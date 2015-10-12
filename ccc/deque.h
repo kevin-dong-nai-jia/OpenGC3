@@ -15,10 +15,12 @@ struct                                                                     \
 {                                                                          \
     _cc_deque_element_type **head;                                         \
     _cc_deque_element_type **tail;                                         \
+                                                                           \
+    int size;                                                              \
 }
 
 
-#define cc_deque_init {NULL, NULL}
+#define cc_deque_init {NULL, NULL, 0}
 
 
 #define _cc_deque_node(_cc_deque_element_type)                             \
@@ -103,6 +105,16 @@ for                                                                        \
 
 
 
+/* deque container capacity */
+
+
+#define cc_deque_size(_cc_deque_object)                                    \
+(                                                                          \
+    (_cc_deque_object).size                                                \
+)
+
+
+
 /* deque container modifiers */
 
 
@@ -124,6 +136,8 @@ for                                                                        \
         new_node->ptn[0] = (void*)(&(*(_cc_deque_object).tail));           \
                                                                            \
     (_cc_deque_object).tail = &(new_node->ptn[2]);                         \
+                                                                           \
+    (_cc_deque_object).size++;                                             \
 }
 
 
