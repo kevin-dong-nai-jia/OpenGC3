@@ -1,8 +1,9 @@
-# Ignore everything
+# Ignore all
 *
 
-# But not source files, header files and .gitignore
+# But not these...
 !*.c
 !ccc/
 !ccc/*.h
+!README.md
 !.gitignore
