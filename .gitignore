@@ -1,9 +1,17 @@
 # Ignore all
+
 *
 
+
 # But not these...
+
 !*.c
+
 !ccc/
 !ccc/*.h
+
+!tests/
+!tests/*.c
+
 !README.md
 !.gitignore
