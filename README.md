@@ -4,8 +4,34 @@
 
 A collection of containers implemented by ANSI C macros.
 
+## Example
+
+### Deque
+
+```C
+cc_deque(char*) msg = cc_deque_init;
+
+cc_deque_push_back(msg, char*, "Hello everyone:\n");
+cc_deque_push_back(msg, char*, "Welcome to C Container Collection Project!\n");
+
+cc_deque_iter(char*) msg_iter = cc_deque_iter_begin(msg);
+
+cc_deque_traversal(msg, msg_iter, char*)
+    printf("%s", **msg_iter);
+
+cc_deque_dealloc(msg, char*);
+```
+
+Please see the header files under folder ccc/ for more details.
+
+## Motivation
+
+Though C++ has existed for many years, there’s still no efficient and instinctive way to create containers in ANSI C (without using any extensions provided by a specific compiler).
+
 ## Contributor
 
 Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>>
 
-Please feel free to contact me if you are interested in developing this project!
+## License
+
+This project is distributed under GPLv2 or later.
