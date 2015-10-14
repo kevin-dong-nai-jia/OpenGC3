@@ -26,7 +26,7 @@ Please see the header files under folder ccc/ for more details.
 
 ## Motivation
 
-Though C++ has existed for many years, there’s still no efficient and instinctive way to create containers in ANSI C (without using any extensions provided by a specific compiler).
+Though C++ has existed for many years, there’s still no efficient and instinctive way to create containers by ANSI C macros (without using any extensions provided by specific compiler).
 
 ## Contributor
 
