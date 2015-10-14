@@ -6,14 +6,30 @@
 
 int main(void)
 {
-    /* (b)oundary-test: cc_deque_push_back */
-    {
-        // TODO
-    }
+    /* Test 1 */
 
-    /* (o)rdinary-test: cc_deque_push_back */
+    printf("Test 1:\n");
+
     {
-        // TODO
+        cc_deque(char*) test1 = cc_deque_init;
+
+        char *num_str[10] = { "five" , "six", "four", "seven", "three",
+                              "eight", "two", "nine", "one"  , "ten"    };
+
+        int cnt;
+
+        while (cnt <= 10)
+        {
+            cc_deque_iter(char*) test1_iter = cc_deque_iter_begin(test1);
+
+            cc_deque_traversal(test1, test1_iter, char*)
+                printf("%s ", **test1_iter);
+
+            puts("");
+
+            cc_deque_push_front(test1, char*, num_str[cnt++]);
+            cc_deque_push_back (test1, char*, num_str[cnt++]);
+        }
     }
 
     return 0;
