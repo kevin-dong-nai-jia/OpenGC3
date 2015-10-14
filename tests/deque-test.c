@@ -30,6 +30,8 @@ int main(void)
             cc_deque_push_front(test1, char*, num_str[cnt++]);
             cc_deque_push_back (test1, char*, num_str[cnt++]);
         }
+
+        cc_deque_dealloc(test1, char*);
     }
 
     return 0;

@@ -26,6 +26,9 @@ int main(void)
 
             printf("%d! :%d\n", **date_iter, cc_deque_size(msg));
         }
+
+        cc_deque_dealloc(msg, char*);
+        cc_deque_dealloc(date, int);
     }
 
     return 0;
