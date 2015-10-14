@@ -16,8 +16,7 @@ cc_deque_push_back(msg, char*, "Welcome to C Container Collection Project!\n");
 
 cc_deque_iter(char*) msg_iter = cc_deque_iter_begin(msg);
 
-cc_deque_traversal(msg, msg_iter, char*)
-    printf("%s", **msg_iter);
+cc_deque_traversal(msg, msg_iter, char*)  printf("%s", **msg_iter);
 
 cc_deque_dealloc(msg, char*);
 ```
@@ -26,7 +25,7 @@ Please see the header files under folder ccc/ for more details.
 
 ## Motivation
 
-Though C++ has existed for many years, there’s still no efficient and instinctive way to create containers by ANSI C macros (without using any extensions provided by specific compiler).
+Though C++ has existed for many years, there’s still no **efficient** and **instinctive** way to create containers by ANSI C macros (without using any extensions provided by specific compilers).
 
 ## Contributor
 
