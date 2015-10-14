@@ -16,7 +16,7 @@ int main(void)
         char *num_str[10] = { "five" , "six", "four", "seven", "three",
                               "eight", "two", "nine", "one"  , "ten"    };
 
-        int cnt;
+        int cnt = 0;
 
         while (cnt <= 10)
         {
