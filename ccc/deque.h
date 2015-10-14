@@ -28,8 +28,14 @@ struct                                                                     \
 struct                                                                     \
 {                                                                          \
     _cc_deque_element_type val;                                            \
+                                                                           \
     void *ptni[4];                                                         \
 }
+
+/* NOTE: ptni: p stands for prev   */
+/*             t stands for this   */
+/*             n stands for next   */
+/*             i stands for itself */
 
 
 
