@@ -15,7 +15,7 @@ cc_deque_push_back(msg, char*, "Hello everyone:\n");
 cc_deque_push_back(msg, char*, "Welcome to C Container Collection Project!\n");
 
 cc_deque_iter(char*) msg_iter = cc_deque_iter_init;
-cc_deque_traversal(msg, msg_iter, char*)  printf("%s", **msg_iter);
+cc_deque_trav(msg, msg_iter, char*)  printf("%s", **msg_iter);
 
 cc_deque_dealloc(msg, char*);
 ```

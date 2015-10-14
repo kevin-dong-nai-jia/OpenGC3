@@ -21,7 +21,7 @@ int main(void)
             cc_deque_iter(char*) msg_iter = cc_deque_iter_init;
             cc_deque_iter(int)  date_iter = cc_deque_iter_begin(date);
 
-            cc_deque_traversal(msg, msg_iter, char*)
+            cc_deque_trav(msg, msg_iter, char*)
                 printf("%s", **msg_iter);
 
             printf("%d! :%d\n", **date_iter, cc_deque_size(msg));

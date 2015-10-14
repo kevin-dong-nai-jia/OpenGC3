@@ -107,9 +107,9 @@ struct                                                                     \
 /* deque container traversal */
 
 
-#define cc_deque_traversal(_cc_deque_object,                               \
-                           _cc_deque_iter_object,                          \
-                           _cc_deque_element_type)                         \
+#define cc_deque_trav(_cc_deque_object,                                    \
+                      _cc_deque_iter_object,                               \
+                      _cc_deque_element_type)                              \
                                                                            \
 for                                                                        \
 (                                                                          \

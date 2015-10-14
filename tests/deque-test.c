@@ -22,7 +22,7 @@ int main(void)
         {
             cc_deque_iter(char*) test1_iter = cc_deque_iter_begin(test1);
 
-            cc_deque_traversal(test1, test1_iter, char*)
+            cc_deque_trav(test1, test1_iter, char*)
                 printf("%s ", **test1_iter);
 
             puts("");
