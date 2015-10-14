@@ -130,12 +130,13 @@ for                                                                        \
                                                                            \
 {                                                                          \
     _cc_deque_node(_cc_deque_element_type) *new_node =                     \
-        calloc(1, sizeof(_cc_deque_node(_cc_deque_element_type)));         \
+        malloc(sizeof(_cc_deque_node(_cc_deque_element_type)));            \
                                                                            \
     new_node->val    = _cc_deque_push_back_value;                          \
     new_node->ptn[1] = &new_node->val;                                     \
                                                                            \
     if (cc_deque_empty((_cc_deque_object)))                                \
+        new_node->ptn[0] = new_node->ptn[2] = NULL,                        \
         (_cc_deque_object).head = &(new_node->ptn[0]);                     \
     else                                                                   \
         *(_cc_deque_object).tail = (void*)(&(new_node->ptn[0])),           \
@@ -153,12 +154,13 @@ for                                                                        \
                                                                            \
 {                                                                          \
     _cc_deque_node(_cc_deque_element_type) *new_node =                     \
-        calloc(1, sizeof(_cc_deque_node(_cc_deque_element_type)));         \
+        malloc(sizeof(_cc_deque_node(_cc_deque_element_type)));            \
                                                                            \
     new_node->val    = _cc_deque_push_front_value;                         \
     new_node->ptn[1] = &new_node->val;                                     \
                                                                            \
     if (cc_deque_empty((_cc_deque_object)))                                \
+        new_node->ptn[0] = new_node->ptn[2] = NULL,                        \
         (_cc_deque_object).tail = &(new_node->ptn[2]);                     \
     else                                                                   \
         *(_cc_deque_object).head = (void*)(&(new_node->ptn[2])),           \
