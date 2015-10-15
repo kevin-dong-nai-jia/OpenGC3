@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../ccc/deque.h"
+#include "../src/ccc/deque.h"
 
 
 int main(void)
