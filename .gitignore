@@ -7,8 +7,9 @@
 
 !*.c
 
-!ccc/
-!ccc/*.h
+!src/
+!src/ccc/
+!src/ccc/*.h
 
 !tests/
 !tests/*.c
