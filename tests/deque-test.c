@@ -7,8 +7,9 @@
 int main(void)
 {
     /* Test 1 */
+    /* Push back ten pointers to char */
 
-    printf("\nTest 1:\n");
+    printf("Test 1:\n");
 
     {
         cc_deque(char*) test1 = cc_deque_init;
@@ -35,6 +36,7 @@ int main(void)
     }
 
     /* Test 2 */
+    /* Check deallocation (with valgrind) */
 
     printf("\nTest 2:\n\n");
 
@@ -43,7 +45,7 @@ int main(void)
 
         int cnt = 0;
 
-        while (cnt <= 50000000)
+        while (cnt <= 10000000)
         {
             cc_deque_push_back(test2, int, cnt++);
 
@@ -52,8 +54,37 @@ int main(void)
         }
 
         cc_deque_dealloc(test2, int);
+    }
 
-        puts("");
+    /* Test 3 */
+    /* Push back two structs */
+
+    printf("\n\nTest 3:\n\n");
+
+    {
+        typedef struct
+        {
+            char *msg[2];
+        } test3_struct;
+
+        cc_deque(test3_struct) test3 = cc_deque_init;
+        cc_deque_iter(test3_struct) test3_iter = cc_deque_iter_init;
+
+        test3_struct test3_1, test3_2;
+
+        test3_1.msg[0] = "Push";
+        test3_1.msg[1] = "back";
+        test3_2.msg[0] = "two";
+        test3_2.msg[1] = "structs.\n";
+
+        cc_deque_push_back(test3, test3_struct, test3_1);
+        cc_deque_push_back(test3, test3_struct, test3_2);
+
+        cc_deque_trav(test3, test3_iter, test3_struct)
+            printf("%s ", (**test3_iter).msg[0]),
+            printf("%s ", (**test3_iter).msg[1]);
+
+        cc_deque_dealloc(test3, test3_struct);
     }
 
     return 0;
