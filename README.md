@@ -9,18 +9,22 @@ A collection of containers implemented by ANSI C macros.
 ### Deque
 
 ```C
-cc_deque(char*) msg = cc_deque_init;
+cc_deque(msg, char*);
 
-cc_deque_push_back(msg, char*, "Hello everyone:\n");
-cc_deque_push_back(msg, char*, "Welcome to C Container Collection Project!\n");
+cc_deque_push_back(msg, "Hello everyone:\n");
+cc_deque_push_back(msg, "Welcome to C Container Collection Project!\n");
 
-cc_deque_iter(char*) msg_iter = cc_deque_iter_init;
-cc_deque_trav(msg, msg_iter, char*)  printf("%s", **msg_iter);
+cc_deque_iter(msg_iter, msg);
+cc_deque_trav(msg_iter, msg)  printf("%s", **msg_iter);
 
-cc_deque_dealloc(msg, char*);
+cc_deque_dealloc(msg);
 ```
 
 Please see the header files under folder ccc/ for more details.
+
+## History
+
+2016 Jan 09 - Passing the same element type to each function is not needed.
 
 ## Motivation
 
