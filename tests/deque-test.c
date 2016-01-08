@@ -6,10 +6,30 @@
 
 int main(void)
 {
+    /* Test 0 */
+    /* For demonstration */
+
+    printf("Test 0:\n\n");
+
+    {
+        cc_deque(msg, char*);
+
+        cc_deque_push_back(msg, "Hello everyone:\n");
+        cc_deque_push_back(msg, "Welcome to C Container Collection Project!\n");
+
+        {
+            cc_deque_iter(msg_iter, msg);
+            cc_deque_trav(msg_iter, msg)  printf("%s", **msg_iter);
+        }
+
+        cc_deque_dealloc(msg);
+    }
+
+
     /* Test 1 */
     /* Push back ten pointers to char */
 
-    printf("Test 1:");
+    printf("\n\nTest 1:");
 
     {
         cc_deque(test1, char*);
