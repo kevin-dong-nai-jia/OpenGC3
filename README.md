@@ -6,8 +6,6 @@ A collection of containers implemented by ANSI C macros.
 
 ## Example
 
-### Deque
-
 ```C
 cc_deque(msg, char*);
 
