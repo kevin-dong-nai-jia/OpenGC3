@@ -6,8 +6,10 @@
 /* deque container struct */
 
 
-#define _cc_flag_deque    0
-#define _cc_flag_avs_list 1
+#define _cc_deque_flag_body 1
+#define _cc_deque_flag_avsp 2
+#define _cc_deque_init {_cc_deque_flag_body, 0, NULL, NULL,                \
+                        {_cc_deque_flag_avsp, 0, NULL, NULL}}
 
 #define cc_deque(_cc_deque_object,                                         \
                  _cc_deque_element_type)                                   \
@@ -23,10 +25,9 @@ struct                                                                     \
     {                                                                      \
         int flag, size;                                                    \
         void **head, **tail;                                               \
-    }   avs_list;                                                          \
+    }   _avsp;                                                             \
                                                                            \
-}   _cc_deque_object = {_cc_flag_deque, 0, NULL, NULL,                     \
-                        {_cc_flag_avs_list, 0, NULL, NULL}}
+}   _cc_deque_object = _cc_deque_init
 
 
 #define _cc_deque_node(_cc_deque_object)                                   \
@@ -46,68 +47,58 @@ struct                                                                     \
 #define cc_deque_iter(_cc_deque_iter,                                      \
                       _cc_deque_object)                                    \
                                                                            \
-typedef _cc_deque_object##_element_type _cc_deque_iter##_element_type;     \
-                                                                           \
-_cc_deque_object##_element_type** _cc_deque_iter = NULL
-
-
-#define _cc_deque_iter_no_typedef(_cc_deque_iter,                          \
-                                  _cc_deque_object)                        \
-                                                                           \
 _cc_deque_object##_element_type** _cc_deque_iter = NULL
 
 
 #define cc_deque_iter_begin(_cc_deque_object)                              \
 (                                                                          \
-    ((_cc_deque_object).head == NULL) ?                                    \
+    (_cc_deque_object.head == NULL) ?                                      \
     (NULL) :                                                               \
-    ((_cc_deque_object##_element_type**)(_cc_deque_object).head + 2)       \
+    ((_cc_deque_object##_element_type**)_cc_deque_object.head + 2)         \
 )
 
 
 #define cc_deque_iter_end(_cc_deque_object)                                \
 (                                                                          \
-    ((_cc_deque_object).tail == NULL) ?                                    \
+    (_cc_deque_object.tail == NULL) ?                                      \
     (NULL) :                                                               \
-    ((_cc_deque_object##_element_type**)(_cc_deque_object).tail - 1)       \
+    ((_cc_deque_object##_element_type**)_cc_deque_object.tail - 1)         \
 )
 
 
 #define cc_deque_iter_is_valid(_cc_deque_iter)                             \
 (                                                                          \
-    (_cc_deque_iter) != NULL && *(_cc_deque_iter) != NULL                  \
+    _cc_deque_iter != NULL && *_cc_deque_iter != NULL                      \
 )
 
 
 #define cc_deque_iter_incr(_cc_deque_iter)                                 \
 (                                                                          \
-    (*((_cc_deque_iter) + 1) == NULL) ?                                    \
-    ((_cc_deque_iter) = NULL) :                                            \
-    ((_cc_deque_iter) =                                                    \
-        ((_cc_deque_iter##_element_type**)(*((_cc_deque_iter) + 1)) + 2))  \
+    (*(_cc_deque_iter + 1) == NULL) ?                                      \
+    (_cc_deque_iter = NULL) :                                              \
+    (_cc_deque_iter = (void*)(*((void***)_cc_deque_iter + 1) + 2))         \
 )
 
 
 #define cc_deque_iter_incr_prefix(_cc_deque_iter)                          \
 (                                                                          \
-    cc_deque_iter_incr((_cc_deque_iter)),                                  \
-    (_cc_deque_iter)                                                       \
+    cc_deque_iter_incr(_cc_deque_iter),                                    \
+    _cc_deque_iter                                                         \
 )
 
 
 #define cc_deque_iter_decr(_cc_deque_iter)                                 \
 (                                                                          \
-    (*((_cc_deque_iter) - 2) == NULL) ?                                    \
-    ((_cc_deque_iter) = NULL) :                                            \
-    ((_cc_deque_iter) =                                                    \
-        ((_cc_deque_iter##_element_type**)(*((_cc_deque_iter) - 2)) - 1))  \
+    (*(_cc_deque_iter - 2) == NULL) ?                                      \
+    (_cc_deque_iter = NULL) :                                              \
+    (_cc_deque_iter = (void*)(*((void***)_cc_deque_iter - 2) - 1))         \
 )
 
 
 #define cc_deque_iter_decr_prefix(_cc_deque_iter)                          \
 (                                                                          \
-    cc_deque_iter_decr((_cc_deque_iter)),                                  \
-    (_cc_deque_iter)                                                       \
+    cc_deque_iter_decr(_cc_deque_iter),                                    \
+    _cc_deque_iter                                                         \
 )
 
 
@@ -120,8 +111,8 @@ _cc_deque_object##_element_type** _cc_deque_iter = NULL
                                                                            \
 for                                                                        \
 (                                                                          \
-    (_cc_deque_iter) = cc_deque_iter_begin(_cc_deque_object);              \
-    cc_deque_iter_is_valid((_cc_deque_iter));                              \
+    _cc_deque_iter = cc_deque_iter_begin(_cc_deque_object);                \
+    cc_deque_iter_is_valid(_cc_deque_iter);                                \
     cc_deque_iter_incr(_cc_deque_iter)                                     \
 )
 
@@ -131,8 +122,8 @@ for                                                                        \
                                                                            \
 for                                                                        \
 (                                                                          \
-    (_cc_deque_iter) = cc_deque_iter_end(_cc_deque_object);                \
-    cc_deque_iter_is_valid((_cc_deque_iter));                              \
+    _cc_deque_iter = cc_deque_iter_end(_cc_deque_object);                  \
+    cc_deque_iter_is_valid(_cc_deque_iter);                                \
     cc_deque_iter_decr(_cc_deque_iter)                                     \
 )
 
@@ -143,13 +134,13 @@ for                                                                        \
 
 #define cc_deque_size(_cc_deque_object)                                    \
 (                                                                          \
-    (_cc_deque_object).size                                                \
+    _cc_deque_object.size                                                  \
 )
 
 
 #define cc_deque_empty(_cc_deque_object)                                   \
 (                                                                          \
-    cc_deque_size((_cc_deque_object)) == 0                                 \
+    cc_deque_size(_cc_deque_object) == 0                                   \
 )
 
 
@@ -173,14 +164,14 @@ for                                                                        \
     new_node->pitn[2] = &(new_node->val);                                  \
     new_node->pitn[3] = NULL;                                              \
                                                                            \
-    if (cc_deque_empty((_cc_deque_object)))                                \
-        (_cc_deque_object).head = &(new_node->pitn[0]);                    \
+    if (cc_deque_empty(_cc_deque_object))                                  \
+        _cc_deque_object.head = &(new_node->pitn[0]);                      \
     else                                                                   \
         new_node->pitn[0] = &(*(_cc_deque_object).tail),                   \
         *(_cc_deque_object).tail = &(new_node->pitn[0]);                   \
                                                                            \
-    (_cc_deque_object).tail = &(new_node->pitn[3]);                        \
-    (_cc_deque_object).size++;                                             \
+    _cc_deque_object.tail = &(new_node->pitn[3]);                          \
+    _cc_deque_object.size++;                                               \
 }
 
 
@@ -196,14 +187,14 @@ for                                                                        \
     new_node->pitn[2] = &(new_node->val);                                  \
     new_node->pitn[3] = NULL;                                              \
                                                                            \
-    if (cc_deque_empty((_cc_deque_object)))                                \
-        (_cc_deque_object).tail = &(new_node->pitn[3]);                    \
+    if (cc_deque_empty(_cc_deque_object))                                  \
+        _cc_deque_object.tail = &(new_node->pitn[3]);                      \
     else                                                                   \
         new_node->pitn[3] = &(*(_cc_deque_object).head),                   \
         *(_cc_deque_object).head = &(new_node->pitn[3]);                   \
                                                                            \
-    (_cc_deque_object).head = &(new_node->pitn[0]);                        \
-    (_cc_deque_object).size++;                                             \
+    _cc_deque_object.head = &(new_node->pitn[0]);                          \
+    _cc_deque_object.size++;                                               \
 }
 
 
@@ -217,7 +208,7 @@ for                                                                        \
 #define cc_deque_dealloc(_cc_deque_object)                                 \
 {                                                                          \
     cc_deque_iter(iter, _cc_deque_object);                                 \
-    _cc_deque_iter_no_typedef(iter_dup, _cc_deque_object);                 \
+    cc_deque_iter(iter_dup, _cc_deque_object);                             \
     iter = cc_deque_iter_begin(_cc_deque_object);                          \
                                                                            \
     while (cc_deque_iter_is_valid(iter))                                   \
@@ -227,7 +218,8 @@ for                                                                        \
         free(*(iter_dup - 1));                                             \
     }                                                                      \
                                                                            \
-    (_cc_deque_object).tail = (_cc_deque_object).head = NULL;              \
+    _cc_deque_object.tail = _cc_deque_object.head = NULL;                  \
+    _cc_deque_object.size = 0;                                             \
 }
 
 
