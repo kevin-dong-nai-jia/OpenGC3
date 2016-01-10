@@ -6,10 +6,7 @@
 /* deque container struct */
 
 
-#define _cc_deque_flag_body 1
-#define _cc_deque_flag_avsp 2
-#define _cc_deque_init {_cc_deque_flag_body, 0, NULL, NULL,                \
-                        {_cc_deque_flag_avsp, 0, NULL, NULL}}
+#define _cc_deque_init {0, NULL, NULL, NULL}
 
 #define cc_deque(_cc_deque_object,                                         \
                  _cc_deque_element_type)                                   \
@@ -18,14 +15,8 @@ typedef _cc_deque_element_type _cc_deque_object##_element_type;            \
                                                                            \
 struct                                                                     \
 {                                                                          \
-    int flag, size;                                                        \
-    void **head, **tail;                                                   \
-                                                                           \
-    struct                                                                 \
-    {                                                                      \
-        int flag, size;                                                    \
-        void **head, **tail;                                               \
-    }   _avsp;                                                             \
+    int size;                                                              \
+    void *head, *tail, *avsp;                                              \
                                                                            \
 }   _cc_deque_object = _cc_deque_init
 
@@ -80,25 +71,11 @@ _cc_deque_object##_element_type** _cc_deque_iter = NULL
 )
 
 
-#define cc_deque_iter_incr_prefix(_cc_deque_iter)                          \
-(                                                                          \
-    cc_deque_iter_incr(_cc_deque_iter),                                    \
-    _cc_deque_iter                                                         \
-)
-
-
 #define cc_deque_iter_decr(_cc_deque_iter)                                 \
 (                                                                          \
     (*(_cc_deque_iter - 2) == NULL) ?                                      \
     (_cc_deque_iter = NULL) :                                              \
     (_cc_deque_iter = (void*)(*((void***)_cc_deque_iter - 2) - 1))         \
-)
-
-
-#define cc_deque_iter_decr_prefix(_cc_deque_iter)                          \
-(                                                                          \
-    cc_deque_iter_decr(_cc_deque_iter),                                    \
-    _cc_deque_iter                                                         \
 )
 
 
@@ -149,6 +126,7 @@ for                                                                        \
     /* TODO */
 
 
+
 /* deque container modifiers */
 
 
@@ -167,8 +145,8 @@ for                                                                        \
     if (cc_deque_empty(_cc_deque_object))                                  \
         _cc_deque_object.head = &(new_node->pitn[0]);                      \
     else                                                                   \
-        new_node->pitn[0] = &(*(_cc_deque_object).tail),                   \
-        *(_cc_deque_object).tail = &(new_node->pitn[0]);                   \
+        new_node->pitn[0] = _cc_deque_object.tail,                         \
+        *(void**)(_cc_deque_object.tail) = &(new_node->pitn[0]);           \
                                                                            \
     _cc_deque_object.tail = &(new_node->pitn[3]);                          \
     _cc_deque_object.size++;                                               \
@@ -190,8 +168,8 @@ for                                                                        \
     if (cc_deque_empty(_cc_deque_object))                                  \
         _cc_deque_object.tail = &(new_node->pitn[3]);                      \
     else                                                                   \
-        new_node->pitn[3] = &(*(_cc_deque_object).head),                   \
-        *(_cc_deque_object).head = &(new_node->pitn[3]);                   \
+        new_node->pitn[3] = _cc_deque_object.head,                         \
+        *(void**)(_cc_deque_object.head) = &(new_node->pitn[3]);           \
                                                                            \
     _cc_deque_object.head = &(new_node->pitn[0]);                          \
     _cc_deque_object.size++;                                               \
@@ -200,6 +178,15 @@ for                                                                        \
 
 #define cc_deque_pop_back(_cc_deque_object)                                \
     /* TODO */
+
+
+#define cc_deque_pop_front(_cc_deque_object)                               \
+    /* TODO */
+
+
+#define cc_deque_clear(_cc_deque_object)                                   \
+    /* TODO */
+
 
 
 /* deque container deallocation */
@@ -218,7 +205,9 @@ for                                                                        \
         free(*(iter_dup - 1));                                             \
     }                                                                      \
                                                                            \
-    _cc_deque_object.tail = _cc_deque_object.head = NULL;                  \
+    _cc_deque_object.tail = NULL;                                          \
+    _cc_deque_object.head = NULL;                                          \
+    _cc_deque_object.avsp = NULL;                                          \
     _cc_deque_object.size = 0;                                             \
 }
 
