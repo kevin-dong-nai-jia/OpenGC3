@@ -25,7 +25,7 @@ Please see the header files under folder ccc/ for more details.
 2016 Jan 09 - Use typedef
 2016 Jan 12 - Rename deque to dllst
 
-## TODO List
+## Task List
 
 2016 Jan 12 - Shrink dllst node size
 
