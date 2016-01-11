@@ -22,13 +22,13 @@ Please see the header files under folder ccc/ for more details.
 
 ## History
 
-2016 Jan 09 - Use typedef
+- 2016 Jan 09 - Use typedef
 
-2016 Jan 12 - Rename deque to dllst
+- 2016 Jan 12 - Rename deque to dllst
 
 ## Task List
 
-2016 Jan 12 - Shrink dllst node size
+- 2016 Jan 12 - Shrink dllst node size
 
 ## Motivation
 
