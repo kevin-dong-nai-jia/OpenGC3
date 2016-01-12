@@ -11,14 +11,16 @@
 #define cc_dllst(_cc_dllst_object,                                         \
                  _cc_dllst_element_type)                                   \
                                                                            \
-typedef _cc_dllst_element_type _cc_dllst_object##_element_type;            \
-                                                                           \
-struct                                                                     \
+typedef struct                                                             \
 {                                                                          \
     int size;                                                              \
     void *head, *tail, *avsp;                                              \
                                                                            \
-}   _cc_dllst_object = _cc_dllst_init
+}   _cc_dllst_object##_struct_type;                                        \
+                                                                           \
+_cc_dllst_object##_struct_type _cc_dllst_object = _cc_dllst_init;          \
+                                                                           \
+typedef _cc_dllst_element_type _cc_dllst_object##_element_type
 
 
 #define _cc_dllst_node(_cc_dllst_object)                                   \
