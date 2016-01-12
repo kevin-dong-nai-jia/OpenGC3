@@ -27,7 +27,7 @@ Please see the header files under folder ccc/ for more details.
 
 ## Task List
 
-* 2016 Jan 12 - Shrink dllst node size
+* 2016 Jan 12 - Shrink dllst node size (XOR linked list)
 
 ## Motivation
 
