@@ -27,9 +27,8 @@ typedef _cc_dllst_element_type _cc_dllst_object##_element_type
                                                                            \
 struct                                                                     \
 {                                                                          \
+    void *ptn[3];                                                          \
     _cc_dllst_object##_element_type val;                                   \
-                                                                           \
-    void *pitn[4];                                                         \
 }
 
 
@@ -47,7 +46,7 @@ _cc_dllst_object##_element_type** _cc_dllst_iter = NULL
 (                                                                          \
     (_cc_dllst_object.head == NULL) ?                                      \
     (NULL) :                                                               \
-    ((_cc_dllst_object##_element_type**)_cc_dllst_object.head + 2)         \
+    ((_cc_dllst_object##_element_type**)_cc_dllst_object.head + 1)         \
 )
 
 
@@ -69,15 +68,15 @@ _cc_dllst_object##_element_type** _cc_dllst_iter = NULL
 (                                                                          \
     (*(_cc_dllst_iter + 1) == NULL) ?                                      \
     (_cc_dllst_iter = NULL) :                                              \
-    (_cc_dllst_iter = (void*)(*((void***)_cc_dllst_iter + 1) + 2))         \
+    (_cc_dllst_iter = (void*)(*((void***)_cc_dllst_iter + 1) + 1))         \
 )
 
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (*(_cc_dllst_iter - 2) == NULL) ?                                      \
+    (*(_cc_dllst_iter - 1) == NULL) ?                                      \
     (_cc_dllst_iter = NULL) :                                              \
-    (_cc_dllst_iter = (void*)(*((void***)_cc_dllst_iter - 2) - 1))         \
+    (_cc_dllst_iter = (void*)(*((void***)_cc_dllst_iter - 1) - 1))         \
 )
 
 
@@ -138,19 +137,18 @@ for                                                                        \
     _cc_dllst_node(_cc_dllst_object) *new_node =                           \
         malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));                  \
                                                                            \
-    new_node->val     = _cc_dllst_push_back_value;                         \
-    new_node->pitn[0] = NULL;                                              \
-    new_node->pitn[1] = new_node;                                          \
-    new_node->pitn[2] = &(new_node->val);                                  \
-    new_node->pitn[3] = NULL;                                              \
+    new_node->val    = _cc_dllst_push_back_value;                          \
+    new_node->ptn[0] = NULL;                                               \
+    new_node->ptn[1] = &(new_node->val);                                   \
+    new_node->ptn[2] = NULL;                                               \
                                                                            \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
-        _cc_dllst_object.head = &(new_node->pitn[0]);                      \
+        _cc_dllst_object.head = &(new_node->ptn[0]);                       \
     else                                                                   \
-        new_node->pitn[0] = _cc_dllst_object.tail,                         \
-        *(void**)(_cc_dllst_object.tail) = &(new_node->pitn[0]);           \
+        new_node->ptn[0] = _cc_dllst_object.tail,                          \
+        *(void**)(_cc_dllst_object.tail) = &(new_node->ptn[0]);            \
                                                                            \
-    _cc_dllst_object.tail = &(new_node->pitn[3]);                          \
+    _cc_dllst_object.tail = &(new_node->ptn[2]);                           \
     _cc_dllst_object.size++;                                               \
 }
 
@@ -161,19 +159,18 @@ for                                                                        \
     _cc_dllst_node(_cc_dllst_object) *new_node =                           \
         malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));                  \
                                                                            \
-    new_node->val     = _cc_dllst_push_front_value;                        \
-    new_node->pitn[0] = NULL;                                              \
-    new_node->pitn[1] = new_node;                                          \
-    new_node->pitn[2] = &(new_node->val);                                  \
-    new_node->pitn[3] = NULL;                                              \
+    new_node->val    = _cc_dllst_push_front_value;                         \
+    new_node->ptn[0] = NULL;                                               \
+    new_node->ptn[1] = &(new_node->val);                                   \
+    new_node->ptn[2] = NULL;                                               \
                                                                            \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
-        _cc_dllst_object.tail = &(new_node->pitn[3]);                      \
+        _cc_dllst_object.tail = &(new_node->ptn[2]);                       \
     else                                                                   \
-        new_node->pitn[3] = _cc_dllst_object.head,                         \
-        *(void**)(_cc_dllst_object.head) = &(new_node->pitn[3]);           \
+        new_node->ptn[2] = _cc_dllst_object.head,                          \
+        *(void**)(_cc_dllst_object.head) = &(new_node->ptn[2]);            \
                                                                            \
-    _cc_dllst_object.head = &(new_node->pitn[0]);                          \
+    _cc_dllst_object.head = &(new_node->ptn[0]);                           \
     _cc_dllst_object.size++;                                               \
 }
 
@@ -204,7 +201,7 @@ for                                                                        \
     {                                                                      \
         iter_dup = iter;                                                   \
         cc_dllst_iter_incr(iter);                                          \
-        free(*(iter_dup - 1));                                             \
+        free(&(*(iter_dup - 1)));                                          \
     }                                                                      \
                                                                            \
     _cc_dllst_object.tail = NULL;                                          \
