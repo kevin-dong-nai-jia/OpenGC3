@@ -22,7 +22,7 @@ struct                                                                     \
                                                                            \
 typedef _cc_dllst_element_type _cc_dllst_object##_element_type;            \
                                                                            \
-cc_sllst(_cc_dllst_object##_avsp, _cc_dllst_element_type)
+cc_sllst(_##_cc_dllst_object##_avsp, _cc_dllst_element_type)
 
 
 #define _cc_dllst_node(_cc_dllst_object) _cc_xllst_node(_cc_dllst_object)
@@ -91,8 +91,8 @@ for                                                                        \
 )
 
 
-#define cc_dllst_rtrav(_cc_dllst_iter,                                     \
-                       _cc_dllst_object)                                   \
+#define cc_dllst_revtrav(_cc_dllst_iter,                                   \
+                         _cc_dllst_object)                                 \
                                                                            \
 for                                                                        \
 (                                                                          \
