@@ -18,7 +18,7 @@ cc_dllst_trav(msg_iter, msg)  printf("%s", **msg_iter);
 cc_dllst_dealloc(msg);
 ```
 
-Please see the header files under folder ccc/ for more details.
+Please see the header files under folder src/ccc/ for more details.
 
 ## Motivation
 
