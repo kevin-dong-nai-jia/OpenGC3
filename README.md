@@ -20,15 +20,6 @@ cc_dllst_dealloc(msg);
 
 Please see the header files under folder ccc/ for more details.
 
-## History
-
-* 2016 Jan 09 - Use typedef
-* 2016 Jan 12 - Rename deque to dllst
-
-## Task List
-
-* 2016 Jan 12 - Shrink dllst node size (XOR linked list)
-
 ## Motivation
 
 Though C++ has existed for many years, there’s still no **efficient** and **instinctive** ways to create containers in ANSI C code (using macros without any extensions provided by specific compilers).
