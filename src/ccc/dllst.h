@@ -1,35 +1,31 @@
 #ifndef _CCC_DLLST_H_
 #define _CCC_DLLST_H_
 
+#include "sllst.h"
+
 
 
 /* dllst container struct */
 
 
-#define _cc_dllst_init {0, NULL, NULL, NULL}
+#define _cc_dllst_init {0, NULL, NULL}
+
 
 #define cc_dllst(_cc_dllst_object,                                         \
                  _cc_dllst_element_type)                                   \
                                                                            \
-typedef struct                                                             \
-{                                                                          \
-    int size;                                                              \
-    void *head, *tail, *avsp;                                              \
-                                                                           \
-}   _cc_dllst_object##_struct_type;                                        \
-                                                                           \
-_cc_dllst_object##_struct_type _cc_dllst_object = _cc_dllst_init;          \
-                                                                           \
-typedef _cc_dllst_element_type _cc_dllst_object##_element_type
-
-
-#define _cc_dllst_node(_cc_dllst_object)                                   \
-                                                                           \
 struct                                                                     \
 {                                                                          \
-    void *ptn[3];                                                          \
-    _cc_dllst_object##_element_type val;                                   \
-}
+    int size;                                                              \
+    void *head, *tail;                                                     \
+}   _cc_dllst_object = _cc_dllst_init;                                     \
+                                                                           \
+typedef _cc_dllst_element_type _cc_dllst_object##_element_type;            \
+                                                                           \
+cc_sllst(_cc_dllst_object##_avsp, _cc_dllst_element_type)
+
+
+#define _cc_dllst_node(_cc_dllst_object) _cc_xllst_node(_cc_dllst_object)
 
 
 
@@ -206,7 +202,6 @@ for                                                                        \
                                                                            \
     _cc_dllst_object.tail = NULL;                                          \
     _cc_dllst_object.head = NULL;                                          \
-    _cc_dllst_object.avsp = NULL;                                          \
     _cc_dllst_object.size = 0;                                             \
 }
 
