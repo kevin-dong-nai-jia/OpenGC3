@@ -13,14 +13,13 @@ int main(void)
 
     {
         cc_dllst(msg, char*);
+        cc_dllst_iter(msg_iter, msg);
 
         cc_dllst_push_back(msg, "Hello everyone:\n");
         cc_dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
 
-        {
-            cc_dllst_iter(msg_iter, msg);
-            cc_dllst_trav(msg_iter, msg)  printf("%s", **msg_iter);
-        }
+        cc_dllst_trav(msg_iter, msg)
+            printf("%s", ***msg_iter);
 
         cc_dllst_dealloc(msg);
     }
@@ -42,10 +41,9 @@ int main(void)
         while (puts("") && cnt <= 10)
         {
             cc_dllst_iter(test1_iter, test1);
-            test1_iter = cc_dllst_iter_begin(test1);
 
             cc_dllst_trav(test1_iter, test1)
-                printf("%s ", **test1_iter);
+                printf("%s ", ***test1_iter);
 
             cc_dllst_push_front(test1, num_str[cnt++]);
             cc_dllst_push_back (test1, num_str[cnt++]);
@@ -97,8 +95,8 @@ int main(void)
         cc_dllst_push_back(test3, test3_2);
 
         cc_dllst_trav(test3_iter, test3)
-            printf("%s ", (**test3_iter).msg[0]),
-            printf("%s ", (**test3_iter).msg[1]);
+            printf("%s ", (***test3_iter).msg[0]),
+            printf("%s ", (***test3_iter).msg[1]);
 
         cc_dllst_dealloc(test3);
     }
