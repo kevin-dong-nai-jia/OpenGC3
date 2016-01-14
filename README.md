@@ -8,17 +8,18 @@ A collection of containers implemented by ANSI C macros.
 
 ```C
 cc_dllst(msg, char*);
+cc_dllst_iter(msg_iter, msg);
 
 cc_dllst_push_back(msg, "Hello everyone:\n");
 cc_dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
 
-cc_dllst_iter(msg_iter, msg);
-cc_dllst_trav(msg_iter, msg)  printf("%s", **msg_iter);
+cc_dllst_trav(msg_iter, msg)
+    printf("%s", ***msg_iter);
 
 cc_dllst_dealloc(msg);
 ```
 
-Please see the header files under folder src/ccc/ for more details.
+Please see the header files under src/ccc/ for more details.
 
 ## Motivation
 
