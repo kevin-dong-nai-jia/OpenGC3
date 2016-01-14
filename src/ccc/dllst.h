@@ -262,15 +262,15 @@ for                                                                        \
 #define cc_dllst_dealloc(_cc_dllst_object)                                 \
 {                                                                          \
     cc_dllst_iter(iter, _cc_dllst_object);                                 \
-    cc_dllst_iter(iter_dup, _cc_dllst_object);                             \
     cc_dllst_iter_begin(iter, _cc_dllst_object);                           \
                                                                            \
-    while (cc_dllst_iter_is_valid(iter))                                   \
-    {                                                                      \
-        cc_dllst_iter_copy(iter_dup, iter);                                \
-        cc_dllst_iter_incr(iter);                                          \
-        free(&(*((*iter_dup) - 1)));                                       \
-    }                                                                      \
+    if (cc_dllst_size(_cc_dllst_object) >= 1)                              \
+        do                                                                 \
+        {                                                                  \
+            cc_dllst_iter_incr(iter);                                      \
+            free(&(*(*(iter - 1) - 1)));                                   \
+        }                                                                  \
+        while (cc_dllst_iter_is_valid(iter));                              \
                                                                            \
     _cc_dllst_object.tail = NULL;                                          \
     _cc_dllst_object.head = NULL;                                          \
