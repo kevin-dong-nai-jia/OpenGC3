@@ -11,7 +11,7 @@
                                                                            \
 struct                                                                     \
 {                                                                          \
-    void *ptn[3];                                                          \
+    void *xrt[2];                                                          \
     _cc_xllst_object##_element_type val;                                   \
 }
 
