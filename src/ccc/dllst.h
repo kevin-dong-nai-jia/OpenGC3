@@ -9,7 +9,7 @@
 /* dllst container struct */
 
 
-#define _cc_dllst_init {0, NULL, NULL}
+#define _cc_dllst_init {0, 0, NULL, NULL, NULL, NULL}
 
 
 #define cc_dllst(_cc_dllst_object,                                         \
@@ -17,8 +17,8 @@
                                                                            \
 struct                                                                     \
 {                                                                          \
-    int size;                                                              \
-    void *head, *tail;                                                     \
+    int size, bufsize;                                                     \
+    void *head, *tail, *bufhead, *buftail;                                 \
 }   _cc_dllst_object = _cc_dllst_init;                                     \
                                                                            \
 typedef _cc_dllst_element_type _cc_dllst_object##_element_type
