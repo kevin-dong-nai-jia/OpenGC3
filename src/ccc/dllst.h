@@ -1,7 +1,6 @@
 #ifndef _CCC_DLLST_H_
 #define _CCC_DLLST_H_
 
-#include "sllst.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -22,12 +21,16 @@ struct                                                                     \
     void *head, *tail;                                                     \
 }   _cc_dllst_object = _cc_dllst_init;                                     \
                                                                            \
-typedef _cc_dllst_element_type _cc_dllst_object##_element_type             \
+typedef _cc_dllst_element_type _cc_dllst_object##_element_type
+
+
+#define _cc_dllst_node(_cc_dllst_object)                                   \
                                                                            \
-/* ; cc_sllst(_##_cc_dllst_object##_avsp, _cc_dllst_element_type) */
-
-
-#define _cc_dllst_node(_cc_dllst_object) _cc_xllst_node(_cc_dllst_object)
+struct                                                                     \
+{                                                                          \
+    void *xrt[2];                                                          \
+    _cc_dllst_object##_element_type val;                                   \
+}
 
 
 
