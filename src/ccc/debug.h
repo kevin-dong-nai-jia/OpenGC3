@@ -19,7 +19,7 @@ void* __cc_message(char* file, int line, char* type, int count, ...)
     fprintf(stderr, "\n[ CCC ] %s: ", type);
 
     while (count--)
-        fprintf(stderr, "%s%s", va_arg(ap, char*), count ? " " : "\n\n");
+        fprintf(stderr, "%s%s", va_arg(ap, char*), count ? " " : "\n");
 
     va_end(ap);
 
@@ -40,6 +40,13 @@ void* __cc_message(char* file, int line, char* type, int count, ...)
 (                                                                          \
     __cc_message(__FILE__, __LINE__, "WARNING", 3,                         \
                  #_cc_dllst_object, "(a dllst container)", "is empty.")    \
+)
+
+
+#define __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+(                                                                          \
+    __cc_message(__FILE__, __LINE__, "WARNING", 3,                         \
+                 #_cc_dllst_iter, "(a dllst iterator)", "is invalid.")     \
 )
 
 
