@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define CCC_DEBUG
 #include "../src/ccc/dllst.h"
 
 
@@ -28,7 +29,7 @@ int main(void)
     /* Test 1 */
     /* Push back ten pointers to char */
 
-    printf("\n\nTest 1:");
+    printf("\n\nTest 1: \n");
 
     {
         cc_dllst(test1, char*);
@@ -38,15 +39,15 @@ int main(void)
 
         int cnt = 0;
 
-        while (puts("") && cnt <= 10)
+        while (puts("") && cnt < 10)
         {
             cc_dllst_iter(test1_iter, test1);
 
-            cc_dllst_trav(test1_iter, test1)
-                printf("%s ", ***test1_iter);
-
             cc_dllst_push_front(test1, num_str[cnt++]);
             cc_dllst_push_back (test1, num_str[cnt++]);
+
+            cc_dllst_trav(test1_iter, test1)
+                printf("%s ", ***test1_iter);
         }
 
         cc_dllst_dealloc(test1);
@@ -99,6 +100,20 @@ int main(void)
             printf("%s ", (***test3_iter).msg[1]);
 
         cc_dllst_dealloc(test3);
+    }
+
+
+    /* Test 4 */
+    /* Test debug mode */
+
+    printf("\n\nTest 4: \n");
+
+    {
+        cc_dllst(test4, char*);
+        cc_dllst_iter(test4_iter, test4);
+
+        cc_dllst_trav(test4_iter, test4)
+            printf("%s", ***test4_iter);
     }
 
 
