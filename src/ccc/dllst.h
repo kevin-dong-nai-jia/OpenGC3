@@ -112,7 +112,7 @@ _cc_dllst_iter##_element_type*** const                                     \
 (                                                                          \
     (_cc_dllst_object.head == NULL) ?                                      \
     (                                                                      \
-        (_cc_dllst_object##_element_type***)                               \
+        (_cc_dllst_iter##_element_type***)                                 \
             __cc_warning_dllst_is_empty(_cc_dllst_object)                  \
     ) :                                                                    \
     (                                                                      \
@@ -133,7 +133,7 @@ _cc_dllst_iter##_element_type*** const                                     \
 (                                                                          \
     (_cc_dllst_object.tail == NULL) ?                                      \
     (                                                                      \
-        (_cc_dllst_object##_element_type***)                               \
+        (_cc_dllst_iter##_element_type***)                                 \
             __cc_warning_dllst_is_empty(_cc_dllst_object)                  \
     ) :                                                                    \
     (                                                                      \
