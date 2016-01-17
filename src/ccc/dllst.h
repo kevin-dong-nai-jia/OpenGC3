@@ -81,7 +81,6 @@ _cc_dllst_object##_element_type*** const                                   \
 (                                                                          \
     (_cc_dllst_object.head == NULL) ?                                      \
     (                                                                      \
-        cc_dllst_iter_clear(_cc_dllst_iter),                               \
         (_cc_dllst_object##_element_type***)                               \
             __cc_warning_dllst_empty(_cc_dllst_object)                     \
     ) :                                                                    \
@@ -103,7 +102,6 @@ _cc_dllst_object##_element_type*** const                                   \
 (                                                                          \
     (_cc_dllst_object.tail == NULL) ?                                      \
     (                                                                      \
-        cc_dllst_iter_clear(_cc_dllst_iter),                               \
         (_cc_dllst_object##_element_type***)                               \
             __cc_warning_dllst_empty(_cc_dllst_object)                     \
     ) :                                                                    \
@@ -130,7 +128,10 @@ _cc_dllst_object##_element_type*** const                                   \
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ? (0) :                    \
+    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
+    (                                                                      \
+        __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+    ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[1] = _##_cc_dllst_iter##_hptnt[2],       \
         _##_cc_dllst_iter##_hptnt[2] = _##_cc_dllst_iter##_hptnt[3],       \
@@ -147,7 +148,10 @@ _cc_dllst_object##_element_type*** const                                   \
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ? (0) :                    \
+    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
+    (                                                                      \
+        __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+    ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[3] = _##_cc_dllst_iter##_hptnt[2],       \
         _##_cc_dllst_iter##_hptnt[2] = _##_cc_dllst_iter##_hptnt[1],       \
