@@ -114,6 +114,8 @@ int main(void)
 
         cc_dllst_trav(test4_iter, test4)
             printf("%s", ***test4_iter);
+
+        cc_dllst_iter_incr(test4_iter);
     }
 
 
