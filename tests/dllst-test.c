@@ -116,6 +116,8 @@ int main(void)
             printf("%s", ***test4_iter);
 
         cc_dllst_iter_incr(test4_iter);
+
+        (void)cc_dref(test4_iter);
     }
 
 
