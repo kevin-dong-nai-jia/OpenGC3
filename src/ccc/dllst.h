@@ -47,8 +47,39 @@ struct                                                                     \
                                                                            \
 void **_##_cc_dllst_iter##_hptnt[5] = _cc_dllst_iter_hptnt_init;           \
                                                                            \
-_cc_dllst_object##_element_type*** const                                   \
+typedef _cc_dllst_object##_element_type _cc_dllst_iter##_element_type;     \
+                                                                           \
+_cc_dllst_iter##_element_type*** const                                     \
     _cc_dllst_iter = (void*)(&(_##_cc_dllst_iter##_hptnt[2]))
+
+
+#define cc_dllst_iter_is_valid(_cc_dllst_iter)                             \
+(                                                                          \
+    _cc_dllst_iter != NULL        &&                                       \
+    *(_cc_dllst_iter - 1) != NULL &&                                       \
+    *(_cc_dllst_iter + 1) != NULL                                          \
+)
+
+
+#define cc_dllst_iter_dereference(_cc_dllst_iter)                          \
+(                                                                          \
+   *(                                                                      \
+        (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                      \
+        (                                                                  \
+            (_cc_dllst_iter##_element_type*)                               \
+                __cc_error_dllst_iter_cannot_dereference(_cc_dllst_iter)   \
+        ) :                                                                \
+        (                                                                  \
+            **_cc_dllst_iter                                               \
+        )                                                                  \
+    )                                                                      \
+)
+
+
+#define cc_dref(_cc_dllst_iter)                                            \
+(                                                                          \
+    cc_dllst_iter_dereference(_cc_dllst_iter)                              \
+)
 
 
 #define cc_dllst_iter_copy(_cc_dllst_iter_dst,                             \
@@ -82,7 +113,7 @@ _cc_dllst_object##_element_type*** const                                   \
     (_cc_dllst_object.head == NULL) ?                                      \
     (                                                                      \
         (_cc_dllst_object##_element_type***)                               \
-            __cc_warning_dllst_empty(_cc_dllst_object)                     \
+            __cc_warning_dllst_is_empty(_cc_dllst_object)                  \
     ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[0] = &(_cc_dllst_object.head),           \
@@ -92,7 +123,7 @@ _cc_dllst_object##_element_type*** const                                   \
             _cc_dllst_addr_xor(&(_cc_dllst_object.head),                   \
                                *((void**)_cc_dllst_object.head - 1)) + 1,  \
         _##_cc_dllst_iter##_hptnt[4] = &(_cc_dllst_object.tail),           \
-        (_cc_dllst_object##_element_type***)_cc_dllst_iter                 \
+        _cc_dllst_iter                                                     \
     )                                                                      \
 )
 
@@ -103,7 +134,7 @@ _cc_dllst_object##_element_type*** const                                   \
     (_cc_dllst_object.tail == NULL) ?                                      \
     (                                                                      \
         (_cc_dllst_object##_element_type***)                               \
-            __cc_warning_dllst_empty(_cc_dllst_object)                     \
+            __cc_warning_dllst_is_empty(_cc_dllst_object)                  \
     ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[4] = &(_cc_dllst_object.tail),           \
@@ -113,16 +144,8 @@ _cc_dllst_object##_element_type*** const                                   \
             _cc_dllst_addr_xor(&(_cc_dllst_object.tail),                   \
                                *((void**)_cc_dllst_object.tail - 1)) + 1,  \
         _##_cc_dllst_iter##_hptnt[0] = &(_cc_dllst_object.head),           \
-        (_cc_dllst_object##_element_type***)_cc_dllst_iter                 \
+        _cc_dllst_iter                                                     \
     )                                                                      \
-)
-
-
-#define cc_dllst_iter_is_valid(_cc_dllst_iter)                             \
-(                                                                          \
-    _cc_dllst_iter != NULL        &&                                       \
-    *(_cc_dllst_iter - 1) != NULL &&                                       \
-    *(_cc_dllst_iter + 1) != NULL                                          \
 )
 
 
@@ -130,7 +153,8 @@ _cc_dllst_object##_element_type*** const                                   \
 (                                                                          \
     (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
     (                                                                      \
-        __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+        (_cc_dllst_iter##_element_type***)                                 \
+            __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)             \
     ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[1] = _##_cc_dllst_iter##_hptnt[2],       \
@@ -141,7 +165,8 @@ _cc_dllst_object##_element_type*** const                                   \
              _##_cc_dllst_iter##_hptnt[4] + 1) ? (NULL) :                  \
             (_cc_dllst_addr_xor(&(*(_##_cc_dllst_iter##_hptnt[1] - 1)),    \
                                 *(_##_cc_dllst_iter##_hptnt[2] - 1)) + 1)  \
-        )                                                                  \
+        ),                                                                 \
+        _cc_dllst_iter                                                     \
     )                                                                      \
 )
 
@@ -150,7 +175,8 @@ _cc_dllst_object##_element_type*** const                                   \
 (                                                                          \
     (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
     (                                                                      \
-        __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+        (_cc_dllst_iter##_element_type***)                                 \
+            __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)             \
     ) :                                                                    \
     (                                                                      \
         _##_cc_dllst_iter##_hptnt[3] = _##_cc_dllst_iter##_hptnt[2],       \
@@ -161,7 +187,8 @@ _cc_dllst_object##_element_type*** const                                   \
              _##_cc_dllst_iter##_hptnt[0] + 1) ? (NULL) :                  \
             (_cc_dllst_addr_xor(&(*(_##_cc_dllst_iter##_hptnt[3] - 1)),    \
                                 *(_##_cc_dllst_iter##_hptnt[2] - 1)) + 1)  \
-        )                                                                  \
+        ),                                                                 \
+        _cc_dllst_iter                                                     \
     )                                                                      \
 )
 
