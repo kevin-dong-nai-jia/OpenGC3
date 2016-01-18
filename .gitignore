@@ -11,8 +11,8 @@
 !src/ccc/
 !src/ccc/*.h
 
-!tests/
-!tests/*.c
+!test/
+!test/*.c
 
 !README.md
 !.gitignore
