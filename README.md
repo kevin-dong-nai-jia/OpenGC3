@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-A collection of high-performance containers implemented by C macros.
+A collection of **high-performance** containers implemented by C macros.
 
 ## Example
 
@@ -23,7 +23,7 @@ Please see the header files under src/ccc/ for more details.
 
 ## Motivation
 
-Though C++ has existed for many years, there’s still no **efficient** and **instinctive** ways to create containers in ANSI C code (using macros without any extensions provided by specific compilers).
+Though C++ has existed for many years, there’s still no **efficient** and **instinctive** ways to create containers in C99 standard.
 
 ## Contributor
 
