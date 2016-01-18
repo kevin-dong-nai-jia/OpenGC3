@@ -15,8 +15,10 @@ void* __cc_message(char* file, int line, char* type, int code, int count, ...)
 
     va_start(ap, count);
 
+    int is_error = (strcmp(type, "ERROR") == 0);
+
     fprintf(stderr, "\n[ CCC ] %s:%d:", file, line);
-    fprintf(stderr, "\n[ CCC ] %s: ", type);
+    fprintf(stderr, "\n[ CCC ] %s: %s", type, is_error ? "  " : "");
 
     while (count--)
         fprintf(stderr, "%s%s", va_arg(ap, char*), count ? " " : "\n");
@@ -25,7 +27,7 @@ void* __cc_message(char* file, int line, char* type, int code, int count, ...)
 
         #ifdef CCC_DEBUG_STRICT
 
-        if (strcmp(type, "ERROR") == 0)
+        if (is_error)
         {
             fprintf(stderr, "[ CCC ] TERMINATED: return status %d\n\n", code);
             exit(code);
