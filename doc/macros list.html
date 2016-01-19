@@ -42,7 +42,7 @@
 		<tr>
 			<th rowspan="2">Container</th>
 			<th colspan="3">Operation</th>
-			<th rowspan="2">Description</th>
+			<th rowspan="2">Short Description</th>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
@@ -52,87 +52,87 @@
 		<tr>
 			<th rowspan="17">doubly</br>linked list</br>(dllst)</th>
 			<td>constructor</td><td align="right">void</td><td>cc_dllst (Object, TYPE);</td>
-			<td></td>
+			<td>Create an empty dllst container.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td>destructor</td><td align="right">void</td><td>cc_dllst_dealloc (Object);</td>
-			<td></td>
+			<td>Deallocate the container manually.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="9">iterators</td><td align="right">void</td><td>cc_dllst_iter (Iter, Object);</td>
-			<td></td>
+			<td>Create an iterator for the dllst container.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">bool</td><td>cc_dllst_iter_is_valid (Iter);</td>
-			<td></td>
+			<td>Return TRUE iff the iterator is dereferenceable.</br>NOTE: This does NOT guarantee the existence of the element.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">TYPE&</td><td>cc_dllst_iter_dereference (Iter);</td>
-			<td></td>
+			<td>Return the reference to the element if the iterator is dereferenceable.</br>Return NULL otherwise.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">void</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
-			<td></td>
+			<td>Copy one iterator to the other.</br>Ignore the return value.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">void</td><td>cc_dllst_iter_clear (Iter);</td>
-			<td></td>
+			<td>Make the iterator not dereferenceable.</br>Ignore the return value.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">Iter</td><td>cc_dllst_iter_begin (Iter, Object);</td>
-			<td></td>
+			<td>Return and set the iterator to point to the first element.</br>Return NULL if the container is empty.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">Iter</td><td>cc_dllst_iter_end (Iter, Object);</td>
-			<td></td>
+			<td>Return and set the iterator to point to the last element.</br>Return NULL if the container is empty.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">Iter</td><td>cc_dllst_iter_incr (Iter);</td>
-			<td></td>
+			<td>Return and move forward the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">Iter</td><td>cc_dllst_iter_decr (Iter);</td>
-			<td></td>
+			<td>Return and move backward the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">traversal</td><td align="right"></td><td>cc_dllst_trav (Object, Iter) { ... }</td>
-			<td></td>
+			<td>Traversal all elements from beginning to end.</br>NOTE: This is NOT a function but a for-loop statement.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right"></td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
-			<td></td>
+			<td>Traversal all elements from end to beginning.</br>NOTE: This is NOT a function but a for-loop statement.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">capacity</td><td align="right">int</td><td>cc_dllst_size (Object);</td>
-			<td></td>
+			<td>Return the number of the elements in the container.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">bool</td><td>cc_dllst_empty (Object);</td>
-			<td></td>
+			<td>Return TRUE iff the container is empty.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">modifiers</td><td align="right">void</td><td>cc_dllst_push_front (Object, Value);</td>
-			<td></td>
+			<td>Insert an element at beginning.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td align="right">void</td><td>cc_dllst_push_back (Object, Value);</td>
-			<td></td>
+			<td>Insert an element at the end.</td>
 		</tr>
 		</table>
 	</body>
