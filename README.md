@@ -21,7 +21,7 @@ cc_dllst_dealloc(msg);
 
 ## Macros List
 
-* [dllst container macros list](http://cdn.rawgit.com/kevin-dong-nai-jia/C-Container-Collection/master/doc/macros%20list.html)
+* [dllst container macros list](http://rawgit.com/kevin-dong-nai-jia/C-Container-Collection/master/doc/macros%20list.html)
 
 ## Motivation
 
