@@ -197,8 +197,8 @@ _cc_dllst_iter##_element_type*** const                                     \
 /* dllst container traversal */
 
 
-#define cc_dllst_trav(_cc_dllst_iter,                                      \
-                      _cc_dllst_object)                                    \
+#define cc_dllst_trav(_cc_dllst_object,                                    \
+                      _cc_dllst_iter)                                      \
                                                                            \
 for                                                                        \
 (                                                                          \
@@ -208,8 +208,8 @@ for                                                                        \
 )
 
 
-#define cc_dllst_trav_rev(_cc_dllst_iter,                                  \
-                          _cc_dllst_object)                                \
+#define cc_dllst_trav_rev(_cc_dllst_object,                                \
+                          _cc_dllst_iter)                                  \
                                                                            \
 for                                                                        \
 (                                                                          \
