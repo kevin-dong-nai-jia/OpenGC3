@@ -19,7 +19,7 @@ cc_dllst_trav(msg_iter, msg)
 cc_dllst_dealloc(msg);
 ```
 
-## Macro List
+## Macros List
 
 <table>
 <tr>
