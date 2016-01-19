@@ -5,7 +5,8 @@
 
 # But not these...
 
-!*.c
+!doc
+!doc/*.html
 
 !src/
 !src/ccc/
