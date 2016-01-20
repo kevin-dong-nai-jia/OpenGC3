@@ -6,12 +6,14 @@
 		table
 		{
 			border-style: hidden;
+			border-bottom: 1px solid;
 			border-collapse: collapse;
 		}
 		th, td
 		{
 			border: 1px solid;
 			padding: 5px;
+			white-space: nowrap;
 		}
 		th, td:nth-child(-n+2)
 		{
@@ -22,12 +24,12 @@
 		td:nth-child(3)
 		{
 			text-align: right;
-			border-right-style: dotted;
+			border-right-style: hidden;
 			font-family: monospace;
 		}
 		td:nth-child(4)
 		{
-			border-left-style: dotted;
+			border-left-style: hidden;
 			font-family: monospace;
 		}
 		td:nth-child(5)
@@ -47,7 +49,7 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<th>Class</th><th>Return</th><th>Macro Function Prototype</th>
+			<th>Class</th><th colspan="2">Macro Function Prototype</th>
 			<td style="display:none"></td>
 		</tr>
 		<tr>
@@ -107,12 +109,12 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="2">traversal</td><td></td><td>cc_dllst_trav (Object, Iter) { ... }</td>
+			<td rowspan="2">traversal</td><td>STAT</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
 			<td>Traversal all elements from beginning to end.</br>NOTE: This is NOT a function but a for-loop statement.</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td></td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
+			<td style="display:none"></td><td>STAT</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
 			<td>Traversal all elements from end to beginning.</br>NOTE: This is NOT a function but a for-loop statement.</td>
 		</tr>
 		<tr>
