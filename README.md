@@ -21,9 +21,9 @@ cc_dllst_dealloc(msg);
 
 ## Macros List
 
-* [dllst container macros list](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros%20list.html) - in development
+* [dllst container](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros%20list.html) - in development
 
-* dcarr container macros list
+* dcarr container
 
 ## Motivation
 
