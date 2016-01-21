@@ -109,13 +109,14 @@ int main(void)
     printf("\n\nTest 4: \n");
 
     {
-        cc_dllst(test4, char*);
+        cc_dllst(test4, int);
         cc_dllst_iter(test4_iter, test4);
 
         cc_dllst_trav(test4, test4_iter)
-            printf("%s", ***test4_iter);
+            printf("%d", ***test4_iter);
 
-        cc_dllst_iter_incr(test4_iter);
+        if (cc_dllst_iter_incr(test4_iter) == NULL)
+            cc_dllst_iter_incr(test4_iter);
 
         (void)cc_dref(test4_iter);
     }
