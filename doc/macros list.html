@@ -60,7 +60,7 @@
 			<th width="64px">Warning</th><th width="64px">Error</th>
 		</tr>
 		<tr>
-			<th rowspan="17">doubly</br>linked list</br>(dllst)</th>
+			<th rowspan="19">doubly</br>linked list</br>(dllst)</th>
 			<td>constructor</td><td>DECL</td><td>cc_dllst (Object, TYPE);</td>
 			<td>Create an empty dllst container.</td>
 			<td>No</td><td>No</td>
@@ -86,7 +86,7 @@
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>TYPE&</td><td>cc_dllst_iter_dereference (Iter);</td>
-			<td>Return the reference to the element if the iterator is dereferenceable.</br>Return NULL otherwise.</td>
+			<td>Return a reference to the element if the iterator is dereferenceable.</br>Return NULL otherwise.</td>
 			<td>No</td><td>Yes</td>
 		</tr>
 		<tr>
@@ -148,6 +148,18 @@
 			<td style="display:none"></td><td>bool</td><td>cc_dllst_empty (Object);</td>
 			<td>Return TRUE iff the container is empty.</td>
 			<td>No</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td rowspan="2">access</td><td>TYPE&</td><td>cc_dllst_front (Object);</td>
+			<td>Return a reference to the first element in the container.</td>
+			<td>Yes</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>TYPE&</td><td>cc_dllst_back (Object);</td>
+			<td>Return a reference to the last element in the container.</td>
+			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
