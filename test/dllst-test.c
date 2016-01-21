@@ -121,5 +121,26 @@ int main(void)
     }
 
 
+    /* Test 5 */
+    /* Element access */
+
+    printf("\n\nTest 5: \n");
+
+    {
+        cc_dllst(test5, char*);
+        cc_dllst_iter(test5_iter, test5);
+
+        (void)cc_dllst_front(test5);
+        (void)cc_dllst_back(test5);
+        cc_dllst_push_front(test5, "\nFailed ");
+        cc_dllst_push_front(test5, "to access.\n");
+        cc_dllst_back(test5)  = "\nElement Access ";
+        cc_dllst_front(test5) = "Succeed\n";
+
+        cc_dllst_trav_rev(test5, test5_iter)
+            printf("%s", ***test5_iter);
+    }
+
+
     return 0;
 }
