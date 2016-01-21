@@ -86,7 +86,7 @@
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>TYPE&</td><td>cc_dllst_iter_dereference (Iter);</td>
-			<td>Return a reference to the element if the iterator is dereferenceable.</br>Return NULL otherwise.</td>
+			<td>Return a reference to the element if the iterator is dereferenceable.</br>It's an undefined behavior otherwise.</td>
 			<td>No</td><td>Yes</td>
 		</tr>
 		<tr>
@@ -104,25 +104,25 @@
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_begin (Iter, Object);</td>
-			<td>Return and set the iterator to point to the first element.</br>Return NULL if the container is empty.</td>
+			<td>Set (and return) the iterator to point to the first element.</br>Return NULL if the container is empty.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_end (Iter, Object);</td>
-			<td>Return and set the iterator to point to the last element.</br>Return NULL if the container is empty.</td>
+			<td>Set (and return) the iterator to point to the last element.</br>Return NULL if the container is empty.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_incr (Iter);</td>
-			<td>Return and move forward the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
+			<td>Move forward (and return) the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_decr (Iter);</td>
-			<td>Return and move backward the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
+			<td>Move backward (and return) the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
@@ -151,14 +151,14 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="2">access</td><td>TYPE&</td><td>cc_dllst_front (Object);</td>
-			<td>Return a reference to the first element in the container.</td>
+			<td rowspan="2">element</br>access</td><td>TYPE&</td><td>cc_dllst_front (Object);</td>
+			<td>Return a reference to the first element in the container.</br>It's an undefined behavior otherwise.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>TYPE&</td><td>cc_dllst_back (Object);</td>
-			<td>Return a reference to the last element in the container.</td>
+			<td>Return a reference to the last element in the container.</br>It's an undefined behavior otherwise.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
