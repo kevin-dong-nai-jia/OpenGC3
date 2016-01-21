@@ -63,14 +63,14 @@ _cc_dllst_iter##_element_type*** const                                     \
 
 #define cc_dllst_iter_dereference(_cc_dllst_iter)                          \
 (                                                                          \
-   *(                                                                      \
+ ***(                                                                      \
         (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                      \
         (                                                                  \
-            (_cc_dllst_iter##_element_type*)                               \
+            (_cc_dllst_iter##_element_type***)                             \
                 __cc_error_dllst_iter_cannot_dereference(_cc_dllst_iter)   \
         ) :                                                                \
         (                                                                  \
-            **_cc_dllst_iter                                               \
+            _cc_dllst_iter                                                 \
         )                                                                  \
     )                                                                      \
 )
