@@ -61,19 +61,19 @@
 		</tr>
 		<tr>
 			<th rowspan="19">doubly</br>linked list</br>(dllst)</th>
-			<td>constructor</td><td>&ltDECL&gt</td><td>cc_dllst (Object, TYPE);</td>
+			<td>constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
 			<td>Create an empty dllst container.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td>destructor</td><td>&ltSTAT&gt</td><td>cc_dllst_dealloc (Object);</td>
+			<td>destructor</td><td>&lt;STAT&gt;</td><td>cc_dllst_dealloc (Object);</td>
 			<td>Deallocate the container manually.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="9">iterators</td><td>&ltDECL&gt</td><td>cc_dllst_iter (Iter, Object);</td>
+			<td rowspan="9">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
 			<td>Create an iterator for the dllst container.</td>
 			<td>No</td><td>No</td>
 		</tr>
@@ -91,13 +91,13 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&ltIGNR&gt</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
+			<td style="display:none"></td><td>&lt;IGNR&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
 			<td>Copy one iterator to the other.</br>Ignore the return value.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&ltIGNR&gt</td><td>cc_dllst_iter_clear (Iter);</td>
+			<td style="display:none"></td><td>&lt;IGNR&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
 			<td>Make the iterator not dereferenceable.</br>Ignore the return value.</td>
 			<td>No</td><td>No</td>
 		</tr>
@@ -127,13 +127,13 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="2">traversal</td><td>&ltSTAT&gt</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
+			<td rowspan="2">traversal</td><td>&lt;STAT&gt;</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
 			<td>Traversal all elements from the beginning to the end.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&ltSTAT&gt</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
 			<td>Traversal all elements from the end to the beginning.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
@@ -163,13 +163,13 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="2">modifiers</td><td>&ltSTAT&gt</td><td>cc_dllst_push_front (Object, Value);</td>
+			<td rowspan="2">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
 			<td>Insert an element at the beginning.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&ltSTAT&gt</td><td>cc_dllst_push_back (Object, Value);</td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_push_back (Object, Value);</td>
 			<td>Insert an element at the end.</td>
 			<td>No</td><td>No</td>
 		</tr>
