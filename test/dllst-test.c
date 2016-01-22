@@ -119,6 +119,8 @@ int main(void)
             cc_dllst_iter_incr(test4_iter);
 
         (void)cc_dref(test4_iter);
+
+        cc_dllst_dealloc(test4);
     }
 
 
@@ -140,6 +142,8 @@ int main(void)
 
         cc_dllst_trav_rev(test5, test5_iter)
             printf("%s", ***test5_iter);
+
+        cc_dllst_dealloc(test5);
     }
 
 
