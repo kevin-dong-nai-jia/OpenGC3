@@ -247,7 +247,7 @@ for                                                                        \
 #define cc_dllst_front(_cc_dllst_object)                                   \
 (                                                                          \
   **(                                                                      \
-        (_cc_dllst_object.head == NULL) ?                                  \
+        (cc_dllst_empty(_cc_dllst_object)) ?                               \
         (                                                                  \
             (_cc_dllst_object##_element_type**)                            \
                 __cc_warning_dllst_is_empty(_cc_dllst_object)              \
@@ -262,7 +262,7 @@ for                                                                        \
 #define cc_dllst_back(_cc_dllst_object)                                    \
 (                                                                          \
   **(                                                                      \
-        (_cc_dllst_object.tail == NULL) ?                                  \
+        (cc_dllst_empty(_cc_dllst_object)) ?                               \
         (                                                                  \
             (_cc_dllst_object##_element_type**)                            \
                 __cc_warning_dllst_is_empty(_cc_dllst_object)              \
