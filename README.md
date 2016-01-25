@@ -25,10 +25,6 @@ cc_dllst_dealloc(msg);
 
 * dcarr container
 
-## Motivation
-
-Though C++ has existed for many years, there’s still no **efficient** and **instinctive** ways to create containers in C99 standard.
-
 ## Contributor
 
 Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>>
