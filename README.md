@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-A collection of **high-performance** containers implemented by C macros.
+A collection of **high-performance** containers implemented by standard C macros.
 
 ## Example
 
