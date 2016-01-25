@@ -84,18 +84,18 @@ _cc_dllst_iter##_element_type*** const                                     \
 
 #define cc_dllst_iter_copy(_cc_dllst_iter_dst,                             \
                            _cc_dllst_iter_src)                             \
-(                                                                          \
+{                                                                          \
     memcpy(_##_cc_dllst_iter_dst##_hptnt,                                  \
            _##_cc_dllst_iter_src##_hptnt,                                  \
            sizeof(_##_cc_dllst_iter_dst##_hptnt))                          \
-)
+}
 
 
 #define cc_dllst_iter_clear(_cc_dllst_iter)                                \
-(                                                                          \
+{                                                                          \
     memset(_##_cc_dllst_iter##_hptnt, 0,                                   \
            sizeof(_##_cc_dllst_iter##_hptnt))                              \
-)
+}
 
 
 #define _cc_dllst_addr_xor(_cc_dllst_addr_a,                               \
