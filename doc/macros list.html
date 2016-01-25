@@ -80,18 +80,6 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>bool</td><td>cc_dllst_iter_is_valid (Iter);</td>
-			<td>Return TRUE iff the iterator is dereferenceable.</br>NOTE: This does NOT guarantee the existence of the element.</td>
-			<td>No</td><td>No</td>
-		</tr>
-		<tr>
-			<td style="display:none"></td>
-			<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_iter_dereference (Iter);</td>
-			<td>Return a reference to the element if the iterator is dereferenceable.</br>It's an undefined behavior otherwise.</td>
-			<td>No</td><td>Yes</td>
-		</tr>
-		<tr>
-			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
 			<td>Copy one iterator to the other.</td>
 			<td>No</td><td>No</td>
@@ -101,6 +89,18 @@
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
 			<td>Make the iterator not dereferenceable.</td>
 			<td>No</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>bool</td><td>cc_dllst_iter_is_valid (Iter);</td>
+			<td>Return TRUE iff the iterator is dereferenceable.</br>NOTE: This does NOT guarantee the existence of the element.</td>
+			<td>No</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_iter_dereference (Iter);</td>
+			<td>Return a reference to the element if the iterator is dereferenceable.</br>It's an undefined behavior otherwise.</td>
+			<td>No</td><td>Yes</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
