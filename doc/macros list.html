@@ -39,6 +39,7 @@
 		}
 		td:nth-child(n+6)
 		{
+			width: 64px;
 			text-align: center;
 		}
 		</style>
@@ -57,10 +58,10 @@
 			<th style="display:none"></th>
 			<th>Class</th><th colspan="2">Macro Function Prototype</th>
 			<th style="display:none"></th>
-			<th width="64px">Warning</th><th width="64px">Error</th>
+			<th>Warning</th><th>Error</th>
 		</tr>
 		<tr>
-			<th rowspan="19">doubly</br>linked list</br>(dllst)</th>
+			<th rowspan="22">doubly</br>linked list</br>(dllst)</th>
 			<td>constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
 			<td>Create an empty dllst container.</td>
 			<td>No</td><td>No</td>
@@ -69,7 +70,7 @@
 			<td style="display:none"></td>
 			<td>destructor</td><td>&lt;STAT&gt;</td><td>cc_dllst_dealloc (Object);</td>
 			<td>Deallocate the container manually.</td>
-			<td>Yes</td><td>No</td>
+			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
@@ -91,14 +92,14 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;IGNR&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
-			<td>Copy one iterator to the other.</br>Ignore the return value.</td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
+			<td>Copy one iterator to the other.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;IGNR&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
-			<td>Make the iterator not dereferenceable.</br>Ignore the return value.</td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
+			<td>Make the iterator not dereferenceable.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
@@ -163,7 +164,7 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="2">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
+			<td rowspan="5">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
 			<td>Insert an element at the beginning.</td>
 			<td>No</td><td>No</td>
 		</tr>
@@ -172,6 +173,24 @@
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_push_back (Object, Value);</td>
 			<td>Insert an element at the end.</td>
 			<td>No</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_front (Object);</td>
+			<td>Remove an element at the beginning.</td>
+			<td>Yes</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_back (Object);</td>
+			<td>Remove an element at the end.</td>
+			<td>Yes</td><td>No</td>
+		</tr>
+		<tr>
+			<td style="display:none"></td>
+			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_clear (Object);</td>
+			<td>Remove all elements in the container.</td>
+			<td>Yes</td><td>No</td>
 		</tr>
 		</table>
 	</body>
