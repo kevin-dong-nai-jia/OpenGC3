@@ -71,7 +71,7 @@ void* __cc_message(char* file, int line, char* type, int code, int count, ...)
 /* CCC Error (terminate the process if CCC_DEBUG_STRICT is set) */
 
 
-#define __cc_error_dllst_iter_cannot_dereference(_cc_dllst_iter)           \
+#define __cc_error_dllst_iter_cannot_be_dereferenced(_cc_dllst_iter)       \
 (                                                                          \
     __cc_message(__FILE__, __LINE__, "ERROR", -1,                          \
                  3, #_cc_dllst_iter, "(a dllst iterator)",                 \
