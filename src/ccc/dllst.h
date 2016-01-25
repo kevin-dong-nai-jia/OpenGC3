@@ -67,7 +67,7 @@ _cc_dllst_iter##_element_type*** const                                     \
         (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                      \
         (                                                                  \
             (_cc_dllst_iter##_element_type***)                             \
-                __cc_error_dllst_iter_cannot_dereference(_cc_dllst_iter)   \
+               __cc_error_dllst_iter_cannot_be_dereferenced(_cc_dllst_iter)\
         ) :                                                                \
         (                                                                  \
             _cc_dllst_iter                                                 \
@@ -281,8 +281,15 @@ for                                                                        \
 #define cc_dllst_push_front(_cc_dllst_object,                              \
                             _cc_dllst_push_front_value)                    \
 {                                                                          \
-    _cc_dllst_node(_cc_dllst_object) *new_node =                           \
-        malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));                  \
+    _cc_dllst_node(_cc_dllst_object) *new_node;                            \
+                                                                           \
+    if (_cc_dllst_object.avsp == NULL)                                     \
+        new_node = malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));       \
+    else                                                                   \
+    {                                                                      \
+        new_node = _cc_dllst_object.avsp;                                  \
+        _cc_dllst_object.avsp = *((void**)_cc_dllst_object.avsp + 1);      \
+    }                                                                      \
                                                                            \
     new_node->val    = _cc_dllst_push_front_value;                         \
     new_node->lnk[1] = &(new_node->val);                                   \
@@ -308,8 +315,15 @@ for                                                                        \
 #define cc_dllst_push_back(_cc_dllst_object,                               \
                            _cc_dllst_push_back_value)                      \
 {                                                                          \
-    _cc_dllst_node(_cc_dllst_object) *new_node =                           \
-        malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));                  \
+    _cc_dllst_node(_cc_dllst_object) *new_node;                            \
+                                                                           \
+    if (_cc_dllst_object.avsp == NULL)                                     \
+        new_node = malloc(sizeof(_cc_dllst_node(_cc_dllst_object)));       \
+    else                                                                   \
+    {                                                                      \
+        new_node = _cc_dllst_object.avsp;                                  \
+        _cc_dllst_object.avsp = *((void**)_cc_dllst_object.avsp + 1);      \
+    }                                                                      \
                                                                            \
     new_node->val    = _cc_dllst_push_back_value;                          \
     new_node->lnk[1] = &(new_node->val);                                   \
@@ -333,15 +347,79 @@ for                                                                        \
 
 
 #define cc_dllst_pop_front(_cc_dllst_object)                               \
-    /* TODO */
+{                                                                          \
+    if (cc_dllst_empty(_cc_dllst_object))                                  \
+    {                                                                      \
+        __cc_warning_dllst_is_empty(_cc_dllst_object);                     \
+    }                                                                      \
+    else                                                                   \
+    {                                                                      \
+        void *begin = (void**)_cc_dllst_object.head - 1;                   \
+                                                                           \
+        if (cc_dllst_size(_cc_dllst_object) == 1)                          \
+        {                                                                  \
+            _cc_dllst_object.head = NULL;                                  \
+            _cc_dllst_object.tail = NULL;                                  \
+        }                                                                  \
+        else                                                               \
+        {                                                                  \
+            _cc_dllst_object.head =                                        \
+                _cc_dllst_addr_xor(*((void**)_cc_dllst_object.head - 1),   \
+                                   &(_cc_dllst_object.head)) + 1;          \
+                                                                           \
+            *((void**)_cc_dllst_object.head - 1) =                         \
+                _cc_dllst_addr_xor(*((void**)_cc_dllst_object.head - 1),   \
+                    _cc_dllst_addr_xor(&(_cc_dllst_object.head), begin));  \
+        }                                                                  \
+                                                                           \
+        *((void**)begin + 1) = _cc_dllst_object.avsp;                      \
+        _cc_dllst_object.avsp = begin;                                     \
+        _cc_dllst_object.size--;                                           \
+    }                                                                      \
+}
 
 
 #define cc_dllst_pop_back(_cc_dllst_object)                                \
-    /* TODO */
+{                                                                          \
+    if (cc_dllst_empty(_cc_dllst_object))                                  \
+    {                                                                      \
+        __cc_warning_dllst_is_empty(_cc_dllst_object);                     \
+    }                                                                      \
+    else                                                                   \
+    {                                                                      \
+        void *end = (void**)_cc_dllst_object.tail - 1;                     \
+                                                                           \
+        if (cc_dllst_size(_cc_dllst_object) == 1)                          \
+        {                                                                  \
+            _cc_dllst_object.head = NULL;                                  \
+            _cc_dllst_object.tail = NULL;                                  \
+        }                                                                  \
+        else                                                               \
+        {                                                                  \
+            _cc_dllst_object.tail =                                        \
+                _cc_dllst_addr_xor(*((void**)_cc_dllst_object.tail - 1),   \
+                                   &(_cc_dllst_object.tail)) + 1;          \
+                                                                           \
+            *((void**)_cc_dllst_object.tail - 1) =                         \
+                _cc_dllst_addr_xor(*((void**)_cc_dllst_object.tail - 1),   \
+                    _cc_dllst_addr_xor(&(_cc_dllst_object.tail), end));    \
+        }                                                                  \
+                                                                           \
+        *((void**)end + 1) = _cc_dllst_object.avsp;                        \
+        _cc_dllst_object.avsp = end;                                       \
+        _cc_dllst_object.size--;                                           \
+    }                                                                      \
+}
 
 
 #define cc_dllst_clear(_cc_dllst_object)                                   \
-    /* TODO */
+{                                                                          \
+    do                                                                     \
+    {                                                                      \
+        cc_dllst_pop_back(_cc_dllst_object);                               \
+    }                                                                      \
+    while (!(cc_dllst_empty(_cc_dllst_object)));                           \
+}
 
 
 
@@ -350,16 +428,28 @@ for                                                                        \
 
 #define cc_dllst_dealloc(_cc_dllst_object)                                 \
 {                                                                          \
-    cc_dllst_iter(iter, _cc_dllst_object);                                 \
-    cc_dllst_iter_begin(iter, _cc_dllst_object);                           \
-                                                                           \
     if (cc_dllst_size(_cc_dllst_object) >= 1)                              \
+    {                                                                      \
+        cc_dllst_iter(iter, _cc_dllst_object);                             \
+        cc_dllst_iter_begin(iter, _cc_dllst_object);                       \
+                                                                           \
         do                                                                 \
         {                                                                  \
             cc_dllst_iter_incr(iter);                                      \
+                                                                           \
             free(&(*(*(iter - 1) - 1)));                                   \
         }                                                                  \
         while (cc_dllst_iter_is_valid(iter));                              \
+    }                                                                      \
+                                                                           \
+    while (_cc_dllst_object.avsp != NULL)                                  \
+    {                                                                      \
+        void *avsp_bup = _cc_dllst_object.avsp;                            \
+                                                                           \
+        _cc_dllst_object.avsp = *((void**)_cc_dllst_object.avsp + 1);      \
+                                                                           \
+        free(avsp_bup);                                                    \
+    }                                                                      \
                                                                            \
     _cc_dllst_object.tail = NULL;                                          \
     _cc_dllst_object.head = NULL;                                          \
