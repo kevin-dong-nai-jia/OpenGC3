@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define CCC_DEBUG
 #include "../src/ccc/dllst.h"
@@ -144,6 +145,62 @@ int main(void)
             printf("%s", ***test5_iter);
 
         cc_dllst_dealloc(test5);
+    }
+
+
+    /* Test 6 */
+    /* Pop elements */
+
+    printf("\n\nTest 6: \n");
+
+    {
+        cc_dllst(test6, int);
+        cc_dllst_iter(test6_iter, test6);
+
+        cc_dllst_pop_front(test6);
+
+        cc_dllst_push_front(test6, 1);
+        cc_dllst_pop_front(test6);
+
+        cc_dllst_push_back(test6, 1);
+        cc_dllst_push_back(test6, 2);
+        cc_dllst_pop_back(test6);
+        cc_dllst_trav(test6, test6_iter)
+            printf("\nOnly '%d' remains in the container.\n", ***test6_iter);
+
+        cc_dllst_dealloc(test6);
+    }
+
+
+    /* Test 7 */
+    /* Frequently push and pop elements */
+
+    printf("\n\nTest 7: \n");
+
+    {
+        cc_dllst(test7, int);
+
+        float rate;
+        clock_t round_1, round_2;
+
+        puts("\nPushing back 10^7 elements...");
+        round_1 = clock();
+        for (int cnt = 0; cnt < 10000000; cnt++)
+            cc_dllst_push_back(test7, cnt);
+        round_1 = clock() - round_1;
+        puts("Clearing the dllst container...");
+        cc_dllst_clear(test7);
+
+        puts("\nPushing back 10^7 elements...");
+        round_2 = clock();
+        for (int cnt = 0; cnt < 10000000; cnt++)
+            cc_dllst_push_back(test7, cnt);
+        round_2 = clock() - round_2;
+        puts("Deallocating the dllst container...");
+        cc_dllst_dealloc(test7);
+
+        rate = ((float)round_1 / (float)round_2) - 1.0;
+        printf("\nIt's %g times faster than using cc_dllst_dealloc().\n", rate);
     }
 
 
