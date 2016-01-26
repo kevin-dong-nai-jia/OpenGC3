@@ -17,22 +17,22 @@
 #define cc_dllst(_cc_dllst_object,                                         \
                  _cc_dllst_element_type)                                   \
                                                                            \
-struct                                                                     \
-{                                                                          \
-    int size;                                                              \
-    void *head, *tail, *avsp;                                              \
-}   _cc_dllst_object = _cc_dllst_init;                                     \
+    struct                                                                 \
+    {                                                                      \
+        int size;                                                          \
+        void *head, *tail, *avsp;                                          \
+    }   _cc_dllst_object = _cc_dllst_init;                                 \
                                                                            \
-typedef _cc_dllst_element_type _cc_dllst_object##_element_type
+    typedef _cc_dllst_element_type _cc_dllst_object##_element_type
 
 
 #define _cc_dllst_node(_cc_dllst_object)                                   \
                                                                            \
-struct                                                                     \
-{                                                                          \
-    void *lnk[2];                                                          \
-    _cc_dllst_object##_element_type val;                                   \
-}
+    struct                                                                 \
+    {                                                                      \
+        void *lnk[2];                                                      \
+        _cc_dllst_object##_element_type val;                               \
+    }
 
 
 
@@ -45,12 +45,12 @@ struct                                                                     \
 #define cc_dllst_iter(_cc_dllst_iter,                                      \
                       _cc_dllst_object)                                    \
                                                                            \
-void **_##_cc_dllst_iter##_hptnt[5] = _cc_dllst_iter_hptnt_init;           \
+    void **_##_cc_dllst_iter##_hptnt[5] = _cc_dllst_iter_hptnt_init;       \
                                                                            \
-typedef _cc_dllst_object##_element_type _cc_dllst_iter##_element_type;     \
+    typedef _cc_dllst_object##_element_type _cc_dllst_iter##_element_type; \
                                                                            \
-_cc_dllst_iter##_element_type*** const                                     \
-    _cc_dllst_iter = (void*)(&(_##_cc_dllst_iter##_hptnt[2]))
+    _cc_dllst_iter##_element_type*** const                                 \
+        _cc_dllst_iter = (void*)(&(_##_cc_dllst_iter##_hptnt[2]))
 
 
 #define cc_dllst_iter_copy(_cc_dllst_iter_dst,                             \
@@ -71,9 +71,9 @@ _cc_dllst_iter##_element_type*** const                                     \
 
 #define cc_dllst_iter_is_valid(_cc_dllst_iter)                             \
 (                                                                          \
-    _cc_dllst_iter != NULL        &&                                       \
-    *(_cc_dllst_iter - 1) != NULL &&                                       \
-    *(_cc_dllst_iter + 1) != NULL                                          \
+       _cc_dllst_iter != NULL                                              \
+    && *(_cc_dllst_iter - 1) != NULL                                       \
+    && *(_cc_dllst_iter + 1) != NULL                                       \
 )
 
 
@@ -81,18 +81,14 @@ _cc_dllst_iter##_element_type*** const                                     \
 (                                                                          \
  ***(                                                                      \
         (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                      \
-        (                                                                  \
-            (_cc_dllst_iter##_element_type***)                             \
-               __cc_error_dllst_iter_cannot_be_dereferenced(_cc_dllst_iter)\
-        ) :                                                                \
-        (                                                                  \
-            _cc_dllst_iter                                                 \
-        )                                                                  \
+        (_cc_dllst_iter##_element_type***)                                 \
+            __cc_error_dllst_iter_cannot_be_dereferenced(_cc_dllst_iter) : \
+        _cc_dllst_iter                                                     \
     )                                                                      \
 )
 
 
-#define cc_dref(_cc_dllst_iter)                                            \
+#define cc_dllst_iter_deref(_cc_dllst_iter)                                \
 (                                                                          \
     cc_dllst_iter_dereference(_cc_dllst_iter)                              \
 )
@@ -248,13 +244,9 @@ for                                                                        \
 (                                                                          \
   **(                                                                      \
         (cc_dllst_empty(_cc_dllst_object)) ?                               \
-        (                                                                  \
-            (_cc_dllst_object##_element_type**)                            \
-                __cc_warning_dllst_is_empty(_cc_dllst_object)              \
-        ) :                                                                \
-        (                                                                  \
-            (_cc_dllst_object##_element_type**)_cc_dllst_object.head       \
-        )                                                                  \
+        (_cc_dllst_object##_element_type**)                                \
+            __cc_warning_dllst_is_empty(_cc_dllst_object) :                \
+        (_cc_dllst_object##_element_type**)_cc_dllst_object.head           \
     )                                                                      \
 )
 
@@ -263,13 +255,9 @@ for                                                                        \
 (                                                                          \
   **(                                                                      \
         (cc_dllst_empty(_cc_dllst_object)) ?                               \
-        (                                                                  \
-            (_cc_dllst_object##_element_type**)                            \
-                __cc_warning_dllst_is_empty(_cc_dllst_object)              \
-        ) :                                                                \
-        (                                                                  \
-            (_cc_dllst_object##_element_type**)_cc_dllst_object.tail       \
-        )                                                                  \
+        (_cc_dllst_object##_element_type**)                                \
+            __cc_warning_dllst_is_empty(_cc_dllst_object) :                \
+        (_cc_dllst_object##_element_type**)_cc_dllst_object.tail           \
     )                                                                      \
 )
 
