@@ -23,7 +23,7 @@ int main(void)
         cc_dllst_trav(msg, msg_iter)
             printf("%s", ***msg_iter);
 
-        cc_dllst_dealloc(msg);
+        cc_dllst_free(msg);
     }
 
 
@@ -51,7 +51,7 @@ int main(void)
                 printf("%s ", ***test1_iter);
         }
 
-        cc_dllst_dealloc(test1);
+        cc_dllst_free(test1);
     }
 
 
@@ -68,7 +68,7 @@ int main(void)
         while (cnt <= 10000000)
             cc_dllst_push_back(test2, cnt++);
 
-        cc_dllst_dealloc(test2);
+        cc_dllst_free(test2);
     }
 
 
@@ -100,7 +100,7 @@ int main(void)
             printf("%s ", (***test3_iter).msg[0]),
             printf("%s ", (***test3_iter).msg[1]);
 
-        cc_dllst_dealloc(test3);
+        cc_dllst_free(test3);
     }
 
 
@@ -121,7 +121,7 @@ int main(void)
 
         (void)cc_dllst_iter_deref(test4_iter);
 
-        cc_dllst_dealloc(test4);
+        cc_dllst_free(test4);
     }
 
 
@@ -144,7 +144,7 @@ int main(void)
         cc_dllst_trav_rev(test5, test5_iter)
             printf("%s", ***test5_iter);
 
-        cc_dllst_dealloc(test5);
+        cc_dllst_free(test5);
     }
 
 
@@ -168,7 +168,7 @@ int main(void)
         cc_dllst_trav(test6, test6_iter)
             printf("\nOnly '%d' remains in the container.\n", ***test6_iter);
 
-        cc_dllst_dealloc(test6);
+        cc_dllst_free(test6);
     }
 
 
@@ -197,10 +197,10 @@ int main(void)
             cc_dllst_push_back(test7, cnt);
         round_2 = clock() - round_2;
         puts("Deallocating the dllst container...");
-        cc_dllst_dealloc(test7);
+        cc_dllst_free(test7);
 
         rate = ((float)round_1 / (float)round_2) - 1.0;
-        printf("\nIt's %g times faster than using cc_dllst_dealloc().\n", rate);
+        printf("\nIt's %g times faster than using cc_dllst_free().\n", rate);
     }
 
 
