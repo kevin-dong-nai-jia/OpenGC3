@@ -119,7 +119,7 @@ int main(void)
         if (cc_dllst_iter_incr(test4_iter) == NULL)
             cc_dllst_iter_incr(test4_iter);
 
-        (void)cc_dref(test4_iter);
+        (void)cc_dllst_iter_deref(test4_iter);
 
         cc_dllst_dealloc(test4);
     }
