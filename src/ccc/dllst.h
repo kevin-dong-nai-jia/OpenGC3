@@ -8,7 +8,7 @@
 
 
 
-/* dllst container */
+/* dllst container constructor */
 
 
 #define _cc_dllst_init {0, NULL, NULL, NULL}
@@ -231,13 +231,8 @@ for                                                                        \
 )
 
 
-#define cc_dllst_resize(_cc_dllst_object,                                  \
-                        _cc_dllst_padding_value)                           \
-    /* TODO */
 
-
-
-/* dllst element access */
+/* dllst container element access */
 
 
 #define cc_dllst_front(_cc_dllst_object)                                   \
@@ -400,6 +395,25 @@ for                                                                        \
 }
 
 
+#define cc_dllst_insert(_cc_dllst_iter,                                    \
+                        _cc_dllst_insert_value)                            \
+    /* TODO */
+
+
+#define cc_dllst_erase(_cc_dllst_iter)                                     \
+    /* TODO */
+
+
+#define cc_dllst_swap(_cc_dllst_object_a,                                  \
+                      _cc_dllst_object_b)                                  \
+    /* TODO */
+
+
+#define cc_dllst_resize(_cc_dllst_object,                                  \
+                        _cc_dllst_padding_value)                           \
+    /* TODO */
+
+
 #define cc_dllst_clear(_cc_dllst_object)                                   \
 {                                                                          \
     do                                                                     \
@@ -411,10 +425,10 @@ for                                                                        \
 
 
 
-/* dllst container deallocation */
+/* dllst container destructor */
 
 
-#define cc_dllst_dealloc(_cc_dllst_object)                                 \
+#define cc_dllst_free(_cc_dllst_object)                                    \
 {                                                                          \
     if (cc_dllst_size(_cc_dllst_object) >= 1)                              \
     {                                                                      \
