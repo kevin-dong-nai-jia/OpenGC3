@@ -10,9 +10,9 @@ C Container Collection (CCC) is designed based on standard C macros and is fully
 
 ## Macros List
 
-* [dllst container](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros%20list.html) - an doubly linked list container
+* [dllst container](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros%20list.html) - a doubly linked list container
 
-* dcarr container - an dynamic cyclic array container
+* dcarr container - a dynamic cyclic array container
 
 ## Contributor
 
