@@ -69,7 +69,7 @@
 }
 
 
-#define cc_dllst_iter_is_valid(_cc_dllst_iter)                             \
+#define cc_dllst_iter_valid(_cc_dllst_iter)                                \
 (                                                                          \
        _cc_dllst_iter != NULL                                              \
     && *(_cc_dllst_iter - 1) != NULL                                       \
@@ -80,7 +80,7 @@
 #define cc_dllst_iter_dereference(_cc_dllst_iter)                          \
 (                                                                          \
  ***(                                                                      \
-        (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                      \
+        (!(cc_dllst_iter_valid(_cc_dllst_iter))) ?                         \
         (_cc_dllst_iter##_element_type***)                                 \
             __cc_error_dllst_iter_cannot_be_dereferenced(_cc_dllst_iter) : \
         _cc_dllst_iter                                                     \
@@ -147,7 +147,7 @@
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
+    (!(cc_dllst_iter_valid(_cc_dllst_iter))) ?                             \
     (                                                                      \
         (_cc_dllst_iter##_element_type***)                                 \
             __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)             \
@@ -169,7 +169,7 @@
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (!(cc_dllst_iter_is_valid(_cc_dllst_iter))) ?                          \
+    (!(cc_dllst_iter_valid(_cc_dllst_iter))) ?                             \
     (                                                                      \
         (_cc_dllst_iter##_element_type***)                                 \
             __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)             \
@@ -199,7 +199,7 @@
 for                                                                        \
 (                                                                          \
     cc_dllst_iter_begin(_cc_dllst_iter, _cc_dllst_object);                 \
-    cc_dllst_iter_is_valid(_cc_dllst_iter);                                \
+    cc_dllst_iter_valid(_cc_dllst_iter);                                   \
     cc_dllst_iter_incr(_cc_dllst_iter)                                     \
 )
 
@@ -210,7 +210,7 @@ for                                                                        \
 for                                                                        \
 (                                                                          \
     cc_dllst_iter_end(_cc_dllst_iter, _cc_dllst_object);                   \
-    cc_dllst_iter_is_valid(_cc_dllst_iter);                                \
+    cc_dllst_iter_valid(_cc_dllst_iter);                                   \
     cc_dllst_iter_decr(_cc_dllst_iter)                                     \
 )
 
@@ -441,7 +441,7 @@ for                                                                        \
                                                                            \
             free(&(*(*(iter - 1) - 1)));                                   \
         }                                                                  \
-        while (cc_dllst_iter_is_valid(iter));                              \
+        while (cc_dllst_iter_valid(iter));                                 \
     }                                                                      \
                                                                            \
     while (_cc_dllst_object.avsp != NULL)                                  \
