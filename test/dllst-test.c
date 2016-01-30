@@ -21,7 +21,7 @@ int main(void)
         cc_dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
 
         cc_dllst_trav(msg, msg_iter)
-            printf("%s", ***msg_iter);
+            printf("%s", cc_dllst_iter_deref(msg_iter));
 
         cc_dllst_free(msg);
     }
@@ -48,7 +48,7 @@ int main(void)
             cc_dllst_push_back (test1, num_str[cnt++]);
 
             cc_dllst_trav(test1, test1_iter)
-                printf("%s ", ***test1_iter);
+                printf("%s ", cc_dllst_iter_deref(test1_iter));
         }
 
         cc_dllst_free(test1);
@@ -97,8 +97,8 @@ int main(void)
         cc_dllst_push_back(test3, test3_2);
 
         cc_dllst_trav(test3, test3_iter)
-            printf("%s ", (***test3_iter).msg[0]),
-            printf("%s ", (***test3_iter).msg[1]);
+            printf("%s ", cc_dllst_iter_deref(test3_iter).msg[0]),
+            printf("%s ", cc_dllst_iter_deref(test3_iter).msg[1]);
 
         cc_dllst_free(test3);
     }
@@ -114,7 +114,7 @@ int main(void)
         cc_dllst_iter(test4_iter, test4);
 
         cc_dllst_trav(test4, test4_iter)
-            printf("%d", ***test4_iter);
+            printf("%d", cc_dllst_iter_deref(test4_iter));
 
         if (cc_dllst_iter_incr(test4_iter) == NULL)
             cc_dllst_iter_incr(test4_iter);
@@ -142,7 +142,7 @@ int main(void)
         cc_dllst_front(test5) = "Succeed\n";
 
         cc_dllst_trav_rev(test5, test5_iter)
-            printf("%s", ***test5_iter);
+            printf("%s", cc_dllst_iter_deref(test5_iter));
 
         cc_dllst_free(test5);
     }
@@ -166,7 +166,8 @@ int main(void)
         cc_dllst_push_back(test6, 2);
         cc_dllst_pop_back(test6);
         cc_dllst_trav(test6, test6_iter)
-            printf("\nOnly '%d' remains in the container.\n", ***test6_iter);
+            printf("\nOnly '%d' remains in the container.\n",
+                   cc_dllst_iter_deref(test6_iter));
 
         cc_dllst_free(test6);
     }
