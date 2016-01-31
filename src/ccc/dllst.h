@@ -50,7 +50,7 @@
     struct                                                                 \
     {                                                                      \
         int size, vcnt;                                                    \
-        void *pool, *pool_bup,                                             \
+        void *pool, *pool_dup,                                             \
              *head, *tail, *avsp;                                          \
         size_t node_size, block_size;                                      \
         ptrdiff_t val_offset, arr_offset;                                  \
@@ -327,9 +327,9 @@ for                                                                        \
         (_cc_dllst_object.vcnt == 0) ?                                     \
         (                                                                  \
             _cc_dllst_object.vcnt = _cc_dllst_block_arr_size,              \
-            _cc_dllst_object.pool_bup = _cc_dllst_object.pool,             \
+            _cc_dllst_object.pool_dup = _cc_dllst_object.pool,             \
             _cc_dllst_object.pool = malloc(_cc_dllst_object.block_size),   \
-            *(void**)_cc_dllst_object.pool = _cc_dllst_object.pool_bup     \
+            *(void**)_cc_dllst_object.pool = _cc_dllst_object.pool_dup     \
         ) :                                                                \
         (NULL)                                                             \
     ),                                                                     \
@@ -525,9 +525,9 @@ for                                                                        \
 {                                                                          \
     while (_cc_dllst_object.pool != NULL)                                  \
     {                                                                      \
-        _cc_dllst_object.pool_bup = _cc_dllst_object.pool;                 \
+        _cc_dllst_object.pool_dup = _cc_dllst_object.pool;                 \
         _cc_dllst_object.pool = *(void**)_cc_dllst_object.pool;            \
-        free(_cc_dllst_object.pool_bup);                                   \
+        free(_cc_dllst_object.pool_dup);                                   \
     }                                                                      \
                                                                            \
     _cc_dllst_object.tail = NULL;                                          \
