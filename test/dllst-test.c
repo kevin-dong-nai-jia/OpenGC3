@@ -3,6 +3,7 @@
 #include <time.h>
 
 #define CCC_DEBUG
+#define CCC_BLOCK_SIZE 1000
 #include "../src/ccc/dllst.h"
 
 
@@ -65,7 +66,7 @@ int main(void)
 
         int cnt = 0;
 
-        while (cnt <= 10000000)
+        while (cnt < 10000000)
             cc_dllst_push_back(test2, cnt++);
 
         cc_dllst_free(test2);
@@ -181,27 +182,17 @@ int main(void)
     {
         cc_dllst(test7, int);
 
-        float rate;
-        clock_t round_1, round_2;
-
         puts("\nPushing back 10^7 elements...");
-        round_1 = clock();
         for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(test7, cnt);
-        round_1 = clock() - round_1;
         puts("Clearing the dllst container...");
         cc_dllst_clear(test7);
 
         puts("\nPushing back 10^7 elements...");
-        round_2 = clock();
         for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(test7, cnt);
-        round_2 = clock() - round_2;
         puts("Deallocating the dllst container...");
         cc_dllst_free(test7);
-
-        rate = ((float)round_1 / (float)round_2) - 1.0;
-        printf("\nIt's %g times faster than using cc_dllst_free().\n", rate);
     }
 
 
