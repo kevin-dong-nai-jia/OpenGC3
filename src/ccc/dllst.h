@@ -39,11 +39,11 @@
                                                                            \
     typedef _cc_dllst_element_type _cc_dllst_object##_element_type;        \
                                                                            \
-    _cc_dllst_node(_cc_dllst_object) _##_cc_dllst_object##_node;           \
+    _cc_dllst_node(_cc_dllst_object) _cc_dllst_object##_internal_node;     \
                                                                            \
     ptrdiff_t _cc_dllst_object##_val_offset =                              \
-        (char*)&(_##_cc_dllst_object##_node.val) -                         \
-        (char*)&(_##_cc_dllst_object##_node.lnk)
+        (char*)&(_cc_dllst_object##_internal_node.val) -                   \
+        (char*)&(_cc_dllst_object##_internal_node.lnk)
 
 
 
