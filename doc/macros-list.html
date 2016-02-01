@@ -84,14 +84,14 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
-			<td>Copy one iterator to the other.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
+			<td>Copy one iterator to the other.</br>The evaluation of this expression should be ignored.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
-			<td>Make the iterator not dereferenceable.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
+			<td>Make the iterator not dereferenceable.</br>The evaluation of this expression should be ignored.</td>
 			<td>No</td><td>No</td>
 		</tr>
 		<tr>
@@ -108,26 +108,26 @@
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_begin (Iter, Object);</td>
-			<td>Set (and return) the iterator to point to the first element.</br>Return NULL if the container is empty.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_begin (Iter, Object);</td>
+			<td>Set the iterator to point to the first element.</br>Evaluate to NULL iff the container is empty.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_end (Iter, Object);</td>
-			<td>Set (and return) the iterator to point to the last element.</br>Return NULL if the container is empty.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_end (Iter, Object);</td>
+			<td>Set the iterator to point to the last element.</br>Evaluate to NULL iff the container is empty.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_incr (Iter);</td>
-			<td>Move forward (and return) the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_incr (Iter);</td>
+			<td>Move forward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>Iter</td><td>cc_dllst_iter_decr (Iter);</td>
-			<td>Move backward (and return) the iterator by one element.</br>Return NULL if the iterator doesn't point to any element.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_decr (Iter);</td>
+			<td>Move backward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
 		</tr>
 		<tr>
