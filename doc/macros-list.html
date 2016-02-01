@@ -18,13 +18,13 @@
 		{
 			border: 1px solid;
 			padding: 5px;
-			white-space: nowrap;
+			white-space: pre;
 		}
 		th, td:nth-child(-n+2)
 		{
 			text-align: center;
 			font-weight: normal;
-			font-family: Helvetica;
+			font-family: "Helvetica";
 		}
 		td:nth-child(3)
 		{
@@ -46,6 +46,11 @@
 			width: 64px;
 			text-align: center;
 		}
+		td:nth-child(8)
+		{
+			text-align: left;
+			font-family: monospace;
+		}
 		</style>
 	</head>
 
@@ -57,6 +62,7 @@
 			<th colspan="3">Operation</th>
 			<th rowspan="2">Short Description</th>
 			<th colspan="2">In Debug Mode</th>
+			<th rowspan="2">Similar Usage in C++</th>
 		</tr>
 		<tr>
 			<th style="display:none"></th>
@@ -65,136 +71,151 @@
 			<th>Warning</th><th>Error</th>
 		</tr>
 		<tr>
-			<th rowspan="22">doubly</br>linked list</br>(dllst)</th>
+			<th rowspan="21">doubly</br>linked list</br>(dllst)</th>
 			<td>constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
 			<td>Create an empty dllst container.</td>
 			<td>No</td><td>No</td>
+			<td>std::list&lt;TYPE&gt; Object;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td>destructor</td><td>&lt;STAT&gt;</td><td>cc_dllst_free (Object);</td>
-			<td>Deallocate the container manually.</td>
+			<td>Deallocate the container manually.</br>NOTE: <font face="monospace">cc_dllst()</font> and <font face="monospace">cc_dllst_free()</font> must exist in pairs.</td>
 			<td>No</td><td>No</td>
+			<td>Object.&#45;list();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td rowspan="9">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
+			<td rowspan="8">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
 			<td>Create an iterator for the dllst container.</td>
 			<td>No</td><td>No</td>
+			<td>std::list&lt;TYPE&gt;::iterator Iter;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_copy (Iter_Dst, Iter_Src);</td>
-			<td>Copy one iterator to the other.</br>The evaluation of this expression should be ignored.</td>
+			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_copy (Iter_DST, Iter_SRC);</td>
+			<td>Assign an iterator, <font face="monospace">Iter_SRC</font>, to <font face="monospace">Iter_DST</font>.</br>The evaluation of this expression should be ignored.</td>
 			<td>No</td><td>No</td>
-		</tr>
-		<tr>
-			<td style="display:none"></td>
-			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_clear (Iter);</td>
-			<td>Make the iterator not dereferenceable.</br>The evaluation of this expression should be ignored.</td>
-			<td>No</td><td>No</td>
+			<td>Iter_DST = Iter_SRC;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>bool</td><td>cc_dllst_iter_valid (Iter);</td>
 			<td>Return TRUE iff the iterator is dereferenceable.</br>NOTE: This does NOT guarantee the existence of the element.</td>
 			<td>No</td><td>No</td>
+			<td><font face="Times New Roman">Not supported in C++</font></td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>TYPE&amp;</br>TYPE&amp;</td><td>cc_dllst_iter_deref (Iter);</br>cc_dllst_iter_dereference (Iter);</td>
 			<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not dereferenceable.</td>
 			<td>No</td><td>Yes</td>
+			<td>*Iter;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_begin (Iter, Object);</td>
 			<td>Set the iterator to point to the first element.</br>Evaluate to NULL iff the container is empty.</td>
 			<td>Yes</td><td>No</td>
+			<td>Iter.begin();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_end (Iter, Object);</td>
 			<td>Set the iterator to point to the last element.</br>Evaluate to NULL iff the container is empty.</td>
 			<td>Yes</td><td>No</td>
+			<td>--Iter.end();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_incr (Iter);</td>
 			<td>Move forward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
+			<td>Iter++;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_decr (Iter);</td>
 			<td>Move backward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
 			<td>Yes</td><td>No</td>
+			<td>Iter--;</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">traversal</td><td>&lt;STAT&gt;</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
 			<td>Traversal all elements from the beginning to the end.</td>
 			<td>Yes</td><td>No</td>
+			<td>for (std::list&lt;TYPE&gt;::iterator</br>     Iter =  Object.begin();</br>     Iter != Object.end();</br>     Iter++) { ... }</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
 			<td>Traversal all elements from the end to the beginning.</td>
 			<td>Yes</td><td>No</td>
+			<td>for (std::list&lt;TYPE&gt;::reverse_iterator</br>     Iter =  Object.rbegin();</br>     Iter != Object.rend();</br>     Iter++) { ... }</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">capacity</td><td>int</td><td>cc_dllst_size (Object);</td>
 			<td>Return the number of the elements in the container.</td>
 			<td>No</td><td>No</td>
+			<td>Object.size();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>bool</td><td>cc_dllst_empty (Object);</td>
 			<td>Return TRUE iff the container is empty.</td>
 			<td>No</td><td>No</td>
+			<td>Object.empty();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="2">element</br>access</td><td>TYPE&amp;</td><td>cc_dllst_front (Object);</td>
 			<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			<td>Yes</td><td>No</td>
+			<td>Object.front();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_back (Object);</td>
 			<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
 			<td>Yes</td><td>No</td>
+			<td>Object.back();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td rowspan="5">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
 			<td>Insert an element at the beginning.</td>
 			<td>No</td><td>No</td>
+			<td>Object.push_front(Value);</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_push_back (Object, Value);</td>
 			<td>Insert an element at the end.</td>
 			<td>No</td><td>No</td>
+			<td>Object.push_back(Value);</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_front (Object);</td>
 			<td>Remove an element at the beginning.</td>
 			<td>Yes</td><td>No</td>
+			<td>Object.pop_front();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_back (Object);</td>
 			<td>Remove an element at the end.</td>
 			<td>Yes</td><td>No</td>
+			<td>Object.pop_back();</td>
 		</tr>
 		<tr>
 			<td style="display:none"></td>
 			<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_clear (Object);</td>
-			<td>Remove all elements in the container.</td>
+			<td>Remove all elements in the container but not deallocate them.</td>
 			<td>Yes</td><td>No</td>
+			<td>Object.clear();</td>
 		</tr>
 		</table>
 	</body>
