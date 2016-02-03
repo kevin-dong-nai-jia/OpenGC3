@@ -135,7 +135,7 @@
     _Pragma("pack(pop)")
 
 
-#define cc_dllst_iter_copy(_cc_dllst_iter_dst, _cc_dllst_iter_src)         \
+#define cc_dllst_iter_assign(_cc_dllst_iter_dst, _cc_dllst_iter_src)       \
 (                                                                          \
     memcpy(_cc_dllst_iter_dst.info,                                        \
            _cc_dllst_iter_src.info,                                        \
