@@ -126,7 +126,7 @@
     _cc_dllst_iter.pobj = (void*)&(_cc_dllst_object);
 
 
-#define cc_dllst_iter_packed(_cc_dllst_iter, _cc_dllst_object)             \
+#define cc_dllst_packed_iter(_cc_dllst_iter, _cc_dllst_object)             \
                                                                            \
     _Pragma("pack(push,1)")                                                \
                                                                            \
