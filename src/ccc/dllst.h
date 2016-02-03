@@ -112,8 +112,8 @@
     }
 
 
-#define _cc_dllst_iter_struct_init {NULL, NULL,                            \
-                                    {NULL, NULL, NULL, NULL, NULL}}
+#define _cc_dllst_iter_struct_init {NULL,                                  \
+                                    NULL, {NULL, NULL, NULL, NULL, NULL}}
 
 
 #define cc_dllst_iter(_cc_dllst_iter,  _cc_dllst_object)                   \
