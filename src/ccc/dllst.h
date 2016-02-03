@@ -60,8 +60,8 @@
     }
 
 
-#define _cc_dllst_struct_init {0, 0, NULL, NULL, NULL,                     \
-                               NULL, NULL, 0, 0, 0, 0, 0}
+#define _cc_dllst_struct_init {0, 0, NULL, NULL, NULL, NULL, NULL,         \
+                               0, 0, 0, 0, 0}
 
 
 #define cc_dllst(_cc_dllst_object, _cc_dllst_elem_type)                    \
