@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define CCC_DEBUG
-#define CCC_BLOCK_SIZE 1000
+#define CCC_BLOCK_ELEM 1000
 #include "../src/ccc/dllst.h"
 
 
@@ -193,6 +193,35 @@ int main(void)
             cc_dllst_push_back(test7, cnt);
         puts("Deallocating the dllst container...");
         cc_dllst_free(test7);
+    }
+
+
+    /* Test 8 */
+    /* Test packed structure */
+
+    printf("\n\nTest 8: (no output)\n");
+
+    {
+        cc_dllst_packed(test8_char       , char);
+        cc_dllst_packed(test8_short      , short);
+        cc_dllst_packed(test8_int        , int);
+        cc_dllst_packed(test8_long_int   , long int);
+        cc_dllst_packed(test8_long_double, long double);
+
+        for (int cnt = 0; cnt < 20000000; cnt++)
+        {
+            cc_dllst_push_back(test8_char, cnt);
+            cc_dllst_push_back(test8_short, cnt);
+            cc_dllst_push_back(test8_int, cnt);
+            cc_dllst_push_back(test8_long_int, cnt);
+            cc_dllst_push_back(test8_long_double, cnt);
+        }
+
+        cc_dllst_free(test8_char);
+        cc_dllst_free(test8_short);
+        cc_dllst_free(test8_int);
+        cc_dllst_free(test8_long_int);
+        cc_dllst_free(test8_long_double);
     }
 
 
