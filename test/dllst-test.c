@@ -129,7 +129,7 @@ int main(void)
     /* Test 5 */
     /* Element access */
 
-    printf("\n\nTest 5: \n");
+    printf("\n\nTest 5: ");
 
     {
         cc_dllst(test5, char*);
@@ -137,10 +137,10 @@ int main(void)
 
         (void)cc_dllst_front(test5);
         (void)cc_dllst_back(test5);
-        cc_dllst_push_front(test5, "\nFailed ");
+        cc_dllst_push_front(test5, "Failed ");
         cc_dllst_push_front(test5, "to access.\n");
-        cc_dllst_back(test5)  = "\nElement Access ";
-        cc_dllst_front(test5) = "Succeed\n";
+        cc_dllst_back(test5)  = "Element access ";
+        cc_dllst_front(test5) = "succeed.\n";
 
         cc_dllst_trav_rev(test5, test5_iter)
             printf("%s", cc_dllst_iter_deref(test5_iter));
@@ -199,7 +199,7 @@ int main(void)
     /* Test 8 */
     /* Test packed structure */
 
-    printf("\n\nTest 8: (no output)\n");
+    printf("\n\nTest 8: \n\n");
 
     {
         cc_dllst_packed(test8_char       , char);
@@ -215,6 +215,18 @@ int main(void)
             cc_dllst_push_back(test8_int, cnt);
             cc_dllst_push_back(test8_long_int, cnt);
             cc_dllst_push_back(test8_long_double, cnt);
+        }
+
+        cc_dllst_packed_iter(iter, test8_char);
+
+        cc_dllst_trav(test8_char, iter)
+        {
+            char var;
+
+            if ((var = cc_dllst_iter_deref(iter)) > 0)
+                printf("%d%c", var, (var != 127) ? ' ' : '\n');
+            else if (var != 0)
+                break;
         }
 
         cc_dllst_free(test8_char);
