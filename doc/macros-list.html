@@ -55,7 +55,7 @@
 				<th rowspan="2">Container</th>
 				<th colspan="3">Operation</th>
 				<th rowspan="2">Short Description</th>
-				<th colspan="2">In Debug Mode</th>
+				<th colspan="2">Debug Mode</th>
 			</tr>
 			<tr>
 				<th style="display:none"></th>
@@ -200,6 +200,16 @@
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_clear (Object);</td>
 				<td>Remove all elements in the container without deallocating.</td>
 				<td>Yes</td><td>No</td>
+			</tr>
+			<tr>
+				<td rowspan="2">settings</td>
+				<td rowspan="2">flags</td><td>#define</td><td>CCC_DEBUG</td>
+				<td colspan="3">Corresponding warning messages will be generated if this flag is set.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td>#define</td><td>CCC_BLOCK_ELEM &lt;NUMBER&gt;</td>
+				<td colspan="3">Set the number of nodes that a single block in the memory pool can hold.</td>
 			</tr>
 		</tbody>
 		</table>
