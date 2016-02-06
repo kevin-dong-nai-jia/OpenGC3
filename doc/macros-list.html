@@ -64,7 +64,7 @@
 				<th>Warning</th><th>Error</th>
 			</tr>
 			<tr>
-				<th rowspan="23">doubly</br>linked list</br>(dllst)</th>
+				<th rowspan="22">doubly</br>linked list</br>(dllst)</th>
 				<td rowspan="2">constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
 				<td>Create a dllst container.</br>Use aligned structure to enhance performance.</td>
 				<td>No</td><td>No</td>
@@ -83,19 +83,13 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="9">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
-				<td>Create an iterator for the dllst container.</br>The iterator might be invalid if the container is modified.</td>
+				<td rowspan="8">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
+				<td>Create an iterator for the (packed) dllst container.</br>The iterator might be invalid if the container is modified.</td>
 				<td>No</td><td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;DECL&gt;</td><td>cc_dllst_packed_iter (Iter, Object);</td>
-				<td>Create an iterator for the packed dllst container.</br>The iterator might be invalid if the container is modified.</td>
-				<td>No</td><td>No</td>
-			</tr>
-			<tr>
-				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_assign (Iter, Iter);</td>
+				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_copy (Iter, Iter);</td>
 				<td>Assign the value of the right iterator to the left iterator.</br>The evaluated value of this expression should be ignored.</td>
 				<td>No</td><td>No</td>
 			</tr>
@@ -208,7 +202,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>#define</td><td>CCC_BLOCK_ELEM &lt;NUMBER&gt;</td>
+				<td style="display:none"></td><td>#define</td><td>CCC_BLOCK_SIZE &lt;NUMBER&gt;</td>
 				<td colspan="3">Set the number of nodes that a single block in the memory pool can hold.</td>
 			</tr>
 		</tbody>
