@@ -16,7 +16,7 @@
                                                                            \
     struct                                                                 \
     {                                                                      \
-        _cc_dllst_object##_elem_type val;                                  \
+        _cc_dllst_object##_element_t val;                                  \
         void *link;                                                        \
     }
 
@@ -25,12 +25,12 @@
 /* dllst container block */
 
 
-#define CCC_BLOCK_ELEM_DEFAULT 16
+#define CCC_BLOCK_SIZE_DEFAULT 16
 
-#ifdef CCC_BLOCK_ELEM
-    #define _cc_dllst_block_elem CCC_BLOCK_ELEM
+#ifdef CCC_BLOCK_SIZE
+    #define _cc_dllst_block_node_num CCC_BLOCK_SIZE
 #else
-    #define _cc_dllst_block_elem CCC_BLOCK_ELEM_DEFAULT
+    #define _cc_dllst_block_node_num CCC_BLOCK_SIZE_DEFAULT
 #endif
 
 
@@ -39,7 +39,7 @@
     struct                                                                 \
     {                                                                      \
         void *next;                                                        \
-        _cc_dllst_node(_cc_dllst_object) arr[_cc_dllst_block_elem];        \
+        _cc_dllst_object##_node_t arr[_cc_dllst_block_node_num];           \
     }
 
 
@@ -53,7 +53,7 @@
     {                                                                      \
         int size, vcnt;                                                    \
         void *pool, *pool_dup;                                             \
-        _cc_dllst_object##_elem_type *avsp, *head, *tail;                  \
+        _cc_dllst_object##_element_t *avsp, *head, *tail;                  \
                                                                            \
         size_t node_size, block_size;                                      \
         ptrdiff_t val_offset, link_offset, arr_offset;                     \
@@ -64,37 +64,34 @@
                                0, 0, 0, 0, 0}
 
 
-#define cc_dllst(_cc_dllst_object, _cc_dllst_elem_type)                    \
+#define cc_dllst(_cc_dllst_object, _cc_dllst_element_t)                    \
                                                                            \
-    typedef _cc_dllst_elem_type _cc_dllst_object##_elem_type;              \
+    typedef _cc_dllst_element_t _cc_dllst_object##_element_t;              \
+    typedef _cc_dllst_struct(_cc_dllst_object) _cc_dllst_object##_t;       \
+    typedef _cc_dllst_node  (_cc_dllst_object) _cc_dllst_object##_node_t;  \
+    typedef _cc_dllst_block (_cc_dllst_object) _cc_dllst_object##_block_t; \
                                                                            \
-    _cc_dllst_struct(_cc_dllst_object)                                     \
-        _cc_dllst_object = _cc_dllst_struct_init;                          \
+    _cc_dllst_object##_t       _cc_dllst_object = _cc_dllst_struct_init;   \
+    _cc_dllst_object##_node_t  _cc_dllst_object##_node;                    \
+    _cc_dllst_object##_block_t _cc_dllst_object##_block;                   \
                                                                            \
-    _cc_dllst_node(_cc_dllst_object) _cc_dllst_object##_node;              \
-                                                                           \
-    _cc_dllst_object.node_size = sizeof(_cc_dllst_object##_node);          \
-                                                                           \
-    _cc_dllst_object.val_offset = &(_cc_dllst_object##_node.val) -         \
-                                  (_cc_dllst_object##_elem_type*)          \
-                                      &(_cc_dllst_object##_node.link);     \
-                                                                           \
-    _cc_dllst_object.link_offset = (char*)&(_cc_dllst_object##_node.link) -\
-                                   (char*)&(_cc_dllst_object##_node.val);  \
-                                                                           \
-    _cc_dllst_block(_cc_dllst_object) _cc_dllst_object##_block;            \
-                                                                           \
+    _cc_dllst_object.node_size  = sizeof(_cc_dllst_object##_node);         \
     _cc_dllst_object.block_size = sizeof(_cc_dllst_object##_block);        \
                                                                            \
-    _cc_dllst_object.arr_offset = (char*)&(_cc_dllst_object##_block.arr) - \
-                                  (char*)&(_cc_dllst_object##_block.next);
+    _cc_dllst_object.val_offset  = &(_cc_dllst_object##_node.val) -        \
+                                   (_cc_dllst_object##_element_t*)         \
+                                       &(_cc_dllst_object##_node.link);    \
+    _cc_dllst_object.link_offset = (char*)&(_cc_dllst_object##_node.link) -\
+                                   (char*)&(_cc_dllst_object##_node.val);  \
+    _cc_dllst_object.arr_offset  = (char*)&(_cc_dllst_object##_block.arr) -\
+                                   (char*)&(_cc_dllst_object##_block.next);
 
 
-#define cc_dllst_packed(_cc_dllst_object, _cc_dllst_elem_type)             \
+#define cc_dllst_packed(_cc_dllst_object, _cc_dllst_element_t)             \
                                                                            \
     _Pragma("pack(push,1)")                                                \
                                                                            \
-    cc_dllst(_cc_dllst_object, _cc_dllst_elem_type);                       \
+    cc_dllst(_cc_dllst_object, _cc_dllst_element_t);                       \
                                                                            \
     _Pragma("pack(pop)")
 
@@ -107,8 +104,8 @@
                                                                            \
     struct                                                                 \
     {                                                                      \
-        _cc_dllst_struct(_cc_dllst_object) *pobj;                          \
-        _cc_dllst_object##_elem_type **iter, *info[5];                     \
+        _cc_dllst_object##_t *pobj;                                        \
+        _cc_dllst_object##_element_t **iter, *info[5];                     \
     }
 
 
@@ -116,26 +113,17 @@
                                     NULL, {NULL, NULL, NULL, NULL, NULL}}
 
 
-#define cc_dllst_iter(_cc_dllst_iter,  _cc_dllst_object)                   \
+#define cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object)                    \
                                                                            \
-    _cc_dllst_iter_struct(_cc_dllst_object)                                \
-        _cc_dllst_iter = _cc_dllst_iter_struct_init;                       \
+    typedef _cc_dllst_iter_struct(_cc_dllst_object) _cc_dllst_iter##_t;    \
+                                                                           \
+    _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;        \
                                                                            \
     _cc_dllst_iter.iter = &(_cc_dllst_iter.info[2]);                       \
-                                                                           \
-    _cc_dllst_iter.pobj = (void*)&(_cc_dllst_object);
+    _cc_dllst_iter.pobj = &(_cc_dllst_object);
 
 
-#define cc_dllst_packed_iter(_cc_dllst_iter, _cc_dllst_object)             \
-                                                                           \
-    _Pragma("pack(push,1)")                                                \
-                                                                           \
-    cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object);                       \
-                                                                           \
-    _Pragma("pack(pop)")
-
-
-#define cc_dllst_iter_assign(_cc_dllst_iter_dst, _cc_dllst_iter_src)       \
+#define cc_dllst_iter_copy(_cc_dllst_iter_dst, _cc_dllst_iter_src)         \
 (                                                                          \
     memcpy(_cc_dllst_iter_dst.info,                                        \
            _cc_dllst_iter_src.info,                                        \
@@ -322,7 +310,7 @@ for                                                                        \
     (                                                                      \
         (_cc_dllst_object.vcnt == 0) ?                                     \
         (                                                                  \
-            _cc_dllst_object.vcnt = _cc_dllst_block_elem,                  \
+            _cc_dllst_object.vcnt = _cc_dllst_block_node_num,              \
             _cc_dllst_object.pool_dup = _cc_dllst_object.pool,             \
             _cc_dllst_object.pool = malloc(_cc_dllst_object.block_size),   \
             *(void**)_cc_dllst_object.pool = _cc_dllst_object.pool_dup     \
@@ -341,7 +329,7 @@ for                                                                        \
 #define cc_dllst_push_front(_cc_dllst_object, _cc_dllst_push_front_value)  \
 {                                                                          \
     void *node, **link;                                                    \
-    _cc_dllst_object##_elem_type *val;                                     \
+    _cc_dllst_object##_element_t *val;                                     \
                                                                            \
     if (_cc_dllst_object.avsp == NULL)                                     \
     {                                                                      \
@@ -381,7 +369,7 @@ for                                                                        \
 #define cc_dllst_push_back(_cc_dllst_object, _cc_dllst_push_back_value)    \
 {                                                                          \
     void *node, **link;                                                    \
-    _cc_dllst_object##_elem_type *val;                                     \
+    _cc_dllst_object##_element_t *val;                                     \
                                                                            \
     if (_cc_dllst_object.avsp == NULL)                                     \
     {                                                                      \
