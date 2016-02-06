@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define CCC_DEBUG
-#define CCC_BLOCK_ELEM 1000
+#define CCC_BLOCK_SIZE 1000
 #include "../src/ccc/dllst.h"
 
 
@@ -217,7 +217,7 @@ int main(void)
             cc_dllst_push_back(test8_long_double, cnt);
         }
 
-        cc_dllst_packed_iter(iter, test8_char);
+        cc_dllst_iter(iter, test8_char);
 
         cc_dllst_trav(test8_char, iter)
         {
