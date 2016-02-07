@@ -67,9 +67,9 @@
 #define cc_dllst(_cc_dllst_object, _cc_dllst_element_t)                    \
                                                                            \
     typedef _cc_dllst_element_t _cc_dllst_object##_element_t;              \
-    typedef _cc_dllst_struct(_cc_dllst_object) _cc_dllst_object##_t;       \
     typedef _cc_dllst_node  (_cc_dllst_object) _cc_dllst_object##_node_t;  \
     typedef _cc_dllst_block (_cc_dllst_object) _cc_dllst_object##_block_t; \
+    typedef _cc_dllst_struct(_cc_dllst_object) _cc_dllst_object##_t;       \
                                                                            \
     _cc_dllst_object##_t       _cc_dllst_object = _cc_dllst_struct_init;   \
     _cc_dllst_object##_node_t  _cc_dllst_object##_node;                    \
@@ -115,6 +115,7 @@
 
 #define cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object)                    \
                                                                            \
+    typedef _cc_dllst_object##_element_t _cc_dllst_iter##_element_t;       \
     typedef _cc_dllst_iter_struct(_cc_dllst_object) _cc_dllst_iter##_t;    \
                                                                            \
     _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;        \
