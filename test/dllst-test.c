@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define CCC_DEBUG
+#define CCC_MESSAGE
 #define CCC_BLOCK_SIZE 1000
 #include "../src/ccc/dllst.h"
 
