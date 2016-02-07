@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "debug.h"
+#include "message.h"
 
 
 
@@ -411,7 +411,7 @@ for                                                                        \
 {                                                                          \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
     {                                                                      \
-        __cc_warning_dllst_is_empty(_cc_dllst_object);                     \
+        (void)__cc_warning_dllst_is_empty(_cc_dllst_object);               \
     }                                                                      \
     else                                                                   \
     {                                                                      \
@@ -444,7 +444,7 @@ for                                                                        \
 {                                                                          \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
     {                                                                      \
-        __cc_warning_dllst_is_empty(_cc_dllst_object);                     \
+        (void)__cc_warning_dllst_is_empty(_cc_dllst_object);               \
     }                                                                      \
     else                                                                   \
     {                                                                      \
