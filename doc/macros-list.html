@@ -39,9 +39,8 @@
 		{
 			font-family: "Times New Roman";
 		}
-		td:nth-child(n+6)
+		td:nth-child(6)
 		{
-			width: 64px;
 			text-align: center;
 		}
 		</style>
@@ -55,155 +54,155 @@
 				<th rowspan="2">Container</th>
 				<th colspan="3">Operation</th>
 				<th rowspan="2">Short Description</th>
-				<th colspan="2">Debug Mode</th>
+				<th colspan="1">Debug</th>
 			</tr>
 			<tr>
 				<th style="display:none"></th>
 				<th>Class</th><th colspan="2">Macros Prototype</th>
 				<th style="display:none"></th>
-				<th>Warning</th><th>Error</th>
+				<th>Warning</th>
 			</tr>
 			<tr>
-				<th rowspan="22">doubly</br>linked list</br>(dllst)</th>
+				<td rowspan="22">doubly</br>linked list</br>(dllst)</td>
 				<td rowspan="2">constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
 				<td>Create a dllst container.</br>Use aligned structure to enhance performance.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;DECL&gt;</td><td>cc_dllst_packed (Object, TYPE);</td>
 				<td>Create a packed dllst container.</br>Use packed structure to reduce memory usage.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td>destructor</td><td>&lt;STAT&gt;</td><td>cc_dllst_free (Object);</td>
 				<td>Deallocate the container manually.</br>The constructor and destructor should exist in pairs.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="8">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
 				<td>Create an iterator for the (packed) dllst container.</br>The iterator might be invalid if the container is modified.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_copy (Iter, Iter);</td>
 				<td>Assign the value of the right iterator to the left iterator.</br>The evaluated value of this expression should be ignored.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>bool</td><td>cc_dllst_iter_valid (Iter);</td>
 				<td>Return TRUE iff the iterator is dereferenceable.</br>This does not guarantee the existence of the element.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>TYPE&amp;</br>TYPE&amp;</td><td>cc_dllst_iter_deref (Iter);</br>cc_dllst_iter_dereference (Iter);</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not dereferenceable.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_begin (Iter, Object);</td>
 				<td>Set the iterator to point to the first element.</br>Evaluate to NULL iff the container is empty.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_end (Iter, Object);</td>
 				<td>Set the iterator to point to the last element.</br>Evaluate to NULL iff the container is empty.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_incr (Iter);</td>
 				<td>Move forward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;EXPR&gt;</td><td>cc_dllst_iter_decr (Iter);</td>
 				<td>Move backward the iterator by one element.</br>Evaluate to NULL iff the iterator doesn't point to any element.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="2">traversal</td><td>&lt;STAT&gt;</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
 				<td>Traversal all elements from the beginning to the end.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
 				<td>Traversal all elements from the end to the beginning.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="2">capacity</td><td>int</td><td>cc_dllst_size (Object);</td>
 				<td>Return the number of the elements in the container.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>bool</td><td>cc_dllst_empty (Object);</td>
 				<td>Return TRUE iff the container is empty.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="2">element</br>access</td><td>TYPE&amp;</td><td>cc_dllst_front (Object);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_back (Object);</td>
 				<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="5">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
 				<td>Insert an element at the beginning.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_push_back (Object, Value);</td>
 				<td>Insert an element at the end.</td>
-				<td>No</td><td>No</td>
+				<td>No</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_front (Object);</td>
 				<td>Remove an element at the beginning.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_back (Object);</td>
 				<td>Remove an element at the end.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_clear (Object);</td>
 				<td>Remove all elements in the container without deallocating.</td>
-				<td>Yes</td><td>No</td>
+				<td>Yes</td>
 			</tr>
 			<tr>
 				<td rowspan="2">settings</td>
 				<td rowspan="2">flags</td><td>#define</td><td>CCC_DEBUG</td>
-				<td colspan="3">Corresponding warning messages will be generated if this flag is set.</td>
+				<td colspan="2">Corresponding warning messages will be generated if this flag is set.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td>#define</td><td>CCC_BLOCK_SIZE &lt;NUMBER&gt;</td>
-				<td colspan="3">Set the number of nodes that a single block in the memory pool can hold.</td>
+				<td colspan="2">Set the number of nodes that a single block in the memory pool can hold.</td>
 			</tr>
 		</tbody>
 		</table>
