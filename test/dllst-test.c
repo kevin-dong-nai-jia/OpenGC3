@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #define CCC_MESSAGE
 #define CCC_BLOCK_SIZE 1000
