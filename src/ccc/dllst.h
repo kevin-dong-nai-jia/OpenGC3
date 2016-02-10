@@ -25,11 +25,10 @@
 /* dllst container block */
 
 
-#define CCC_BLOCK_SIZE_DEFAULT 16
-
 #ifdef CCC_BLOCK_SIZE
     #define _cc_dllst_block_node_num CCC_BLOCK_SIZE
 #else
+    #define CCC_BLOCK_SIZE_DEFAULT   16
     #define _cc_dllst_block_node_num CCC_BLOCK_SIZE_DEFAULT
 #endif
 
@@ -105,12 +104,11 @@
     struct                                                                 \
     {                                                                      \
         _cc_dllst_object##_t *pobj;                                        \
-        _cc_dllst_object##_element_t **iter, *info[5];                     \
+        _cc_dllst_object##_element_t **iter, *prev, *curr, *next;          \
     }
 
 
-#define _cc_dllst_iter_struct_init {NULL,                                  \
-                                    NULL, {NULL, NULL, NULL, NULL, NULL}}
+#define _cc_dllst_iter_struct_init {NULL, NULL, NULL, NULL, NULL}
 
 
 #define cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object)                    \
@@ -120,21 +118,23 @@
                                                                            \
     _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;        \
                                                                            \
-    _cc_dllst_iter.iter = &(_cc_dllst_iter.info[2]);                       \
+    _cc_dllst_iter.iter = &(_cc_dllst_iter.curr);                          \
     _cc_dllst_iter.pobj = &(_cc_dllst_object);
 
 
 #define cc_dllst_iter_copy(_cc_dllst_iter_dst, _cc_dllst_iter_src)         \
 (                                                                          \
-    memcpy(_cc_dllst_iter_dst.info,                                        \
-           _cc_dllst_iter_src.info,                                        \
-           sizeof(_cc_dllst_iter_dst.info))                                \
+    _cc_dllst_iter_dst.prev = _cc_dllst_iter_src.prev,                     \
+    _cc_dllst_iter_dst.curr = _cc_dllst_iter_src.curr,                     \
+    _cc_dllst_iter_dst.next = _cc_dllst_iter_src.next, (void)0             \
 )
 
 
 #define cc_dllst_iter_clear(_cc_dllst_iter)                                \
 (                                                                          \
-    memset(_cc_dllst_iter.info, 0, sizeof(_cc_dllst_iter.info))            \
+    _cc_dllst_iter.prev = NULL,                                            \
+    _cc_dllst_iter.curr = NULL,                                            \
+    _cc_dllst_iter.next = NULL, (void)0                                    \
 )
 
 
@@ -180,12 +180,10 @@
         __cc_warning_dllst_is_empty(_cc_dllst_object)                      \
     ) :                                                                    \
     (                                                                      \
-        _cc_dllst_iter.info[0] = (void*)&(_cc_dllst_object.head),          \
-        _cc_dllst_iter.info[1] = (void*)&(_cc_dllst_object.head),          \
-        _cc_dllst_iter.info[2] = _cc_dllst_object.head,                    \
-        _cc_dllst_iter.info[3] = _cc_xor_2_addrs(&(_cc_dllst_object.head), \
-                                           *(void**)_cc_dllst_object.head),\
-        _cc_dllst_iter.info[4] = (void*)&(_cc_dllst_object.tail)           \
+        _cc_dllst_iter.prev = (void*)&(_cc_dllst_object.head),             \
+        _cc_dllst_iter.curr = _cc_dllst_object.head,                       \
+        _cc_dllst_iter.next = _cc_xor_2_addrs(&(_cc_dllst_object.head),    \
+                                       *(void**)_cc_dllst_object.head)     \
     )                                                                      \
 )
 
@@ -197,12 +195,10 @@
         __cc_warning_dllst_is_empty(_cc_dllst_object)                      \
     ) :                                                                    \
     (                                                                      \
-        _cc_dllst_iter.info[4] = (void*)&(_cc_dllst_object.tail),          \
-        _cc_dllst_iter.info[3] = (void*)&(_cc_dllst_object.tail),          \
-        _cc_dllst_iter.info[2] = _cc_dllst_object.tail,                    \
-        _cc_dllst_iter.info[1] = _cc_xor_2_addrs(&(_cc_dllst_object.tail), \
-                                           *(void**)_cc_dllst_object.tail),\
-        _cc_dllst_iter.info[0] = (void*)&(_cc_dllst_object.head)           \
+        _cc_dllst_iter.next = (void*)&(_cc_dllst_object.tail),             \
+        _cc_dllst_iter.curr = _cc_dllst_object.tail,                       \
+        _cc_dllst_iter.prev = _cc_xor_2_addrs(&(_cc_dllst_object.tail),    \
+                                       *(void**)_cc_dllst_object.tail)     \
     )                                                                      \
 )
 
@@ -214,13 +210,13 @@
         __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
     ) :                                                                    \
     (                                                                      \
-        _cc_dllst_iter.info[1] = _cc_dllst_iter.info[2],                   \
-        _cc_dllst_iter.info[2] = _cc_dllst_iter.info[3],                   \
-        _cc_dllst_iter.info[3] =                                           \
+        _cc_dllst_iter.prev = _cc_dllst_iter.curr,                         \
+        _cc_dllst_iter.curr = _cc_dllst_iter.next,                         \
+        _cc_dllst_iter.next =                                              \
         (                                                                  \
-            (_cc_dllst_iter.info[2] == _cc_dllst_iter.info[4]) ? (NULL) :  \
-            (_cc_xor_2_addrs(_cc_dllst_iter.info[1],                       \
-                             *(void**)_cc_dllst_iter.info[2]))             \
+            (_cc_dllst_iter.curr == (void*)&(_cc_dllst_iter.pobj->tail)) ? \
+            (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.prev,                 \
+                             *(void**)_cc_dllst_iter.curr))                \
         )                                                                  \
     )                                                                      \
 )
@@ -233,13 +229,13 @@
         __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
     ) :                                                                    \
     (                                                                      \
-        _cc_dllst_iter.info[3] = _cc_dllst_iter.info[2],                   \
-        _cc_dllst_iter.info[2] = _cc_dllst_iter.info[1],                   \
-        _cc_dllst_iter.info[1] =                                           \
+        _cc_dllst_iter.next = _cc_dllst_iter.curr,                         \
+        _cc_dllst_iter.curr = _cc_dllst_iter.prev,                         \
+        _cc_dllst_iter.prev =                                              \
         (                                                                  \
-            (_cc_dllst_iter.info[2] == _cc_dllst_iter.info[0]) ? (NULL) :  \
-            (_cc_xor_2_addrs(_cc_dllst_iter.info[3],                       \
-                             *(void**)_cc_dllst_iter.info[2]))             \
+            (_cc_dllst_iter.curr == (void*)&(_cc_dllst_iter.pobj->head)) ? \
+            (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.next,                 \
+                             *(void**)_cc_dllst_iter.curr))                \
         )                                                                  \
     )                                                                      \
 )
@@ -379,10 +375,10 @@ for                                                                        \
     else                                                                   \
     {                                                                      \
         *link = _cc_xor_2_addrs(&(_cc_dllst_object.head),                  \
-                                _cc_dllst_object.head);                    \
+                                  _cc_dllst_object.head);                  \
                                                                            \
         *(void**)_cc_dllst_object.head = _cc_xor_3_addrs(link,             \
-            *(void**)_cc_dllst_object.head, &(_cc_dllst_object.head));     \
+            &(_cc_dllst_object.head), *(void**)_cc_dllst_object.head);     \
     }                                                                      \
                                                                            \
     _cc_dllst_object.head = (void*)link;                                   \
@@ -410,10 +406,10 @@ for                                                                        \
     else                                                                   \
     {                                                                      \
         *link = _cc_xor_2_addrs(&(_cc_dllst_object.tail),                  \
-                                _cc_dllst_object.tail);                    \
+                                  _cc_dllst_object.tail);                  \
                                                                            \
         *(void**)_cc_dllst_object.tail = _cc_xor_3_addrs(link,             \
-            *(void**)_cc_dllst_object.tail, &(_cc_dllst_object.tail));     \
+            &(_cc_dllst_object.tail), *(void**)_cc_dllst_object.tail);     \
     }                                                                      \
                                                                            \
     _cc_dllst_object.tail = (void*)link;                                   \
@@ -439,10 +435,10 @@ for                                                                        \
         else                                                               \
         {                                                                  \
             _cc_dllst_object.head = _cc_xor_2_addrs(                       \
-                *(void**)_cc_dllst_object.head, &(_cc_dllst_object.head)); \
+                &(_cc_dllst_object.head), *(void**)_cc_dllst_object.head); \
                                                                            \
             *(void**)_cc_dllst_object.head = _cc_xor_3_addrs(head,         \
-                *(void**)_cc_dllst_object.head, &(_cc_dllst_object.head)); \
+                &(_cc_dllst_object.head), *(void**)_cc_dllst_object.head); \
         }                                                                  \
                                                                            \
         _cc_dllst_node_clear(head, _cc_dllst_object);                      \
@@ -470,10 +466,10 @@ for                                                                        \
         else                                                               \
         {                                                                  \
             _cc_dllst_object.tail = _cc_xor_2_addrs(                       \
-                *(void**)_cc_dllst_object.tail, &(_cc_dllst_object.tail)); \
+                &(_cc_dllst_object.tail), *(void**)_cc_dllst_object.tail); \
                                                                            \
             *(void**)_cc_dllst_object.tail = _cc_xor_3_addrs(tail,         \
-                *(void**)_cc_dllst_object.tail, &(_cc_dllst_object.tail)); \
+                &(_cc_dllst_object.tail), *(void**)_cc_dllst_object.tail); \
         }                                                                  \
                                                                            \
         _cc_dllst_node_clear(tail, _cc_dllst_object);                      \
