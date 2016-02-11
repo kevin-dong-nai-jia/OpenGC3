@@ -241,7 +241,7 @@ for                                                                        \
 (                                                                          \
     cc_dllst_iter_begin(_cc_dllst_iter, _cc_dllst_object);                 \
     cc_dllst_iter_valid(_cc_dllst_iter);                                   \
-    cc_dllst_iter_incr(_cc_dllst_iter)                                     \
+    cc_dllst_iter_incr (_cc_dllst_iter)                                    \
 )
 
 
@@ -249,9 +249,9 @@ for                                                                        \
                                                                            \
 for                                                                        \
 (                                                                          \
-    cc_dllst_iter_end(_cc_dllst_iter, _cc_dllst_object);                   \
+    cc_dllst_iter_end  (_cc_dllst_iter, _cc_dllst_object);                 \
     cc_dllst_iter_valid(_cc_dllst_iter);                                   \
-    cc_dllst_iter_decr(_cc_dllst_iter)                                     \
+    cc_dllst_iter_decr (_cc_dllst_iter)                                    \
 )
 
 
