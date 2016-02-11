@@ -130,19 +130,9 @@
 )
 
 
-#define cc_dllst_iter_clear(_cc_dllst_iter)                                \
-(                                                                          \
-    _cc_dllst_iter.prev = NULL,                                            \
-    _cc_dllst_iter.curr = NULL,                                            \
-    _cc_dllst_iter.next = NULL, (void)0                                    \
-)
-
-
 #define cc_dllst_iter_valid(_cc_dllst_iter)                                \
 (                                                                          \
-       _cc_dllst_iter.iter != NULL                                         \
-    && *(_cc_dllst_iter.iter - 1) != NULL                                  \
-    && *(_cc_dllst_iter.iter + 1) != NULL                                  \
+    _cc_dllst_iter.prev != NULL && _cc_dllst_iter.next != NULL             \
 )
 
 
