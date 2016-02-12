@@ -104,11 +104,11 @@
     struct                                                                 \
     {                                                                      \
         _cc_dllst_object##_t *pobj;                                        \
-        _cc_dllst_object##_element_t **iter, *prev, *curr, *next;          \
+        _cc_dllst_object##_element_t *prev, *curr, *next;                  \
     }
 
 
-#define _cc_dllst_iter_struct_init {NULL, NULL, NULL, NULL, NULL}
+#define _cc_dllst_iter_struct_init {NULL, NULL, NULL, NULL}
 
 
 #define cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object)                    \
@@ -118,7 +118,6 @@
                                                                            \
     _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;        \
                                                                            \
-    _cc_dllst_iter.iter = &(_cc_dllst_iter.curr);                          \
     _cc_dllst_iter.pobj = &(_cc_dllst_object);
 
 
@@ -138,7 +137,7 @@
 
 #define cc_dllst_iter_dereference(_cc_dllst_iter)                          \
 (                                                                          \
-    *(*_cc_dllst_iter.iter + _cc_dllst_iter.pobj->val_offset)              \
+    *(_cc_dllst_iter.curr + _cc_dllst_iter.pobj->val_offset)               \
 )
 
 
