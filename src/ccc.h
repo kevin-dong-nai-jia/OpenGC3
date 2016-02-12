@@ -1,5 +1,5 @@
-#ifndef _CCC_CCC_H_
-#define _CCC_CCC_H_
+#ifndef _CCC_H_
+#define _CCC_H_
 
 
 
