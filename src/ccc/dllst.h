@@ -94,7 +94,7 @@
 
 
 
-/* dllst bitwise operations */
+/* bitwise operations */
 
 
 #define _cc_xor_2_addrs(_cc_addr_a, _cc_addr_b)                            \
