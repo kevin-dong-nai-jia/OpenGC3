@@ -79,7 +79,7 @@
                                                                            \
     _cc_dllst_object.val_offset  = &(_cc_dllst_object##_node.val) -        \
                                    (_cc_dllst_object##_element_t*)         \
-                                       &(_cc_dllst_object##_node.link);    \
+                                   &(_cc_dllst_object##_node.link);        \
     _cc_dllst_object.link_offset = (char*)&(_cc_dllst_object##_node.link) -\
                                    (char*)&(_cc_dllst_object##_node.val);  \
     _cc_dllst_object.arr_offset  = (char*)&(_cc_dllst_object##_block.arr) -\
@@ -171,7 +171,7 @@
         _cc_dllst_iter.curr = _cc_dllst_object.head,                       \
         _cc_dllst_iter.next = _cc_xor_2_addrs(&(_cc_dllst_object.head),    \
                                        *(void**)_cc_dllst_object.head)     \
-    ) : __cc_warning_dllst_is_empty(_cc_dllst_object)                      \
+    ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
 )
 
 
@@ -183,7 +183,7 @@
         _cc_dllst_iter.curr = _cc_dllst_object.tail,                       \
         _cc_dllst_iter.prev = _cc_xor_2_addrs(&(_cc_dllst_object.tail),    \
                                        *(void**)_cc_dllst_object.tail)     \
-    ) : __cc_warning_dllst_is_empty(_cc_dllst_object)                      \
+    ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
 )
 
 
@@ -199,7 +199,7 @@
             (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.prev,                 \
                              *(void**)_cc_dllst_iter.curr))                \
         )                                                                  \
-    ) : __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+    ) : (__cc_warning_dllst_iter_is_invalid(_cc_dllst_iter))               \
 )
 
 
@@ -215,7 +215,7 @@
             (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.next,                 \
                              *(void**)_cc_dllst_iter.curr))                \
         )                                                                  \
-    ) : __cc_warning_dllst_iter_is_invalid(_cc_dllst_iter)                 \
+    ) : (__cc_warning_dllst_iter_is_invalid(_cc_dllst_iter))               \
 )
 
 
@@ -321,8 +321,7 @@ for                                                                        \
 {                                                                          \
     while (_cc_dllst_object.pool != NULL)                                  \
     {                                                                      \
-        void *pool_dup;                                                    \
-        pool_dup = _cc_dllst_object.pool;                                  \
+        void *pool_dup = _cc_dllst_object.pool;                            \
         _cc_dllst_object.pool = *(void**)_cc_dllst_object.pool;            \
         free(pool_dup);                                                    \
     }                                                                      \
