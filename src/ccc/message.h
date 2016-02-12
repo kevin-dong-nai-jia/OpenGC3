@@ -7,7 +7,7 @@
 
 
 
-void *__cc_message(char* file, int line, char* type, int count, ...)
+void* __cc_message(char* file, int line, char* type, int count, ...)
 {
     va_list ap;
 
