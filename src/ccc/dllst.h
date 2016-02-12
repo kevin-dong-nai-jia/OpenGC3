@@ -25,11 +25,9 @@
 /* dllst container block */
 
 
-#ifdef CCC_BLOCK_SIZE
-    #define _cc_dllst_block_node_num CCC_BLOCK_SIZE
-#else
-    #define CCC_BLOCK_SIZE_DEFAULT   16
-    #define _cc_dllst_block_node_num CCC_BLOCK_SIZE_DEFAULT
+#if (CCC_DLLST_BLOCK_SIZE - 0 <= 0)
+    #undef  CCC_DLLST_BLOCK_SIZE
+    #define CCC_DLLST_BLOCK_SIZE 16
 #endif
 
 
@@ -38,7 +36,7 @@
     struct                                                                 \
     {                                                                      \
         void *next;                                                        \
-        _cc_dllst_object##_node_t arr[_cc_dllst_block_node_num];           \
+        _cc_dllst_object##_node_t arr[CCC_DLLST_BLOCK_SIZE];               \
     }
 
 
@@ -144,21 +142,6 @@
 #define cc_dllst_iter_deref(_cc_dllst_iter)                                \
 (                                                                          \
     cc_dllst_iter_dereference(_cc_dllst_iter)                              \
-)
-
-
-#define _cc_xor_2_addrs(_cc_addr_a, _cc_addr_b)                            \
-(                                                                          \
-    (void*)((uintptr_t)(void*)(_cc_addr_a) ^                               \
-            (uintptr_t)(void*)(_cc_addr_b))                                \
-)
-
-
-#define _cc_xor_3_addrs(_cc_addr_a, _cc_addr_b, _cc_addr_c)                \
-(                                                                          \
-    (void*)((uintptr_t)(void*)(_cc_addr_a) ^                               \
-            (uintptr_t)(void*)(_cc_addr_b) ^                               \
-            (uintptr_t)(void*)(_cc_addr_c))                                \
 )
 
 
@@ -279,7 +262,9 @@ for                                                                        \
 
 
 #define _cc_dllst_node_alloc(_cc_dllst_node_ptr, _cc_dllst_object)         \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     if (_cc_dllst_object.avsp == NULL)                                     \
     {                                                                      \
         if (_cc_dllst_object.vcnt == 0)                                    \
@@ -291,7 +276,7 @@ for                                                                        \
                 (void)__cc_error_dllst_failed_to_alloc(_cc_dllst_object);  \
                                                                            \
             *(void**)_cc_dllst_object.pool = pool_dup;                     \
-            _cc_dllst_object.vcnt = _cc_dllst_block_node_num;              \
+            _cc_dllst_object.vcnt = CCC_DLLST_BLOCK_SIZE;                  \
         }                                                                  \
                                                                            \
         _cc_dllst_node_ptr = (void*)                                       \
@@ -306,25 +291,29 @@ for                                                                        \
                                                                            \
         _cc_dllst_object.avsp = *(void**)_cc_dllst_object.avsp;            \
     }                                                                      \
-}
+)
 
 
 #define _cc_dllst_node_clear(_cc_dllst_node_link_ptr, _cc_dllst_object)    \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     *(void**)_cc_dllst_node_link_ptr = _cc_dllst_object.avsp;              \
     _cc_dllst_object.avsp = _cc_dllst_node_link_ptr;                       \
-}
+)
 
 
 #define _cc_dllst_all_nodes_free(_cc_dllst_object)                         \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     while (_cc_dllst_object.pool != NULL)                                  \
     {                                                                      \
         void *pool_dup = _cc_dllst_object.pool;                            \
         _cc_dllst_object.pool = *(void**)_cc_dllst_object.pool;            \
         free(pool_dup);                                                    \
     }                                                                      \
-}
+)
 
 
 
@@ -332,8 +321,10 @@ for                                                                        \
 
 
 #define cc_dllst_push_front(_cc_dllst_object, _cc_dllst_push_front_value)  \
-{                                                                          \
-    void *node, **link;                                                    \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
+    void *node; void **link;                                               \
     _cc_dllst_object##_element_t *val;                                     \
                                                                            \
     _cc_dllst_node_alloc(node, _cc_dllst_object);                          \
@@ -359,12 +350,14 @@ for                                                                        \
                                                                            \
     _cc_dllst_object.head = (void*)link;                                   \
     _cc_dllst_object.size++;                                               \
-}
+)
 
 
 #define cc_dllst_push_back(_cc_dllst_object, _cc_dllst_push_back_value)    \
-{                                                                          \
-    void *node, **link;                                                    \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
+    void *node; void **link;                                               \
     _cc_dllst_object##_element_t *val;                                     \
                                                                            \
     _cc_dllst_node_alloc(node, _cc_dllst_object);                          \
@@ -390,11 +383,13 @@ for                                                                        \
                                                                            \
     _cc_dllst_object.tail = (void*)link;                                   \
     _cc_dllst_object.size++;                                               \
-}
+)
 
 
 #define cc_dllst_pop_front(_cc_dllst_object)                               \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
     {                                                                      \
         (void)__cc_warning_dllst_is_empty(_cc_dllst_object);               \
@@ -421,11 +416,13 @@ for                                                                        \
                                                                            \
         _cc_dllst_object.size--;                                           \
     }                                                                      \
-}
+)
 
 
 #define cc_dllst_pop_back(_cc_dllst_object)                                \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     if (cc_dllst_empty(_cc_dllst_object))                                  \
     {                                                                      \
         (void)__cc_warning_dllst_is_empty(_cc_dllst_object);               \
@@ -452,7 +449,7 @@ for                                                                        \
                                                                            \
         _cc_dllst_object.size--;                                           \
     }                                                                      \
-}
+)
 
 
 #define cc_dllst_insert(_cc_dllst_iter, _cc_dllst_insert_value)            \
@@ -472,10 +469,12 @@ for                                                                        \
 
 
 #define cc_dllst_clear(_cc_dllst_object)                                   \
-{                                                                          \
-    do cc_dllst_pop_back(_cc_dllst_object)                                 \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
+    do cc_dllst_pop_back(_cc_dllst_object);                                \
     while (!(cc_dllst_empty(_cc_dllst_object)));                           \
-}
+)
 
 
 
@@ -483,14 +482,16 @@ for                                                                        \
 
 
 #define cc_dllst_free(_cc_dllst_object)                                    \
-{                                                                          \
+                                                                           \
+CCC_STATEMENT_                                                             \
+(                                                                          \
     _cc_dllst_all_nodes_free(_cc_dllst_object);                            \
                                                                            \
     _cc_dllst_object.size = 0;                                             \
     _cc_dllst_object.vcnt = 0;                                             \
     _cc_dllst_object.head = NULL;                                          \
     _cc_dllst_object.tail = NULL;                                          \
-}
+)
 
 
 
