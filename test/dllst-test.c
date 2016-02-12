@@ -2,8 +2,9 @@
 #include <stdlib.h>
 
 #define CCC_MESSAGE
-#define CCC_BLOCK_SIZE 1000
-#include "../src/ccc/dllst.h"
+#define CCC_DLLST_BLOCK_SIZE 1000
+
+#include "../src/ccc.h"
 
 
 int main(void)
