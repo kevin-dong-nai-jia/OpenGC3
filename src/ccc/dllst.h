@@ -146,21 +146,31 @@
 )
 
 
-#define cc_dllst_iter_valid(_cc_dllst_iter)                                \
-(                                                                          \
-    _cc_dllst_iter.prev != NULL && _cc_dllst_iter.next != NULL             \
-)
-
-
-#define cc_dllst_iter_dereference(_cc_dllst_iter)                          \
+#define cc_dllst_iter_deref(_cc_dllst_iter)                                \
 (                                                                          \
     *(_cc_dllst_iter.curr + _cc_dllst_iter.pobj->val_offset)               \
 )
 
 
-#define cc_dllst_iter_deref(_cc_dllst_iter)                                \
+#define cc_dllst_iter_head(_cc_dllst_iter, _cc_dllst_object)               \
 (                                                                          \
-    cc_dllst_iter_dereference(_cc_dllst_iter)                              \
+    (_cc_dllst_object.head != NULL) ?                                      \
+    (                                                                      \
+        _cc_dllst_iter.prev = NULL,                                        \
+        _cc_dllst_iter.curr = (void*)&(_cc_dllst_object.head),             \
+        _cc_dllst_iter.next = _cc_dllst_object.head                        \
+    ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
+)
+
+
+#define cc_dllst_iter_tail(_cc_dllst_iter, _cc_dllst_object)               \
+(                                                                          \
+    (_cc_dllst_object.tail != NULL) ?                                      \
+    (                                                                      \
+        _cc_dllst_iter.next = NULL,                                        \
+        _cc_dllst_iter.curr = (void*)&(_cc_dllst_object.tail),             \
+        _cc_dllst_iter.prev = _cc_dllst_object.tail                        \
+    ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
 )
 
 
@@ -171,7 +181,7 @@
         _cc_dllst_iter.prev = (void*)&(_cc_dllst_object.head),             \
         _cc_dllst_iter.curr = _cc_dllst_object.head,                       \
         _cc_dllst_iter.next = _cc_xor_2_addrs(&(_cc_dllst_object.head),    \
-                                       *(void**)_cc_dllst_object.head)     \
+                                              *(void**)_cc_dllst_object.head) \
     ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
 )
 
@@ -183,14 +193,14 @@
         _cc_dllst_iter.next = (void*)&(_cc_dllst_object.tail),             \
         _cc_dllst_iter.curr = _cc_dllst_object.tail,                       \
         _cc_dllst_iter.prev = _cc_xor_2_addrs(&(_cc_dllst_object.tail),    \
-                                       *(void**)_cc_dllst_object.tail)     \
+                                              *(void**)_cc_dllst_object.tail) \
     ) : (__cc_warning_dllst_is_empty(_cc_dllst_object))                    \
 )
 
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (cc_dllst_iter_valid(_cc_dllst_iter)) ?                                \
+    (_cc_dllst_iter.next != NULL) ?                                        \
     (                                                                      \
         _cc_dllst_iter.prev = _cc_dllst_iter.curr,                         \
         _cc_dllst_iter.curr = _cc_dllst_iter.next,                         \
@@ -198,7 +208,7 @@
         (                                                                  \
             (_cc_dllst_iter.curr == (void*)&(_cc_dllst_iter.pobj->tail)) ? \
             (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.prev,                 \
-                             *(void**)_cc_dllst_iter.curr))                \
+                                      *(void**)_cc_dllst_iter.curr))       \
         )                                                                  \
     ) : (__cc_warning_dllst_iter_is_invalid(_cc_dllst_iter))               \
 )
@@ -206,7 +216,7 @@
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                 \
 (                                                                          \
-    (cc_dllst_iter_valid(_cc_dllst_iter)) ?                                \
+    (_cc_dllst_iter.prev != NULL) ?                                        \
     (                                                                      \
         _cc_dllst_iter.next = _cc_dllst_iter.curr,                         \
         _cc_dllst_iter.curr = _cc_dllst_iter.prev,                         \
@@ -214,7 +224,7 @@
         (                                                                  \
             (_cc_dllst_iter.curr == (void*)&(_cc_dllst_iter.pobj->head)) ? \
             (NULL) : (_cc_xor_2_addrs(_cc_dllst_iter.next,                 \
-                             *(void**)_cc_dllst_iter.curr))                \
+                                      *(void**)_cc_dllst_iter.curr))       \
         )                                                                  \
     ) : (__cc_warning_dllst_iter_is_invalid(_cc_dllst_iter))               \
 )
@@ -226,22 +236,14 @@
 
 #define cc_dllst_trav(_cc_dllst_object, _cc_dllst_iter)                    \
                                                                            \
-for                                                                        \
-(                                                                          \
-    cc_dllst_iter_begin(_cc_dllst_iter, _cc_dllst_object);                 \
-    cc_dllst_iter_valid(_cc_dllst_iter);                                   \
-    cc_dllst_iter_incr (_cc_dllst_iter)                                    \
-)
+    if (cc_dllst_iter_head(_cc_dllst_iter, _cc_dllst_object))              \
+        while (cc_dllst_iter_incr(_cc_dllst_iter))
 
 
 #define cc_dllst_trav_rev(_cc_dllst_object, _cc_dllst_iter)                \
                                                                            \
-for                                                                        \
-(                                                                          \
-    cc_dllst_iter_end  (_cc_dllst_iter, _cc_dllst_object);                 \
-    cc_dllst_iter_valid(_cc_dllst_iter);                                   \
-    cc_dllst_iter_decr (_cc_dllst_iter)                                    \
-)
+    if (cc_dllst_iter_tail(_cc_dllst_iter, _cc_dllst_object))              \
+        while (cc_dllst_iter_decr(_cc_dllst_iter))
 
 
 
@@ -361,7 +363,7 @@ CCC_STATEMENT_                                                             \
     else                                                                   \
     {                                                                      \
         *link = _cc_xor_2_addrs(&(_cc_dllst_object.head),                  \
-                                  _cc_dllst_object.head);                  \
+                                _cc_dllst_object.head);                    \
                                                                            \
         *(void**)_cc_dllst_object.head = _cc_xor_3_addrs(link,             \
             &(_cc_dllst_object.head), *(void**)_cc_dllst_object.head);     \
@@ -394,7 +396,7 @@ CCC_STATEMENT_                                                             \
     else                                                                   \
     {                                                                      \
         *link = _cc_xor_2_addrs(&(_cc_dllst_object.tail),                  \
-                                  _cc_dllst_object.tail);                  \
+                                _cc_dllst_object.tail);                    \
                                                                            \
         *(void**)_cc_dllst_object.tail = _cc_xor_3_addrs(link,             \
             &(_cc_dllst_object.tail), *(void**)_cc_dllst_object.tail);     \
