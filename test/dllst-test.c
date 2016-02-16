@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CCC_MESSAGE
 #define CCC_DLLST_BLOCK_SIZE 1000
 
 #include "../src/ccc.h"
@@ -108,7 +107,7 @@ int main(void)
     /* Test 4 */
     /* Test debug mode */
 
-    printf("\n\nTest 4: \n");
+    printf("\n\nTest 4: (no output)\n");
 
     {
         cc_dllst(test4, int);
@@ -152,7 +151,7 @@ int main(void)
     /* Test 6 */
     /* Pop elements */
 
-    printf("\n\nTest 6: \n");
+    printf("\n\nTest 6: ");
 
     {
         cc_dllst(test6, int);
@@ -167,7 +166,7 @@ int main(void)
         cc_dllst_push_back(test6, 2);
         cc_dllst_pop_back(test6);
         cc_dllst_trav(test6, test6_iter)
-            printf("\nOnly '%d' remains in the container.\n",
+            printf("Only '%d' remains in the container.\n",
                    cc_dllst_iter_deref(test6_iter));
 
         cc_dllst_free(test6);
