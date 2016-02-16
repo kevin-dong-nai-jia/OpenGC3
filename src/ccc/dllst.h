@@ -117,12 +117,12 @@
 /* dllst container iterators */
 
 
-#define _cc_dllst_iter_struct(_cc_dllst_object)                            \
+#define _cc_dllst_iter_struct(_cc_dllst_iter)                              \
                                                                            \
     struct                                                                 \
     {                                                                      \
-        _cc_dllst_object##_t *pobj;                                        \
-        _cc_dllst_object##_element_t *prev, *curr, *next;                  \
+        _cc_dllst_iter##_object_t  *pobj;                                  \
+        _cc_dllst_iter##_element_t *prev, *curr, *next;                    \
     }
 
 
@@ -131,20 +131,13 @@
 
 #define cc_dllst_iter(_cc_dllst_iter, _cc_dllst_object)                    \
                                                                            \
+    typedef _cc_dllst_object##_t         _cc_dllst_iter##_object_t;        \
     typedef _cc_dllst_object##_element_t _cc_dllst_iter##_element_t;       \
-    typedef _cc_dllst_iter_struct(_cc_dllst_object) _cc_dllst_iter##_t;    \
+    typedef _cc_dllst_iter_struct(_cc_dllst_iter) _cc_dllst_iter##_iter_t; \
                                                                            \
-    _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;        \
+    _cc_dllst_iter##_iter_t _cc_dllst_iter = _cc_dllst_iter_struct_init;   \
                                                                            \
     _cc_dllst_iter.pobj = &(_cc_dllst_object);
-
-
-#define cc_dllst_iter_copy(_cc_dllst_iter_dst, _cc_dllst_iter_src)         \
-(                                                                          \
-    _cc_dllst_iter_dst.prev = _cc_dllst_iter_src.prev,                     \
-    _cc_dllst_iter_dst.curr = _cc_dllst_iter_src.curr,                     \
-    _cc_dllst_iter_dst.next = _cc_dllst_iter_src.next, (void)0             \
-)
 
 
 #define cc_dllst_iter_deref(_cc_dllst_iter)                                \
@@ -153,38 +146,56 @@
 )
 
 
+#define cc_dllst_iter_copy(_cc_dllst_iter_dst, _cc_dllst_iter_src)         \
+                                                                           \
+CCC_VOID_EXPR_                                                             \
+((                                                                         \
+    _cc_dllst_iter_dst.prev = _cc_dllst_iter_src.prev,                     \
+    _cc_dllst_iter_dst.curr = _cc_dllst_iter_src.curr,                     \
+    _cc_dllst_iter_dst.next = _cc_dllst_iter_src.next                      \
+))
+
+
 #define cc_dllst_iter_head(_cc_dllst_iter, _cc_dllst_object)               \
-(                                                                          \
+                                                                           \
+CCC_VOID_EXPR_                                                             \
+((                                                                         \
     _cc_dllst_iter.prev = NULL,                                            \
     _cc_dllst_iter.curr = (void*)&(_cc_dllst_object.head),                 \
     _cc_dllst_iter.next = _cc_dllst_object.head                            \
-)
+))
 
 
 #define cc_dllst_iter_tail(_cc_dllst_iter, _cc_dllst_object)               \
-(                                                                          \
+                                                                           \
+CCC_VOID_EXPR_                                                             \
+((                                                                         \
     _cc_dllst_iter.next = NULL,                                            \
     _cc_dllst_iter.curr = (void*)&(_cc_dllst_object.tail),                 \
     _cc_dllst_iter.prev = _cc_dllst_object.tail                            \
-)
+))
 
 
 #define cc_dllst_iter_begin(_cc_dllst_iter, _cc_dllst_object)              \
-(                                                                          \
+                                                                           \
+CCC_VOID_EXPR_                                                             \
+((                                                                         \
     _cc_dllst_iter.prev = (void*)&(_cc_dllst_object.head),                 \
     _cc_dllst_iter.curr = _cc_dllst_object.head,                           \
     _cc_dllst_iter.next = _cc_xor_2_addrs(&(_cc_dllst_object.head),        \
                                           *(void**)_cc_dllst_object.head)  \
-)
+))
 
 
 #define cc_dllst_iter_end(_cc_dllst_iter, _cc_dllst_object)                \
-(                                                                          \
+                                                                           \
+CCC_VOID_EXPR_                                                             \
+((                                                                         \
     _cc_dllst_iter.next = (void*)&(_cc_dllst_object.tail),                 \
     _cc_dllst_iter.curr = _cc_dllst_object.tail,                           \
     _cc_dllst_iter.prev = _cc_xor_2_addrs(&(_cc_dllst_object.tail),        \
                                           *(void**)_cc_dllst_object.tail)  \
-)
+))
 
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                 \
