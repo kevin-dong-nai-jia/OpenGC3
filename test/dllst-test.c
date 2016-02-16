@@ -207,7 +207,7 @@ int main(void)
         cc_dllst_packed(test8_long_int   , long int);
         cc_dllst_packed(test8_long_double, long double);
 
-        for (int cnt = 0; cnt < 20000000; cnt++)
+        for (int cnt = 0; cnt < 1000000; cnt++)
         {
             cc_dllst_push_back(test8_char, cnt);
             cc_dllst_push_back(test8_short, cnt);
