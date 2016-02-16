@@ -293,8 +293,8 @@ CCC_STATEMENT_                                                             \
                                                                            \
         _cc_dllst_node_ptr = (void*)                                       \
             ((char*)_cc_dllst_object.pool +                                \
-             _cc_dllst_object.arr_offset +                                 \
-             _cc_dllst_object.node_size * (--(_cc_dllst_object.vcnt)));    \
+             _cc_dllst_object.arr_offset  +                                \
+             _cc_dllst_object.node_size   * (--(_cc_dllst_object.vcnt)));  \
     }                                                                      \
     else                                                                   \
     {                                                                      \
@@ -345,8 +345,7 @@ CCC_STATEMENT_                                                             \
     *val = _cc_dllst_push_front_value;                                     \
                                                                            \
      link = (void*)((char*)node + _cc_dllst_object.link_offset);           \
-    *link = _cc_xor_2_addrs(&(_cc_dllst_object.head),                      \
-                            _cc_dllst_object.head);                        \
+    *link = _cc_xor_2_addrs(&(_cc_dllst_object.head), _cc_dllst_object.head); \
                                                                            \
     *(void**)_cc_dllst_object.head = _cc_xor_3_addrs(link,                 \
         &(_cc_dllst_object.head), *(void**)_cc_dllst_object.head);         \
@@ -370,8 +369,7 @@ CCC_STATEMENT_                                                             \
     *val = _cc_dllst_push_back_value;                                      \
                                                                            \
      link = (void*)((char*)node + _cc_dllst_object.link_offset);           \
-    *link = _cc_xor_2_addrs(&(_cc_dllst_object.tail),                      \
-                            _cc_dllst_object.tail);                        \
+    *link = _cc_xor_2_addrs(&(_cc_dllst_object.tail), _cc_dllst_object.tail); \
                                                                            \
     *(void**)_cc_dllst_object.tail = _cc_xor_3_addrs(link,                 \
         &(_cc_dllst_object.tail), *(void**)_cc_dllst_object.tail);         \
