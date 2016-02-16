@@ -273,7 +273,7 @@ CCC_VOID_EXPR_                                                             \
 
 
 
-/* dllst container node operation */
+/* dllst container node operations */
 
 
 #define _cc_dllst_node_alloc(_cc_dllst_node_ptr, _cc_dllst_object)         \
@@ -448,11 +448,15 @@ CCC_STATEMENT_                                                             \
 
 
 
-/* dllst container modifiers (additional) */
+/* dllst container operations */
 
 
 #define cc_dllst_transfer_range(_cc_dllst_object, _cc_dllst_iter_position, \
                                 _cc_dllst_iter_fisrt, _cc_dllst_iter_last) \
+    /* TODO */
+
+
+#define cc_dllst_sort(_cc_dllst_object)                                    \
     /* TODO */
 
 
