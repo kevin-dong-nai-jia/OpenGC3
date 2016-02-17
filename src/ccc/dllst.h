@@ -138,7 +138,7 @@
     _cc_dllst_iter.pobj = &(_cc_dllst);
 
 
-#define cc_dllst_iter_deref(_cc_dllst_iter)                                    \
+#define cc_dllst_iter_dref(_cc_dllst_iter)                                     \
 (                                                                              \
     *(_cc_dllst_iter.curr + _cc_dllst_iter.pobj->val_offset)                   \
 )
@@ -239,6 +239,22 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
+/* dllst container access */
+
+
+#define cc_dllst_front(_cc_dllst)                                              \
+(                                                                              \
+    *(_cc_dllst.head + _cc_dllst.val_offset)                                   \
+)
+
+
+#define cc_dllst_back(_cc_dllst)                                               \
+(                                                                              \
+    *(_cc_dllst.tail + _cc_dllst.val_offset)                                   \
+)
+
+
+
 /* dllst container capacity */
 
 
@@ -251,22 +267,6 @@ CCC_VOID_EXPR_                                                                 \
 #define cc_dllst_empty(_cc_dllst)                                              \
 (                                                                              \
     cc_dllst_size(_cc_dllst) == 0                                              \
-)
-
-
-
-/* dllst container element access */
-
-
-#define cc_dllst_front(_cc_dllst)                                              \
-(                                                                              \
-    *(_cc_dllst.head + _cc_dllst.val_offset)                                   \
-)
-
-
-#define cc_dllst_back(_cc_dllst)                                               \
-(                                                                              \
-    *(_cc_dllst.tail + _cc_dllst.val_offset)                                   \
 )
 
 
