@@ -1,9 +1,9 @@
 #ifndef _CCC_DLLST_H_
 #define _CCC_DLLST_H_
 
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
 
 
