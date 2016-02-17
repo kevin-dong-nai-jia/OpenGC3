@@ -198,25 +198,25 @@ CCC_VOID_EXPR_                                                                 \
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                     \
 (                                                                              \
-    (_cc_dllst_iter.next == NULL) ? (NULL) :                                   \
+    (_cc_dllst_iter.next != NULL) ?                                            \
     (                                                                          \
         _cc_dllst_iter.prev = _cc_dllst_iter.curr,                             \
         _cc_dllst_iter.curr = _cc_dllst_iter.next,                             \
         _cc_dllst_iter.next = _cc_xor_2_addrs(_cc_dllst_iter.prev,             \
                                               *(void**)_cc_dllst_iter.curr)    \
-    )                                                                          \
+    ) : (void*)NULL                                                            \
 )
 
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                     \
 (                                                                              \
-    (_cc_dllst_iter.prev == NULL) ? (NULL) :                                   \
+    (_cc_dllst_iter.prev != NULL) ?                                            \
     (                                                                          \
         _cc_dllst_iter.next = _cc_dllst_iter.curr,                             \
         _cc_dllst_iter.curr = _cc_dllst_iter.prev,                             \
         _cc_dllst_iter.prev = _cc_xor_2_addrs(_cc_dllst_iter.next,             \
                                               *(void**)_cc_dllst_iter.curr)    \
-    )                                                                          \
+    ) : (void*)NULL                                                            \
 )
 
 
