@@ -141,7 +141,7 @@ int main(void)
         cc_dllst_back(test5)  = "Element access ";
         cc_dllst_front(test5) = "succeed.\n";
 
-        cc_dllst_trav_rev(test5, test5_iter)
+        cc_dllst_trav_backward(test5, test5_iter)
             printf("%s", cc_dllst_iter_deref(test5_iter));
 
         cc_dllst_free(test5);
