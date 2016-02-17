@@ -56,9 +56,9 @@ int main(void)
 
 
     /* Test 2 */
-    /* Check deallocation */
+    /* Deallocation */
 
-    printf("\n\nTest 2: (no output)\n");
+    printf("\n\nTest 2: ");
 
     {
         cc_dllst(test2, int);
@@ -69,6 +69,8 @@ int main(void)
             cc_dllst_push_back(test2, cnt++);
 
         cc_dllst_free(test2);
+
+        puts("Test deallocation.");
     }
 
 
@@ -105,9 +107,9 @@ int main(void)
 
 
     /* Test 4 */
-    /* Test debug mode */
+    /* Empty container */
 
-    printf("\n\nTest 4: (no output)\n");
+    printf("\n\nTest 4: ");
 
     {
         cc_dllst(test4, int);
@@ -117,7 +119,7 @@ int main(void)
             printf("%d", cc_dllst_iter_deref(test4_iter));
 
         if (cc_dllst_iter_incr(test4_iter) == NULL)
-            cc_dllst_iter_incr(test4_iter);
+            puts("The iterator points to the tail.");
 
         (void)cc_dllst_iter_deref(test4_iter);
 
