@@ -57,128 +57,128 @@
 			</tr>
 			<tr>
 				<th style="display:none"></th>
-				<th>Class</th><th colspan="2">Macros Prototype</th>
+				<th>Class</th><th colspan="2">Function-like Macros Prototype</th>
 				<th style="display:none"></th>
 			</tr>
 			<tr>
 				<td rowspan="23">doubly</br>linked list</br>(dllst)</td>
-				<td rowspan="2">constructor</td><td>&lt;DECL&gt;</td><td>cc_dllst (Object, TYPE);</td>
+				<td rowspan="2">constructor</td><td>DEFINE</td><td>cc_dllst (DLLST, TYPE);</td>
 				<td>Create a dllst container.</br>Use aligned structure to enhance performance.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;DECL&gt;</td><td>cc_dllst_packed (Object, TYPE);</td>
-				<td>Create a packed dllst container.</br>Use packed structure to reduce memory usage.</td>
+				<td style="display:none"></td><td>DEFINE</td><td>cc_dllst_packed (DLLST, TYPE);</td>
+				<td>Create a packed dllst container.</br>Use packed structure to reduce memory consumption.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td>destructor</td><td>&lt;STAT&gt;</td><td>cc_dllst_free (Object);</td>
-				<td>Deallocate the container manually.</br>The constructor and destructor should exist in pairs.</td>
-			</tr>
-			<tr>
-				<td style="display:none"></td>
-				<td rowspan="9">iterators</td><td>&lt;DECL&gt;</td><td>cc_dllst_iter (Iter, Object);</td>
+				<td rowspan="9">iterators</td><td>DEFINE</td><td>cc_dllst_iter (ITER, DLLST);</td>
 				<td>Create an iterator for the (packed) dllst container.</br>The iterator might be invalid if the container is modified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_iter_deref (Iter);</td>
-				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not dereferenceable.</td>
+				<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_iter_dref (ITER);</td>
+				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not invalid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_copy (Iter, Iter);</td>
-				<td>Assign the right iterator to the left iterator.</br>It's not acceptable to assign the iterator by equality sign.</td>
+				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_copy (ITER, ITER);</td>
+				<td>Assign the right iterator to the left iterator.</br>It's not acceptable to assign the iterator by assignment operator.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_head (Iter, Object);</td>
-				<td>Set the iterator to the head.</br>Note: The head is the previous node of the first element.</td>
+				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_head (ITER, DLLST);</td>
+				<td>Set the iterator to the head.</br>The head is a sentinel node that points to the first element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_tail (Iter, Object);</td>
-				<td>Set the iterator to the tail.</br>Note: The tail is the next node of the last element.</td>
+				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_tail (ITER, DLLST);</td>
+				<td>Set the iterator to the tail.</br>The tail is a sentinel node that points to the last element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_begin (Iter, Object);</td>
-				<td>Set the iterator to the first element.</br>Set the iterator to the tail if the container is empty.</td>
+				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_begin (ITER, DLLST);</td>
+				<td>Set the iterator to the first element usaully.</br>Set the iterator to the tail if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_end (Iter, Object);</td>
-				<td>Set the iterator to the last element.</br>Set the iterator to the head if the container is empty.</td>
+				<td style="display:none"></td><td>void</td><td>cc_dllst_iter_end (ITER, DLLST);</td>
+				<td>Set the iterator to the last element usaully.</br>Set the iterator to the head if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void*</td><td>cc_dllst_iter_incr (Iter);</td>
+				<td style="display:none"></td><td>void*</td><td>cc_dllst_iter_incr (ITER);</td>
 				<td>Move forward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>void*</td><td>cc_dllst_iter_decr (Iter);</td>
+				<td style="display:none"></td><td>void*</td><td>cc_dllst_iter_decr (ITER);</td>
 				<td>Move backward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">capacity</td><td>int</td><td>cc_dllst_size (Object);</td>
-				<td>Return the number of the elements in the container.</td>
+				<td rowspan="2">traversal</td><td>LOOP</td><td>cc_dllst_trav (DLLST, ITER) { ... }</td>
+				<td>Traversal all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>bool</td><td>cc_dllst_empty (Object);</td>
-				<td>Return TRUE iff the container is empty.</td>
+				<td style="display:none"></td><td>LOOP</td><td>cc_dllst_trav_backward (DLLST, ITER) { ... }</td>
+				<td>Traversal all elements from the end to the beginning.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">element</br>access</td><td>TYPE&amp;</td><td>cc_dllst_front (Object);</td>
+				<td rowspan="2">access</td><td>TYPE&amp;</td><td>cc_dllst_front (DLLST);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_back (Object);</td>
+				<td style="display:none"></td><td>TYPE&amp;</td><td>cc_dllst_back (DLLST);</td>
 				<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="5">modifiers</td><td>&lt;STAT&gt;</td><td>cc_dllst_push_front (Object, Value);</td>
-				<td>Insert an element at the beginning.</td>
+				<td rowspan="2">capacity</td><td>int</td><td>cc_dllst_size (DLLST);</td>
+				<td>Return the number of the elements in the container.</br>Return 0 if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_push_back (Object, Value);</td>
-				<td>Insert an element at the end.</td>
+				<td style="display:none"></td><td>bool</td><td>cc_dllst_empty (DLLST);</td>
+				<td>Return TRUE iff the container is empty.</br>TRUE is usually represented by any numeric value not equal to zero.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_front (Object);</td>
-				<td>Remove the first element if the container is not empty.</td>
+				<td rowspan="5">modifiers</td><td>STAT</td><td>cc_dllst_push_front (DLLST, value);</td>
+				<td>Insert an element at the beginning.</br>This makes a copy but not a reference of the value into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_pop_back (Object);</td>
-				<td>Remove the last element if the container is not empty.</td>
+				<td style="display:none"></td><td>STAT</td><td>cc_dllst_push_back (DLLST, value);</td>
+				<td>Insert an element at the end.</br>This makes a copy but not a reference of the value into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;STAT&gt;</td><td>cc_dllst_clear (Object);</td>
-				<td>Remove all elements in the container without deallocating.</td>
+				<td style="display:none"></td><td>STAT</td><td>cc_dllst_pop_front (DLLST);</td>
+				<td>Remove the first element.</br>There is nothing modified if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">traversal</td><td>&lt;LOOP&gt;</td><td>cc_dllst_trav (Object, Iter) { ... }</td>
-				<td>Traversal all elements from the beginning to the end.</td>
+				<td style="display:none"></td><td>STAT</td><td>cc_dllst_pop_back (DLLST);</td>
+				<td>Remove the last element.</br>There is nothing modified if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>&lt;LOOP&gt;</td><td>cc_dllst_trav_rev (Object, Iter) { ... }</td>
-				<td>Traversal all elements from the end to the beginning.</td>
+				<td style="display:none"></td><td>STAT</td><td>cc_dllst_clear (DLLST);</td>
+				<td>Remove all elements in the container.</br>This does not deallocate all elements in the container.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td>destructor</td><td>STAT</td><td>cc_dllst_free (DLLST);</td>
+				<td>Deallocate all elements in the container manually.</br>The constructor and destructor should exist in pairs.</td>
 			</tr>
 			<tr>
 				<td rowspan="1">settings</td>
-				<td rowspan="1">flags</td></td><td>#define</td><td>CCC_DLLST_BLOCK_SIZE &lt;NUMBER&gt;</td>
-				<td colspan="2">Set the number of nodes that a single block in the memory pool can hold.</td>
+				<td rowspan="1">constants</td></td><td>#define</td><td>CCC_DLLST_BLOCK_SIZE NUMBER</td>
+				<td colspan="2">Set the number of elements that a single block in the memory pool can hold.</br>The default value is 16.</td>
 			</tr>
 		</tbody>
 		</table>
