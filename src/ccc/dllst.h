@@ -52,10 +52,13 @@
         int size, vcnt;                                                        \
         size_t node_size, block_size;                                          \
         ptrdiff_t val_offset, link_offset, arr_offset;                         \
+                                                                               \
+        _cc_dllst##_node_t *pnode;                                             \
     }
 
 
-#define _cc_dllst_struct_init {NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0}
+#define _cc_dllst_struct_init {NULL, NULL, NULL, NULL,                         \
+                               0, 0, 0, 0, 0, 0, 0, NULL}
 
 
 #define cc_dllst(_cc_dllst, _cc_dllst_element_t)                               \
@@ -284,17 +287,18 @@ CCC_STATEMENT_                                                                 \
         {                                                                      \
             void *pool_dup = _cc_dllst.pool;                                   \
             _cc_dllst.pool = malloc(_cc_dllst.block_size);                     \
-                                                                               \
             *(void**)_cc_dllst.pool = pool_dup;                                \
+                                                                               \
             _cc_dllst.vcnt = CCC_DLLST_BLOCK_SIZE;                             \
         }                                                                      \
                                                                                \
-        _cc_dllst_node_ptr = ((char*)_cc_dllst.pool + _cc_dllst.arr_offset +   \
-                              _cc_dllst.node_size * --_cc_dllst.vcnt);         \
+        _cc_dllst_node_ptr = (void*)((char*)_cc_dllst.pool +                   \
+                                     _cc_dllst.arr_offset  +                   \
+                                     _cc_dllst.node_size   * --_cc_dllst.vcnt);\
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        _cc_dllst_node_ptr = _cc_dllst.avsp + _cc_dllst.val_offset;            \
+        _cc_dllst_node_ptr = (void*)(_cc_dllst.avsp + _cc_dllst.val_offset);   \
                                                                                \
         _cc_dllst.avsp = *(void**)_cc_dllst.avsp;                              \
     }                                                                          \
@@ -331,21 +335,15 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    void *node; void **link;                                                   \
-    _cc_dllst##_element_t *val;                                                \
+    _cc_dllst_node_alloc(_cc_dllst.pnode, _cc_dllst);                          \
                                                                                \
-    _cc_dllst_node_alloc(node, _cc_dllst);                                     \
+    _cc_dllst.pnode->val  = _cc_dllst_push_front_value;                        \
+    _cc_dllst.pnode->link = _cc_xor_2_addrs(&(_cc_dllst.head), _cc_dllst.head);\
                                                                                \
-     val = node;                                                               \
-    *val = _cc_dllst_push_front_value;                                         \
-                                                                               \
-     link = (void*)((char*)node + _cc_dllst.link_offset);                      \
-    *link = _cc_xor_2_addrs(&(_cc_dllst.head), _cc_dllst.head);                \
-                                                                               \
-    *(void**)_cc_dllst.head = _cc_xor_3_addrs(&(_cc_dllst.head), link,         \
+    *(void**)_cc_dllst.head = _cc_xor_3_addrs(&(_cc_dllst.head),               \
+                                              &(_cc_dllst.pnode->link),        \
                                               *(void**)_cc_dllst.head);        \
-                                                                               \
-    _cc_dllst.head = (void*)link;                                              \
+    _cc_dllst.head = (void*)&(_cc_dllst.pnode->link);                          \
                                                                                \
     _cc_dllst.size++;                                                          \
 })
@@ -355,21 +353,15 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    void *node; void **link;                                                   \
-    _cc_dllst##_element_t *val;                                                \
+    _cc_dllst_node_alloc(_cc_dllst.pnode, _cc_dllst);                          \
                                                                                \
-    _cc_dllst_node_alloc(node, _cc_dllst);                                     \
+    _cc_dllst.pnode->val  = _cc_dllst_push_back_value;                         \
+    _cc_dllst.pnode->link = _cc_xor_2_addrs(&(_cc_dllst.tail), _cc_dllst.tail);\
                                                                                \
-     val = node;                                                               \
-    *val = _cc_dllst_push_back_value;                                          \
-                                                                               \
-     link = (void*)((char*)node + _cc_dllst.link_offset);                      \
-    *link = _cc_xor_2_addrs(&(_cc_dllst.tail), _cc_dllst.tail);                \
-                                                                               \
-    *(void**)_cc_dllst.tail = _cc_xor_3_addrs(&(_cc_dllst.tail), link,         \
+    *(void**)_cc_dllst.tail = _cc_xor_3_addrs(&(_cc_dllst.tail),               \
+                                              &(_cc_dllst.pnode->link),        \
                                               *(void**)_cc_dllst.tail);        \
-                                                                               \
-    _cc_dllst.tail = (void*)link;                                              \
+    _cc_dllst.tail = (void*)&(_cc_dllst.pnode->link);                          \
                                                                                \
     _cc_dllst.size++;                                                          \
 })
@@ -385,7 +377,6 @@ CCC_STATEMENT_                                                                 \
                                                                                \
         _cc_dllst.head = _cc_xor_2_addrs(&(_cc_dllst.head),                    \
                                          *(void**)_cc_dllst.head);             \
-                                                                               \
         *(void**)_cc_dllst.head = _cc_xor_3_addrs(&(_cc_dllst.head), head,     \
                                                   *(void**)_cc_dllst.head);    \
                                                                                \
@@ -406,7 +397,6 @@ CCC_STATEMENT_                                                                 \
                                                                                \
         _cc_dllst.tail = _cc_xor_2_addrs(&(_cc_dllst.tail),                    \
                                          *(void**)_cc_dllst.tail);             \
-                                                                               \
         *(void**)_cc_dllst.tail = _cc_xor_3_addrs(&(_cc_dllst.tail), tail,     \
                                                   *(void**)_cc_dllst.tail);    \
                                                                                \
