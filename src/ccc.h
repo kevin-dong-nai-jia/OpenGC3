@@ -3,7 +3,7 @@
 
 
 
-/* CCC properties */
+/* CCC syntax */
 
 
 #define CCC_STATEMENT_(_ccc_statement)                                         \
@@ -14,6 +14,18 @@
 #define CCC_VOID_EXPR_(_ccc_expression)                                        \
                                                                                \
     ((_ccc_expression), ((void)0))
+
+
+
+/* CCC constants */
+
+
+#if (CCC_DLLST_BLOCK_SIZE - 0 <= 0)
+
+    #undef  CCC_DLLST_BLOCK_SIZE
+    #define CCC_DLLST_BLOCK_SIZE 16
+
+#endif
 
 
 
