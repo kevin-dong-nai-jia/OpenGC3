@@ -7,110 +7,70 @@
 
 
 
-/* dllst container node */
+/* dllst container create */
 
 
-#define _cc_dllst_node(_cc_dllst)                                              \
+typedef void* _link_t;
+
+#define cc_dllst(_elem_t)                                                      \
                                                                                \
     struct                                                                     \
     {                                                                          \
-        _cc_dllst##_element_t val;                                             \
-        void *link;                                                            \
+        _elem_t *head;                                                         \
+        _elem_t *tail;                                                         \
+        _elem_t *avsp;                                                         \
+                                                                               \
+        struct                                                                 \
+        {                                                                      \
+            _link_t next;                                                      \
+                                                                               \
+            struct                                                             \
+            {                                                                  \
+                _elem_t val;                                                   \
+                _link_t xorl;                                                  \
+            }   nodes[CCC_DLLST_BLOCK_SIZE], *pnode;                           \
+                                                                               \
+        }   block, *pool;                                                      \
+                                                                               \
+        size_t    size, vcnt;                                                  \
+        ptrdiff_t val_offset, link_offset;                                     \
     }
 
 
-
-/* dllst container block */
-
-
-#if (CCC_DLLST_BLOCK_SIZE - 0 <= 0)
-    #undef  CCC_DLLST_BLOCK_SIZE
-    #define CCC_DLLST_BLOCK_SIZE 16
-#endif
-
-
-#define _cc_dllst_block(_cc_dllst)                                             \
+#define cc_dllst_init(_cc_dllst)                                               \
                                                                                \
-    struct                                                                     \
-    {                                                                          \
-        void *next;                                                            \
-        _cc_dllst##_node_t arr[CCC_DLLST_BLOCK_SIZE];                          \
-    }
-
-
-
-/* dllst container constructor */
-
-
-#define _cc_dllst_struct(_cc_dllst)                                            \
+CCC_VOID_EXPR_                                                                 \
+((                                                                             \
+    (_cc_dllst).head = (_link_t)&((_cc_dllst).tail),                           \
+    (_cc_dllst).tail = (_link_t)&((_cc_dllst).head),                           \
+    (_cc_dllst).avsp = NULL,                                                   \
+    (_cc_dllst).pool = &((_cc_dllst).block),                                   \
                                                                                \
-    struct                                                                     \
-    {                                                                          \
-        void *pool;                                                            \
-        _cc_dllst##_element_t *avsp, *head, *tail;                             \
-                                                                               \
-        int size, vcnt;                                                        \
-        size_t node_size, block_size;                                          \
-        ptrdiff_t val_offset, link_offset, arr_offset;                         \
-                                                                               \
-        _cc_dllst##_node_t *pnode;                                             \
-    }
-
-
-#define _cc_dllst_struct_init {NULL, NULL, NULL, NULL,                         \
-                               0, 0, 0, 0, 0, 0, 0, NULL}
-
-
-#define cc_dllst(_cc_dllst, _cc_dllst_element_t)                               \
-                                                                               \
-    typedef _cc_dllst_element_t         _cc_dllst##_element_t;                 \
-    typedef _cc_dllst_node  (_cc_dllst) _cc_dllst##_node_t;                    \
-    typedef _cc_dllst_block (_cc_dllst) _cc_dllst##_block_t;                   \
-    typedef _cc_dllst_struct(_cc_dllst) _cc_dllst##_t;                         \
-                                                                               \
-    _cc_dllst##_t       _cc_dllst = _cc_dllst_struct_init;                     \
-    _cc_dllst##_node_t  _cc_dllst##_node;                                      \
-    _cc_dllst##_block_t _cc_dllst##_block;                                     \
-                                                                               \
-    _cc_dllst.head = (void*)&(_cc_dllst.tail);                                 \
-    _cc_dllst.tail = (void*)&(_cc_dllst.head);                                 \
-                                                                               \
-    _cc_dllst.node_size  = sizeof(_cc_dllst##_node);                           \
-    _cc_dllst.block_size = sizeof(_cc_dllst##_block);                          \
-                                                                               \
-    _cc_dllst.val_offset  = &(_cc_dllst##_node.val) -                          \
-                            (_cc_dllst##_element_t*)&(_cc_dllst##_node.link);  \
-    _cc_dllst.link_offset = (char*)&(_cc_dllst##_node.link) -                  \
-                            (char*)&(_cc_dllst##_node.val);                    \
-    _cc_dllst.arr_offset  = (char*)&(_cc_dllst##_block.arr) -                  \
-                            (char*)&(_cc_dllst##_block.next);
-
-
-#define cc_dllst_packed(_cc_dllst, _cc_dllst_element_t)                        \
-                                                                               \
-    _Pragma("pack(push,1)")                                                    \
-                                                                               \
-    cc_dllst(_cc_dllst, _cc_dllst_element_t);                                  \
-                                                                               \
-    _Pragma("pack(pop)")
+    (_cc_dllst).size = 0,                                                      \
+    (_cc_dllst).vcnt = CCC_DLLST_BLOCK_SIZE,                                   \
+    (_cc_dllst).link_offset = (char*)&((_cc_dllst).block.pnode->xorl) -        \
+                              (char*)&((_cc_dllst).block.pnode->val),          \
+    (_cc_dllst).val_offset  = (_cc_dllst).link_offset * (-1) /                 \
+                              sizeof((_cc_dllst).block.pnode->val)             \
+))
 
 
 
 /* bitwise operations */
 
 
-#define _cc_xor_2_addrs(_cc_addr_a, _cc_addr_b)                                \
+#define _cc_xor_2(_cc_addr_a, _cc_addr_b)                                      \
 (                                                                              \
-    (void*)((uintptr_t)(void*)(_cc_addr_a) ^                                   \
-            (uintptr_t)(void*)(_cc_addr_b))                                    \
+    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_b))                                \
 )
 
 
-#define _cc_xor_3_addrs(_cc_addr_a, _cc_addr_b, _cc_addr_c)                    \
+#define _cc_xor_3(_cc_addr_a, _cc_addr_b, _cc_addr_c)                          \
 (                                                                              \
-    (void*)((uintptr_t)(void*)(_cc_addr_a) ^                                   \
-            (uintptr_t)(void*)(_cc_addr_b) ^                                   \
-            (uintptr_t)(void*)(_cc_addr_c))                                    \
+    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_b) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_c))                                \
 )
 
 
@@ -118,32 +78,33 @@
 /* dllst container iterators */
 
 
-#define _cc_dllst_iter_struct(_cc_dllst_iter)                                  \
+#define cc_dllst_iter(_elem_t)                                                 \
                                                                                \
     struct                                                                     \
     {                                                                          \
-        _cc_dllst_iter##_object_t  *pobj;                                      \
-        _cc_dllst_iter##_element_t *prev, *curr, *next;                        \
+        _elem_t *prev;                                                         \
+        _elem_t *curr;                                                         \
+        _elem_t *next;                                                         \
+                                                                               \
+        cc_dllst(_elem_t) *pobj;                                               \
     }
 
 
-#define _cc_dllst_iter_struct_init {NULL, NULL, NULL, NULL}
-
-
-#define cc_dllst_iter(_cc_dllst_iter, _cc_dllst)                               \
+#define cc_dllst_iter_init(_cc_dllst_iter, _cc_dllst)                          \
                                                                                \
-    typedef _cc_dllst##_t                         _cc_dllst_iter##_object_t;   \
-    typedef _cc_dllst##_element_t                 _cc_dllst_iter##_element_t;  \
-    typedef _cc_dllst_iter_struct(_cc_dllst_iter) _cc_dllst_iter##_t;          \
+CCC_VOID_EXPR_                                                                 \
+((                                                                             \
+    (_cc_dllst_iter).prev = NULL,                                              \
+    (_cc_dllst_iter).curr = NULL,                                              \
+    (_cc_dllst_iter).next = NULL,                                              \
                                                                                \
-    _cc_dllst_iter##_t _cc_dllst_iter = _cc_dllst_iter_struct_init;            \
-                                                                               \
-    _cc_dllst_iter.pobj = &(_cc_dllst);
+    (_cc_dllst_iter).pobj = (void*)&(_cc_dllst)                                \
+))
 
 
 #define cc_dllst_iter_dref(_cc_dllst_iter)                                     \
 (                                                                              \
-    *(_cc_dllst_iter.curr + _cc_dllst_iter.pobj->val_offset)                   \
+    *((_cc_dllst_iter).curr + (_cc_dllst_iter).pobj->val_offset)               \
 )
 
 
@@ -151,9 +112,9 @@
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    _cc_dllst_iter_dst.prev = _cc_dllst_iter_src.prev,                         \
-    _cc_dllst_iter_dst.curr = _cc_dllst_iter_src.curr,                         \
-    _cc_dllst_iter_dst.next = _cc_dllst_iter_src.next                          \
+    (_cc_dllst_iter_dst).prev = (_cc_dllst_iter_src).prev,                     \
+    (_cc_dllst_iter_dst).curr = (_cc_dllst_iter_src).curr,                     \
+    (_cc_dllst_iter_dst).next = (_cc_dllst_iter_src).next                      \
 ))
 
 
@@ -161,9 +122,9 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    _cc_dllst_iter.prev = NULL,                                                \
-    _cc_dllst_iter.curr = (void*)&(_cc_dllst.head),                            \
-    _cc_dllst_iter.next = _cc_dllst.head                                       \
+    (_cc_dllst_iter).prev = NULL,                                              \
+    (_cc_dllst_iter).curr = (_link_t)&((_cc_dllst).head),                      \
+    (_cc_dllst_iter).next = (_cc_dllst).head                                   \
 ))
 
 
@@ -171,9 +132,9 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    _cc_dllst_iter.next = NULL,                                                \
-    _cc_dllst_iter.curr = (void*)&(_cc_dllst.tail),                            \
-    _cc_dllst_iter.prev = _cc_dllst.tail                                       \
+    (_cc_dllst_iter).next = NULL,                                              \
+    (_cc_dllst_iter).curr = (_link_t)&((_cc_dllst).tail),                      \
+    (_cc_dllst_iter).prev = (_cc_dllst).tail                                   \
 ))
 
 
@@ -181,10 +142,10 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    _cc_dllst_iter.prev = (void*)&(_cc_dllst.head),                            \
-    _cc_dllst_iter.curr = _cc_dllst.head,                                      \
-    _cc_dllst_iter.next = _cc_xor_2_addrs(&(_cc_dllst.head),                   \
-                                          *(void**)_cc_dllst.head)             \
+    (_cc_dllst_iter).prev = (_link_t)&((_cc_dllst).head),                      \
+    (_cc_dllst_iter).curr = (_cc_dllst).head,                                  \
+    (_cc_dllst_iter).next = _cc_xor_2(&((_cc_dllst).head),                     \
+                                      *(_link_t*)(_cc_dllst).head)             \
 ))
 
 
@@ -192,33 +153,33 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    _cc_dllst_iter.next = (void*)&(_cc_dllst.tail),                            \
-    _cc_dllst_iter.curr = _cc_dllst.tail,                                      \
-    _cc_dllst_iter.prev = _cc_xor_2_addrs(&(_cc_dllst.tail),                   \
-                                          *(void**)_cc_dllst.tail)             \
+    (_cc_dllst_iter).next = (_link_t)&((_cc_dllst).tail),                      \
+    (_cc_dllst_iter).curr = (_cc_dllst).tail,                                  \
+    (_cc_dllst_iter).prev = _cc_xor_2(&((_cc_dllst).tail),                     \
+                                      *(_link_t*)(_cc_dllst).tail)             \
 ))
 
 
 #define cc_dllst_iter_incr(_cc_dllst_iter)                                     \
 (                                                                              \
-    (_cc_dllst_iter.next != NULL) ?                                            \
+    ((_cc_dllst_iter).next != NULL) ?                                          \
     (                                                                          \
-        _cc_dllst_iter.prev = _cc_dllst_iter.curr,                             \
-        _cc_dllst_iter.curr = _cc_dllst_iter.next,                             \
-        _cc_dllst_iter.next = _cc_xor_2_addrs(_cc_dllst_iter.prev,             \
-                                              *(void**)_cc_dllst_iter.curr)    \
+        (_cc_dllst_iter).prev = (_cc_dllst_iter).curr,                         \
+        (_cc_dllst_iter).curr = (_cc_dllst_iter).next,                         \
+        (_cc_dllst_iter).next = _cc_xor_2((_cc_dllst_iter).prev,               \
+                                          *(_link_t*)(_cc_dllst_iter).curr)    \
     ) : (void*)NULL                                                            \
 )
 
 
 #define cc_dllst_iter_decr(_cc_dllst_iter)                                     \
 (                                                                              \
-    (_cc_dllst_iter.prev != NULL) ?                                            \
+    ((_cc_dllst_iter).prev != NULL) ?                                          \
     (                                                                          \
-        _cc_dllst_iter.next = _cc_dllst_iter.curr,                             \
-        _cc_dllst_iter.curr = _cc_dllst_iter.prev,                             \
-        _cc_dllst_iter.prev = _cc_xor_2_addrs(_cc_dllst_iter.next,             \
-                                              *(void**)_cc_dllst_iter.curr)    \
+        (_cc_dllst_iter).next = (_cc_dllst_iter).curr,                         \
+        (_cc_dllst_iter).curr = (_cc_dllst_iter).prev,                         \
+        (_cc_dllst_iter).prev = _cc_xor_2((_cc_dllst_iter).next,               \
+                                          *(_link_t*)(_cc_dllst_iter).curr)    \
     ) : (void*)NULL                                                            \
 )
 
@@ -229,16 +190,16 @@ CCC_VOID_EXPR_                                                                 \
 
 #define cc_dllst_trav(_cc_dllst, _cc_dllst_iter)                               \
                                                                                \
-    cc_dllst_iter_head(_cc_dllst_iter, _cc_dllst);                             \
+    cc_dllst_iter_head((_cc_dllst_iter), (_cc_dllst));                         \
                                                                                \
-    while (cc_dllst_iter_incr(_cc_dllst_iter))
+    while (cc_dllst_iter_incr((_cc_dllst_iter)))
 
 
-#define cc_dllst_trav_backward(_cc_dllst, _cc_dllst_iter)                      \
+#define cc_dllst_trav_back(_cc_dllst, _cc_dllst_iter)                          \
                                                                                \
-    cc_dllst_iter_tail(_cc_dllst_iter, _cc_dllst);                             \
+    cc_dllst_iter_tail((_cc_dllst_iter), (_cc_dllst));                         \
                                                                                \
-    while (cc_dllst_iter_decr(_cc_dllst_iter))
+    while (cc_dllst_iter_decr((_cc_dllst_iter)))
 
 
 
@@ -247,13 +208,13 @@ CCC_VOID_EXPR_                                                                 \
 
 #define cc_dllst_front(_cc_dllst)                                              \
 (                                                                              \
-    *(_cc_dllst.head + _cc_dllst.val_offset)                                   \
+    *((_cc_dllst).head + (_cc_dllst).val_offset)                               \
 )
 
 
 #define cc_dllst_back(_cc_dllst)                                               \
 (                                                                              \
-    *(_cc_dllst.tail + _cc_dllst.val_offset)                                   \
+    *((_cc_dllst).tail + (_cc_dllst).val_offset)                               \
 )
 
 
@@ -263,13 +224,13 @@ CCC_VOID_EXPR_                                                                 \
 
 #define cc_dllst_size(_cc_dllst)                                               \
 (                                                                              \
-    _cc_dllst.size                                                             \
+    (_cc_dllst).size                                                           \
 )
 
 
 #define cc_dllst_empty(_cc_dllst)                                              \
 (                                                                              \
-    cc_dllst_size(_cc_dllst) == 0                                              \
+    cc_dllst_size((_cc_dllst)) == 0                                            \
 )
 
 
@@ -277,51 +238,47 @@ CCC_VOID_EXPR_                                                                 \
 /* dllst container node operations */
 
 
-#define _cc_dllst_node_alloc(_cc_dllst_node_ptr, _cc_dllst)                    \
+#define _cc_dllst_node_alloc(_cc_dllst_pnode, _cc_dllst)                       \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    if (_cc_dllst.avsp == NULL)                                                \
+    if ((_cc_dllst).avsp == NULL)                                              \
     {                                                                          \
-        if (_cc_dllst.vcnt == 0)                                               \
+        if ((_cc_dllst).vcnt == 0)                                             \
         {                                                                      \
-            void *pool_dup = _cc_dllst.pool;                                   \
-            _cc_dllst.pool = malloc(_cc_dllst.block_size);                     \
-            *(void**)_cc_dllst.pool = pool_dup;                                \
-                                                                               \
-            _cc_dllst.vcnt = CCC_DLLST_BLOCK_SIZE;                             \
+            _link_t pool_dup = (_cc_dllst).pool;                               \
+            (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block));              \
+            *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
+            (_cc_dllst).vcnt = CCC_DLLST_BLOCK_SIZE;                           \
         }                                                                      \
                                                                                \
-        _cc_dllst_node_ptr = (void*)((char*)_cc_dllst.pool +                   \
-                                     _cc_dllst.arr_offset  +                   \
-                                     _cc_dllst.node_size   * --_cc_dllst.vcnt);\
+        (_cc_dllst_pnode) = &((_cc_dllst).pool->nodes[--(_cc_dllst).vcnt]);    \
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        _cc_dllst_node_ptr = (void*)(_cc_dllst.avsp + _cc_dllst.val_offset);   \
-                                                                               \
-        _cc_dllst.avsp = *(void**)_cc_dllst.avsp;                              \
+        (_cc_dllst_pnode) = (void*)((_cc_dllst).avsp + (_cc_dllst).val_offset);\
+        (_cc_dllst).avsp = *(_link_t*)(_cc_dllst).avsp;                        \
     }                                                                          \
 })
 
 
-#define _cc_dllst_node_clear(_cc_dllst_node_link_ptr, _cc_dllst)               \
+#define _cc_dllst_node_clear(_cc_dllst_node_pxorl, _cc_dllst)                  \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    *(void**)_cc_dllst_node_link_ptr = _cc_dllst.avsp;                         \
-    _cc_dllst.avsp = _cc_dllst_node_link_ptr;                                  \
+    *(_link_t*)(_cc_dllst_node_pxorl) = (_cc_dllst).avsp;                      \
+    (_cc_dllst).avsp = (_cc_dllst_node_pxorl);                                 \
 })
 
 
-#define _cc_dllst_all_nodes_free(_cc_dllst)                                    \
+#define _cc_dllst_blocks_free(_cc_dllst)                                       \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    while (_cc_dllst.pool != NULL)                                             \
+    while ((_cc_dllst).pool != &((_cc_dllst).block))                           \
     {                                                                          \
-        void *pool_dup = _cc_dllst.pool;                                       \
-        _cc_dllst.pool = *(void**)_cc_dllst.pool;                              \
+        _link_t pool_dup = (_cc_dllst).pool;                                   \
+        (_cc_dllst).pool = *(_link_t*)(_cc_dllst).pool;                        \
         free(pool_dup);                                                        \
     }                                                                          \
 })
@@ -335,17 +292,19 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    _cc_dllst_node_alloc(_cc_dllst.pnode, _cc_dllst);                          \
+    _cc_dllst_node_alloc((_cc_dllst).block.pnode, (_cc_dllst));                \
                                                                                \
-    _cc_dllst.pnode->val  = _cc_dllst_push_front_value;                        \
-    _cc_dllst.pnode->link = _cc_xor_2_addrs(&(_cc_dllst.head), _cc_dllst.head);\
+    (_cc_dllst).block.pnode->val  = (_cc_dllst_push_front_value);              \
+    (_cc_dllst).block.pnode->xorl = _cc_xor_2(&((_cc_dllst).head),             \
+                                                (_cc_dllst).head);             \
                                                                                \
-    *(void**)_cc_dllst.head = _cc_xor_3_addrs(&(_cc_dllst.head),               \
-                                              &(_cc_dllst.pnode->link),        \
-                                              *(void**)_cc_dllst.head);        \
-    _cc_dllst.head = (void*)&(_cc_dllst.pnode->link);                          \
+    *(_link_t*)                                                                \
+    (_cc_dllst).head = _cc_xor_3(&((_cc_dllst).head),                          \
+                                 &((_cc_dllst).block.pnode->xorl),             \
+                                 *(_link_t*)(_cc_dllst).head);                 \
+    (_cc_dllst).head = (_link_t)&((_cc_dllst).block.pnode->xorl);              \
                                                                                \
-    _cc_dllst.size++;                                                          \
+    (_cc_dllst).size++;                                                        \
 })
 
 
@@ -353,17 +312,19 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    _cc_dllst_node_alloc(_cc_dllst.pnode, _cc_dllst);                          \
+    _cc_dllst_node_alloc((_cc_dllst).block.pnode, (_cc_dllst));                \
                                                                                \
-    _cc_dllst.pnode->val  = _cc_dllst_push_back_value;                         \
-    _cc_dllst.pnode->link = _cc_xor_2_addrs(&(_cc_dllst.tail), _cc_dllst.tail);\
+    (_cc_dllst).block.pnode->val  = (_cc_dllst_push_back_value);               \
+    (_cc_dllst).block.pnode->xorl = _cc_xor_2(&((_cc_dllst).tail),             \
+                                                (_cc_dllst).tail);             \
                                                                                \
-    *(void**)_cc_dllst.tail = _cc_xor_3_addrs(&(_cc_dllst.tail),               \
-                                              &(_cc_dllst.pnode->link),        \
-                                              *(void**)_cc_dllst.tail);        \
-    _cc_dllst.tail = (void*)&(_cc_dllst.pnode->link);                          \
+    *(_link_t*)                                                                \
+    (_cc_dllst).tail = _cc_xor_3(&((_cc_dllst).tail),                          \
+                                 &((_cc_dllst).block.pnode->xorl),             \
+                                 *(_link_t*)(_cc_dllst).tail);                 \
+    (_cc_dllst).tail = (_link_t)&((_cc_dllst).block.pnode->xorl);              \
                                                                                \
-    _cc_dllst.size++;                                                          \
+    (_cc_dllst).size++;                                                        \
 })
 
 
@@ -371,18 +332,19 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    if (!(cc_dllst_empty(_cc_dllst)))                                          \
+    if (!(cc_dllst_empty((_cc_dllst))))                                        \
     {                                                                          \
-        void *head = _cc_dllst.head;                                           \
+        _link_t head = (_cc_dllst).head;                                       \
                                                                                \
-        _cc_dllst.head = _cc_xor_2_addrs(&(_cc_dllst.head),                    \
-                                         *(void**)_cc_dllst.head);             \
-        *(void**)_cc_dllst.head = _cc_xor_3_addrs(&(_cc_dllst.head), head,     \
-                                                  *(void**)_cc_dllst.head);    \
+        (_cc_dllst).head = _cc_xor_2(&((_cc_dllst).head),                      \
+                                     *(_link_t*)(_cc_dllst).head);             \
+        *(_link_t*)                                                            \
+        (_cc_dllst).head = _cc_xor_3(&((_cc_dllst).head), head,                \
+                                     *(_link_t*)(_cc_dllst).head);             \
                                                                                \
-        _cc_dllst_node_clear(head, _cc_dllst);                                 \
+        _cc_dllst_node_clear(head, (_cc_dllst));                               \
                                                                                \
-        _cc_dllst.size--;                                                      \
+        (_cc_dllst).size--;                                                    \
     }                                                                          \
 })
 
@@ -391,18 +353,19 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    if (!(cc_dllst_empty(_cc_dllst)))                                          \
+    if (!(cc_dllst_empty((_cc_dllst))))                                        \
     {                                                                          \
-        void *tail = _cc_dllst.tail;                                           \
+        _link_t tail = (_cc_dllst).tail;                                       \
                                                                                \
-        _cc_dllst.tail = _cc_xor_2_addrs(&(_cc_dllst.tail),                    \
-                                         *(void**)_cc_dllst.tail);             \
-        *(void**)_cc_dllst.tail = _cc_xor_3_addrs(&(_cc_dllst.tail), tail,     \
-                                                  *(void**)_cc_dllst.tail);    \
+        (_cc_dllst).tail = _cc_xor_2(&((_cc_dllst).tail),                      \
+                                     *(_link_t*)(_cc_dllst).tail);             \
+        *(_link_t*)                                                            \
+        (_cc_dllst).tail = _cc_xor_3(&((_cc_dllst).tail), tail,                \
+                                     *(_link_t*)(_cc_dllst).tail);             \
                                                                                \
-        _cc_dllst_node_clear(tail, _cc_dllst);                                 \
+        _cc_dllst_node_clear(tail, (_cc_dllst));                               \
                                                                                \
-        _cc_dllst.size--;                                                      \
+        (_cc_dllst).size--;                                                    \
     }                                                                          \
 })
 
@@ -427,8 +390,8 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    do cc_dllst_pop_back(_cc_dllst);                                           \
-    while (!(cc_dllst_empty(_cc_dllst)));                                      \
+    do cc_dllst_pop_back((_cc_dllst));                                         \
+    while (!(cc_dllst_empty((_cc_dllst))));                                    \
 })
 
 
@@ -446,19 +409,20 @@ CCC_STATEMENT_                                                                 \
 
 
 
-/* dllst container destructor */
+/* dllst container destroy */
 
 
 #define cc_dllst_free(_cc_dllst)                                               \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    _cc_dllst_all_nodes_free(_cc_dllst);                                       \
+    _cc_dllst_blocks_free((_cc_dllst));                                        \
                                                                                \
-    _cc_dllst.size = 0;                                                        \
-    _cc_dllst.vcnt = 0;                                                        \
-    _cc_dllst.head = (void*)&(_cc_dllst.tail);                                 \
-    _cc_dllst.tail = (void*)&(_cc_dllst.head);                                 \
+    (_cc_dllst).size = 0;                                                      \
+    (_cc_dllst).vcnt = 0;                                                      \
+    (_cc_dllst).avsp = NULL;                                                   \
+    (_cc_dllst).head = (_link_t)&((_cc_dllst).tail);                           \
+    (_cc_dllst).tail = (_link_t)&((_cc_dllst).head);                           \
 })
 
 
