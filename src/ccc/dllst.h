@@ -48,10 +48,10 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
     (_cc_dllst).size = 0,                                                      \
     (_cc_dllst).vcnt = CCC_DLLST_BLOCK_SIZE,                                   \
-    (_cc_dllst).link_offset = (char*)&((_cc_dllst).block.pnode->xorl) -        \
-                              (char*)&((_cc_dllst).block.pnode->val),          \
+    (_cc_dllst).link_offset = (char*)&((_cc_dllst).block.nodes[0].xorl) -      \
+                              (char*)&((_cc_dllst).block.nodes[0].val),        \
     (_cc_dllst).val_offset  = (_cc_dllst).link_offset * (-1) /                 \
-                              sizeof((_cc_dllst).block.pnode->val)             \
+                              sizeof((_cc_dllst).block.nodes[0].val)           \
 ))
 
 
