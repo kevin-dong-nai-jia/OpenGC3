@@ -14,8 +14,11 @@ int main(void)
     printf("Test 0:\n\n");
 
     {
-        cc_dllst(msg, char*);
-        cc_dllst_iter(msg_iter, msg);
+        cc_dllst(char*) msg;
+        cc_dllst_init(msg);
+
+        cc_dllst_iter(char*) msg_iter;
+        cc_dllst_iter_init(msg_iter, msg);
 
         cc_dllst_push_back(msg, "Hello everyone:\n");
         cc_dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
@@ -33,7 +36,8 @@ int main(void)
     printf("\n\nTest 1: \n");
 
     {
-        cc_dllst(test1, char*);
+        cc_dllst(char*) list;
+        cc_dllst_init(list);
 
         char *num_str[10] = { "five" , "six", "four", "seven", "three",
                               "eight", "two", "nine", "one"  , "ten"    };
@@ -42,16 +46,17 @@ int main(void)
 
         while (puts("") && cnt < 10)
         {
-            cc_dllst_iter(test1_iter, test1);
+            cc_dllst_iter(char*) iter;
+            cc_dllst_iter_init(iter, list);
 
-            cc_dllst_push_front(test1, num_str[cnt++]);
-            cc_dllst_push_back (test1, num_str[cnt++]);
+            cc_dllst_push_front(list, num_str[cnt++]);
+            cc_dllst_push_back (list, num_str[cnt++]);
 
-            cc_dllst_trav(test1, test1_iter)
-                printf("%s ", cc_dllst_iter_dref(test1_iter));
+            cc_dllst_trav(list, iter)
+                printf("%s ", cc_dllst_iter_dref(iter));
         }
 
-        cc_dllst_free(test1);
+        cc_dllst_free(list);
     }
 
 
@@ -61,14 +66,15 @@ int main(void)
     printf("\n\nTest 2: ");
 
     {
-        cc_dllst(test2, int);
+        cc_dllst(int) list;
+        cc_dllst_init(list);
 
         int cnt = 0;
 
         while (cnt < 10000000)
-            cc_dllst_push_back(test2, cnt++);
+            cc_dllst_push_back(list, cnt++);
 
-        cc_dllst_free(test2);
+        cc_dllst_free(list);
 
         puts("Test deallocation.");
     }
@@ -83,26 +89,29 @@ int main(void)
         typedef struct
         {
             char *msg[2];
-        } test3_struct;
+        } msg_struct;
 
-        cc_dllst(test3, test3_struct);
-        cc_dllst_iter(test3_iter, test3);
+        cc_dllst(msg_struct) list;
+        cc_dllst_init(list);
 
-        test3_struct test3_1, test3_2;
+        cc_dllst_iter(msg_struct) iter;
+        cc_dllst_iter_init(iter, list);
 
-        test3_1.msg[0] = "Push";
-        test3_1.msg[1] = "back";
-        test3_2.msg[0] = "two";
-        test3_2.msg[1] = "structs.\n";
+        msg_struct msg_1, msg_2;
 
-        cc_dllst_push_back(test3, test3_1);
-        cc_dllst_push_back(test3, test3_2);
+        msg_1.msg[0] = "Push";
+        msg_1.msg[1] = "back";
+        msg_2.msg[0] = "two";
+        msg_2.msg[1] = "structs.\n";
 
-        cc_dllst_trav(test3, test3_iter)
-            printf("%s ", cc_dllst_iter_dref(test3_iter).msg[0]),
-            printf("%s ", cc_dllst_iter_dref(test3_iter).msg[1]);
+        cc_dllst_push_back(list, msg_1);
+        cc_dllst_push_back(list, msg_2);
 
-        cc_dllst_free(test3);
+        cc_dllst_trav(list, iter)
+            printf("%s ", cc_dllst_iter_dref(iter).msg[0]),
+            printf("%s ", cc_dllst_iter_dref(iter).msg[1]);
+
+        cc_dllst_free(list);
     }
 
 
@@ -112,18 +121,21 @@ int main(void)
     printf("\n\nTest 4: ");
 
     {
-        cc_dllst(test4, int);
-        cc_dllst_iter(test4_iter, test4);
+        cc_dllst(int) list;
+        cc_dllst_init(list);
 
-        cc_dllst_trav(test4, test4_iter)
-            printf("%d", cc_dllst_iter_dref(test4_iter));
+        cc_dllst_iter(int) iter;
+        cc_dllst_iter_init(iter, list);
 
-        if (cc_dllst_iter_incr(test4_iter) == NULL)
+        cc_dllst_trav(list, iter)
+            printf("%d", cc_dllst_iter_dref(iter));
+
+        if (cc_dllst_iter_incr(iter) == NULL)
             puts("The iterator points to the tail.");
 
-        (void)cc_dllst_iter_dref(test4_iter);
+        (void)cc_dllst_iter_dref(iter);
 
-        cc_dllst_free(test4);
+        cc_dllst_free(list);
     }
 
 
@@ -133,20 +145,23 @@ int main(void)
     printf("\n\nTest 5: ");
 
     {
-        cc_dllst(test5, char*);
-        cc_dllst_iter(test5_iter, test5);
+        cc_dllst(char*) list;
+        cc_dllst_init(list);
 
-        (void)cc_dllst_front(test5);
-        (void)cc_dllst_back(test5);
-        cc_dllst_push_front(test5, "Failed ");
-        cc_dllst_push_front(test5, "to access.\n");
-        cc_dllst_back(test5)  = "Element access ";
-        cc_dllst_front(test5) = "succeed.\n";
+        cc_dllst_iter(char*) iter;
+        cc_dllst_iter_init(iter, list);
 
-        cc_dllst_trav_backward(test5, test5_iter)
-            printf("%s", cc_dllst_iter_dref(test5_iter));
+        (void)cc_dllst_front(list);
+        (void)cc_dllst_back(list);
+        cc_dllst_push_front(list, "Failed ");
+        cc_dllst_push_front(list, "to access.\n");
+        cc_dllst_back(list)  = "Element access ";
+        cc_dllst_front(list) = "succeed.\n";
 
-        cc_dllst_free(test5);
+        cc_dllst_trav_back(list, iter)
+            printf("%s", cc_dllst_iter_dref(iter));
+
+        cc_dllst_free(list);
     }
 
 
@@ -156,22 +171,25 @@ int main(void)
     printf("\n\nTest 6: ");
 
     {
-        cc_dllst(test6, int);
-        cc_dllst_iter(test6_iter, test6);
+        cc_dllst(int) list;
+        cc_dllst_init(list);
 
-        cc_dllst_pop_front(test6);
+        cc_dllst_iter(int) iter;
+        cc_dllst_iter_init(iter, list);
 
-        cc_dllst_push_front(test6, 1);
-        cc_dllst_pop_front(test6);
+        cc_dllst_pop_front(list);
 
-        cc_dllst_push_back(test6, 1);
-        cc_dllst_push_back(test6, 2);
-        cc_dllst_pop_back(test6);
-        cc_dllst_trav(test6, test6_iter)
+        cc_dllst_push_front(list, 1);
+        cc_dllst_pop_front(list);
+
+        cc_dllst_push_back(list, 1);
+        cc_dllst_push_back(list, 2);
+        cc_dllst_pop_back(list);
+        cc_dllst_trav(list, iter)
             printf("Only '%d' remains in the container.\n",
-                   cc_dllst_iter_dref(test6_iter));
+                   cc_dllst_iter_dref(iter));
 
-        cc_dllst_free(test6);
+        cc_dllst_free(list);
     }
 
 
@@ -181,19 +199,20 @@ int main(void)
     printf("\n\nTest 7: \n");
 
     {
-        cc_dllst(test7, int);
+        cc_dllst(int) list;
+        cc_dllst_init(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            cc_dllst_push_back(test7, cnt);
+            cc_dllst_push_back(list, cnt);
         puts("Clearing the dllst container...");
-        cc_dllst_clear(test7);
+        cc_dllst_clear(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            cc_dllst_push_back(test7, cnt);
+            cc_dllst_push_back(list, cnt);
         puts("Deallocating the dllst container...");
-        cc_dllst_free(test7);
+        cc_dllst_free(list);
     }
 
 
@@ -203,24 +222,18 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        cc_dllst_packed(test8_char       , char);
-        cc_dllst_packed(test8_short      , short);
-        cc_dllst_packed(test8_int        , int);
-        cc_dllst_packed(test8_long_int   , long int);
-        cc_dllst_packed(test8_long_double, long double);
+        #pragma pack(push, 1)
+        cc_dllst(char) list;
+        cc_dllst_init(list);
+
+        cc_dllst_iter(char) iter;
+        cc_dllst_iter_init(iter, list);
+        #pragma pack(pop)
 
         for (int cnt = 0; cnt < 1000000; cnt++)
-        {
-            cc_dllst_push_back(test8_char, cnt);
-            cc_dllst_push_back(test8_short, cnt);
-            cc_dllst_push_back(test8_int, cnt);
-            cc_dllst_push_back(test8_long_int, cnt);
-            cc_dllst_push_back(test8_long_double, cnt);
-        }
+            cc_dllst_push_back(list, cnt);
 
-        cc_dllst_iter(iter, test8_char);
-
-        cc_dllst_trav(test8_char, iter)
+        cc_dllst_trav(list, iter)
         {
             char var;
 
@@ -230,11 +243,7 @@ int main(void)
                 break;
         }
 
-        cc_dllst_free(test8_char);
-        cc_dllst_free(test8_short);
-        cc_dllst_free(test8_int);
-        cc_dllst_free(test8_long_int);
-        cc_dllst_free(test8_long_double);
+        cc_dllst_free(list);
     }
 
 
