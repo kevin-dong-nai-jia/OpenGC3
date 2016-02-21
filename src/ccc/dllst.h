@@ -7,7 +7,7 @@
 
 
 
-/* dllst container create */
+/* dllst create */
 
 
 typedef void* _link_t;
@@ -56,26 +56,7 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
-/* bitwise operations */
-
-
-#define _cc_xor_2(_cc_addr_a, _cc_addr_b)                                      \
-(                                                                              \
-    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_b))                                \
-)
-
-
-#define _cc_xor_3(_cc_addr_a, _cc_addr_b, _cc_addr_c)                          \
-(                                                                              \
-    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_b) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_c))                                \
-)
-
-
-
-/* dllst container iterators */
+/* dllst iterator create */
 
 
 #define cc_dllst_iter(_elem_t)                                                 \
@@ -100,6 +81,29 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
     (_cc_dllst_iter).pobj = (void*)&(_cc_dllst)                                \
 ))
+
+
+
+/* bitwise operations */
+
+
+#define _cc_xor_2(_cc_addr_a, _cc_addr_b)                                      \
+(                                                                              \
+    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_b))                                \
+)
+
+
+#define _cc_xor_3(_cc_addr_a, _cc_addr_b, _cc_addr_c)                          \
+(                                                                              \
+    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_b) ^                               \
+              (uintptr_t)(_link_t)(_cc_addr_c))                                \
+)
+
+
+
+/* dllst iterator operations */
 
 
 #define cc_dllst_iter_dref(_cc_dllst_iter)                                     \
@@ -185,7 +189,7 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
-/* dllst container traversal */
+/* dllst traversal */
 
 
 #define cc_dllst_trav(_cc_dllst, _cc_dllst_iter)                               \
@@ -203,7 +207,7 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
-/* dllst container access */
+/* dllst access */
 
 
 #define cc_dllst_front(_cc_dllst)                                              \
@@ -219,7 +223,7 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
-/* dllst container capacity */
+/* dllst capacity */
 
 
 #define cc_dllst_size(_cc_dllst)                                               \
@@ -235,7 +239,7 @@ CCC_VOID_EXPR_                                                                 \
 
 
 
-/* dllst container node operations */
+/* dllst node operations */
 
 
 #define _cc_dllst_node_alloc(_cc_dllst_pnode, _cc_dllst)                       \
@@ -285,7 +289,7 @@ CCC_STATEMENT_                                                                 \
 
 
 
-/* dllst container modifiers */
+/* dllst modifiers */
 
 
 #define cc_dllst_push_front(_cc_dllst, _cc_dllst_push_front_value)             \
@@ -396,7 +400,7 @@ CCC_STATEMENT_                                                                 \
 
 
 
-/* dllst container operations */
+/* dllst operations */
 
 
 #define cc_dllst_transfer_range(_cc_dllst, _cc_dllst_iter_position,            \
@@ -409,7 +413,7 @@ CCC_STATEMENT_                                                                 \
 
 
 
-/* dllst container destroy */
+/* dllst destroy */
 
 
 #define cc_dllst_free(_cc_dllst)                                               \
