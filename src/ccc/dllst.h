@@ -422,11 +422,7 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     _cc_dllst_blocks_free((_cc_dllst));                                        \
                                                                                \
-    (_cc_dllst).size = 0;                                                      \
-    (_cc_dllst).vcnt = 0;                                                      \
-    (_cc_dllst).avsp = NULL;                                                   \
-    (_cc_dllst).head = (_link_t)&((_cc_dllst).tail);                           \
-    (_cc_dllst).tail = (_link_t)&((_cc_dllst).head);                           \
+    cc_dllst_init((_cc_dllst));                                                \
 })
 
 
