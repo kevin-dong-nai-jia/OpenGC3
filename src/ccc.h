@@ -20,13 +20,28 @@
 /* CCC constants */
 
 
-#if (CCC_DLLST_BLOCK_SIZE - 0 <= 0)
+#if (CCC_DLLST_START - 0 <= 0)
 
-    #undef  CCC_DLLST_BLOCK_SIZE
-    #define CCC_DLLST_BLOCK_SIZE 16
+    #undef  CCC_DLLST_START
+    #define CCC_DLLST_START 16
 
 #endif
 
+
+#if (CCC_DLLST_RATIO - 0 <= 0)
+
+    #undef  CCC_DLLST_RATIO
+    #define CCC_DLLST_RATIO 2
+
+#endif
+
+
+#if (CCC_DLLST_LIMIT - 0 <= CCC_DLLST_START)
+
+    #undef  CCC_DLLST_LIMIT
+    #define CCC_DLLST_LIMIT 65536
+
+#endif
 
 
 /* CCC header files */

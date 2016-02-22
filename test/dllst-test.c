@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CCC_DLLST_BLOCK_SIZE 1000
+#define CCC_DLLST_START 10
+#define CCC_DLLST_RATIO 10
+#define CCC_DLLST_LIMIT 1000000
 
 #include "../src/ccc.h"
 

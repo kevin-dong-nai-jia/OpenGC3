@@ -28,11 +28,11 @@ typedef void* _link_t;
             {                                                                  \
                 _elem_t val;                                                   \
                 _link_t xorl;                                                  \
-            }   nodes[CCC_DLLST_BLOCK_SIZE], *pnode;                           \
+            }   nodes[CCC_DLLST_START], *pnode;                                \
                                                                                \
         }   block, *pool;                                                      \
                                                                                \
-        size_t    size, vcnt;                                                  \
+        size_t    size, ncnt, vcnt;                                            \
         ptrdiff_t val_offset, link_offset;                                     \
     }
 
@@ -47,7 +47,8 @@ CCC_VOID_EXPR_                                                                 \
     (_cc_dllst).pool = &((_cc_dllst).block),                                   \
                                                                                \
     (_cc_dllst).size = 0,                                                      \
-    (_cc_dllst).vcnt = CCC_DLLST_BLOCK_SIZE,                                   \
+    (_cc_dllst).ncnt = CCC_DLLST_START,                                        \
+    (_cc_dllst).vcnt = CCC_DLLST_START,                                        \
     (_cc_dllst).link_offset = (char*)&((_cc_dllst).block.nodes[0].xorl) -      \
                               (char*)&((_cc_dllst).block.nodes[0].val),        \
     (_cc_dllst).val_offset  = (_cc_dllst).link_offset * (-1) /                 \
@@ -251,9 +252,18 @@ CCC_STATEMENT_                                                                 \
         if ((_cc_dllst).vcnt == 0)                                             \
         {                                                                      \
             _link_t pool_dup = (_cc_dllst).pool;                               \
-            (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block));              \
+                                                                               \
+            (_cc_dllst).vcnt = (((_cc_dllst).ncnt >= CCC_DLLST_LIMIT) ?        \
+                                ((_cc_dllst).ncnt) :                           \
+                                ((_cc_dllst).ncnt *= CCC_DLLST_RATIO));        \
+            (_cc_dllst).vcnt = (((_cc_dllst).vcnt <= CCC_DLLST_LIMIT) ?        \
+                                ((_cc_dllst).vcnt) : CCC_DLLST_LIMIT);         \
+                                                                               \
+            (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
+                                      sizeof((_cc_dllst).block.nodes[0]) *     \
+                                      ((_cc_dllst).vcnt - CCC_DLLST_START));   \
+                                                                               \
             *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
-            (_cc_dllst).vcnt = CCC_DLLST_BLOCK_SIZE;                           \
         }                                                                      \
                                                                                \
         (_cc_dllst_pnode) = &((_cc_dllst).pool->nodes[--(_cc_dllst).vcnt]);    \
