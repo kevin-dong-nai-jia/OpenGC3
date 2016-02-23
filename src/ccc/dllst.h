@@ -421,7 +421,7 @@ CCC_STATEMENT_                                                                 \
         _link_t node_pxorl;                                                    \
                                                                                \
         _cc_dllst_node_alloc((*(_cc_dllst_iter).pobj).block.pnode,             \
-                             (*(_cc_dllst_iter).pobj));                        \
+                              *(_cc_dllst_iter).pobj);                         \
                                                                                \
         (_cc_dllst_iter).pobj->block.pnode->val = (_cc_dllst_insert_value);    \
                                                                                \
@@ -438,12 +438,36 @@ CCC_STATEMENT_                                                                 \
         *(_link_t*)                                                            \
         (_cc_dllst_iter).next = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).next,    \
                                           (_cc_dllst_iter).prev, node_pxorl);  \
+                                                                               \
+        (_cc_dllst_iter).pobj->size++;                                         \
     }                                                                          \
 })
 
 
 #define cc_dllst_erase(_cc_dllst_iter)                                         \
-    /* TODO */
+                                                                               \
+CCC_STATEMENT_                                                                 \
+({                                                                             \
+    if ((_cc_dllst_iter).prev != NULL && (_cc_dllst_iter).next != NULL)        \
+    {                                                                          \
+        _link_t node_pxorl = (_cc_dllst_iter).curr;                            \
+                                                                               \
+        *(_link_t*)                                                            \
+        (_cc_dllst_iter).prev = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).prev,    \
+                                          (_cc_dllst_iter).next, node_pxorl);  \
+        *(_link_t*)                                                            \
+        (_cc_dllst_iter).next = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).next,    \
+                                          (_cc_dllst_iter).prev, node_pxorl);  \
+                                                                               \
+        (_cc_dllst_iter).curr = (_cc_dllst_iter).next;                         \
+        (_cc_dllst_iter).next = _cc_xor_2((_cc_dllst_iter).prev,               \
+                                          *(_link_t*)(_cc_dllst_iter).curr);   \
+                                                                               \
+        _cc_dllst_node_clear(node_pxorl, *(_cc_dllst_iter).pobj);              \
+                                                                               \
+        (_cc_dllst_iter).pobj->size--;                                         \
+    }                                                                          \
+})
 
 
 #define cc_dllst_swap(_cc_dllst_a, _cc_dllst_b)                                \
