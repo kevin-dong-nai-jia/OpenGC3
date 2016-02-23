@@ -252,7 +252,7 @@ int main(void)
     /* Test 9 */
     /* Test insert */
 
-    printf("\n\nTest 9: \n");
+    printf("\n\nTest 9: \n\n");
 
     {
         cc_dllst(int) list;
@@ -261,27 +261,54 @@ int main(void)
         cc_dllst_iter(int) iter;
         cc_dllst_iter_init(iter, list);
 
-        for (int cnt = 0; cnt < 10; cnt++)
+        for (int cnt = 0; cnt < 6; cnt++)
             cc_dllst_push_back(list, 2 * cnt + 1);
 
-        puts("");
         cc_dllst_trav(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_iter_head(iter, list);
 
-        for (int cnt = 0; cnt <= 10; cnt++)
+        for (int cnt = 0; cnt <= 6; cnt++)
         {
             cc_dllst_iter_incr(iter);
             cc_dllst_insert(iter, 2 * cnt);
             cc_dllst_iter_incr(iter);
         }
 
-        printf("->");
+        printf("-> ");
         cc_dllst_trav(list, iter)
-            printf(" %d", cc_dllst_iter_dref(iter));
+            printf("%d ", cc_dllst_iter_dref(iter));
 
-        puts("");
+        cc_dllst_iter_head(iter, list);
+
+        for (int cnt = 0; cnt <= 6; cnt++)
+        {
+            cc_dllst_iter_incr(iter);
+            cc_dllst_erase(iter);
+        }
+
+        printf("-> ");
+        cc_dllst_trav(list, iter)
+            printf("%d ", cc_dllst_iter_dref(iter));
+
+        cc_dllst_iter_begin(iter, list);
+
+        for (int cnt = 0; cnt <= 4; cnt++)
+            cc_dllst_erase(iter);
+
+        printf("-> ");
+        cc_dllst_trav(list, iter)
+            printf("%d ", cc_dllst_iter_dref(iter));
+
+        cc_dllst_iter_begin(iter, list);
+
+        cc_dllst_erase(iter);
+
+        puts("-> (none)");
+        cc_dllst_trav(list, iter)
+            printf("%d ", cc_dllst_iter_dref(iter));
+
         cc_dllst_free(list);
     }
 
