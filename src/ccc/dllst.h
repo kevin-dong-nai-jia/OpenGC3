@@ -7,6 +7,34 @@
 
 
 
+/* dllst constants */
+
+
+#if (CCC_DLLST_START - 0 <= 0)
+
+    #undef  CCC_DLLST_START
+    #define CCC_DLLST_START 16
+
+#endif
+
+
+#if (CCC_DLLST_RATIO - 0 <= 0)
+
+    #undef  CCC_DLLST_RATIO
+    #define CCC_DLLST_RATIO 2
+
+#endif
+
+
+#if (CCC_DLLST_LIMIT - 0 <= CCC_DLLST_START)
+
+    #undef  CCC_DLLST_LIMIT
+    #define CCC_DLLST_LIMIT 65536
+
+#endif
+
+
+
 /* dllst create */
 
 
@@ -385,7 +413,33 @@ CCC_STATEMENT_                                                                 \
 
 
 #define cc_dllst_insert(_cc_dllst_iter, _cc_dllst_insert_value)                \
-    /* TODO */
+                                                                               \
+CCC_STATEMENT_                                                                 \
+({                                                                             \
+    if ((_cc_dllst_iter).prev != NULL)                                         \
+    {                                                                          \
+        _link_t node_pxorl;                                                    \
+                                                                               \
+        _cc_dllst_node_alloc((*(_cc_dllst_iter).pobj).block.pnode,             \
+                             (*(_cc_dllst_iter).pobj));                        \
+                                                                               \
+        (_cc_dllst_iter).pobj->block.pnode->val = (_cc_dllst_insert_value);    \
+                                                                               \
+        (_cc_dllst_iter).next = (_cc_dllst_iter).curr;                         \
+        (_cc_dllst_iter).curr = node_pxorl                                     \
+                              = &((_cc_dllst_iter).pobj->block.pnode->xorl);   \
+                                                                               \
+        *(_link_t*)                                                            \
+        (_cc_dllst_iter).curr = _cc_xor_2((_cc_dllst_iter).prev,               \
+                                          (_cc_dllst_iter).next);              \
+        *(_link_t*)                                                            \
+        (_cc_dllst_iter).prev = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).prev,    \
+                                          (_cc_dllst_iter).next, node_pxorl);  \
+        *(_link_t*)                                                            \
+        (_cc_dllst_iter).next = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).next,    \
+                                          (_cc_dllst_iter).prev, node_pxorl);  \
+    }                                                                          \
+})
 
 
 #define cc_dllst_erase(_cc_dllst_iter)                                         \
