@@ -281,15 +281,14 @@ CCC_STATEMENT_                                                                 \
         {                                                                      \
             _link_t pool_dup = (_cc_dllst).pool;                               \
                                                                                \
-            (_cc_dllst).vcnt = (((_cc_dllst).ncnt >= CCC_DLLST_LIMIT) ?        \
-                                ((_cc_dllst).ncnt) :                           \
-                                ((_cc_dllst).ncnt *= CCC_DLLST_RATIO));        \
-            (_cc_dllst).vcnt = (((_cc_dllst).vcnt <= CCC_DLLST_LIMIT) ?        \
-                                ((_cc_dllst).vcnt) : CCC_DLLST_LIMIT);         \
+            if ((_cc_dllst).ncnt < CCC_DLLST_LIMIT)                            \
+                (_cc_dllst).vcnt = ((_cc_dllst).ncnt *= CCC_DLLST_RATIO);      \
+            else                                                               \
+                (_cc_dllst).vcnt = ((_cc_dllst).ncnt =  CCC_DLLST_LIMIT);      \
                                                                                \
             (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
-                                      sizeof((_cc_dllst).block.nodes[0]) *     \
-                                      ((_cc_dllst).vcnt - CCC_DLLST_START));   \
+                                      ((_cc_dllst).vcnt - 1) *                 \
+                                      sizeof((_cc_dllst).block.nodes[0]));     \
                                                                                \
             *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
         }                                                                      \
