@@ -287,8 +287,8 @@ CCC_STATEMENT_                                                                 \
                 (_cc_dllst).vcnt = ((_cc_dllst).ncnt =  CCC_DLLST_LIMIT);      \
                                                                                \
             (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
-                                      ((_cc_dllst).vcnt - 1) *                 \
-                                      sizeof((_cc_dllst).block.nodes[0]));     \
+                                      sizeof((_cc_dllst).block.nodes[0]) *     \
+                                      ((_cc_dllst).vcnt - CCC_DLLST_START));   \
                                                                                \
             *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
         }                                                                      \
