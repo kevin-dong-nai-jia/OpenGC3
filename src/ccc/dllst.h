@@ -288,7 +288,7 @@ CCC_STATEMENT_                                                                 \
                                                                                \
             (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
                                       sizeof((_cc_dllst).block.nodes[0]) *     \
-                                      ((_cc_dllst).vcnt - CCC_DLLST_START));   \
+                                      ((_cc_dllst).ncnt - CCC_DLLST_START));   \
                                                                                \
             *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
         }                                                                      \
@@ -443,6 +443,11 @@ CCC_STATEMENT_                                                                 \
 })
 
 
+#define cc_dllst_insert_range(_cc_dllst_iter_position,                         \
+                              _cc_dllst_iter_fisrt, _cc_dllst_iter_last)       \
+    /* TODO */
+
+
 #define cc_dllst_erase(_cc_dllst_iter)                                         \
                                                                                \
 CCC_STATEMENT_                                                                 \
@@ -488,11 +493,6 @@ CCC_STATEMENT_                                                                 \
 
 
 /* dllst operations */
-
-
-#define cc_dllst_transfer_range(_cc_dllst, _cc_dllst_iter_position,            \
-                                _cc_dllst_iter_fisrt, _cc_dllst_iter_last)     \
-    /* TODO */
 
 
 #define cc_dllst_sort(_cc_dllst)                                               \
