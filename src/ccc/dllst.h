@@ -217,6 +217,19 @@ CCC_VOID_EXPR_                                                                 \
 )
 
 
+#define cc_dllst_iter_advance(_cc_dllst_iter, _cc_dllst_iter_distance)         \
+                                                                               \
+CCC_STATEMENT_                                                                 \
+({                                                                             \
+    int distance = (_cc_dllst_iter_distance);                                  \
+                                                                               \
+    if (distance > 0)                                                          \
+        while (distance-- && cc_dllst_iter_incr((_cc_dllst_iter)));            \
+    else if (distance < 0)                                                     \
+        while (distance++ && cc_dllst_iter_decr((_cc_dllst_iter)));            \
+})
+
+
 
 /* dllst traversal */
 
