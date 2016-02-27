@@ -515,6 +515,10 @@ CCC_STATEMENT_                                                                 \
     _link_t l_prev = (_cc_dllst_iter_l).prev;                                  \
     _link_t l_curr = (_cc_dllst_iter_l).curr;                                  \
                                                                                \
+    _link_t *pp_next = (_link_t*)&((_cc_dllst_iter_p).next);                   \
+    _link_t *pf_next = (_link_t*)&((_cc_dllst_iter_f).next);                   \
+    _link_t *pl_next = (_link_t*)&((_cc_dllst_iter_l).next);                   \
+                                                                               \
     *(_link_t*)p_prev = _cc_xor_3(p_curr, f_curr, *(_link_t*)p_prev);          \
     *(_link_t*)p_curr = _cc_xor_3(p_prev, l_prev, *(_link_t*)p_curr);          \
     *(_link_t*)f_prev = _cc_xor_3(f_curr, l_curr, *(_link_t*)f_prev);          \
@@ -522,19 +526,16 @@ CCC_STATEMENT_                                                                 \
     *(_link_t*)l_prev = _cc_xor_3(l_curr, p_curr, *(_link_t*)l_prev);          \
     *(_link_t*)l_curr = _cc_xor_3(l_prev, f_prev, *(_link_t*)l_curr);          \
                                                                                \
-    if ((_cc_dllst_iter_p).next == f_curr)                                     \
-        (_cc_dllst_iter_p).next =  l_curr;                                     \
-    if ((_cc_dllst_iter_f).next == l_curr)                                     \
-        (_cc_dllst_iter_f).next =  p_curr;                                     \
-    if ((_cc_dllst_iter_l).next == p_curr)                                     \
-        (_cc_dllst_iter_l).next =  f_curr;                                     \
+    if (*pp_next == f_curr)                                                    \
+        *pp_next =  l_curr;                                                    \
+    if (*pf_next == l_curr)                                                    \
+        *pf_next =  p_curr;                                                    \
+    if (*pl_next == p_curr)                                                    \
+        *pl_next =  f_curr;                                                    \
                                                                                \
-    (_cc_dllst_iter_p).prev = _cc_xor_2((_cc_dllst_iter_p).next,               \
-                                        *(_link_t*)(_cc_dllst_iter_p).curr);   \
-    (_cc_dllst_iter_f).prev = _cc_xor_2((_cc_dllst_iter_f).next,               \
-                                        *(_link_t*)(_cc_dllst_iter_f).curr);   \
-    (_cc_dllst_iter_l).prev = _cc_xor_2((_cc_dllst_iter_l).next,               \
-                                        *(_link_t*)(_cc_dllst_iter_l).curr);   \
+    (_cc_dllst_iter_p).prev = _cc_xor_2(*pp_next, *(_link_t*)p_curr);          \
+    (_cc_dllst_iter_f).prev = _cc_xor_2(*pf_next, *(_link_t*)f_curr);          \
+    (_cc_dllst_iter_l).prev = _cc_xor_2(*pl_next, *(_link_t*)l_curr);          \
 })
 
 
