@@ -456,9 +456,50 @@ CCC_STATEMENT_                                                                 \
 })
 
 
-#define cc_dllst_insert_range(_cc_dllst_iter_position,                         \
-                              _cc_dllst_iter_fisrt, _cc_dllst_iter_last)       \
-    /* TODO */
+#define cc_dllst_insert_range(_cc_dllst_iter_p,                                \
+                              _cc_dllst_iter_f, _cc_dllst_iter_l)              \
+                                                                               \
+CCC_STATEMENT_                                                                 \
+({                                                                             \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_p).prev = _cc_xor_3((_cc_dllst_iter_p).curr,               \
+                                        (_cc_dllst_iter_f).curr,               \
+                                        *(_link_t*)(_cc_dllst_iter_p).prev);   \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_p).curr = _cc_xor_3((_cc_dllst_iter_p).prev,               \
+                                        (_cc_dllst_iter_l).prev,               \
+                                        *(_link_t*)(_cc_dllst_iter_p).curr);   \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_f).prev = _cc_xor_3((_cc_dllst_iter_f).curr,               \
+                                        (_cc_dllst_iter_l).curr,               \
+                                        *(_link_t*)(_cc_dllst_iter_f).prev);   \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_f).curr = _cc_xor_3((_cc_dllst_iter_f).prev,               \
+                                        (_cc_dllst_iter_p).prev,               \
+                                        *(_link_t*)(_cc_dllst_iter_f).curr);   \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_l).prev = _cc_xor_3((_cc_dllst_iter_l).curr,               \
+                                        (_cc_dllst_iter_p).curr,               \
+                                        *(_link_t*)(_cc_dllst_iter_l).prev);   \
+    *(_link_t*)                                                                \
+    (_cc_dllst_iter_l).curr = _cc_xor_3((_cc_dllst_iter_l).prev,               \
+                                        (_cc_dllst_iter_f).prev,               \
+                                        *(_link_t*)(_cc_dllst_iter_l).curr);   \
+                                                                               \
+    if ((_cc_dllst_iter_p).next == (_cc_dllst_iter_f).curr)                    \
+        (_cc_dllst_iter_p).next =  (_cc_dllst_iter_l).curr;                    \
+    if ((_cc_dllst_iter_f).next == (_cc_dllst_iter_l).curr)                    \
+        (_cc_dllst_iter_f).next =  (_cc_dllst_iter_p).curr;                    \
+    if ((_cc_dllst_iter_l).next == (_cc_dllst_iter_p).curr)                    \
+        (_cc_dllst_iter_l).next =  (_cc_dllst_iter_f).curr;                    \
+                                                                               \
+    (_cc_dllst_iter_p).prev = _cc_xor_2((_cc_dllst_iter_p).next,               \
+                                        *(_link_t*)(_cc_dllst_iter_p).curr);   \
+    (_cc_dllst_iter_f).prev = _cc_xor_2((_cc_dllst_iter_f).next,               \
+                                        *(_link_t*)(_cc_dllst_iter_f).curr);   \
+    (_cc_dllst_iter_l).prev = _cc_xor_2((_cc_dllst_iter_l).next,               \
+                                        *(_link_t*)(_cc_dllst_iter_l).curr);   \
+})
 
 
 #define cc_dllst_erase(_cc_dllst_iter)                                         \
