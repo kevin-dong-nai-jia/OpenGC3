@@ -250,7 +250,7 @@ int main(void)
 
 
     /* Test 9 */
-    /* Test insert */
+    /* Test insert and erase */
 
     printf("\n\nTest 9: \n\n");
 
@@ -308,6 +308,53 @@ int main(void)
         puts("-> (none)");
         cc_dllst_trav(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
+
+        cc_dllst_free(list);
+    }
+
+
+    /* Test 10 */
+    /* Test insert a range of itself */
+
+    printf("\n\nTest 10: \n\n");
+
+    {
+        cc_dllst(int) list;
+        cc_dllst_init(list);
+
+        cc_dllst_iter(int) print, iter[3];
+        cc_dllst_iter_init(print, list);
+        cc_dllst_iter_init(iter[0], list);
+        cc_dllst_iter_init(iter[1], list);
+        cc_dllst_iter_init(iter[2], list);
+
+        int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
+                          {-4, 0, 3}, {0, 2, 0} , {1, 0, -1} , {1, -1, 1} };
+
+        for (int cnt = 0; cnt < 7; cnt++)
+            cc_dllst_push_back(list, cnt + 'A');
+
+        cc_dllst_iter_head(iter[0], list);
+        cc_dllst_iter_head(iter[1], list);
+        cc_dllst_iter_head(iter[2], list);
+
+        cc_dllst_trav(list, print)
+            printf("%c ", cc_dllst_iter_dref(print));
+
+        for (int cnt = 0; cnt < 8; cnt++)
+        {
+            cc_dllst_iter_advance(iter[0], pos[cnt][0]);
+            cc_dllst_iter_advance(iter[1], pos[cnt][1]);
+            cc_dllst_iter_advance(iter[2], pos[cnt][2]);
+
+            cc_dllst_insert_range(iter[0], iter[1], iter[2]);
+
+            printf("/ ");
+            cc_dllst_trav(list, print)
+                printf("%c ", cc_dllst_iter_dref(print));
+        }
+
+        puts("= A C E D B F G /");
 
         cc_dllst_free(list);
     }
