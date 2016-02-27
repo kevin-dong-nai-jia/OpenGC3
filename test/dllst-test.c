@@ -314,7 +314,7 @@ int main(void)
 
 
     /* Test 10 */
-    /* Test insert a range of itself */
+    /* Test splice */
 
     printf("\n\nTest 10: \n\n");
 
@@ -347,7 +347,7 @@ int main(void)
             cc_dllst_iter_advance(iter[1], pos[cnt][1]);
             cc_dllst_iter_advance(iter[2], pos[cnt][2]);
 
-            cc_dllst_insert_range(iter[0], iter[1], iter[2]);
+            cc_dllst_splice_range(iter[0], iter[1], iter[2]);
 
             printf("/ ");
             cc_dllst_trav(list, print)
