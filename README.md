@@ -20,4 +20,4 @@ Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>>
 
 ## License
 
-This project is distributed under GPLv2 or later.
+This project is distributed under the MIT license.
