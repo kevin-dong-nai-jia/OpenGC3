@@ -57,23 +57,18 @@
 			</tr>
 			<tr>
 				<th style="display:none"></th>
-				<th>Class</th><th colspan="2">Function-like Macros Prototype</th>
+				<th>Category</th><th colspan="2">Function-like Macros Prototype</th>
 				<th style="display:none"></th>
 			</tr>
 			<tr>
-				<td rowspan="23">doubly</br>linked list</br>(dllst)</td>
-				<td rowspan="2">constructor</td><td>DEFINE</td><td>cc_dllst (DLLST, TYPE);</td>
-				<td>Create a dllst container.</br>Use aligned structure to enhance performance.</td>
+				<td rowspan="22">Doubly</br>Linked List</br>(dllst)</td>
+				<td rowspan="1">Constructor</td><td>DEFINE</td><td>cc_dllst (TYPE) DLLST;</td>
+				<td>Create a dllst container.</br>Use a C struct to simulate a container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>DEFINE</td><td>cc_dllst_packed (DLLST, TYPE);</td>
-				<td>Create a packed dllst container.</br>Use packed structure to reduce memory consumption.</td>
-			</tr>
-			<tr>
-				<td style="display:none"></td>
-				<td rowspan="9">iterators</td><td>DEFINE</td><td>cc_dllst_iter (ITER, DLLST);</td>
-				<td>Create an iterator for the (packed) dllst container.</br>The iterator might be invalid if the container is modified.</td>
+				<td rowspan="9">Iterators</td><td>DEFINE</td><td>cc_dllst_iter (ITER, DLLST);</td>
+				<td>Create an iterator for the dllst container.</br>The iterator might be invalid if the container is modified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -117,7 +112,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">traversal</td><td>LOOP</td><td>cc_dllst_trav (DLLST, ITER) { ... }</td>
+				<td rowspan="2">Traversal</td><td>LOOP</td><td>cc_dllst_trav (DLLST, ITER) { ... }</td>
 				<td>Traversal all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
@@ -127,7 +122,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">access</td><td>TYPE&amp;</td><td>cc_dllst_front (DLLST);</td>
+				<td rowspan="2">Access</td><td>TYPE&amp;</td><td>cc_dllst_front (DLLST);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
@@ -137,7 +132,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">capacity</td><td>int</td><td>cc_dllst_size (DLLST);</td>
+				<td rowspan="2">Capacity</td><td>int</td><td>cc_dllst_size (DLLST);</td>
 				<td>Return the number of the elements in the container.</br>Return 0 if the container is empty.</td>
 			</tr>
 			<tr>
@@ -147,7 +142,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="5">modifiers</td><td>STAT</td><td>cc_dllst_push_front (DLLST, value);</td>
+				<td rowspan="5">Modifiers</td><td>STAT</td><td>cc_dllst_push_front (DLLST, value);</td>
 				<td>Insert an element at the beginning.</br>This makes a copy but not a reference of the value into the container.</td>
 			</tr>
 			<tr>
@@ -172,12 +167,12 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td>destructor</td><td>STAT</td><td>cc_dllst_free (DLLST);</td>
+				<td rowspan="1">Destructor</td><td>STAT</td><td>cc_dllst_free (DLLST);</td>
 				<td>Deallocate all elements in the container manually.</br>The constructor and destructor should exist in pairs.</td>
 			</tr>
 			<tr>
-				<td rowspan="1">settings</td>
-				<td rowspan="1">constants</td></td><td>#define</td><td>CCC_DLLST_BLOCK_SIZE NUMBER</td>
+				<td rowspan="1">MISC.</td>
+				<td rowspan="1">Constants</td></td><td>#define</td><td>CCC_DLLST_BLOCK_SIZE NUMBER</td>
 				<td colspan="2">Set the number of elements that a single block in the memory pool can hold.</br>The default value is 16.</td>
 			</tr>
 		</tbody>
