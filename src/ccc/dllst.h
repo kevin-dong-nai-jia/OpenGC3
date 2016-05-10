@@ -53,7 +53,7 @@
 #if (CCC_DLLST_LIMIT - 0 <= CCC_DLLST_START)
 
     #undef  CCC_DLLST_LIMIT
-    #define CCC_DLLST_LIMIT 65536
+    #define CCC_DLLST_LIMIT CCC_DLLST_START
 
 #endif
 
@@ -62,30 +62,31 @@
 /* dllst create */
 
 
-typedef void* _link_t;
+typedef void* link_t;
 
-#define cc_dllst(_elem_t)                                                      \
+#define cc_dllst(elem_t)                                                       \
                                                                                \
     struct                                                                     \
     {                                                                          \
-        _elem_t *head;                                                         \
-        _elem_t *tail;                                                         \
-        _elem_t *avsp;                                                         \
+        elem_t *head;                                                          \
+        elem_t *tail;                                                          \
+        elem_t *avsp;                                                          \
+                                                                               \
+        size_t    size, ncnt, vcnt;                                            \
+        ptrdiff_t val_offset, xor_offset;                                      \
                                                                                \
         struct                                                                 \
         {                                                                      \
-            _link_t next;                                                      \
+            link_t next;                                                       \
                                                                                \
             struct                                                             \
             {                                                                  \
-                _elem_t val;                                                   \
-                _link_t xorl;                                                  \
+                elem_t val;                                                    \
+                link_t xor;                                                    \
+                                                                               \
             }   nodes[CCC_DLLST_START], *pnode;                                \
                                                                                \
         }   block, *pool;                                                      \
-                                                                               \
-        size_t    size, ncnt, vcnt;                                            \
-        ptrdiff_t val_offset, link_offset;                                     \
     }
 
 
@@ -93,18 +94,18 @@ typedef void* _link_t;
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    (_cc_dllst).head = (_link_t)&((_cc_dllst).tail),                           \
-    (_cc_dllst).tail = (_link_t)&((_cc_dllst).head),                           \
+    (_cc_dllst).head = (link_t)&((_cc_dllst).tail),                            \
+    (_cc_dllst).tail = (link_t)&((_cc_dllst).head),                            \
     (_cc_dllst).avsp = NULL,                                                   \
     (_cc_dllst).pool = &((_cc_dllst).block),                                   \
                                                                                \
     (_cc_dllst).size = 0,                                                      \
     (_cc_dllst).ncnt = CCC_DLLST_START,                                        \
     (_cc_dllst).vcnt = CCC_DLLST_START,                                        \
-    (_cc_dllst).link_offset = (char*)&((_cc_dllst).block.nodes[0].xorl) -      \
-                              (char*)&((_cc_dllst).block.nodes[0].val),        \
-    (_cc_dllst).val_offset  = (_cc_dllst).link_offset * (-1) /                 \
-                              sizeof((_cc_dllst).block.nodes[0].val)           \
+    (_cc_dllst).xor_offset = (char*)&((_cc_dllst).block.nodes[0].xor) -        \
+                             (char*)&((_cc_dllst).block.nodes[0].val),         \
+    (_cc_dllst).val_offset = (_cc_dllst).xor_offset * (-1) /                   \
+                             sizeof((_cc_dllst).block.nodes[0].val)            \
 ))
 
 
@@ -112,15 +113,15 @@ CCC_VOID_EXPR_                                                                 \
 /* dllst iterator create */
 
 
-#define cc_dllst_iter(_elem_t)                                                 \
+#define cc_dllst_iter(elem_t)                                                  \
                                                                                \
     struct                                                                     \
     {                                                                          \
-        _elem_t *prev;                                                         \
-        _elem_t *curr;                                                         \
-        _elem_t *next;                                                         \
+        elem_t *prev;                                                          \
+        elem_t *curr;                                                          \
+        elem_t *next;                                                          \
                                                                                \
-        cc_dllst(_elem_t) *pobj;                                               \
+        cc_dllst(elem_t) *pobj;                                                \
     }
 
 
@@ -140,18 +141,18 @@ CCC_VOID_EXPR_                                                                 \
 /* bitwise operations */
 
 
-#define _cc_xor_2(_cc_addr_a, _cc_addr_b)                                      \
+#define X2(_cc_addr_a, _cc_addr_b)                                             \
 (                                                                              \
-    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_b))                                \
+    (link_t)((uintptr_t)(link_t)(_cc_addr_a) ^                                 \
+             (uintptr_t)(link_t)(_cc_addr_b))                                  \
 )
 
 
-#define _cc_xor_3(_cc_addr_a, _cc_addr_b, _cc_addr_c)                          \
+#define X3(_cc_addr_a, _cc_addr_b, _cc_addr_c)                                 \
 (                                                                              \
-    (_link_t)((uintptr_t)(_link_t)(_cc_addr_a) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_b) ^                               \
-              (uintptr_t)(_link_t)(_cc_addr_c))                                \
+    (link_t)((uintptr_t)(link_t)(_cc_addr_a) ^                                 \
+             (uintptr_t)(link_t)(_cc_addr_b) ^                                 \
+             (uintptr_t)(link_t)(_cc_addr_c))                                  \
 )
 
 
@@ -180,7 +181,7 @@ CCC_VOID_EXPR_                                                                 \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
     (_cc_dllst_iter).prev = NULL,                                              \
-    (_cc_dllst_iter).curr = (_link_t)&((_cc_dllst).head),                      \
+    (_cc_dllst_iter).curr = (link_t)&((_cc_dllst).head),                       \
     (_cc_dllst_iter).next = (_cc_dllst).head                                   \
 ))
 
@@ -190,7 +191,7 @@ CCC_VOID_EXPR_                                                                 \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
     (_cc_dllst_iter).next = NULL,                                              \
-    (_cc_dllst_iter).curr = (_link_t)&((_cc_dllst).tail),                      \
+    (_cc_dllst_iter).curr = (link_t)&((_cc_dllst).tail),                       \
     (_cc_dllst_iter).prev = (_cc_dllst).tail                                   \
 ))
 
@@ -199,10 +200,9 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    (_cc_dllst_iter).prev = (_link_t)&((_cc_dllst).head),                      \
+    (_cc_dllst_iter).prev = (link_t)&((_cc_dllst).head),                       \
     (_cc_dllst_iter).curr = (_cc_dllst).head,                                  \
-    (_cc_dllst_iter).next = _cc_xor_2(&((_cc_dllst).head),                     \
-                                      *(_link_t*)(_cc_dllst).head)             \
+    (_cc_dllst_iter).next = X2(&((_cc_dllst).head), *(link_t*)(_cc_dllst).head)\
 ))
 
 
@@ -210,10 +210,9 @@ CCC_VOID_EXPR_                                                                 \
                                                                                \
 CCC_VOID_EXPR_                                                                 \
 ((                                                                             \
-    (_cc_dllst_iter).next = (_link_t)&((_cc_dllst).tail),                      \
+    (_cc_dllst_iter).next = (link_t)&((_cc_dllst).tail),                       \
     (_cc_dllst_iter).curr = (_cc_dllst).tail,                                  \
-    (_cc_dllst_iter).prev = _cc_xor_2(&((_cc_dllst).tail),                     \
-                                      *(_link_t*)(_cc_dllst).tail)             \
+    (_cc_dllst_iter).prev = X2(&((_cc_dllst).tail), *(link_t*)(_cc_dllst).tail)\
 ))
 
 
@@ -223,9 +222,9 @@ CCC_VOID_EXPR_                                                                 \
     (                                                                          \
         (_cc_dllst_iter).prev = (_cc_dllst_iter).curr,                         \
         (_cc_dllst_iter).curr = (_cc_dllst_iter).next,                         \
-        (_cc_dllst_iter).next = _cc_xor_2((_cc_dllst_iter).prev,               \
-                                          *(_link_t*)(_cc_dllst_iter).curr)    \
-    ) : (void*)NULL                                                            \
+        (_cc_dllst_iter).next =                                                \
+                   X2((_cc_dllst_iter).prev, *(link_t*)(_cc_dllst_iter).curr)  \
+    ) : (NULL)                                                                 \
 )
 
 
@@ -235,9 +234,9 @@ CCC_VOID_EXPR_                                                                 \
     (                                                                          \
         (_cc_dllst_iter).next = (_cc_dllst_iter).curr,                         \
         (_cc_dllst_iter).curr = (_cc_dllst_iter).prev,                         \
-        (_cc_dllst_iter).prev = _cc_xor_2((_cc_dllst_iter).next,               \
-                                          *(_link_t*)(_cc_dllst_iter).curr)    \
-    ) : (void*)NULL                                                            \
+        (_cc_dllst_iter).prev =                                                \
+                   X2((_cc_dllst_iter).next, *(link_t*)(_cc_dllst_iter).curr)  \
+    ) : (NULL)                                                                 \
 )
 
 
@@ -316,7 +315,7 @@ CCC_STATEMENT_                                                                 \
     {                                                                          \
         if ((_cc_dllst).vcnt == 0)                                             \
         {                                                                      \
-            _link_t pool_dup = (_cc_dllst).pool;                               \
+            link_t pool_dup = (_cc_dllst).pool;                                \
                                                                                \
             if ((_cc_dllst).ncnt < CCC_DLLST_LIMIT)                            \
                 (_cc_dllst).vcnt = ((_cc_dllst).ncnt *= CCC_DLLST_RATIO);      \
@@ -327,7 +326,7 @@ CCC_STATEMENT_                                                                 \
                                       sizeof((_cc_dllst).block.nodes[0]) *     \
                                       ((_cc_dllst).ncnt - CCC_DLLST_START));   \
                                                                                \
-            *(_link_t*)(_cc_dllst).pool = pool_dup;                            \
+            *(link_t*)(_cc_dllst).pool = pool_dup;                             \
         }                                                                      \
                                                                                \
         (_cc_dllst_pnode) = &((_cc_dllst).pool->nodes[--(_cc_dllst).vcnt]);    \
@@ -335,17 +334,17 @@ CCC_STATEMENT_                                                                 \
     else                                                                       \
     {                                                                          \
         (_cc_dllst_pnode) = (void*)((_cc_dllst).avsp + (_cc_dllst).val_offset);\
-        (_cc_dllst).avsp = *(_link_t*)(_cc_dllst).avsp;                        \
+        (_cc_dllst).avsp = *(link_t*)(_cc_dllst).avsp;                         \
     }                                                                          \
 })
 
 
-#define _cc_dllst_node_clear(_cc_dllst_node_pxorl, _cc_dllst)                  \
+#define _cc_dllst_node_clear(_cc_dllst_node_pxor, _cc_dllst)                   \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    *(_link_t*)(_cc_dllst_node_pxorl) = (_cc_dllst).avsp;                      \
-    (_cc_dllst).avsp = (_cc_dllst_node_pxorl);                                 \
+    *(link_t*)(_cc_dllst_node_pxor) = (_cc_dllst).avsp;                        \
+    (_cc_dllst).avsp = (_cc_dllst_node_pxor);                                  \
 })
 
 
@@ -355,8 +354,8 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     while ((_cc_dllst).pool != &((_cc_dllst).block))                           \
     {                                                                          \
-        _link_t pool_dup = (_cc_dllst).pool;                                   \
-        (_cc_dllst).pool = *(_link_t*)(_cc_dllst).pool;                        \
+        link_t pool_dup = (_cc_dllst).pool;                                    \
+        (_cc_dllst).pool = *(link_t*)(_cc_dllst).pool;                         \
         free(pool_dup);                                                        \
     }                                                                          \
 })
@@ -372,15 +371,14 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     _cc_dllst_node_alloc((_cc_dllst).block.pnode, (_cc_dllst));                \
                                                                                \
-    (_cc_dllst).block.pnode->val  = (_cc_dllst_push_front_value);              \
-    (_cc_dllst).block.pnode->xorl = _cc_xor_2(&((_cc_dllst).head),             \
-                                                (_cc_dllst).head);             \
+    (_cc_dllst).block.pnode->val = (_cc_dllst_push_front_value);               \
+    (_cc_dllst).block.pnode->xor = X2(&((_cc_dllst).head), (_cc_dllst).head);  \
                                                                                \
-    *(_link_t*)                                                                \
-    (_cc_dllst).head = _cc_xor_3(&((_cc_dllst).head),                          \
-                                 &((_cc_dllst).block.pnode->xorl),             \
-                                 *(_link_t*)(_cc_dllst).head);                 \
-    (_cc_dllst).head = (_link_t)&((_cc_dllst).block.pnode->xorl);              \
+    *(link_t*)                                                                 \
+    (_cc_dllst).head = X3(&((_cc_dllst).head),                                 \
+                          *(link_t*)(_cc_dllst).head,                          \
+                          &((_cc_dllst).block.pnode->xor));                    \
+    (_cc_dllst).head = (link_t)&((_cc_dllst).block.pnode->xor);                \
                                                                                \
     (_cc_dllst).size++;                                                        \
 })
@@ -392,15 +390,14 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     _cc_dllst_node_alloc((_cc_dllst).block.pnode, (_cc_dllst));                \
                                                                                \
-    (_cc_dllst).block.pnode->val  = (_cc_dllst_push_back_value);               \
-    (_cc_dllst).block.pnode->xorl = _cc_xor_2(&((_cc_dllst).tail),             \
-                                                (_cc_dllst).tail);             \
+    (_cc_dllst).block.pnode->val = (_cc_dllst_push_back_value);                \
+    (_cc_dllst).block.pnode->xor = X2(&((_cc_dllst).tail), (_cc_dllst).tail);  \
                                                                                \
-    *(_link_t*)                                                                \
-    (_cc_dllst).tail = _cc_xor_3(&((_cc_dllst).tail),                          \
-                                 &((_cc_dllst).block.pnode->xorl),             \
-                                 *(_link_t*)(_cc_dllst).tail);                 \
-    (_cc_dllst).tail = (_link_t)&((_cc_dllst).block.pnode->xorl);              \
+    *(link_t*)                                                                 \
+    (_cc_dllst).tail = X3(&((_cc_dllst).tail),                                 \
+                          *(link_t*)(_cc_dllst).tail,                          \
+                          &((_cc_dllst).block.pnode->xor));                    \
+    (_cc_dllst).tail = (link_t)&((_cc_dllst).block.pnode->xor);                \
                                                                                \
     (_cc_dllst).size++;                                                        \
 })
@@ -412,13 +409,12 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     if (!(cc_dllst_empty((_cc_dllst))))                                        \
     {                                                                          \
-        _link_t head = (_cc_dllst).head;                                       \
+        link_t head  =   (_cc_dllst).head;                                     \
+        link_t phead = &((_cc_dllst).head);                                    \
                                                                                \
-        (_cc_dllst).head = _cc_xor_2(&((_cc_dllst).head),                      \
-                                     *(_link_t*)(_cc_dllst).head);             \
-        *(_link_t*)                                                            \
-        (_cc_dllst).head = _cc_xor_3(&((_cc_dllst).head), head,                \
-                                     *(_link_t*)(_cc_dllst).head);             \
+        (_cc_dllst).head = X2(phead, *(link_t*)(_cc_dllst).head);              \
+        *(link_t*)                                                             \
+        (_cc_dllst).head = X3(phead, *(link_t*)(_cc_dllst).head, head);        \
                                                                                \
         _cc_dllst_node_clear(head, (_cc_dllst));                               \
                                                                                \
@@ -433,13 +429,12 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     if (!(cc_dllst_empty((_cc_dllst))))                                        \
     {                                                                          \
-        _link_t tail = (_cc_dllst).tail;                                       \
+        link_t tail  =   (_cc_dllst).tail;                                     \
+        link_t ptail = &((_cc_dllst).tail);                                    \
                                                                                \
-        (_cc_dllst).tail = _cc_xor_2(&((_cc_dllst).tail),                      \
-                                     *(_link_t*)(_cc_dllst).tail);             \
-        *(_link_t*)                                                            \
-        (_cc_dllst).tail = _cc_xor_3(&((_cc_dllst).tail), tail,                \
-                                     *(_link_t*)(_cc_dllst).tail);             \
+        (_cc_dllst).tail = X2(ptail, *(link_t*)(_cc_dllst).tail);              \
+        *(link_t*)                                                             \
+        (_cc_dllst).tail = X3(ptail, *(link_t*)(_cc_dllst).tail, tail);        \
                                                                                \
         _cc_dllst_node_clear(tail, (_cc_dllst));                               \
                                                                                \
@@ -454,7 +449,7 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     if ((_cc_dllst_iter).prev != NULL)                                         \
     {                                                                          \
-        _link_t node_pxorl;                                                    \
+        link_t node_pxor;                                                      \
                                                                                \
         _cc_dllst_node_alloc((*(_cc_dllst_iter).pobj).block.pnode,             \
                               *(_cc_dllst_iter).pobj);                         \
@@ -462,18 +457,18 @@ CCC_STATEMENT_                                                                 \
         (_cc_dllst_iter).pobj->block.pnode->val = (_cc_dllst_insert_value);    \
                                                                                \
         (_cc_dllst_iter).next = (_cc_dllst_iter).curr;                         \
-        (_cc_dllst_iter).curr = node_pxorl                                     \
-                              = &((_cc_dllst_iter).pobj->block.pnode->xorl);   \
+        (_cc_dllst_iter).curr = node_pxor                                      \
+                              = &((_cc_dllst_iter).pobj->block.pnode->xor);    \
                                                                                \
-        *(_link_t*)                                                            \
-        (_cc_dllst_iter).curr = _cc_xor_2((_cc_dllst_iter).prev,               \
-                                          (_cc_dllst_iter).next);              \
-        *(_link_t*)                                                            \
-        (_cc_dllst_iter).prev = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).prev,    \
-                                          (_cc_dllst_iter).next, node_pxorl);  \
-        *(_link_t*)                                                            \
-        (_cc_dllst_iter).next = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).next,    \
-                                          (_cc_dllst_iter).prev, node_pxorl);  \
+        *(link_t*)                                                             \
+        (_cc_dllst_iter).curr = X2((_cc_dllst_iter).prev,                      \
+                                   (_cc_dllst_iter).next);                     \
+        *(link_t*)                                                             \
+        (_cc_dllst_iter).prev = X3(*(link_t*)(_cc_dllst_iter).prev,            \
+                                   (_cc_dllst_iter).next, node_pxor);          \
+        *(link_t*)                                                             \
+        (_cc_dllst_iter).next = X3(*(link_t*)(_cc_dllst_iter).next,            \
+                                   (_cc_dllst_iter).prev, node_pxor);          \
                                                                                \
         (_cc_dllst_iter).pobj->size++;                                         \
     }                                                                          \
@@ -486,20 +481,20 @@ CCC_STATEMENT_                                                                 \
 ({                                                                             \
     if ((_cc_dllst_iter).prev != NULL && (_cc_dllst_iter).next != NULL)        \
     {                                                                          \
-        _link_t node_pxorl = (_cc_dllst_iter).curr;                            \
-                                                                               \
-        *(_link_t*)                                                            \
-        (_cc_dllst_iter).prev = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).prev,    \
-                                          (_cc_dllst_iter).next, node_pxorl);  \
-        *(_link_t*)                                                            \
-        (_cc_dllst_iter).next = _cc_xor_3(*(_link_t*)(_cc_dllst_iter).next,    \
-                                          (_cc_dllst_iter).prev, node_pxorl);  \
-                                                                               \
+        link_t node_pxor = (_cc_dllst_iter).curr;                              \
         (_cc_dllst_iter).curr = (_cc_dllst_iter).next;                         \
-        (_cc_dllst_iter).next = _cc_xor_2((_cc_dllst_iter).prev,               \
-                                          *(_link_t*)(_cc_dllst_iter).curr);   \
                                                                                \
-        _cc_dllst_node_clear(node_pxorl, *(_cc_dllst_iter).pobj);              \
+        *(link_t*)                                                             \
+        (_cc_dllst_iter).prev = X3(*(link_t*)(_cc_dllst_iter).prev,            \
+                                   (_cc_dllst_iter).next, node_pxor);          \
+        *(link_t*)                                                             \
+        (_cc_dllst_iter).next = X3(*(link_t*)(_cc_dllst_iter).next,            \
+                                   (_cc_dllst_iter).prev, node_pxor);          \
+                                                                               \
+        (_cc_dllst_iter).next = X2(*(link_t*)(_cc_dllst_iter).curr,            \
+                                   (_cc_dllst_iter).prev);                     \
+                                                                               \
+        _cc_dllst_node_clear(node_pxor, *(_cc_dllst_iter).pobj);               \
                                                                                \
         (_cc_dllst_iter).pobj->size--;                                         \
     }                                                                          \
@@ -532,23 +527,23 @@ CCC_STATEMENT_                                                                 \
                                                                                \
 CCC_STATEMENT_                                                                 \
 ({                                                                             \
-    _link_t p_prev = (_cc_dllst_iter_p).prev;                                  \
-    _link_t p_curr = (_cc_dllst_iter_p).curr;                                  \
-    _link_t f_prev = (_cc_dllst_iter_f).prev;                                  \
-    _link_t f_curr = (_cc_dllst_iter_f).curr;                                  \
-    _link_t l_prev = (_cc_dllst_iter_l).prev;                                  \
-    _link_t l_curr = (_cc_dllst_iter_l).curr;                                  \
+    link_t p_prev = (_cc_dllst_iter_p).prev;                                   \
+    link_t p_curr = (_cc_dllst_iter_p).curr;                                   \
+    link_t f_prev = (_cc_dllst_iter_f).prev;                                   \
+    link_t f_curr = (_cc_dllst_iter_f).curr;                                   \
+    link_t l_prev = (_cc_dllst_iter_l).prev;                                   \
+    link_t l_curr = (_cc_dllst_iter_l).curr;                                   \
                                                                                \
-    _link_t *pp_next = (_link_t*)&((_cc_dllst_iter_p).next);                   \
-    _link_t *pf_next = (_link_t*)&((_cc_dllst_iter_f).next);                   \
-    _link_t *pl_next = (_link_t*)&((_cc_dllst_iter_l).next);                   \
+    link_t *pp_next = (link_t*)&((_cc_dllst_iter_p).next);                     \
+    link_t *pf_next = (link_t*)&((_cc_dllst_iter_f).next);                     \
+    link_t *pl_next = (link_t*)&((_cc_dllst_iter_l).next);                     \
                                                                                \
-    *(_link_t*)p_prev = _cc_xor_3(p_curr, f_curr, *(_link_t*)p_prev);          \
-    *(_link_t*)p_curr = _cc_xor_3(p_prev, l_prev, *(_link_t*)p_curr);          \
-    *(_link_t*)f_prev = _cc_xor_3(f_curr, l_curr, *(_link_t*)f_prev);          \
-    *(_link_t*)f_curr = _cc_xor_3(f_prev, p_prev, *(_link_t*)f_curr);          \
-    *(_link_t*)l_prev = _cc_xor_3(l_curr, p_curr, *(_link_t*)l_prev);          \
-    *(_link_t*)l_curr = _cc_xor_3(l_prev, f_prev, *(_link_t*)l_curr);          \
+    *(link_t*)p_prev = X3(p_curr, f_curr, *(link_t*)p_prev);                   \
+    *(link_t*)p_curr = X3(p_prev, l_prev, *(link_t*)p_curr);                   \
+    *(link_t*)f_prev = X3(f_curr, l_curr, *(link_t*)f_prev);                   \
+    *(link_t*)f_curr = X3(f_prev, p_prev, *(link_t*)f_curr);                   \
+    *(link_t*)l_prev = X3(l_curr, p_curr, *(link_t*)l_prev);                   \
+    *(link_t*)l_curr = X3(l_prev, f_prev, *(link_t*)l_curr);                   \
                                                                                \
     if (*pp_next == f_curr)                                                    \
         *pp_next =  l_curr;                                                    \
@@ -557,9 +552,9 @@ CCC_STATEMENT_                                                                 \
     if (*pl_next == p_curr)                                                    \
         *pl_next =  f_curr;                                                    \
                                                                                \
-    (_cc_dllst_iter_p).prev = _cc_xor_2(*pp_next, *(_link_t*)p_curr);          \
-    (_cc_dllst_iter_f).prev = _cc_xor_2(*pf_next, *(_link_t*)f_curr);          \
-    (_cc_dllst_iter_l).prev = _cc_xor_2(*pl_next, *(_link_t*)l_curr);          \
+    (_cc_dllst_iter_p).prev = X2(*pp_next, *(link_t*)p_curr);                  \
+    (_cc_dllst_iter_f).prev = X2(*pf_next, *(link_t*)f_curr);                  \
+    (_cc_dllst_iter_l).prev = X2(*pl_next, *(link_t*)l_curr);                  \
 })
 
 
