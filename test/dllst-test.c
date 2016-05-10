@@ -232,7 +232,7 @@ int main(void)
         cc_dllst_iter_init(iter, list);
         #pragma pack(pop)
 
-        for (int cnt = 0; cnt < 1000000; cnt++)
+        for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(list, cnt);
 
         cc_dllst_trav(list, iter)
@@ -240,7 +240,7 @@ int main(void)
             char var;
 
             if ((var = cc_dllst_iter_dref(iter)) > 0)
-                printf("%d%c", var, (var != 127) ? ' ' : '\n');
+                printf("%03d%c", var, (var != 127) ? ' ' : '\n');
             else if (var != 0)
                 break;
         }
@@ -280,9 +280,9 @@ int main(void)
         cc_dllst_trav(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
-        cc_dllst_iter_head(iter, list);
+        cc_dllst_iter_begin(iter, list);
 
-        for (int cnt = 0; cnt <= 6; cnt++)
+        for (int cnt = 0; cnt <= 5; cnt++)
         {
             cc_dllst_iter_incr(iter);
             cc_dllst_erase(iter);
@@ -294,7 +294,7 @@ int main(void)
 
         cc_dllst_iter_begin(iter, list);
 
-        for (int cnt = 0; cnt <= 4; cnt++)
+        for (int cnt = 0; cnt <= 5; cnt++)
             cc_dllst_erase(iter);
 
         printf("-> ");
