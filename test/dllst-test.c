@@ -5,7 +5,7 @@
 #define CCC_DLLST_RATIO 10
 #define CCC_DLLST_LIMIT 1000000
 
-#include "../src/ccc.h"
+#include "../src/dllst.h"
 
 
 int main(void)
