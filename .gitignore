@@ -10,8 +10,6 @@
 
 !src/
 !src/*.h
-!src/ccc/
-!src/ccc/*.h
 
 !test/
 !test/*.c
