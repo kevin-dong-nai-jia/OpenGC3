@@ -25,6 +25,7 @@
 #ifndef _CCC_DLLST_H_
 #define _CCC_DLLST_H_
 
+
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -111,10 +112,13 @@ VOID_EXPR_                                                                     \
     (_cc_dllst).size = 0,                                                      \
     (_cc_dllst).ncnt = CCC_DLLST_START,                                        \
     (_cc_dllst).vcnt = CCC_DLLST_START,                                        \
-    (_cc_dllst).xor_offset = (char*)&((_cc_dllst).block.nodes[0].xor) -        \
-                             (char*)&((_cc_dllst).block.nodes[0].val),         \
-    (_cc_dllst).val_offset = (_cc_dllst).xor_offset *                          \
-                             (-1) / sizeof((_cc_dllst).block.nodes[0].val)     \
+                                                                               \
+    (((_cc_dllst).xor_offset = ((char*)&((_cc_dllst).block.nodes[0].xor) -     \
+                                (char*)&((_cc_dllst).block.nodes[0].val))) %   \
+     sizeof((_cc_dllst).block.nodes[0].val)) ?                                 \
+    (puts("FATAL ERROR: Misalignment Issue."), exit(EXIT_FAILURE), 0) :        \
+    ((_cc_dllst).val_offset = (_cc_dllst).xor_offset * (-1) /                  \
+                              sizeof((_cc_dllst).block.nodes[0].val))          \
 )
 
 
@@ -254,9 +258,10 @@ STATEMENT_                                                                     \
     int distance = (_cc_dllst_iter_diff);                                      \
                                                                                \
     if (distance > 0)                                                          \
-        while (distance-- && cc_dllst_iter_incr((_cc_dllst_iter)));            \
-    else if (distance < 0)                                                     \
-        while (distance++ && cc_dllst_iter_decr((_cc_dllst_iter)));            \
+        while (cc_dllst_iter_incr((_cc_dllst_iter)) && --distance);            \
+                                                                               \
+    if (distance < 0)                                                          \
+        while (cc_dllst_iter_decr((_cc_dllst_iter)) && ++distance);            \
 )
 
 
