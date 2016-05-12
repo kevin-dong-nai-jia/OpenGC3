@@ -3,7 +3,7 @@
 
 #define CCC_DLLST_START 10
 #define CCC_DLLST_RATIO 10
-#define CCC_DLLST_LIMIT 1000000
+#define CCC_DLLST_THRSH 1000000
 
 #include "../src/dllst.h"
 

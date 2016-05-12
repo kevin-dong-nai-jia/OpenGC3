@@ -60,10 +60,10 @@
 #endif
 
 
-#if (CCC_DLLST_LIMIT - 0 <  CCC_DLLST_START)
+#if (CCC_DLLST_THRSH - 0 <  CCC_DLLST_START)
 
-    #undef  CCC_DLLST_LIMIT
-    #define CCC_DLLST_LIMIT 65536
+    #undef  CCC_DLLST_THRSH
+    #define CCC_DLLST_THRSH 65536
 
 #endif
 
@@ -329,10 +329,10 @@ STATEMENT_                                                                     \
         {                                                                      \
             link pool_dup = (_cc_dllst).pool;                                  \
                                                                                \
-            if ((_cc_dllst).ncnt < CCC_DLLST_LIMIT)                            \
+            if ((_cc_dllst).ncnt < CCC_DLLST_THRSH)                            \
                 (_cc_dllst).vcnt = ((_cc_dllst).ncnt *= CCC_DLLST_RATIO);      \
             else                                                               \
-                (_cc_dllst).vcnt = ((_cc_dllst).ncnt =  CCC_DLLST_LIMIT);      \
+                (_cc_dllst).vcnt = ((_cc_dllst).ncnt =  CCC_DLLST_THRSH);      \
                                                                                \
             (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
                                       sizeof((_cc_dllst).block.nodes[0]) *     \
