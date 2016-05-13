@@ -64,7 +64,7 @@
 				<th style="display:none"></th>
 			</tr>
 			<tr>
-				<td rowspan="28">Doubly</br></br>Linked List</br></br>(dllst)</td>
+				<td rowspan="31">DLLST</td>
 				<td rowspan="2">Create</td><td> <i>def</i></td><td>cc_dllst (TYPE) DLLST;</td>
 				<td>Create a dllst container.</br>Use a C struct to simulate a container.</td>
 			</tr>
@@ -110,7 +110,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="5">Modifiers</td><td> <i>stat</i></td><td>cc_dllst_push_front (DLLST, <i>value</i>);</td>
+				<td rowspan="7">Modifiers</td><td> <i>stat</i></td><td>cc_dllst_push_front (DLLST, <i>value</i>);</td>
 				<td>Insert an element at the beginning.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
 			</tr>
 			<tr>
@@ -132,6 +132,21 @@
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_clear (DLLST);</td>
 				<td>Remove all elements in the container.</br>This does not deallocate all elements in the container.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_insert (ITER, <i>value</i>);</td>
+				<td>Insert an element at the position where the iterator points.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_erase (ITER);</td>
+				<td>Erase an element at the position where the iterator points.</br>There is nothing modified if the container is empty.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td rowspan="1">Operations</td><td> <i>stat</i></td><td>cc_dllst_move_range (ITER_P, ITER_F, ITER_L);</td>
+				<td>Move elements in the range <font face="monospace">[ITER_F, ITER_L)</font> to position where <font face="monospace">ITER_P</font> points.</br>These three iterators should be affiliated to the same dllst container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -181,26 +196,26 @@
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="2">Traversal</td><td> <i>loop</i></td><td>cc_dllst_trav (DLLST, ITER) { ... }</td>
-				<td>Traversal all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
+				<td>Traverse all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <i>loop</i></td><td>cc_dllst_trav_backward (DLLST, ITER) { ... }</td>
-				<td>Traversal all elements from the end to the beginning.</br>There is no effect if the container is empty.</td>
+				<td style="display:none"></td><td> <i>loop</i></td><td>cc_dllst_trav_back (DLLST, ITER) { ... }</td>
+				<td>Traverse all elements (backward) from the end to the beginning.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="3">Preset</br></br>Constants</td><td>#define</td><td>CCC_DLLST_START <i>integer</i></td>
+				<td rowspan="3">Preset</br></br>Constants</td><td>#define</td><td>CC_DLLST_START <i>integer</i></td>
 				<td colspan="2">Set <i><font face="monospace">integer</font></i> as the number of reserved elements in the initial block (in stack).</br>The default value is 16.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>#define</td><td>CCC_DLLST_RATIO <i>integer</i></td>
+				<td style="display:none"></td><td>#define</td><td>CC_DLLST_RATIO <i>integer</i></td>
 				<td colspan="2">Set <i><font face="monospace">integer</font></i> as the increment ratio for the next block if the current one is full.</br>The default value is 2.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td>#define</td><td>CCC_DLLST_THRSH <i>integer</i></td>
+				<td style="display:none"></td><td>#define</td><td>CC_DLLST_THRSH <i>integer</i></td>
 				<td colspan="2">Set <i><font face="monospace">integer</font></i> as the threshold value that the size of block will stop increasing at.</br>The default value is 65536.</td>
 			</tr>
 		</tbody>
