@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CCC_DLLST_START 10
-#define CCC_DLLST_RATIO 10
-#define CCC_DLLST_THRSH 1000000
+#define CC_DLLST_START 10
+#define CC_DLLST_RATIO 10
+#define CC_DLLST_THRSH 1000000
 
 #include "../src/dllst.h"
 
@@ -347,7 +347,7 @@ int main(void)
             cc_dllst_iter_advance(iter[1], pos[cnt][1]);
             cc_dllst_iter_advance(iter[2], pos[cnt][2]);
 
-            cc_dllst_splice_range(iter[0], iter[1], iter[2]);
+            cc_dllst_move_range(iter[0], iter[1], iter[2]);
 
             printf("/ ");
             cc_dllst_trav(list, print)
