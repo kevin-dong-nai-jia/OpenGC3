@@ -233,8 +233,8 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_cc_dllst_iter).prev = (_cc_dllst_iter).curr,                         \
         (_cc_dllst_iter).curr = (_cc_dllst_iter).next,                         \
-        (_cc_dllst_iter).next =                                                \
-                   XOR2((_cc_dllst_iter).prev, *(link*)(_cc_dllst_iter).curr)  \
+        (_cc_dllst_iter).next = XOR2((_cc_dllst_iter).prev,                    \
+                                     *(link*)(_cc_dllst_iter).curr)            \
     ) : (NULL)                                                                 \
 )
 
@@ -245,8 +245,8 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_cc_dllst_iter).next = (_cc_dllst_iter).curr,                         \
         (_cc_dllst_iter).curr = (_cc_dllst_iter).prev,                         \
-        (_cc_dllst_iter).prev =                                                \
-                   XOR2((_cc_dllst_iter).next, *(link*)(_cc_dllst_iter).curr)  \
+        (_cc_dllst_iter).prev = XOR2((_cc_dllst_iter).next,                    \
+                                     *(link*)(_cc_dllst_iter).curr)            \
     ) : (NULL)                                                                 \
 )
 
@@ -332,7 +332,7 @@ STATEMENT_                                                                     \
             if ((_cc_dllst).ncnt < CCC_DLLST_THRSH)                            \
                 (_cc_dllst).vcnt = ((_cc_dllst).ncnt *= CCC_DLLST_RATIO);      \
             else                                                               \
-                (_cc_dllst).vcnt = ((_cc_dllst).ncnt =  CCC_DLLST_THRSH);      \
+                (_cc_dllst).vcnt = ((_cc_dllst).ncnt  = CCC_DLLST_THRSH);      \
                                                                                \
             (_cc_dllst).pool = malloc(sizeof((_cc_dllst).block) +              \
                                       sizeof((_cc_dllst).block.nodes[0]) *     \
@@ -525,8 +525,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    do cc_dllst_pop_back((_cc_dllst));                                         \
-    while (!(cc_dllst_empty((_cc_dllst))));                                    \
+    while (!(cc_dllst_empty((_cc_dllst))))                                     \
+        cc_dllst_pop_back((_cc_dllst));                                        \
 )
 
 
@@ -583,8 +583,6 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _cc_dllst_blocks_free((_cc_dllst));                                        \
-                                                                               \
-    cc_dllst_init((_cc_dllst));                                                \
 )
 
 
