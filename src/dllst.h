@@ -165,13 +165,13 @@ VOID_EXPR_                                                                     \
 /* bitwise operations */
 
 
-#define XOR2(_addr_a, _addr_b)                                                 \
+#define XOR_2(_addr_a, _addr_b)                                                \
 (                                                                              \
     (link)((uintptr_t)(link)(_addr_a) ^ (uintptr_t)(link)(_addr_b))            \
 )
 
 
-#define XOR3(_addr_a, _addr_b, _addr_c)                                        \
+#define XOR_3(_addr_a, _addr_b, _addr_c)                                       \
 (                                                                              \
     (link)((uintptr_t)(link)(_addr_a) ^                                        \
            (uintptr_t)(link)(_addr_b) ^ (uintptr_t)(link)(_addr_c))            \
@@ -224,7 +224,7 @@ VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter).prev = (link)&((_dllst).head),                                     \
     (_iter).curr = (_dllst).head,                                              \
-    (_iter).next = XOR2(&((_dllst).head), *(link*)(_dllst).head)               \
+    (_iter).next = XOR_2(&((_dllst).head), *(link*)(_dllst).head)              \
 )
 
 
@@ -234,7 +234,7 @@ VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter).next = (link)&((_dllst).tail),                                     \
     (_iter).curr = (_dllst).tail,                                              \
-    (_iter).prev = XOR2(&((_dllst).tail), *(link*)(_dllst).tail)               \
+    (_iter).prev = XOR_2(&((_dllst).tail), *(link*)(_dllst).tail)              \
 )
 
 
@@ -244,7 +244,8 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_iter).prev = (_iter).curr,                                           \
         (_iter).curr = (_iter).next,                                           \
-        (_iter).next = XOR2((_iter).prev, *(link*)(_iter).curr)                \
+        (_iter).next = XOR_2((_iter).prev, *(link*)(_iter).curr)               \
+                                                                               \
     ) : (void*)(NULL)                                                          \
 )
 
@@ -255,7 +256,8 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_iter).next = (_iter).curr,                                           \
         (_iter).curr = (_iter).prev,                                           \
-        (_iter).prev = XOR2((_iter).next, *(link*)(_iter).curr)                \
+        (_iter).prev = XOR_2((_iter).next, *(link*)(_iter).curr)               \
+                                                                               \
     ) : (void*)(NULL)                                                          \
 )
 
@@ -375,12 +377,12 @@ STATEMENT_                                                                     \
     _cc_dllst_node_alloc((_dllst).block.pnode, (_dllst));                      \
                                                                                \
     (_dllst).block.pnode->val = (_value);                                      \
-    (_dllst).block.pnode->xor = XOR2(&((_dllst).head), (_dllst).head);         \
+    (_dllst).block.pnode->xor = XOR_2(&((_dllst).head), (_dllst).head);        \
                                                                                \
     *(link*)                                                                   \
-    (_dllst).head = XOR3(&((_dllst).head),                                     \
-                         *(link*)(_dllst).head,                                \
-                         &((_dllst).block.pnode->xor));                        \
+    (_dllst).head = XOR_3(&((_dllst).head),                                    \
+                          *(link*)(_dllst).head,                               \
+                          &((_dllst).block.pnode->xor));                       \
     (_dllst).head = (link)&((_dllst).block.pnode->xor);                        \
                                                                                \
     (_dllst).size++;                                                           \
@@ -394,12 +396,12 @@ STATEMENT_                                                                     \
     _cc_dllst_node_alloc((_dllst).block.pnode, (_dllst));                      \
                                                                                \
     (_dllst).block.pnode->val = (_value);                                      \
-    (_dllst).block.pnode->xor = XOR2(&((_dllst).tail), (_dllst).tail);         \
+    (_dllst).block.pnode->xor = XOR_2(&((_dllst).tail), (_dllst).tail);        \
                                                                                \
     *(link*)                                                                   \
-    (_dllst).tail = XOR3(&((_dllst).tail),                                     \
-                            *(link*)(_dllst).tail,                             \
-                            &((_dllst).block.pnode->xor));                     \
+    (_dllst).tail = XOR_3(&((_dllst).tail),                                    \
+                          *(link*)(_dllst).tail,                               \
+                          &((_dllst).block.pnode->xor));                       \
     (_dllst).tail = (link)&((_dllst).block.pnode->xor);                        \
                                                                                \
     (_dllst).size++;                                                           \
@@ -415,9 +417,9 @@ STATEMENT_                                                                     \
         link head  =   (_dllst).head;                                          \
         link phead = &((_dllst).head);                                         \
                                                                                \
-        (_dllst).head = XOR2(phead, *(link*)(_dllst).head);                    \
+        (_dllst).head = XOR_2(phead, *(link*)(_dllst).head);                   \
         *(link*)                                                               \
-        (_dllst).head = XOR3(phead, *(link*)(_dllst).head, head);              \
+        (_dllst).head = XOR_3(phead, *(link*)(_dllst).head, head);             \
                                                                                \
         _cc_dllst_node_clear(head, (_dllst));                                  \
                                                                                \
@@ -435,9 +437,9 @@ STATEMENT_                                                                     \
         link tail  =   (_dllst).tail;                                          \
         link ptail = &((_dllst).tail);                                         \
                                                                                \
-        (_dllst).tail = XOR2(ptail, *(link*)(_dllst).tail);                    \
+        (_dllst).tail = XOR_2(ptail, *(link*)(_dllst).tail);                   \
         *(link*)                                                               \
-        (_dllst).tail = XOR3(ptail, *(link*)(_dllst).tail, tail);              \
+        (_dllst).tail = XOR_3(ptail, *(link*)(_dllst).tail, tail);             \
                                                                                \
         _cc_dllst_node_clear(tail, (_dllst));                                  \
                                                                                \
@@ -462,11 +464,11 @@ STATEMENT_                                                                     \
         (_iter).curr = pxor = &((_iter).pdllst->block.pnode->xor);             \
                                                                                \
         *(link*)                                                               \
-        (_iter).curr = XOR2((_iter).prev, (_iter).next);                       \
+        (_iter).curr = XOR_2((_iter).prev, (_iter).next);                      \
         *(link*)                                                               \
-        (_iter).prev = XOR3(*(link*)(_iter).prev, (_iter).next, pxor);         \
+        (_iter).prev = XOR_3(*(link*)(_iter).prev, (_iter).next, pxor);        \
         *(link*)                                                               \
-        (_iter).next = XOR3(*(link*)(_iter).next, (_iter).prev, pxor);         \
+        (_iter).next = XOR_3(*(link*)(_iter).next, (_iter).prev, pxor);        \
                                                                                \
         (_iter).pdllst->size++;                                                \
     }                                                                          \
@@ -483,11 +485,11 @@ STATEMENT_                                                                     \
         (_iter).curr = (_iter).next;                                           \
                                                                                \
         *(link*)                                                               \
-        (_iter).prev = XOR3(*(link*)(_iter).prev, (_iter).next, pxor);         \
+        (_iter).prev = XOR_3(*(link*)(_iter).prev, (_iter).next, pxor);        \
         *(link*)                                                               \
-        (_iter).next = XOR3(*(link*)(_iter).next, (_iter).prev, pxor);         \
+        (_iter).next = XOR_3(*(link*)(_iter).next, (_iter).prev, pxor);        \
                                                                                \
-        (_iter).next = XOR2(*(link*)(_iter).curr, (_iter).prev);               \
+        (_iter).next = XOR_2(*(link*)(_iter).curr, (_iter).prev);              \
                                                                                \
         _cc_dllst_node_clear(pxor, *(_iter).pdllst);                           \
                                                                                \
@@ -496,10 +498,10 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_swap(_dllst_a, _dllst_b)  /* TODO */
+#define cc_dllst_swap(_dllst_a, _dllst_b)                             /* TODO */
 
 
-#define cc_dllst_resize(_dllst, _value)    /* TODO */
+#define cc_dllst_resize(_dllst, _value)                               /* TODO */
 
 
 #define cc_dllst_clear(_dllst)                                                 \
@@ -530,12 +532,12 @@ STATEMENT_                                                                     \
     link *pf_next = (link*)&((_iter_f).next);                                  \
     link *pl_next = (link*)&((_iter_l).next);                                  \
                                                                                \
-    *(link*)p_prev = XOR3(p_curr, f_curr, *(link*)p_prev);                     \
-    *(link*)p_curr = XOR3(p_prev, l_prev, *(link*)p_curr);                     \
-    *(link*)f_prev = XOR3(f_curr, l_curr, *(link*)f_prev);                     \
-    *(link*)f_curr = XOR3(f_prev, p_prev, *(link*)f_curr);                     \
-    *(link*)l_prev = XOR3(l_curr, p_curr, *(link*)l_prev);                     \
-    *(link*)l_curr = XOR3(l_prev, f_prev, *(link*)l_curr);                     \
+    *(link*)p_prev = XOR_3(p_curr, f_curr, *(link*)p_prev);                    \
+    *(link*)p_curr = XOR_3(p_prev, l_prev, *(link*)p_curr);                    \
+    *(link*)f_prev = XOR_3(f_curr, l_curr, *(link*)f_prev);                    \
+    *(link*)f_curr = XOR_3(f_prev, p_prev, *(link*)f_curr);                    \
+    *(link*)l_prev = XOR_3(l_curr, p_curr, *(link*)l_prev);                    \
+    *(link*)l_curr = XOR_3(l_prev, f_prev, *(link*)l_curr);                    \
                                                                                \
     if (*pp_next == f_curr)                                                    \
         *pp_next =  l_curr;                                                    \
@@ -544,13 +546,13 @@ STATEMENT_                                                                     \
     if (*pl_next == p_curr)                                                    \
         *pl_next =  f_curr;                                                    \
                                                                                \
-    (_iter_p).prev = XOR2(*pp_next, *(link*)p_curr);                           \
-    (_iter_f).prev = XOR2(*pf_next, *(link*)f_curr);                           \
-    (_iter_l).prev = XOR2(*pl_next, *(link*)l_curr);                           \
+    (_iter_p).prev = XOR_2(*pp_next, *(link*)p_curr);                          \
+    (_iter_f).prev = XOR_2(*pf_next, *(link*)f_curr);                          \
+    (_iter_l).prev = XOR_2(*pl_next, *(link*)l_curr);                          \
 )
 
 
-#define cc_dllst_sort(_dllst)  /* TODO */
+#define cc_dllst_sort(_dllst)                                         /* TODO */
 
 
 
