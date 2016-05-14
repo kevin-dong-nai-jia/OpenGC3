@@ -134,7 +134,15 @@ VOID_EXPR_                                                                     \
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
                                                                                \
-        cc_dllst(elem_t) *pobj;                                                \
+        struct                                                                 \
+        {                                                                      \
+            elem_t *prev;                                                      \
+            elem_t *curr;                                                      \
+            elem_t *next;                                                      \
+                                                                               \
+        }   *piter;                                                            \
+                                                                               \
+        cc_dllst(elem_t) *pdllst;                                              \
     }
 
 
@@ -146,7 +154,8 @@ VOID_EXPR_                                                                     \
     (_iter).curr = NULL,                                                       \
     (_iter).next = NULL,                                                       \
                                                                                \
-    (_iter).pobj = (void*)&(_dllst)                                            \
+    (_iter).piter  = NULL,                                                     \
+    (_iter).pdllst = (void*)&(_dllst)                                          \
 )
 
 
@@ -173,7 +182,7 @@ VOID_EXPR_                                                                     \
 
 #define cc_dllst_iter_dref(_iter)                                              \
 (                                                                              \
-    *((_iter).curr + (_iter).pobj->val_offset)                                 \
+    *((_iter).curr + (_iter).pdllst->val_offset)                               \
 )
 
 
@@ -443,12 +452,12 @@ STATEMENT_                                                                     \
     {                                                                          \
         link pxor;                                                             \
                                                                                \
-        _cc_dllst_node_alloc((*(_iter).pobj).block.pnode, *(_iter).pobj);      \
+        _cc_dllst_node_alloc((*(_iter).pdllst).block.pnode, *(_iter).pdllst);  \
                                                                                \
-        (_iter).pobj->block.pnode->val = (_value);                             \
+        (_iter).pdllst->block.pnode->val = (_value);                           \
                                                                                \
         (_iter).next = (_iter).curr;                                           \
-        (_iter).curr = pxor = &((_iter).pobj->block.pnode->xor);               \
+        (_iter).curr = pxor = &((_iter).pdllst->block.pnode->xor);             \
                                                                                \
         *(link*)                                                               \
         (_iter).curr = XOR2((_iter).prev, (_iter).next);                       \
@@ -457,7 +466,7 @@ STATEMENT_                                                                     \
         *(link*)                                                               \
         (_iter).next = XOR3(*(link*)(_iter).next, (_iter).prev, pxor);         \
                                                                                \
-        (_iter).pobj->size++;                                                  \
+        (_iter).pdllst->size++;                                                \
     }                                                                          \
 )
 
@@ -478,9 +487,9 @@ STATEMENT_                                                                     \
                                                                                \
         (_iter).next = XOR2(*(link*)(_iter).curr, (_iter).prev);               \
                                                                                \
-        _cc_dllst_node_clear(pxor, *(_iter).pobj);                             \
+        _cc_dllst_node_clear(pxor, *(_iter).pdllst);                           \
                                                                                \
-        (_iter).pobj->size--;                                                  \
+        (_iter).pdllst->size--;                                                \
     }                                                                          \
 )
 
@@ -548,16 +557,12 @@ STATEMENT_                                                                     \
 
 #define cc_dllst_trav(_dllst, _iter)                                           \
                                                                                \
-    cc_dllst_iter_head((_iter), (_dllst));                                     \
-                                                                               \
-    while (cc_dllst_iter_incr((_iter)))
+    for (cc_dllst_iter_head((_iter), (_dllst)); cc_dllst_iter_incr((_iter)); )
 
 
 #define cc_dllst_trav_back(_dllst, _iter)                                      \
                                                                                \
-    cc_dllst_iter_tail((_iter), (_dllst));                                     \
-                                                                               \
-    while (cc_dllst_iter_decr((_iter)))
+    for (cc_dllst_iter_tail((_iter), (_dllst)); cc_dllst_iter_decr((_iter)); )
 
 
 
