@@ -134,15 +134,17 @@ VOID_EXPR_                                                                     \
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
                                                                                \
+        cc_dllst(elem_t) *pdllst;                                              \
+                                                                               \
         struct                                                                 \
         {                                                                      \
             elem_t *prev;                                                      \
             elem_t *curr;                                                      \
             elem_t *next;                                                      \
                                                                                \
-        }   *piter;                                                            \
+            cc_dllst(elem_t) *pdllst;                                          \
                                                                                \
-        cc_dllst(elem_t) *pdllst;                                              \
+        }   *piter;                                                            \
     }
 
 
@@ -154,8 +156,8 @@ VOID_EXPR_                                                                     \
     (_iter).curr = NULL,                                                       \
     (_iter).next = NULL,                                                       \
                                                                                \
-    (_iter).piter  = NULL,                                                     \
-    (_iter).pdllst = (void*)&(_dllst)                                          \
+    (_iter).pdllst = (void*)&(_dllst),                                         \
+    (_iter).piter  = NULL                                                      \
 )
 
 
