@@ -135,16 +135,6 @@ VOID_EXPR_                                                                     \
         elem_t *next;                                                          \
                                                                                \
         cc_dllst(elem_t) *pdllst;                                              \
-                                                                               \
-        struct                                                                 \
-        {                                                                      \
-            elem_t *prev;                                                      \
-            elem_t *curr;                                                      \
-            elem_t *next;                                                      \
-                                                                               \
-            cc_dllst(elem_t) *pdllst;                                          \
-                                                                               \
-        }   *piter;                                                            \
     }
 
 
@@ -156,8 +146,7 @@ VOID_EXPR_                                                                     \
     (_iter).curr = NULL,                                                       \
     (_iter).next = NULL,                                                       \
                                                                                \
-    (_iter).pdllst = (void*)&(_dllst),                                         \
-    (_iter).piter  = NULL                                                      \
+    (_iter).pdllst = (void*)&(_dllst)                                          \
 )
 
 
@@ -516,39 +505,35 @@ STATEMENT_                                                                     \
 /* dllst operations */
 
 
-#define cc_dllst_move_range(_iter_p, _iter_f, _iter_l)                         \
+#define cc_dllst_move_range(_iter_p, _iter_l, _iter_r)                         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     link p_prev = (_iter_p).prev;                                              \
     link p_curr = (_iter_p).curr;                                              \
-    link f_prev = (_iter_f).prev;                                              \
-    link f_curr = (_iter_f).curr;                                              \
     link l_prev = (_iter_l).prev;                                              \
     link l_curr = (_iter_l).curr;                                              \
+    link r_prev = (_iter_r).prev;                                              \
+    link r_curr = (_iter_r).curr;                                              \
                                                                                \
-    link *pp_next = (link*)&((_iter_p).next);                                  \
-    link *pf_next = (link*)&((_iter_f).next);                                  \
-    link *pl_next = (link*)&((_iter_l).next);                                  \
+    *(link*)p_prev = XOR_3(p_curr, l_curr, *(link*)p_prev);                    \
+    *(link*)p_curr = XOR_3(p_prev, r_prev, *(link*)p_curr);                    \
+    *(link*)l_prev = XOR_3(l_curr, r_curr, *(link*)l_prev);                    \
+    *(link*)l_curr = XOR_3(l_prev, p_prev, *(link*)l_curr);                    \
+    *(link*)r_prev = XOR_3(r_curr, p_curr, *(link*)r_prev);                    \
+    *(link*)r_curr = XOR_3(r_prev, l_prev, *(link*)r_curr);                    \
                                                                                \
-    *(link*)p_prev = XOR_3(p_curr, f_curr, *(link*)p_prev);                    \
-    *(link*)p_curr = XOR_3(p_prev, l_prev, *(link*)p_curr);                    \
-    *(link*)f_prev = XOR_3(f_curr, l_curr, *(link*)f_prev);                    \
-    *(link*)f_curr = XOR_3(f_prev, p_prev, *(link*)f_curr);                    \
-    *(link*)l_prev = XOR_3(l_curr, p_curr, *(link*)l_prev);                    \
-    *(link*)l_curr = XOR_3(l_prev, f_prev, *(link*)l_curr);                    \
+    (_iter_p).next = ((_iter_p).next == l_curr) ? (r_curr) : ((_iter_p).next); \
+    (_iter_l).next = ((_iter_l).next == r_curr) ? (p_curr) : ((_iter_l).next); \
+    (_iter_r).next = ((_iter_r).next == p_curr) ? (l_curr) : ((_iter_r).next); \
                                                                                \
-    if (*pp_next == f_curr)                                                    \
-        *pp_next =  l_curr;                                                    \
-    if (*pf_next == l_curr)                                                    \
-        *pf_next =  p_curr;                                                    \
-    if (*pl_next == p_curr)                                                    \
-        *pl_next =  f_curr;                                                    \
-                                                                               \
-    (_iter_p).prev = XOR_2(*pp_next, *(link*)p_curr);                          \
-    (_iter_f).prev = XOR_2(*pf_next, *(link*)f_curr);                          \
-    (_iter_l).prev = XOR_2(*pl_next, *(link*)l_curr);                          \
+    (_iter_p).prev = XOR_2((_iter_p).next, *(link*)p_curr);                    \
+    (_iter_l).prev = XOR_2((_iter_l).next, *(link*)l_curr);                    \
+    (_iter_r).prev = XOR_2((_iter_r).next, *(link*)r_curr);                    \
 )
+
+
+#define cc_dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x)      /* TODO */
 
 
 #define cc_dllst_sort(_dllst)                                         /* TODO */
