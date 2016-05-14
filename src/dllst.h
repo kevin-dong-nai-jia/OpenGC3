@@ -322,10 +322,9 @@ STATEMENT_                                                                     \
         {                                                                      \
             link pool_dup = (_dllst).pool;                                     \
                                                                                \
-            if ((_dllst).ncnt < CC_DLLST_THRSH)                                \
-                (_dllst).vcnt = ((_dllst).ncnt *= CC_DLLST_RATIO);             \
-            else                                                               \
-                (_dllst).vcnt = ((_dllst).ncnt  = CC_DLLST_THRSH);             \
+            (_dllst).vcnt = ((_dllst).ncnt  < CC_DLLST_THRSH) ?                \
+                            ((_dllst).ncnt *= CC_DLLST_RATIO) :                \
+                            ((_dllst).ncnt  = CC_DLLST_THRSH);                 \
                                                                                \
             (_dllst).pool = malloc(sizeof((_dllst).block) +                    \
                                    sizeof((_dllst).block.nodes[0]) *           \
