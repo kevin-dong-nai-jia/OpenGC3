@@ -110,13 +110,13 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="7">Modifiers</td><td> <i>stat</i></td><td>cc_dllst_push_front (DLLST, <i>value</i>);</td>
-				<td>Insert an element at the beginning.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
+				<td rowspan="7">Modifiers</td><td> <i>stat</i></td><td>cc_dllst_push_front (DLLST, <b><i>value</i></b>);</td>
+				<td>Insert an element at the beginning.</br>This makes a copy of <b><i><font face="monospace">value</font></i></b> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_push_back (DLLST, <i>value</i>);</td>
-				<td>Insert an element at the end.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
+				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_push_back (DLLST, <b><i>value</i></b>);</td>
+				<td>Insert an element at the end.</br>This makes a copy of <b><i><font face="monospace">value</font></i></b> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -135,8 +135,8 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_insert (ITER, <i>value</i>);</td>
-				<td>Insert an element at the position where the iterator points.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
+				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_insert (ITER, <b><i>value</i></b>);</td>
+				<td>Insert an element at the position where the iterator points.</br>This makes a copy of <b><i><font face="monospace">value</font></i></b> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -145,8 +145,8 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Operations</td><td> <i>stat</i></td><td>cc_dllst_move_range (ITER_P, ITER_F, ITER_L);</td>
-				<td>Move elements in the range <font face="monospace">[ITER_F, ITER_L)</font> to position where <font face="monospace">ITER_P</font> points.</br>These three iterators should be affiliated to the same dllst container.</td>
+				<td rowspan="1">Operations</td><td> <i>stat</i></td><td>cc_dllst_move_range (ITER_P, ITER_L, ITER_R);</td>
+				<td>Move elements in the range <font face="monospace">[ITER_L, ITER_R)</font> to position where <font face="monospace">ITER_P</font> points.</br>These three iterators should be affiliated to the same dllst container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -190,17 +190,17 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_iter_advance (ITER, <i>diff</i>);</td>
-				<td>Move the iterator by <i><font face="monospace">diff</font></i> element(s). (set forward as positive)</br>The iterator will stop at the sentinel node if there is no element left to iterate over.</td>
+				<td style="display:none"></td><td> <i>stat</i></td><td>cc_dllst_iter_advance (ITER, <b><i>diff</i></b>);</td>
+				<td>Move the iterator by <b><i><font face="monospace">diff</font></i></b> element(s). (set forward as positive)</br>The iterator will stop at the sentinel node if there is no element left to iterate over.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Traversal</td><td> <i>loop</i></td><td>cc_dllst_trav (DLLST, ITER) { ... }</td>
+				<td rowspan="2">Traversal</td><td> (loop)</td><td>cc_dllst_trav (DLLST, ITER) <i>statement</i> ;</td>
 				<td>Traverse all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <i>loop</i></td><td>cc_dllst_trav_back (DLLST, ITER) { ... }</td>
+				<td style="display:none"></td><td> (loop)</td><td>cc_dllst_trav_back (DLLST, ITER) <i>statement</i> ;</td>
 				<td>Traverse all elements (backward) from the end to the beginning.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
