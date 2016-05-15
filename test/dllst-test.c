@@ -314,7 +314,7 @@ int main(void)
 
 
     /* Test 10 */
-    /* Test splice */
+    /* Test move */
 
     printf("\n\nTest 10: \n\n");
 
@@ -322,11 +322,11 @@ int main(void)
         cc_dllst(int) list;
         cc_dllst_init(list);
 
-        cc_dllst_iter(int) print, iter[3];
-        cc_dllst_iter_init(print, list);
-        cc_dllst_iter_init(iter[0], list);
-        cc_dllst_iter_init(iter[1], list);
-        cc_dllst_iter_init(iter[2], list);
+        cc_dllst_iter(int) iter, move[3];
+        cc_dllst_iter_init(iter, list);
+        cc_dllst_iter_init(move[0], list);
+        cc_dllst_iter_init(move[1], list);
+        cc_dllst_iter_init(move[2], list);
 
         int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
                           {-4, 0, 3}, {0, 2, 0} , {1, 0, -1} , {1, -1, 1} };
@@ -334,27 +334,75 @@ int main(void)
         for (int cnt = 0; cnt < 7; cnt++)
             cc_dllst_push_back(list, cnt + 'A');
 
-        cc_dllst_iter_head(iter[0], list);
-        cc_dllst_iter_head(iter[1], list);
-        cc_dllst_iter_head(iter[2], list);
+        cc_dllst_iter_head(move[0], list);
+        cc_dllst_iter_head(move[1], list);
+        cc_dllst_iter_head(move[2], list);
 
-        cc_dllst_trav(list, print)
-            printf("%c ", cc_dllst_iter_dref(print));
+        cc_dllst_trav(list, iter)
+            printf("%c ", cc_dllst_iter_dref(iter));
 
         for (int cnt = 0; cnt < 8; cnt++)
         {
-            cc_dllst_iter_advance(iter[0], pos[cnt][0]);
-            cc_dllst_iter_advance(iter[1], pos[cnt][1]);
-            cc_dllst_iter_advance(iter[2], pos[cnt][2]);
+            cc_dllst_iter_advance(move[0], pos[cnt][0]);
+            cc_dllst_iter_advance(move[1], pos[cnt][1]);
+            cc_dllst_iter_advance(move[2], pos[cnt][2]);
 
-            cc_dllst_move_range(iter[0], iter[1], iter[2]);
+            cc_dllst_move_range(move[0], move[1], move[2]);
 
             printf("/ ");
-            cc_dllst_trav(list, print)
-                printf("%c ", cc_dllst_iter_dref(print));
+            cc_dllst_trav(list, iter)
+                printf("%c ", cc_dllst_iter_dref(iter));
         }
 
         puts("= A C E D B F G /");
+
+        cc_dllst_free(list);
+    }
+
+
+    /* Test 11 */
+    /* Test merge */
+
+    printf("\n\nTest 11: \n\n");
+
+    {
+        cc_dllst(int) list;
+        cc_dllst_init(list);
+
+        cc_dllst_iter(int) iter, move[4];
+        cc_dllst_iter_init(iter, list);
+        cc_dllst_iter_init(move[0], list);
+        cc_dllst_iter_init(move[1], list);
+        cc_dllst_iter_init(move[2], list);
+        cc_dllst_iter_init(move[3], list);
+
+        int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
+
+        for (int i = 0; i < 16; i++)
+            cc_dllst_push_back(list, str1[i]);
+
+        cc_dllst_trav(list, iter)
+            printf("%d ", cc_dllst_iter_dref(iter));
+
+        printf("-> ");
+
+        cc_dllst_iter_begin(move[0], list);
+        cc_dllst_iter_begin(move[1], list);
+        cc_dllst_iter_begin(move[2], list);
+
+        cc_dllst_iter_advance(move[0], 0);
+        cc_dllst_iter_advance(move[1], 8);
+        cc_dllst_iter_advance(move[2], 16);
+
+        cc_dllst_merge_range(move[0], move[1], move[2],
+                             move[3], CC_DLLST_DEFAULT_COMP);
+
+        cc_dllst_trav(list, iter)
+            printf("%d ", cc_dllst_iter_dref(iter));
+
+        puts("");
+
+        cc_dllst_clear(list);
 
         cc_dllst_free(list);
     }
