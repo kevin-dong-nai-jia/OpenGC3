@@ -1,9 +1,11 @@
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define  CC_DLLST_START 10
 #define  CC_DLLST_RATIO 10
 #define  CC_DLLST_THRSH 1000000
+
 #include "../src/dllst.h"
 
 #define INCR_LOOP_(_cnt, _num) for (int _cnt = 0; _cnt < (_num); _cnt++)
@@ -370,31 +372,72 @@ int main(void)
         cc_dllst(int) list;
         cc_dllst_init(list);
 
-        cc_dllst_iter(int) iter, move[4];
+        cc_dllst_iter(int) iter, iters[4];
         cc_dllst_iter_init(iter, list);
-        INCR_LOOP_(cnt, 4) cc_dllst_iter_init(move[cnt], list);
+        INCR_LOOP_(cnt, 4) cc_dllst_iter_init(iters[cnt], list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
-        INCR_LOOP_(cnt, 16) cc_dllst_push_back(list, str1[cnt]);
+        for (int cnt = 0; cnt < 2; cnt++)
+        {
+            INCR_LOOP_(cnt, 16) cc_dllst_push_back(list, str1[cnt]);
+
+            INCR_TRAV_(list, iter)
+                printf("%d ", cc_dllst_iter_dref(iter));
+
+            printf("-> ");
+
+            switch (cnt)
+            {
+                case 0:
+                INCR_LOOP_(cnt, 3) cc_dllst_iter_begin(iters[cnt], list);
+                INCR_LOOP_(cnt, 3) cc_dllst_iter_advance(iters[cnt], 8 * cnt);
+
+                cc_dllst_merge_range(iters[0], iters[1], iters[2],
+                                     iters[3], CC_DLLST_DEFAULT_COMP);
+                break;
+
+                case 1:
+                cc_dllst_sort(list, iters, CC_DLLST_DEFAULT_COMP);
+                break;
+            }
+
+            INCR_TRAV_(list, iter)
+                printf("%d ", cc_dllst_iter_dref(iter));
+
+            puts("");
+
+            cc_dllst_clear(list);
+        }
+
+        cc_dllst_free(list);
+    }
+
+
+    /* Test 12 */
+    /* Test sort */
+
+    printf("\n\nTest 12: \n\n");
+
+    {
+        cc_dllst(int) list;
+        cc_dllst_init(list);
+
+        cc_dllst_iter(int) iter, iters[4];
+        cc_dllst_iter_init(iter, list);
+        INCR_LOOP_(cnt, 4) cc_dllst_iter_init(iters[cnt], list);
+
+        int length = 100000;
+        srand(time(NULL));
+
+        INCR_LOOP_(cnt, length) cc_dllst_push_back(list, rand());
+
+        cc_dllst_sort(list, iters, CC_DLLST_DEFAULT_COMP);
 
         INCR_TRAV_(list, iter)
-            printf("%d ", cc_dllst_iter_dref(iter));
-
-        printf("-> ");
-
-        INCR_LOOP_(cnt, 3) cc_dllst_iter_begin(move[cnt], list);
-        INCR_LOOP_(cnt, 3) cc_dllst_iter_advance(move[cnt], 8 * cnt);
-
-        cc_dllst_merge_range(move[0], move[1], move[2],
-                             move[3], CC_DLLST_DEFAULT_COMP);
-
-        INCR_TRAV_(list, iter)
-            printf("%d ", cc_dllst_iter_dref(iter));
+            printf("Largest = %10d\r", cc_dllst_iter_dref(iter));
 
         puts("");
-
-        cc_dllst_clear(list);
 
         cc_dllst_free(list);
     }
