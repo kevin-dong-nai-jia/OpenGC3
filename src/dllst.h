@@ -41,34 +41,6 @@
 
 
 
-/* dllst constants */
-
-
-#if (CC_DLLST_START - 0 <= 0)
-
-    #undef  CC_DLLST_START
-    #define CC_DLLST_START 16
-
-#endif
-
-
-#if (CC_DLLST_RATIO - 0 <= 0)
-
-    #undef  CC_DLLST_RATIO
-    #define CC_DLLST_RATIO 2
-
-#endif
-
-
-#if (CC_DLLST_THRSH - 0 <  CC_DLLST_START)
-
-    #undef  CC_DLLST_THRSH
-    #define CC_DLLST_THRSH 65536
-
-#endif
-
-
-
 /* dllst create */
 
 
@@ -100,6 +72,22 @@
     }
 
 
+#define cc_dllst_iter(elem_t)                                                  \
+                                                                               \
+    struct                                                                     \
+    {                                                                          \
+        elem_t *prev;                                                          \
+        elem_t *curr;                                                          \
+        elem_t *next;                                                          \
+                                                                               \
+        cc_dllst(elem_t) *pdllst;                                              \
+    }
+
+
+
+/* dllst initialize */
+
+
 #define cc_dllst_init(_dllst)                                                  \
                                                                                \
 VOID_EXPR_                                                                     \
@@ -122,22 +110,6 @@ VOID_EXPR_                                                                     \
 )
 
 
-
-/* dllst iterator create */
-
-
-#define cc_dllst_iter(elem_t)                                                  \
-                                                                               \
-    struct                                                                     \
-    {                                                                          \
-        elem_t *prev;                                                          \
-        elem_t *curr;                                                          \
-        elem_t *next;                                                          \
-                                                                               \
-        cc_dllst(elem_t) *pdllst;                                              \
-    }
-
-
 #define cc_dllst_iter_init(_iter, _dllst)                                      \
                                                                                \
 VOID_EXPR_                                                                     \
@@ -151,154 +123,19 @@ VOID_EXPR_                                                                     \
 
 
 
-/* bitwise operations */
+/* dllst destroy */
 
 
-#define XOR_2(_addr_a, _addr_b)                                                \
-(                                                                              \
-    (link)((uintptr_t)(link)(_addr_a) ^ (uintptr_t)(link)(_addr_b))            \
-)
-
-
-#define XOR_3(_addr_a, _addr_b, _addr_c)                                       \
-(                                                                              \
-    (link)((uintptr_t)(link)(_addr_a) ^                                        \
-           (uintptr_t)(link)(_addr_b) ^ (uintptr_t)(link)(_addr_c))            \
-)
-
-
-
-/* dllst iterator operations */
-
-
-#define cc_dllst_iter_dref(_iter)                                              \
-(                                                                              \
-    *((_iter).curr + (_iter).pdllst->val_offset)                               \
-)
-
-
-#define cc_dllst_iter_copy(_iter_dst, _iter_src)                               \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_iter_dst).prev = (_iter_src).prev,                                       \
-    (_iter_dst).curr = (_iter_src).curr,                                       \
-    (_iter_dst).next = (_iter_src).next                                        \
-)
-
-
-#define cc_dllst_iter_head(_iter, _dllst)                                      \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_iter).prev = NULL,                                                       \
-    (_iter).curr = (link)&((_dllst).head),                                     \
-    (_iter).next = (_dllst).head                                               \
-)
-
-
-#define cc_dllst_iter_tail(_iter, _dllst)                                      \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_iter).next = NULL,                                                       \
-    (_iter).curr = (link)&((_dllst).tail),                                     \
-    (_iter).prev = (_dllst).tail                                               \
-)
-
-
-#define cc_dllst_iter_begin(_iter, _dllst)                                     \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_iter).prev = (link)&((_dllst).head),                                     \
-    (_iter).curr = (_dllst).head,                                              \
-    (_iter).next = XOR_2(&((_dllst).head), *(link*)(_dllst).head)              \
-)
-
-
-#define cc_dllst_iter_end(_iter, _dllst)                                       \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_iter).next = (link)&((_dllst).tail),                                     \
-    (_iter).curr = (_dllst).tail,                                              \
-    (_iter).prev = XOR_2(&((_dllst).tail), *(link*)(_dllst).tail)              \
-)
-
-
-#define cc_dllst_iter_incr(_iter)                                              \
-(                                                                              \
-    ((_iter).next != NULL) ?                                                   \
-    (                                                                          \
-        (_iter).prev = (_iter).curr,                                           \
-        (_iter).curr = (_iter).next,                                           \
-        (_iter).next = XOR_2((_iter).prev, *(link*)(_iter).curr)               \
-                                                                               \
-    ) : (void*)(NULL)                                                          \
-)
-
-
-#define cc_dllst_iter_decr(_iter)                                              \
-(                                                                              \
-    ((_iter).prev != NULL) ?                                                   \
-    (                                                                          \
-        (_iter).next = (_iter).curr,                                           \
-        (_iter).curr = (_iter).prev,                                           \
-        (_iter).prev = XOR_2((_iter).next, *(link*)(_iter).curr)               \
-                                                                               \
-    ) : (void*)(NULL)                                                          \
-)
-
-
-#define cc_dllst_iter_advance(_iter, _diff)                                    \
+#define cc_dllst_free(_dllst)                                                  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int diff = (_diff);                                                        \
-                                                                               \
-    if (diff > 0)                                                              \
-        while (cc_dllst_iter_incr((_iter)) && --diff);                         \
-                                                                               \
-    if (diff < 0)                                                              \
-        while (cc_dllst_iter_decr((_iter)) && ++diff);                         \
+    _cc_dllst_blocks_free((_dllst));                                           \
 )
 
 
 
-/* dllst access */
-
-
-#define cc_dllst_front(_dllst)                                                 \
-(                                                                              \
-    *((_dllst).head + (_dllst).val_offset)                                     \
-)
-
-
-#define cc_dllst_back(_dllst)                                                  \
-(                                                                              \
-    *((_dllst).tail + (_dllst).val_offset)                                     \
-)
-
-
-
-/* dllst capacity */
-
-
-#define cc_dllst_size(_dllst)                                                  \
-(                                                                              \
-    (_dllst).size                                                              \
-)
-
-
-#define cc_dllst_empty(_dllst)                                                 \
-(                                                                              \
-    cc_dllst_size((_dllst)) == 0                                               \
-)
-
-
-
-/* dllst node operations */
+/* internal: node operations */
 
 
 #define _cc_dllst_node_alloc(_pnode, _dllst)                                   \
@@ -355,14 +192,51 @@ STATEMENT_                                                                     \
 
 
 
-/* dllst destroy */
+/* internal: link exclusive or */
 
 
-#define cc_dllst_free(_dllst)                                                  \
-                                                                               \
-STATEMENT_                                                                     \
+#define XOR_2(_addr_a, _addr_b)                                                \
 (                                                                              \
-    _cc_dllst_blocks_free((_dllst));                                           \
+    (link)((uintptr_t)(link)(_addr_a) ^ (uintptr_t)(link)(_addr_b))            \
+)
+
+
+#define XOR_3(_addr_a, _addr_b, _addr_c)                                       \
+(                                                                              \
+    (link)((uintptr_t)(link)(_addr_a) ^                                        \
+           (uintptr_t)(link)(_addr_b) ^ (uintptr_t)(link)(_addr_c))            \
+)
+
+
+
+/* dllst access */
+
+
+#define cc_dllst_front(_dllst)                                                 \
+(                                                                              \
+    *((_dllst).head + (_dllst).val_offset)                                     \
+)
+
+
+#define cc_dllst_back(_dllst)                                                  \
+(                                                                              \
+    *((_dllst).tail + (_dllst).val_offset)                                     \
+)
+
+
+
+/* dllst capacity */
+
+
+#define cc_dllst_size(_dllst)                                                  \
+(                                                                              \
+    (_dllst).size                                                              \
+)
+
+
+#define cc_dllst_empty(_dllst)                                                 \
+(                                                                              \
+    cc_dllst_size((_dllst)) == 0                                               \
 )
 
 
@@ -570,19 +444,126 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_sort_range(_iter_l, _iter_r, _ptr4_iter_x)           /* TODO */
-
-
-#define cc_dllst_sort(_ptr6_iter_x)                                   /* TODO */
-
-
-
-/* dllst compare */
-
-
-#define CC_DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                \
+#define cc_dllst_sort(_dllst, _ptr4_iter_x, _leq)                              \
+                                                                               \
+STATEMENT_                                                                     \
 (                                                                              \
-    cc_dllst_iter_dref((_iter_a)) - cc_dllst_iter_dref((_iter_b)) <= 0         \
+    if (cc_dllst_empty(_dllst))  break;                                        \
+                                                                               \
+    for (int cnt = 1, gap = 1; ((cnt != 2) && (cnt = 1)); gap <<= 1)           \
+    {                                                                          \
+        cc_dllst_iter_begin((_ptr4_iter_x)[0], (_dllst));                      \
+        cc_dllst_iter_begin((_ptr4_iter_x)[1], (_dllst));                      \
+        cc_dllst_iter_begin((_ptr4_iter_x)[2], (_dllst));                      \
+                                                                               \
+        while ((_ptr4_iter_x)[0].next != NULL && cnt++)                        \
+        {                                                                      \
+            cc_dllst_iter_advance((_ptr4_iter_x)[1], gap);                     \
+            cc_dllst_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);       \
+            cc_dllst_iter_advance((_ptr4_iter_x)[2], gap);                     \
+                                                                               \
+            cc_dllst_merge_range ((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],        \
+                                  (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq); \
+        }                                                                      \
+    }                                                                          \
+)
+
+
+
+/* dllst iterators */
+
+
+#define cc_dllst_iter_dref(_iter)                                              \
+(                                                                              \
+    *((_iter).curr + (_iter).pdllst->val_offset)                               \
+)
+
+
+#define cc_dllst_iter_copy(_iter_dst, _iter_src)                               \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter_dst).prev = (_iter_src).prev,                                       \
+    (_iter_dst).curr = (_iter_src).curr,                                       \
+    (_iter_dst).next = (_iter_src).next                                        \
+)
+
+
+#define cc_dllst_iter_head(_iter, _dllst)                                      \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter).prev = NULL,                                                       \
+    (_iter).curr = (link)&((_dllst).head),                                     \
+    (_iter).next = (_dllst).head                                               \
+)
+
+
+#define cc_dllst_iter_tail(_iter, _dllst)                                      \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter).next = NULL,                                                       \
+    (_iter).curr = (link)&((_dllst).tail),                                     \
+    (_iter).prev = (_dllst).tail                                               \
+)
+
+
+#define cc_dllst_iter_begin(_iter, _dllst)                                     \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter).prev = (link)&((_dllst).head),                                     \
+    (_iter).curr = (_dllst).head,                                              \
+    (_iter).next = XOR_2(&((_dllst).head), *(link*)(_dllst).head)              \
+)
+
+
+#define cc_dllst_iter_end(_iter, _dllst)                                       \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter).next = (link)&((_dllst).tail),                                     \
+    (_iter).curr = (_dllst).tail,                                              \
+    (_iter).prev = XOR_2(&((_dllst).tail), *(link*)(_dllst).tail)              \
+)
+
+
+#define cc_dllst_iter_incr(_iter)                                              \
+(                                                                              \
+    ((_iter).next != NULL) ?                                                   \
+    (                                                                          \
+        (_iter).prev = (_iter).curr,                                           \
+        (_iter).curr = (_iter).next,                                           \
+        (_iter).next = XOR_2((_iter).prev, *(link*)(_iter).curr)               \
+                                                                               \
+    ) : (void*)(NULL)                                                          \
+)
+
+
+#define cc_dllst_iter_decr(_iter)                                              \
+(                                                                              \
+    ((_iter).prev != NULL) ?                                                   \
+    (                                                                          \
+        (_iter).next = (_iter).curr,                                           \
+        (_iter).curr = (_iter).prev,                                           \
+        (_iter).prev = XOR_2((_iter).next, *(link*)(_iter).curr)               \
+                                                                               \
+    ) : (void*)(NULL)                                                          \
+)
+
+
+#define cc_dllst_iter_advance(_iter, _diff)                                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int diff = (_diff);                                                        \
+                                                                               \
+    if (diff > 0)                                                              \
+        while (cc_dllst_iter_incr((_iter)) && --diff);                         \
+                                                                               \
+    if (diff < 0)                                                              \
+        while (cc_dllst_iter_decr((_iter)) && ++diff);                         \
 )
 
 
@@ -598,6 +579,44 @@ STATEMENT_                                                                     \
 #define DECR_TRAV_(_dllst, _iter)                                              \
                                                                                \
     for (cc_dllst_iter_tail((_iter), (_dllst)); cc_dllst_iter_decr((_iter)); )
+
+
+
+/* default constants */
+
+
+#if (CC_DLLST_START - 0 <= 0)
+
+    #undef  CC_DLLST_START
+    #define CC_DLLST_START 16
+
+#endif
+
+
+#if (CC_DLLST_RATIO - 0 <= 0)
+
+    #undef  CC_DLLST_RATIO
+    #define CC_DLLST_RATIO 2
+
+#endif
+
+
+#if (CC_DLLST_THRSH - 0 <  CC_DLLST_START)
+
+    #undef  CC_DLLST_THRSH
+    #define CC_DLLST_THRSH 65536
+
+#endif
+
+
+
+/* default comparators */
+
+
+#define CC_DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                \
+(                                                                              \
+    cc_dllst_iter_dref((_iter_a)) - cc_dllst_iter_dref((_iter_b)) <= 0         \
+)
 
 
 
