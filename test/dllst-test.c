@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define CC_DLLST_START 10
-#define CC_DLLST_RATIO 10
-#define CC_DLLST_THRSH 1000000
-
+#define  CC_DLLST_START 10
+#define  CC_DLLST_RATIO 10
+#define  CC_DLLST_THRSH 1000000
 #include "../src/dllst.h"
+
+#define INCR_LOOP_(_cnt, _num) for (int _cnt = 0; _cnt < (_num); _cnt++)
 
 
 int main(void)
@@ -25,7 +26,7 @@ int main(void)
         cc_dllst_push_back(msg, "Hello everyone:\n");
         cc_dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
 
-        cc_dllst_trav(msg, msg_iter)
+        INCR_TRAV_(msg, msg_iter)
             printf("%s", cc_dllst_iter_dref(msg_iter));
 
         cc_dllst_free(msg);
@@ -54,7 +55,7 @@ int main(void)
             cc_dllst_push_front(list, num_str[cnt++]);
             cc_dllst_push_back (list, num_str[cnt++]);
 
-            cc_dllst_trav(list, iter)
+            INCR_TRAV_(list, iter)
                 printf("%s ", cc_dllst_iter_dref(iter));
         }
 
@@ -109,7 +110,7 @@ int main(void)
         cc_dllst_push_back(list, msg_1);
         cc_dllst_push_back(list, msg_2);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%s ", cc_dllst_iter_dref(iter).msg[0]),
             printf("%s ", cc_dllst_iter_dref(iter).msg[1]);
 
@@ -129,7 +130,7 @@ int main(void)
         cc_dllst_iter(int) iter;
         cc_dllst_iter_init(iter, list);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d", cc_dllst_iter_dref(iter));
 
         if (cc_dllst_iter_incr(iter) == NULL)
@@ -160,7 +161,7 @@ int main(void)
         cc_dllst_back(list)  = "Element access ";
         cc_dllst_front(list) = "succeed.\n";
 
-        cc_dllst_trav_back(list, iter)
+        DECR_TRAV_(list, iter)
             printf("%s", cc_dllst_iter_dref(iter));
 
         cc_dllst_free(list);
@@ -187,7 +188,7 @@ int main(void)
         cc_dllst_push_back(list, 1);
         cc_dllst_push_back(list, 2);
         cc_dllst_pop_back(list);
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("Only '%d' remains in the container.\n",
                    cc_dllst_iter_dref(iter));
 
@@ -235,7 +236,7 @@ int main(void)
         for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(list, cnt);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
         {
             char var;
 
@@ -264,7 +265,7 @@ int main(void)
         for (int cnt = 0; cnt < 6; cnt++)
             cc_dllst_push_back(list, 2 * cnt + 1);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_iter_head(iter, list);
@@ -277,7 +278,7 @@ int main(void)
         }
 
         printf("-> ");
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_iter_begin(iter, list);
@@ -289,7 +290,7 @@ int main(void)
         }
 
         printf("-> ");
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_iter_begin(iter, list);
@@ -298,7 +299,7 @@ int main(void)
             cc_dllst_erase(iter);
 
         printf("-> ");
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_iter_begin(iter, list);
@@ -306,7 +307,7 @@ int main(void)
         cc_dllst_erase(iter);
 
         puts("-> (none)");
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         cc_dllst_free(list);
@@ -338,7 +339,7 @@ int main(void)
         cc_dllst_iter_head(move[1], list);
         cc_dllst_iter_head(move[2], list);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%c ", cc_dllst_iter_dref(iter));
 
         for (int cnt = 0; cnt < 8; cnt++)
@@ -350,7 +351,7 @@ int main(void)
             cc_dllst_move_range(move[0], move[1], move[2]);
 
             printf("/ ");
-            cc_dllst_trav(list, iter)
+            INCR_TRAV_(list, iter)
                 printf("%c ", cc_dllst_iter_dref(iter));
         }
 
@@ -371,33 +372,24 @@ int main(void)
 
         cc_dllst_iter(int) iter, move[4];
         cc_dllst_iter_init(iter, list);
-        cc_dllst_iter_init(move[0], list);
-        cc_dllst_iter_init(move[1], list);
-        cc_dllst_iter_init(move[2], list);
-        cc_dllst_iter_init(move[3], list);
+        INCR_LOOP_(cnt, 4) cc_dllst_iter_init(move[cnt], list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
-        for (int i = 0; i < 16; i++)
-            cc_dllst_push_back(list, str1[i]);
+        INCR_LOOP_(cnt, 16) cc_dllst_push_back(list, str1[cnt]);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         printf("-> ");
 
-        cc_dllst_iter_begin(move[0], list);
-        cc_dllst_iter_begin(move[1], list);
-        cc_dllst_iter_begin(move[2], list);
-
-        cc_dllst_iter_advance(move[0], 0);
-        cc_dllst_iter_advance(move[1], 8);
-        cc_dllst_iter_advance(move[2], 16);
+        INCR_LOOP_(cnt, 3) cc_dllst_iter_begin(move[cnt], list);
+        INCR_LOOP_(cnt, 3) cc_dllst_iter_advance(move[cnt], 8 * cnt);
 
         cc_dllst_merge_range(move[0], move[1], move[2],
                              move[3], CC_DLLST_DEFAULT_COMP);
 
-        cc_dllst_trav(list, iter)
+        INCR_TRAV_(list, iter)
             printf("%d ", cc_dllst_iter_dref(iter));
 
         puts("");
