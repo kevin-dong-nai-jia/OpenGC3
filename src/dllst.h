@@ -355,6 +355,18 @@ STATEMENT_                                                                     \
 
 
 
+/* dllst destroy */
+
+
+#define cc_dllst_free(_dllst)                                                  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _cc_dllst_blocks_free((_dllst));                                           \
+)
+
+
+
 /* dllst modifiers */
 
 
@@ -558,7 +570,10 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_sort(_dllst)                                         /* TODO */
+#define cc_dllst_sort_range(_iter_l, _iter_r, _ptr4_iter_x)           /* TODO */
+
+
+#define cc_dllst_sort(_ptr6_iter_x)                                   /* TODO */
 
 
 
@@ -575,26 +590,14 @@ STATEMENT_                                                                     \
 /* dllst traversal */
 
 
-#define cc_dllst_trav(_dllst, _iter)                                           \
+#define INCR_TRAV_(_dllst, _iter)                                              \
                                                                                \
     for (cc_dllst_iter_head((_iter), (_dllst)); cc_dllst_iter_incr((_iter)); )
 
 
-#define cc_dllst_trav_back(_dllst, _iter)                                      \
+#define DECR_TRAV_(_dllst, _iter)                                              \
                                                                                \
     for (cc_dllst_iter_tail((_iter), (_dllst)); cc_dllst_iter_decr((_iter)); )
-
-
-
-/* dllst destroy */
-
-
-#define cc_dllst_free(_dllst)                                                  \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _cc_dllst_blocks_free((_dllst));                                           \
-)
 
 
 
