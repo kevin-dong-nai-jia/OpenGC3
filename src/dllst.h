@@ -516,6 +516,8 @@ STATEMENT_                                                                     \
     link r_prev = (_iter_r).prev;                                              \
     link r_curr = (_iter_r).curr;                                              \
                                                                                \
+    if (p_curr == l_curr || p_curr == r_curr)  break;                          \
+                                                                               \
     *(link*)p_prev = XOR_3(p_curr, l_curr, *(link*)p_prev);                    \
     *(link*)p_curr = XOR_3(p_prev, r_prev, *(link*)p_curr);                    \
     *(link*)l_prev = XOR_3(l_curr, r_curr, *(link*)l_prev);                    \
@@ -533,10 +535,40 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x)      /* TODO */
+#define cc_dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x, _leq)         \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    cc_dllst_iter_copy((_iter_x), (_iter_m));                                  \
+                                                                               \
+    while ((_iter_m).curr != (_iter_r).curr)                                   \
+    {                                                                          \
+        while ((_iter_l).curr != (_iter_m).curr && _leq((_iter_l), (_iter_m))) \
+            cc_dllst_iter_incr((_iter_l));                                     \
+                                                                               \
+        while ((_iter_x).curr != (_iter_r).curr && _leq((_iter_x), (_iter_l))) \
+            cc_dllst_iter_incr((_iter_x));                                     \
+                                                                               \
+        cc_dllst_move_range((_iter_l), (_iter_m), (_iter_x));                  \
+        cc_dllst_iter_copy((_iter_m), (_iter_x));                              \
+    }                                                                          \
+                                                                               \
+    cc_dllst_iter_copy((_iter_l), (_iter_m));                                  \
+    cc_dllst_iter_copy((_iter_r), (_iter_m));                                  \
+)
 
 
 #define cc_dllst_sort(_dllst)                                         /* TODO */
+
+
+
+/* dllst compare */
+
+
+#define CC_DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                \
+(                                                                              \
+    cc_dllst_iter_dref((_iter_a)) - cc_dllst_iter_dref((_iter_b)) <= 0         \
+)
 
 
 
