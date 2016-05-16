@@ -35,10 +35,18 @@
 typedef void*  link_t;
 
 
+/* pragma (struct) */
+
+#define PRAGMA_PADDED_BEGIN
+#define PRAGMA_PADDED_END
+
+#define PRAGMA_PACKED_BEGIN  _Pragma("pack(push, 1)")
+#define PRAGMA_PACKED_END    _Pragma("pack(pop)")
+
+
 /* syntax wrappers */
 
 #define STATEMENT_(...)  do {__VA_ARGS__} while (0)
-
 #define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
@@ -147,7 +155,7 @@ STATEMENT_                                                                     \
 
 
 
-/* internal: node operations */
+/* node operations */
 
 
 #define _cc_dllst_node_alloc(_pnode, _dllst)                                   \
@@ -204,7 +212,7 @@ STATEMENT_                                                                     \
 
 
 
-/* internal: link exclusive or */
+/* link exclusive or */
 
 
 #define XOR_2(_addr_a, _addr_b)                                                \
@@ -596,17 +604,6 @@ STATEMENT_                                                                     \
 (                                                                              \
     cc_dllst_iter_dref((_iter_a)) - cc_dllst_iter_dref((_iter_b)) <= 0         \
 )
-
-
-
-/* pragmas for structs */
-
-
-#define PRAGMA_PADDED_BEGIN
-#define PRAGMA_PADDED_END
-
-#define PRAGMA_PACKED_BEGIN  _Pragma("pack(push, 1)")
-#define PRAGMA_PACKED_END    _Pragma("pack(pop)")
 
 
 
