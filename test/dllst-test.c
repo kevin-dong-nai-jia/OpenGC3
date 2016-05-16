@@ -256,10 +256,10 @@ int main(void)
     printf("\n\nTest 9: \n\n");
 
     {
-        cc_dllst(int) list;
+        cc_dllst_pckd(int) list;
         cc_dllst_init(list);
 
-        cc_dllst_iter(int) iter;
+        cc_dllst_iter_pckd(int) iter;
         cc_dllst_iter_init(iter, list);
 
         for (int cnt = 0; cnt < 6; cnt++)
