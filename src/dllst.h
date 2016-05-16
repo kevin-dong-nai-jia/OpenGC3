@@ -80,7 +80,11 @@ typedef void*  link_t;
     }
 
 
-#define cc_dllst_iter(elem_t)                                                  \
+#define cc_dllst_iter(elem_t)       _cc_dllst_iter(elem_t, PADDED)
+
+#define cc_dllst_iter_pckd(elem_t)  _cc_dllst_iter(elem_t, PACKED)
+
+#define _cc_dllst_iter(elem_t, PACK)                                           \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -88,7 +92,7 @@ typedef void*  link_t;
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
                                                                                \
-        cc_dllst(elem_t) *pdllst;                                              \
+        _cc_dllst(elem_t, PACK) *pdllst;                                       \
     }
 
 
