@@ -227,13 +227,11 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        #pragma pack(push, 1)
-        cc_dllst(char) list;
+        cc_dllst_pack(char) list;
         cc_dllst_init(list);
 
         cc_dllst_iter(char) iter;
         cc_dllst_iter_init(iter, list);
-        #pragma pack(pop)
 
         for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(list, cnt);
