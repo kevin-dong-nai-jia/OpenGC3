@@ -21,7 +21,6 @@
 \*                                                                            */
 
 
-
 #ifndef _CCC_DLLST_H_
 #define _CCC_DLLST_H_
 
@@ -31,26 +30,27 @@
 #include <stdint.h>
 
 
-typedef void* link_t;
+/* type definition */
+
+typedef void*  link_t;
 
 
-/* syntax wrapper */
+/* syntax wrappers */
 
+#define STATEMENT_(...)  do {__VA_ARGS__} while (0)
 
-#define STATEMENT_(...) do {__VA_ARGS__} while (0)
-
-#define VOID_EXPR_(...) ((__VA_ARGS__), ((void)0))
+#define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
 
 /* dllst create */
 
 
-#define cc_dllst(elem_t)       _cc_dllst(elem_t, normal)
+#define cc_dllst(elem_t)       _cc_dllst(elem_t, PADDED)
 
-#define cc_dllst_pack(elem_t)  _cc_dllst(elem_t, packed)
+#define cc_dllst_pckd(elem_t)  _cc_dllst(elem_t, PACKED)
 
-#define _cc_dllst(elem_t, type)                                                \
+#define _cc_dllst(elem_t, PACK)                                                \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -65,18 +65,18 @@ typedef void* link_t;
         {                                                                      \
             link_t next;                                                       \
                                                                                \
-            struct_##type(_cc_node(elem_t)  nodes[CC_DLLST_START], *pnode;)    \
+            PRAGMA_##PACK##_BEGIN                                              \
+                                                                               \
+            struct                                                             \
+            {                                                                  \
+                elem_t val;                                                    \
+                link_t xor;                                                    \
+                                                                               \
+            }   nodes[CC_DLLST_START], *pnode;                                 \
+                                                                               \
+            PRAGMA_##PACK##_END                                                \
                                                                                \
         }   block, *pool;                                                      \
-    }
-
-
-#define _cc_node(elem_t)                                                       \
-                                                                               \
-    struct                                                                     \
-    {                                                                          \
-        elem_t val;                                                            \
-        link_t xor;                                                            \
     }
 
 
@@ -252,78 +252,47 @@ STATEMENT_                                                                     \
 /* dllst modifiers */
 
 
-#define cc_dllst_push_front(_dllst, _value)                                    \
+#define cc_dllst_push_front(_dllst, _value) _cc_dllst_push(_dllst, _value, head)
+
+#define cc_dllst_push_back(_dllst, _value)  _cc_dllst_push(_dllst, _value, tail)
+
+#define _cc_dllst_push(_dllst, _value, _name_)                                 \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     _cc_dllst_node_alloc((_dllst).block.pnode, (_dllst));                      \
                                                                                \
     (_dllst).block.pnode->val = (_value);                                      \
-    (_dllst).block.pnode->xor = XOR_2(&((_dllst).head), (_dllst).head);        \
+    (_dllst).block.pnode->xor = XOR_2(&((_dllst)._name_), (_dllst)._name_);    \
                                                                                \
     *(link_t*)                                                                 \
-    (_dllst).head = XOR_3(&((_dllst).head),                                    \
-                          *(link_t*)(_dllst).head,                             \
-                          &((_dllst).block.pnode->xor));                       \
-    (_dllst).head = (link_t)&((_dllst).block.pnode->xor);                      \
+    (_dllst)._name_ = XOR_3(&((_dllst)._name_),                                \
+                            *(link_t*)(_dllst)._name_,                         \
+                            &((_dllst).block.pnode->xor));                     \
+    (_dllst)._name_ = (link_t)&((_dllst).block.pnode->xor);                    \
                                                                                \
     (_dllst).size++;                                                           \
 )
 
 
-#define cc_dllst_push_back(_dllst, _value)                                     \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _cc_dllst_node_alloc((_dllst).block.pnode, (_dllst));                      \
-                                                                               \
-    (_dllst).block.pnode->val = (_value);                                      \
-    (_dllst).block.pnode->xor = XOR_2(&((_dllst).tail), (_dllst).tail);        \
-                                                                               \
-    *(link_t*)                                                                 \
-    (_dllst).tail = XOR_3(&((_dllst).tail),                                    \
-                          *(link_t*)(_dllst).tail,                             \
-                          &((_dllst).block.pnode->xor));                       \
-    (_dllst).tail = (link_t)&((_dllst).block.pnode->xor);                      \
-                                                                               \
-    (_dllst).size++;                                                           \
-)
+#define cc_dllst_pop_front(_dllst) _cc_dllst_pop(_dllst, head)
 
+#define cc_dllst_pop_back(_dllst)  _cc_dllst_pop(_dllst, tail)
 
-#define cc_dllst_pop_front(_dllst)                                             \
+#define _cc_dllst_pop(_dllst, _name_)                                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     if (!(cc_dllst_empty((_dllst))))                                           \
     {                                                                          \
-        link_t head  =   (_dllst).head;                                        \
-        link_t phead = &((_dllst).head);                                       \
+        link_t    _name_ =   (_dllst)._name_;                                  \
+        link_t p##_name_ = &((_dllst)._name_);                                 \
                                                                                \
-        (_dllst).head = XOR_2(phead, *(link_t*)(_dllst).head);                 \
+        (_dllst)._name_ = XOR_2(p##_name_, *(link_t*)(_dllst)._name_);         \
         *(link_t*)                                                             \
-        (_dllst).head = XOR_3(phead, *(link_t*)(_dllst).head, head);           \
+        (_dllst)._name_ = XOR_3(p##_name_, *(link_t*)(_dllst)._name_, _name_); \
                                                                                \
-        _cc_dllst_node_clear(head, (_dllst));                                  \
-                                                                               \
-        (_dllst).size--;                                                       \
-    }                                                                          \
-)
-
-
-#define cc_dllst_pop_back(_dllst)                                              \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (!(cc_dllst_empty((_dllst))))                                           \
-    {                                                                          \
-        link_t tail  =   (_dllst).tail;                                        \
-        link_t ptail = &((_dllst).tail);                                       \
-                                                                               \
-        (_dllst).tail = XOR_2(ptail, *(link_t*)(_dllst).tail);                 \
-        *(link_t*)                                                             \
-        (_dllst).tail = XOR_3(ptail, *(link_t*)(_dllst).tail, tail);           \
-                                                                               \
-        _cc_dllst_node_clear(tail, (_dllst));                                  \
+        _cc_dllst_node_clear(_name_, (_dllst));                                \
                                                                                \
         (_dllst).size--;                                                       \
     }                                                                          \
@@ -539,25 +508,23 @@ VOID_EXPR_                                                                     \
 
 #define cc_dllst_iter_incr(_iter)                                              \
 (                                                                              \
-    ((_iter).next != NULL) ?                                                   \
+    ((_iter).next == NULL) ? (void*)(NULL) :                                   \
     (                                                                          \
         (_iter).prev = (_iter).curr,                                           \
         (_iter).curr = (_iter).next,                                           \
         (_iter).next = XOR_2((_iter).prev, *(link_t*)(_iter).curr)             \
-                                                                               \
-    ) : (void*)(NULL)                                                          \
+    )                                                                          \
 )
 
 
 #define cc_dllst_iter_decr(_iter)                                              \
 (                                                                              \
-    ((_iter).prev != NULL) ?                                                   \
+    ((_iter).prev == NULL) ? (void*)(NULL) :                                   \
     (                                                                          \
         (_iter).next = (_iter).curr,                                           \
         (_iter).curr = (_iter).prev,                                           \
         (_iter).prev = XOR_2((_iter).next, *(link_t*)(_iter).curr)             \
-                                                                               \
-    ) : (void*)(NULL)                                                          \
+    )                                                                          \
 )
 
 
@@ -631,10 +598,11 @@ STATEMENT_                                                                     \
 /* pragmas for structs */
 
 
-#define struct_normal(...)  __VA_ARGS__
+#define PRAGMA_PADDED_BEGIN
+#define PRAGMA_PADDED_END
 
-#define struct_packed(...)  _Pragma("pack(push, 1)")                           \
-                            __VA_ARGS__  _Pragma("pack(pop)")
+#define PRAGMA_PACKED_BEGIN  _Pragma("pack(push, 1)")
+#define PRAGMA_PACKED_END    _Pragma("pack(pop)")
 
 
 
