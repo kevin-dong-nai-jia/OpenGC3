@@ -227,7 +227,7 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        cc_dllst_pack(char) list;
+        cc_dllst_pckd(char) list;
         cc_dllst_init(list);
 
         cc_dllst_iter(char) iter;
@@ -236,15 +236,15 @@ int main(void)
         for (int cnt = 0; cnt < 10000000; cnt++)
             cc_dllst_push_back(list, cnt);
 
-        INCR_TRAV_(list, iter)
-        {
-            char var;
+        char var = 0;
 
-            if ((var = cc_dllst_iter_dref(iter)) > 0)
-                printf("%03d%c", var, (var != 127) ? ' ' : '\n');
-            else if (var != 0)
+        INCR_TRAV_(list, iter)
+            if (var != 127)
+                printf("%03d ", (var = cc_dllst_iter_dref(iter)));
+            else
                 break;
-        }
+
+        puts("");
 
         cc_dllst_free(list);
     }
