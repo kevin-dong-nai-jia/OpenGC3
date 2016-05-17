@@ -36,7 +36,7 @@ int main(void)
 
 
     /* Test 1 */
-    /* Push back ten pointers to char */
+    /* Test push back */
 
     printf("\n\nTest 1: \n");
 
@@ -66,7 +66,7 @@ int main(void)
 
 
     /* Test 2 */
-    /* Deallocation */
+    /* Test free */
 
     printf("\n\nTest 2: ");
 
@@ -86,7 +86,7 @@ int main(void)
 
 
     /* Test 3 */
-    /* Push back two structs */
+    /* Test push */
 
     printf("\n\nTest 3: ");
 
@@ -121,7 +121,7 @@ int main(void)
 
 
     /* Test 4 */
-    /* Empty container */
+    /* Test incr */
 
     printf("\n\nTest 4: ");
 
@@ -145,7 +145,7 @@ int main(void)
 
 
     /* Test 5 */
-    /* Element access */
+    /* Test access */
 
     printf("\n\nTest 5: ");
 
@@ -171,7 +171,7 @@ int main(void)
 
 
     /* Test 6 */
-    /* Pop elements */
+    /* Test pop */
 
     printf("\n\nTest 6: ");
 
@@ -199,7 +199,7 @@ int main(void)
 
 
     /* Test 7 */
-    /* Frequently push and pop elements */
+    /* Test push and pop */
 
     printf("\n\nTest 7: \n");
 
@@ -425,7 +425,7 @@ int main(void)
         cc_dllst_iter_init(iter, list);
         INCR_LOOP_(cnt, 4) cc_dllst_iter_init(iters[cnt], list);
 
-        int length = 100000;
+        int length = 1000;
         srand(time(NULL));
 
         INCR_LOOP_(cnt, length) cc_dllst_push_back(list, rand());
@@ -438,6 +438,39 @@ int main(void)
         puts("");
 
         cc_dllst_free(list);
+    }
+
+
+    /* Test 13 */
+    /* Test sort parallel */
+
+    printf("\n\nTest 13: \n\n");
+
+    {
+        const int n = 2;
+
+        cc_dllst(int) list, lists[n];
+        cc_dllst_init(list);
+        INCR_LOOP_(i, n) cc_dllst_init(lists[i]);
+
+        cc_dllst_iter(int) iter, iters[n][4];
+        cc_dllst_iter_init(iter, list);
+        INCR_LOOP_(i, n)
+            INCR_LOOP_(j, 4)
+                cc_dllst_iter_init(iters[i][j], lists[i]);
+
+        int length = 100000;
+        INCR_LOOP_(cnt, length) cc_dllst_push_back(list, length - cnt);
+
+        cc_dllst_sort_parallel(list, lists, iters, n, CC_DLLST_DEFAULT_COMP);
+
+        INCR_TRAV_(list, iter)
+            printf("Largest = %d\r", cc_dllst_iter_dref(iter));
+
+        puts("");
+
+        cc_dllst_free(list);
+        INCR_LOOP_(i, n) cc_dllst_free(lists[i]);
     }
 
 
