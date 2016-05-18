@@ -459,13 +459,13 @@ int main(void)
             INCR_LOOP_(j, 4)
                 cc_dllst_iter_init(iters[i][j], lists[i]);
 
-        int length = 100000;
+        int length = 10000;
         INCR_LOOP_(cnt, length) cc_dllst_push_back(list, length - cnt);
 
         cc_dllst_sort_parallel(list, lists, iters, n, CC_DLLST_DEFAULT_COMP);
 
         INCR_TRAV_(list, iter)
-            printf("Largest = %d\r", cc_dllst_iter_dref(iter));
+            printf("Ten thousand = %d\r", cc_dllst_iter_dref(iter));
 
         puts("");
 
