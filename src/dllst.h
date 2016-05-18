@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 
 /* type definition */
@@ -67,7 +68,7 @@ typedef void*  link_t;
         elem_t *tail;                                                          \
         elem_t *avsp;                                                          \
                                                                                \
-        size_t    size, ncnt, vcnt;                                            \
+        int       size, ncnt, vcnt;                                            \
         ptrdiff_t val_offset, xor_offset;                                      \
                                                                                \
         struct                                                                 \
@@ -462,45 +463,75 @@ STATEMENT_                                                                     \
 )
 
 
+#define _cc_dllst_sort_two_sub(_dllst, _ptrn_dllst, _ptrn4_iter_x, _r, _leq)   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int size_half_sub[(_r)];                                                   \
+                                                                               \
+    for (int cstl = 0; cstl < (_r); cstl++)                                    \
+        size_half_sub[cstl] = (_ptrn_dllst)[cstl].size;                        \
+                                                                               \
+    for (int cstl = 0, cstr = (_r); ((cstl < ((-1) * (_dllst).size - 1)) &&    \
+                             ((_ptrn_dllst)[cstr].size != 0)); cstl++, cstr++) \
+    {                                                                          \
+        (_dllst).size += 1;                                                    \
+        (_ptrn_dllst)[cstl].size += (_ptrn_dllst)[cstr].size;                  \
+        (_ptrn_dllst)[cstr].size  = 0;                                         \
+                                                                               \
+        cc_dllst_iter_tail ((_ptrn4_iter_x)[cstl][0], (_ptrn_dllst)[cstl]);    \
+        cc_dllst_iter_begin((_ptrn4_iter_x)[cstl][1], (_ptrn_dllst)[cstr]);    \
+        cc_dllst_iter_tail ((_ptrn4_iter_x)[cstl][2], (_ptrn_dllst)[cstr]);    \
+        cc_dllst_move_range((_ptrn4_iter_x)[cstl][0], (_ptrn4_iter_x)[cstl][1],\
+                            (_ptrn4_iter_x)[cstl][2]);                         \
+    }                                                                          \
+                                                                               \
+    _Pragma("omp parallel for")                                                \
+    for (int cstl = 0; cstl < (_r); cstl++)                                    \
+        _cc_dllst_sort((_ptrn_dllst)[cstl],                                    \
+                       (_ptrn4_iter_x)[cstl], _leq, size_half_sub[cstl]);      \
+)
+
+
 #define cc_dllst_sort_parallel(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n, _leq) \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    size_t sub_size = ((_dllst).size / (_n)) +                                 \
-                      (((_dllst).size % (_n) == 0) ? (0) : (1));               \
+    int size     = (_dllst).size,                                              \
+        size_sub = (size / (_n)) + ((size % (_n) == 0) ? (0) : (1));           \
                                                                                \
-    for (int cnt = 0; cnt < (_n); cnt++)                                       \
+    for (int csp = 0; csp < (_n); csp++)                                       \
     {                                                                          \
-        if ((_dllst).size >= sub_size)                                         \
-            (_ptrn_dllst_x)[cnt].size = sub_size, (_dllst).size -= sub_size;   \
-        else                                                                   \
-            (_ptrn_dllst_x)[cnt].size = (_dllst).size, (_dllst).size = 0;      \
+        bool suff = ((_dllst).size >= size_sub);                               \
                                                                                \
-        cc_dllst_iter_tail   ((_ptrn4_iter_x)[cnt][0], (_ptrn_dllst_x)[cnt]);  \
-        cc_dllst_iter_begin  ((_ptrn4_iter_x)[cnt][1], (_dllst));              \
-        cc_dllst_iter_begin  ((_ptrn4_iter_x)[cnt][2], (_dllst));              \
-        cc_dllst_iter_advance((_ptrn4_iter_x)[cnt][2], sub_size);              \
-        cc_dllst_move_range  ((_ptrn4_iter_x)[cnt][0], (_ptrn4_iter_x)[cnt][1],\
-                              (_ptrn4_iter_x)[cnt][2]);                        \
+        (_ptrn_dllst_x)[csp].size = suff ? size_sub : (_dllst).size;           \
+        (_dllst).size             = suff ? ((_dllst).size - size_sub) : 0;     \
+                                                                               \
+        cc_dllst_iter_tail   ((_ptrn4_iter_x)[csp][0], (_ptrn_dllst_x)[csp]);  \
+        cc_dllst_iter_begin  ((_ptrn4_iter_x)[csp][1], (_dllst));              \
+        cc_dllst_iter_begin  ((_ptrn4_iter_x)[csp][2], (_dllst));              \
+        cc_dllst_iter_advance((_ptrn4_iter_x)[csp][2], size_sub);              \
+        cc_dllst_move_range  ((_ptrn4_iter_x)[csp][0], (_ptrn4_iter_x)[csp][1],\
+                              (_ptrn4_iter_x)[csp][2]);                        \
     }                                                                          \
+                                                                               \
+    (_dllst).size = (-1) * (_n);                                               \
                                                                                \
     _Pragma("omp parallel for")                                                \
-    for (int thread = 0; thread < (_n); thread++)                              \
-        cc_dllst_sort((_ptrn_dllst_x)[thread], (_ptrn4_iter_x)[thread], _leq); \
+    for (int csp = 0; csp < (_n); csp++)                                       \
+        cc_dllst_sort((_ptrn_dllst_x)[csp], (_ptrn4_iter_x)[csp], _leq);       \
                                                                                \
-    for (int cnt = 0; cnt < (_n); cnt++)                                       \
-    {                                                                          \
-        (_dllst).size += (_ptrn_dllst_x)[cnt].size;                            \
-        (_ptrn_dllst_x)[cnt].size = 0;                                         \
+    for (int csp = (_n); (csp = ((csp + (csp > 1 ? 1 : 0)) / 2)); )            \
+        _cc_dllst_sort_two_sub((_dllst), (_ptrn_dllst_x),                      \
+                                         (_ptrn4_iter_x), csp, _leq);          \
                                                                                \
-        cc_dllst_iter_tail ((_ptrn4_iter_x)[cnt][0], (_dllst));                \
-        cc_dllst_iter_begin((_ptrn4_iter_x)[cnt][1], (_ptrn_dllst_x)[cnt]);    \
-        cc_dllst_iter_tail ((_ptrn4_iter_x)[cnt][2], (_ptrn_dllst_x)[cnt]);    \
-        cc_dllst_move_range((_ptrn4_iter_x)[cnt][0], (_ptrn4_iter_x)[cnt][1],  \
-                            (_ptrn4_iter_x)[cnt][2]);                          \
-    }                                                                          \
+    cc_dllst_iter_tail ((_ptrn4_iter_x)[0][0], (_dllst));                      \
+    cc_dllst_iter_begin((_ptrn4_iter_x)[0][1], (_ptrn_dllst_x)[0]);            \
+    cc_dllst_iter_tail ((_ptrn4_iter_x)[0][2], (_ptrn_dllst_x)[0]);            \
+    cc_dllst_move_range((_ptrn4_iter_x)[0][0], (_ptrn4_iter_x)[0][1],          \
+                        (_ptrn4_iter_x)[0][2]);                                \
                                                                                \
-    _cc_dllst_sort((_dllst), (_ptrn4_iter_x)[0], _leq, sub_size);              \
+    (_dllst).size = size;                                                      \
 )
 
 
