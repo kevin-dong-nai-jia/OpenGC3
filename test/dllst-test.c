@@ -13,7 +13,7 @@ int main(void)
     /* Test 0 */
     /* For demonstration */
 
-    printf("Test 0:\n\n");
+    printf("Test 0: \n\n");
 
     {
         dllst(char*) msg;
@@ -25,7 +25,8 @@ int main(void)
         dllst_push_back(msg, "Hello everyone:\n");
         dllst_push_back(msg, "Welcome to C Container Collection Project!\n");
 
-        INCR_TRAV_(msg, msg_iter)  printf("%s", dllst_iter_dref(msg_iter));
+        DLLST_TRAVERSAL(msg, msg_iter)
+            printf("%s", dllst_iter_dref(msg_iter));
 
         dllst_free(msg);
     }
@@ -53,7 +54,8 @@ int main(void)
             dllst_push_front(list, num_str[cnt++]);
             dllst_push_back (list, num_str[cnt++]);
 
-            INCR_TRAV_(list, iter)  printf("%s ", dllst_iter_dref(iter));
+            DLLST_TRAVERSAL(list, iter)
+                printf("%s ", dllst_iter_dref(iter));
         }
 
         dllst_free(list);
@@ -108,7 +110,7 @@ int main(void)
         dllst_push_back(list, msg_1);
         dllst_push_back(list, msg_2);
 
-        INCR_TRAV_(list, iter)
+        DLLST_TRAVERSAL(list, iter)
             printf("%s ", dllst_iter_dref(iter).msg[0]),
             printf("%s ", dllst_iter_dref(iter).msg[1]);
 
@@ -128,7 +130,8 @@ int main(void)
         dllst_iter(int) iter;
         dllst_iter_init(iter, list);
 
-        INCR_TRAV_(list, iter)  printf("%d", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d", dllst_iter_dref(iter));
 
         if (dllst_iter_incr(iter) == NULL)
             puts("The iterator points to the tail.");
@@ -158,7 +161,8 @@ int main(void)
         dllst_back(list)  = "Element access ";
         dllst_front(list) = "succeed.\n";
 
-        DECR_TRAV_(list, iter)  printf("%s", dllst_iter_dref(iter));
+        DLLST_BACKWARD_TRAVERSAL(list, iter)
+            printf("%s", dllst_iter_dref(iter));
 
         dllst_free(list);
     }
@@ -179,12 +183,14 @@ int main(void)
         dllst_pop_front(list);
 
         dllst_push_front(list, 1);
-        dllst_pop_front(list);
+        dllst_pop_front (list);
 
         dllst_push_back(list, 1);
         dllst_push_back(list, 2);
-        dllst_pop_back(list);
-        INCR_TRAV_(list, iter)  printf("'%d' == '1'\n",  dllst_iter_dref(iter));
+        dllst_pop_back (list);
+
+        DLLST_TRAVERSAL(list, iter)
+            printf("'%d' == '1'\n",  dllst_iter_dref(iter));
 
         dllst_free(list);
     }
@@ -230,7 +236,7 @@ int main(void)
 
         char var = 0;
 
-        INCR_TRAV_(list, iter)
+        DLLST_TRAVERSAL(list, iter)
             if (var != 127)  printf("%03d ", (var = dllst_iter_dref(iter)));
             else  break;
 
@@ -255,7 +261,8 @@ int main(void)
         for (int cnt = 0; cnt < 6; cnt++)
             dllst_push_back(list, 2 * cnt + 1);
 
-        INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d ", dllst_iter_dref(iter));
 
         dllst_iter_head(iter, list);
 
@@ -267,7 +274,8 @@ int main(void)
         }
 
         printf("-> ");
-        INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d ", dllst_iter_dref(iter));
 
         dllst_iter_begin(iter, list);
 
@@ -278,7 +286,8 @@ int main(void)
         }
 
         printf("-> ");
-        INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d ", dllst_iter_dref(iter));
 
         dllst_iter_begin(iter, list);
 
@@ -286,14 +295,16 @@ int main(void)
             dllst_erase(iter);
 
         printf("-> ");
-        INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d ", dllst_iter_dref(iter));
 
         dllst_iter_begin(iter, list);
 
         dllst_erase(iter);
 
         puts("-> (none)");
-        INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%d ", dllst_iter_dref(iter));
 
         dllst_free(list);
     }
@@ -324,7 +335,8 @@ int main(void)
         dllst_iter_head(move[1], list);
         dllst_iter_head(move[2], list);
 
-        INCR_TRAV_(list, iter)  printf("%c ", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("%c ", dllst_iter_dref(iter));
 
         for (int cnt = 0; cnt < 8; cnt++)
         {
@@ -335,7 +347,8 @@ int main(void)
             dllst_move_range(move[0], move[1], move[2]);
 
             printf("/ ");
-            INCR_TRAV_(list, iter)  printf("%c ", dllst_iter_dref(iter));
+            DLLST_TRAVERSAL(list, iter)
+                printf("%c ", dllst_iter_dref(iter));
         }
 
         puts("= A C E D B F G /");
@@ -363,7 +376,8 @@ int main(void)
         {
             INCR_LOOP_(cnt, 16)  dllst_push_back(list, str1[cnt]);
 
-            INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+            DLLST_TRAVERSAL(list, iter)
+                printf("%d ", dllst_iter_dref(iter));
 
             printf("-> ");
 
@@ -382,7 +396,8 @@ int main(void)
                 break;
             }
 
-            INCR_TRAV_(list, iter)  printf("%d ", dllst_iter_dref(iter));
+            DLLST_TRAVERSAL(list, iter)
+                printf("%d ", dllst_iter_dref(iter));
 
             puts("");
 
@@ -413,7 +428,8 @@ int main(void)
 
         dllst_sort(list, iters, DLLST_DEFAULT_COMP);
 
-        INCR_TRAV_(list, iter)  printf("Max = %10d\r", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("Max = %10d\r", dllst_iter_dref(iter));
 
         puts("");
 
@@ -442,7 +458,8 @@ int main(void)
 
         dllst_sort_parallel(list, lists, iters, n, DLLST_DEFAULT_COMP);
 
-        INCR_TRAV_(list, iter)  printf("10^5 = %d\r", dllst_iter_dref(iter));
+        DLLST_TRAVERSAL(list, iter)
+            printf("Ten thousand = %d\r", dllst_iter_dref(iter));
 
         puts("");
 
