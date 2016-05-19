@@ -633,12 +633,14 @@ STATEMENT_                                                                     \
 /* dllst traversal */
 
 
-#define INCR_TRAV_(_dllst, _iter)                                              \
+#define DLLST_TRAVERSAL(_dllst, _iter)  DLLST_FORWARD_TRAVERSAL(_dllst, _iter)
+
+#define DLLST_FORWARD_TRAVERSAL(_dllst, _iter)                                 \
                                                                                \
     for (dllst_iter_head((_iter), (_dllst)); dllst_iter_incr((_iter)); )
 
 
-#define DECR_TRAV_(_dllst, _iter)                                              \
+#define DLLST_BACKWARD_TRAVERSAL(_dllst, _iter)                                \
                                                                                \
     for (dllst_iter_tail((_iter), (_dllst)); dllst_iter_decr((_iter)); )
 
