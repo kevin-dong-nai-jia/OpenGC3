@@ -21,8 +21,8 @@
 \*                                                                            */
 
 
-#ifndef _CCC_DLLST_H_
-#define _CCC_DLLST_H_
+#ifndef _DLLST_H_
+#define _DLLST_H_
 
 
 #include <omp.h>
@@ -56,11 +56,11 @@ typedef void*  link_t;
 /* dllst create */
 
 
-#define cc_dllst(elem_t)       _cc_dllst(elem_t, PADDED)
+#define dllst(elem_t)       dllst_extd(elem_t, PADDED)
 
-#define cc_dllst_pckd(elem_t)  _cc_dllst(elem_t, PACKED)
+#define dllst_pckd(elem_t)  dllst_extd(elem_t, PACKED)
 
-#define _cc_dllst(elem_t, PACK)                                                \
+#define dllst_extd(elem_t, _pack)                                              \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -70,31 +70,32 @@ typedef void*  link_t;
                                                                                \
         int       size, ncnt, vcnt;                                            \
         ptrdiff_t val_offset, xor_offset;                                      \
+        int       blkstart, blkratio, blkthrsh;                                \
                                                                                \
         struct                                                                 \
         {                                                                      \
             link_t next;                                                       \
                                                                                \
-            PRAGMA_##PACK##_BEGIN                                              \
+            PRAGMA_##_pack##_BEGIN                                             \
                                                                                \
             struct                                                             \
             {                                                                  \
                 elem_t val;                                                    \
                 link_t xor;                                                    \
                                                                                \
-            }   nodes[CC_DLLST_START], *pnode;                                 \
+            }   *pnode, nodes[1];                                              \
                                                                                \
-            PRAGMA_##PACK##_END                                                \
+            PRAGMA_##_pack##_END                                               \
                                                                                \
-        }   block, *pool;                                                      \
+        }   *pool, block;                                                      \
     }
 
 
-#define cc_dllst_iter(elem_t)       _cc_dllst_iter(elem_t, PADDED)
+#define dllst_iter(elem_t)       dllst_iter_extd(elem_t, PADDED)
 
-#define cc_dllst_iter_pckd(elem_t)  _cc_dllst_iter(elem_t, PACKED)
+#define dllst_iter_pckd(elem_t)  dllst_iter_extd(elem_t, PACKED)
 
-#define _cc_dllst_iter(elem_t, PACK)                                           \
+#define dllst_iter_extd(elem_t, PACK)                                          \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -102,7 +103,7 @@ typedef void*  link_t;
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
                                                                                \
-        _cc_dllst(elem_t, PACK) *pdllst;                                       \
+        dllst_extd(elem_t, PACK) *pdllst;                                      \
     }
 
 
@@ -110,29 +111,36 @@ typedef void*  link_t;
 /* dllst initialize */
 
 
-#define cc_dllst_init(_dllst)                                                  \
+#define dllst_init(_dllst)  dllst_init_extd(_dllst, 16, 2, 65536)
+
+#define dllst_init_extd(_dllst, _start, _ratio, _thrsh)                        \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_dllst).head = (link_t)&((_dllst).tail),                                  \
     (_dllst).tail = (link_t)&((_dllst).head),                                  \
     (_dllst).avsp = NULL,                                                      \
-    (_dllst).pool = &((_dllst).block),                                         \
+    (_dllst).pool = NULL,                                                      \
                                                                                \
     (_dllst).size = 0,                                                         \
-    (_dllst).ncnt = CC_DLLST_START,                                            \
-    (_dllst).vcnt = CC_DLLST_START,                                            \
+    (_dllst).ncnt = 0,                                                         \
+    (_dllst).vcnt = 0,                                                         \
+                                                                               \
+    (_dllst).blkstart = ((_start) >= 1) ? (_start) : 1,                        \
+    (_dllst).blkratio = ((_ratio) >= 1) ? (_ratio) : 1,                        \
+    (_dllst).blkthrsh = ((_thrsh) >= (_dllst).blkstart) ?                      \
+                                          (_thrsh) : (_dllst).blkstart,        \
                                                                                \
     (((_dllst).xor_offset = ((char*)&((_dllst).block.nodes[0].xor) -           \
                              (char*)&((_dllst).block.nodes[0].val))) %         \
      sizeof((_dllst).block.nodes[0].val)) ?                                    \
-    (puts("FATAL ERROR: Misalignment Issue."), exit(EXIT_FAILURE), 0) :        \
+    (puts("FATAL ERROR: Misalignment Issue"), exit(EXIT_FAILURE), 0) :         \
     ((_dllst).val_offset = (_dllst).xor_offset * (-1) /                        \
                            sizeof((_dllst).block.nodes[0].val))                \
 )
 
 
-#define cc_dllst_iter_init(_iter, _dllst)                                      \
+#define dllst_iter_init(_iter, _dllst)                                         \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -148,11 +156,11 @@ VOID_EXPR_                                                                     \
 /* dllst destroy */
 
 
-#define cc_dllst_free(_dllst)                                                  \
+#define dllst_free(_dllst)                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _cc_dllst_blocks_free((_dllst));                                           \
+    _dllst_blocks_free((_dllst));                                              \
 )
 
 
@@ -160,7 +168,7 @@ STATEMENT_                                                                     \
 /* node operations */
 
 
-#define _cc_dllst_node_alloc(_pnode, _dllst)                                   \
+#define _dllst_node_alloc(_pnode, _dllst)                                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -170,13 +178,19 @@ STATEMENT_                                                                     \
         {                                                                      \
             link_t pool_dup = (_dllst).pool;                                   \
                                                                                \
-            (_dllst).vcnt = ((_dllst).ncnt  < CC_DLLST_THRSH) ?                \
-                            ((_dllst).ncnt *= CC_DLLST_RATIO) :                \
-                            ((_dllst).ncnt  = CC_DLLST_THRSH);                 \
+            if ((_dllst).ncnt == 0)                                            \
+                (_dllst).vcnt = ((_dllst).ncnt  = (_dllst).blkstart);          \
+            else                                                               \
+                (_dllst).vcnt = ((_dllst).ncnt  < (_dllst).blkthrsh) ?         \
+                                ((_dllst).ncnt *= (_dllst).blkratio) :         \
+                                ((_dllst).ncnt  = (_dllst).blkthrsh);          \
                                                                                \
             (_dllst).pool = malloc(sizeof((_dllst).block) +                    \
                                    sizeof((_dllst).block.nodes[0]) *           \
-                                   ((_dllst).ncnt - CC_DLLST_START));          \
+                                   ((_dllst).ncnt - 1));                       \
+                                                                               \
+            if ((_dllst).pool == NULL)                                         \
+                puts("FATAL ERROR: Failed To Allocate"), exit(EXIT_FAILURE);   \
                                                                                \
             *(link_t*)(_dllst).pool = pool_dup;                                \
         }                                                                      \
@@ -191,7 +205,7 @@ STATEMENT_                                                                     \
 )
 
 
-#define _cc_dllst_node_clear(_pxor, _dllst)                                    \
+#define _dllst_node_clear(_pxor, _dllst)                                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -200,13 +214,14 @@ STATEMENT_                                                                     \
 )
 
 
-#define _cc_dllst_blocks_free(_dllst)                                          \
+#define _dllst_blocks_free(_dllst)                                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while ((_dllst).pool != &((_dllst).block))                                 \
+    while ((_dllst).pool != NULL)                                              \
     {                                                                          \
         link_t pool_dup = (_dllst).pool;                                       \
+                                                                               \
         (_dllst).pool = *(link_t*)(_dllst).pool;                               \
         free(pool_dup);                                                        \
     }                                                                          \
@@ -234,47 +249,33 @@ STATEMENT_                                                                     \
 /* dllst access */
 
 
-#define cc_dllst_front(_dllst)                                                 \
-(                                                                              \
-    *((_dllst).head + (_dllst).val_offset)                                     \
-)
+#define dllst_front(_dllst)  (*((_dllst).head + (_dllst).val_offset))
 
-
-#define cc_dllst_back(_dllst)                                                  \
-(                                                                              \
-    *((_dllst).tail + (_dllst).val_offset)                                     \
-)
+#define dllst_back(_dllst)   (*((_dllst).tail + (_dllst).val_offset))
 
 
 
 /* dllst capacity */
 
 
-#define cc_dllst_size(_dllst)                                                  \
-(                                                                              \
-    (_dllst).size                                                              \
-)
+#define dllst_size(_dllst)   ((_dllst).size)
 
-
-#define cc_dllst_empty(_dllst)                                                 \
-(                                                                              \
-    cc_dllst_size((_dllst)) == 0                                               \
-)
+#define dllst_empty(_dllst)  (dllst_size((_dllst)) == 0)
 
 
 
 /* dllst modifiers */
 
 
-#define  cc_dllst_push_front(_dllst, _val) _cc_dllst_push(_dllst, _val, head)
+#define  dllst_push_front(_dllst, _val)  _dllst_push(_dllst, _val, head)
 
-#define  cc_dllst_push_back(_dllst, _val)  _cc_dllst_push(_dllst, _val, tail)
+#define  dllst_push_back(_dllst, _val)   _dllst_push(_dllst, _val, tail)
 
-#define _cc_dllst_push(_dllst, _val, _name_)                                   \
+#define _dllst_push(_dllst, _val, _name_)                                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _cc_dllst_node_alloc((_dllst).block.pnode, (_dllst));                      \
+    _dllst_node_alloc((_dllst).block.pnode, (_dllst));                         \
                                                                                \
     (_dllst).block.pnode->val = (_val);                                        \
     (_dllst).block.pnode->xor = XOR_2(&((_dllst)._name_), (_dllst)._name_);    \
@@ -289,15 +290,15 @@ STATEMENT_                                                                     \
 )
 
 
-#define  cc_dllst_pop_front(_dllst) _cc_dllst_pop(_dllst, head)
+#define  dllst_pop_front(_dllst)  _dllst_pop(_dllst, head)
 
-#define  cc_dllst_pop_back(_dllst)  _cc_dllst_pop(_dllst, tail)
+#define  dllst_pop_back(_dllst)   _dllst_pop(_dllst, tail)
 
-#define _cc_dllst_pop(_dllst, _name_)                                          \
+#define _dllst_pop(_dllst, _name_)                                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (!(cc_dllst_empty((_dllst))))                                           \
+    if (!(dllst_empty((_dllst))))                                              \
     {                                                                          \
         link_t    _name_ =   (_dllst)._name_;                                  \
         link_t p##_name_ = &((_dllst)._name_);                                 \
@@ -306,14 +307,14 @@ STATEMENT_                                                                     \
         *(link_t*)                                                             \
         (_dllst)._name_ = XOR_3(p##_name_, *(link_t*)(_dllst)._name_, _name_); \
                                                                                \
-        _cc_dllst_node_clear(_name_, (_dllst));                                \
+        _dllst_node_clear(_name_, (_dllst));                                   \
                                                                                \
         (_dllst).size--;                                                       \
     }                                                                          \
 )
 
 
-#define cc_dllst_insert(_iter, _val)                                           \
+#define dllst_insert(_iter, _val)                                              \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -321,7 +322,7 @@ STATEMENT_                                                                     \
     {                                                                          \
         link_t pxor;                                                           \
                                                                                \
-        _cc_dllst_node_alloc((*(_iter).pdllst).block.pnode, *(_iter).pdllst);  \
+        _dllst_node_alloc((*(_iter).pdllst).block.pnode, *(_iter).pdllst);     \
                                                                                \
         (_iter).pdllst->block.pnode->val = (_val);                             \
                                                                                \
@@ -340,7 +341,7 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_erase(_iter)                                                  \
+#define dllst_erase(_iter)                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -356,25 +357,25 @@ STATEMENT_                                                                     \
                                                                                \
         (_iter).next = XOR_2(*(link_t*)(_iter).curr, (_iter).prev);            \
                                                                                \
-        _cc_dllst_node_clear(pxor, *(_iter).pdllst);                           \
+        _dllst_node_clear(pxor, *(_iter).pdllst);                              \
                                                                                \
         (_iter).pdllst->size--;                                                \
     }                                                                          \
 )
 
 
-#define cc_dllst_swap(_dllst_a, _dllst_b)                             /* TODO */
+#define dllst_swap(_dllst_a, _dllst_b)                                /* TODO */
 
 
-#define cc_dllst_resize(_dllst, _value)                               /* TODO */
+#define dllst_resize(_dllst, _value)                                  /* TODO */
 
 
-#define cc_dllst_clear(_dllst)                                                 \
+#define dllst_clear(_dllst)                                                    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(cc_dllst_empty((_dllst))))                                        \
-        cc_dllst_pop_back((_dllst));                                           \
+    while (!(dllst_empty((_dllst))))                                           \
+        dllst_pop_back((_dllst));                                              \
 )
 
 
@@ -382,7 +383,7 @@ STATEMENT_                                                                     \
 /* dllst operations */
 
 
-#define cc_dllst_move_range(_iter_p, _iter_l, _iter_r)                         \
+#define dllst_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -412,58 +413,58 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x, _leq)         \
+#define dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x, _leq)            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    cc_dllst_iter_copy((_iter_x), (_iter_m));                                  \
+    dllst_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
     while ((_iter_m).curr != (_iter_r).curr)                                   \
     {                                                                          \
         while ((_iter_l).curr != (_iter_m).curr && _leq((_iter_l), (_iter_m))) \
-            cc_dllst_iter_incr((_iter_l));                                     \
+            dllst_iter_incr((_iter_l));                                        \
                                                                                \
         while ((_iter_x).curr != (_iter_r).curr && _leq((_iter_x), (_iter_l))) \
-            cc_dllst_iter_incr((_iter_x));                                     \
+            dllst_iter_incr((_iter_x));                                        \
                                                                                \
-        cc_dllst_move_range((_iter_l), (_iter_m), (_iter_x));                  \
-        cc_dllst_iter_copy ((_iter_m), (_iter_x));                             \
+        dllst_move_range((_iter_l), (_iter_m), (_iter_x));                     \
+        dllst_iter_copy ((_iter_m), (_iter_x));                                \
     }                                                                          \
                                                                                \
-    cc_dllst_iter_copy((_iter_l), (_iter_m));                                  \
-    cc_dllst_iter_copy((_iter_r), (_iter_m));                                  \
+    dllst_iter_copy((_iter_l), (_iter_m));                                     \
+    dllst_iter_copy((_iter_r), (_iter_m));                                     \
 )
 
 
-#define  cc_dllst_sort(_dllst, _ptr4_iter_x, _leq)                             \
-        _cc_dllst_sort(_dllst, _ptr4_iter_x, _leq, 1)
+#define  dllst_sort(_dllst, _ptr4_iter_x, _leq)                                \
+        _dllst_sort(_dllst, _ptr4_iter_x, _leq, 1)
 
-#define _cc_dllst_sort(_dllst, _ptr4_iter_x, _leq, _gap)                       \
+#define _dllst_sort(_dllst, _ptr4_iter_x, _leq, _gap)                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (cc_dllst_empty(_dllst))  break;                                        \
+    if (dllst_empty(_dllst))  break;                                           \
                                                                                \
     for (int cnt = 1, gap = (_gap); ((cnt != 2) && (cnt = 1)); gap <<= 1)      \
     {                                                                          \
-        cc_dllst_iter_begin((_ptr4_iter_x)[0], (_dllst));                      \
-        cc_dllst_iter_begin((_ptr4_iter_x)[1], (_dllst));                      \
-        cc_dllst_iter_begin((_ptr4_iter_x)[2], (_dllst));                      \
+        dllst_iter_begin((_ptr4_iter_x)[0], (_dllst));                         \
+        dllst_iter_begin((_ptr4_iter_x)[1], (_dllst));                         \
+        dllst_iter_begin((_ptr4_iter_x)[2], (_dllst));                         \
                                                                                \
         while ((_ptr4_iter_x)[0].next != NULL && cnt++)                        \
         {                                                                      \
-            cc_dllst_iter_advance((_ptr4_iter_x)[1], gap);                     \
-            cc_dllst_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);       \
-            cc_dllst_iter_advance((_ptr4_iter_x)[2], gap);                     \
+            dllst_iter_advance((_ptr4_iter_x)[1], gap);                        \
+            dllst_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);          \
+            dllst_iter_advance((_ptr4_iter_x)[2], gap);                        \
                                                                                \
-            cc_dllst_merge_range ((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],        \
-                                  (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq); \
+            dllst_merge_range ((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],           \
+                               (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq);    \
         }                                                                      \
     }                                                                          \
 )
 
 
-#define _cc_dllst_sort_two_sub(_dllst, _ptrn_dllst, _ptrn4_iter_x, _r, _leq)   \
+#define _dllst_sort_two_sub(_dllst, _ptrn_dllst, _ptrn4_iter_x, _r, _leq)      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -479,21 +480,21 @@ STATEMENT_                                                                     \
         (_ptrn_dllst)[cstl].size += (_ptrn_dllst)[cstr].size;                  \
         (_ptrn_dllst)[cstr].size  = 0;                                         \
                                                                                \
-        cc_dllst_iter_tail ((_ptrn4_iter_x)[cstl][0], (_ptrn_dllst)[cstl]);    \
-        cc_dllst_iter_begin((_ptrn4_iter_x)[cstl][1], (_ptrn_dllst)[cstr]);    \
-        cc_dllst_iter_tail ((_ptrn4_iter_x)[cstl][2], (_ptrn_dllst)[cstr]);    \
-        cc_dllst_move_range((_ptrn4_iter_x)[cstl][0], (_ptrn4_iter_x)[cstl][1],\
-                            (_ptrn4_iter_x)[cstl][2]);                         \
+        dllst_iter_tail ((_ptrn4_iter_x)[cstl][0], (_ptrn_dllst)[cstl]);       \
+        dllst_iter_begin((_ptrn4_iter_x)[cstl][1], (_ptrn_dllst)[cstr]);       \
+        dllst_iter_tail ((_ptrn4_iter_x)[cstl][2], (_ptrn_dllst)[cstr]);       \
+        dllst_move_range((_ptrn4_iter_x)[cstl][0], (_ptrn4_iter_x)[cstl][1],   \
+                         (_ptrn4_iter_x)[cstl][2]);                            \
     }                                                                          \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int cstl = 0; cstl < (_r); cstl++)                                    \
-        _cc_dllst_sort((_ptrn_dllst)[cstl],                                    \
-                       (_ptrn4_iter_x)[cstl], _leq, size_half_sub[cstl]);      \
+        _dllst_sort((_ptrn_dllst)[cstl],                                       \
+                    (_ptrn4_iter_x)[cstl], _leq, size_half_sub[cstl]);         \
 )
 
 
-#define cc_dllst_sort_parallel(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n, _leq) \
+#define dllst_sort_parallel(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n, _leq)    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -507,29 +508,29 @@ STATEMENT_                                                                     \
         (_ptrn_dllst_x)[csp].size = suff ? size_sub : (_dllst).size;           \
         (_dllst).size             = suff ? ((_dllst).size - size_sub) : 0;     \
                                                                                \
-        cc_dllst_iter_tail   ((_ptrn4_iter_x)[csp][0], (_ptrn_dllst_x)[csp]);  \
-        cc_dllst_iter_begin  ((_ptrn4_iter_x)[csp][1], (_dllst));              \
-        cc_dllst_iter_begin  ((_ptrn4_iter_x)[csp][2], (_dllst));              \
-        cc_dllst_iter_advance((_ptrn4_iter_x)[csp][2], size_sub);              \
-        cc_dllst_move_range  ((_ptrn4_iter_x)[csp][0], (_ptrn4_iter_x)[csp][1],\
-                              (_ptrn4_iter_x)[csp][2]);                        \
+        dllst_iter_tail   ((_ptrn4_iter_x)[csp][0], (_ptrn_dllst_x)[csp]);     \
+        dllst_iter_begin  ((_ptrn4_iter_x)[csp][1], (_dllst));                 \
+        dllst_iter_begin  ((_ptrn4_iter_x)[csp][2], (_dllst));                 \
+        dllst_iter_advance((_ptrn4_iter_x)[csp][2], size_sub);                 \
+        dllst_move_range  ((_ptrn4_iter_x)[csp][0], (_ptrn4_iter_x)[csp][1],   \
+                           (_ptrn4_iter_x)[csp][2]);                           \
     }                                                                          \
                                                                                \
     (_dllst).size = (-1) * (_n);                                               \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int csp = 0; csp < (_n); csp++)                                       \
-        cc_dllst_sort((_ptrn_dllst_x)[csp], (_ptrn4_iter_x)[csp], _leq);       \
+        dllst_sort((_ptrn_dllst_x)[csp], (_ptrn4_iter_x)[csp], _leq);          \
                                                                                \
     for (int csp = (_n); (csp = ((csp + (csp > 1 ? 1 : 0)) / 2)); )            \
-        _cc_dllst_sort_two_sub((_dllst), (_ptrn_dllst_x),                      \
-                                         (_ptrn4_iter_x), csp, _leq);          \
+        _dllst_sort_two_sub((_dllst), (_ptrn_dllst_x),                         \
+                                      (_ptrn4_iter_x), csp, _leq);             \
                                                                                \
-    cc_dllst_iter_tail ((_ptrn4_iter_x)[0][0], (_dllst));                      \
-    cc_dllst_iter_begin((_ptrn4_iter_x)[0][1], (_ptrn_dllst_x)[0]);            \
-    cc_dllst_iter_tail ((_ptrn4_iter_x)[0][2], (_ptrn_dllst_x)[0]);            \
-    cc_dllst_move_range((_ptrn4_iter_x)[0][0], (_ptrn4_iter_x)[0][1],          \
-                        (_ptrn4_iter_x)[0][2]);                                \
+    dllst_iter_tail ((_ptrn4_iter_x)[0][0], (_dllst));                         \
+    dllst_iter_begin((_ptrn4_iter_x)[0][1], (_ptrn_dllst_x)[0]);               \
+    dllst_iter_tail ((_ptrn4_iter_x)[0][2], (_ptrn_dllst_x)[0]);               \
+    dllst_move_range((_ptrn4_iter_x)[0][0], (_ptrn4_iter_x)[0][1],             \
+                     (_ptrn4_iter_x)[0][2]);                                   \
                                                                                \
     (_dllst).size = size;                                                      \
 )
@@ -539,13 +540,10 @@ STATEMENT_                                                                     \
 /* dllst iterators */
 
 
-#define cc_dllst_iter_dref(_iter)                                              \
-(                                                                              \
-    *((_iter).curr + (_iter).pdllst->val_offset)                               \
-)
+#define dllst_iter_dref(_iter)  (*((_iter).curr + (_iter).pdllst->val_offset))
 
 
-#define cc_dllst_iter_copy(_iter_dst, _iter_src)                               \
+#define dllst_iter_copy(_iter_dst, _iter_src)                                  \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -555,7 +553,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_head(_iter, _dllst)                                      \
+#define dllst_iter_head(_iter, _dllst)                                         \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -565,7 +563,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_tail(_iter, _dllst)                                      \
+#define dllst_iter_tail(_iter, _dllst)                                         \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -575,7 +573,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_begin(_iter, _dllst)                                     \
+#define dllst_iter_begin(_iter, _dllst)                                        \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -585,7 +583,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_end(_iter, _dllst)                                       \
+#define dllst_iter_end(_iter, _dllst)                                          \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -595,7 +593,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_incr(_iter)                                              \
+#define dllst_iter_incr(_iter)                                                 \
 (                                                                              \
     ((_iter).next == NULL) ? (void*)(NULL) :                                   \
     (                                                                          \
@@ -606,7 +604,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_decr(_iter)                                              \
+#define dllst_iter_decr(_iter)                                                 \
 (                                                                              \
     ((_iter).prev == NULL) ? (void*)(NULL) :                                   \
     (                                                                          \
@@ -617,17 +615,17 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define cc_dllst_iter_advance(_iter, _diff)                                    \
+#define dllst_iter_advance(_iter, _diff)                                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     int diff = (_diff);                                                        \
                                                                                \
     if (diff > 0)                                                              \
-        while (cc_dllst_iter_incr((_iter)) && --diff);                         \
+        while (dllst_iter_incr((_iter)) && --diff);                            \
                                                                                \
     if (diff < 0)                                                              \
-        while (cc_dllst_iter_decr((_iter)) && ++diff);                         \
+        while (dllst_iter_decr((_iter)) && ++diff);                            \
 )
 
 
@@ -637,49 +635,21 @@ STATEMENT_                                                                     \
 
 #define INCR_TRAV_(_dllst, _iter)                                              \
                                                                                \
-    for (cc_dllst_iter_head((_iter), (_dllst)); cc_dllst_iter_incr((_iter)); )
+    for (dllst_iter_head((_iter), (_dllst)); dllst_iter_incr((_iter)); )
 
 
 #define DECR_TRAV_(_dllst, _iter)                                              \
                                                                                \
-    for (cc_dllst_iter_tail((_iter), (_dllst)); cc_dllst_iter_decr((_iter)); )
-
-
-
-/* default constants */
-
-
-#if (CC_DLLST_START - 0 <= 0)
-
-    #undef  CC_DLLST_START
-    #define CC_DLLST_START 16
-
-#endif
-
-
-#if (CC_DLLST_RATIO - 0 <= 0)
-
-    #undef  CC_DLLST_RATIO
-    #define CC_DLLST_RATIO 2
-
-#endif
-
-
-#if (CC_DLLST_THRSH - 0 <  CC_DLLST_START)
-
-    #undef  CC_DLLST_THRSH
-    #define CC_DLLST_THRSH 65536
-
-#endif
+    for (dllst_iter_tail((_iter), (_dllst)); dllst_iter_decr((_iter)); )
 
 
 
 /* default comparators */
 
 
-#define CC_DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                \
+#define DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                   \
 (                                                                              \
-    cc_dllst_iter_dref((_iter_a)) - cc_dllst_iter_dref((_iter_b)) <= 0         \
+    dllst_iter_dref((_iter_a)) - dllst_iter_dref((_iter_b)) <= 0               \
 )
 
 
