@@ -413,7 +413,11 @@ STATEMENT_                                                                     \
 )
 
 
-#define dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x, _leq)            \
+#define dllst_merge_range(_iter_l, _iter_m, _iter_r, _iter_x)                  \
+        dllst_merge_range_extd(_iter_l, _iter_m,                               \
+                               _iter_r, _iter_x, DLLST_DEFAULT_LEQ_COMPARATOR)
+
+#define dllst_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -436,10 +440,10 @@ STATEMENT_                                                                     \
 )
 
 
-#define  dllst_sort(_dllst, _ptr4_iter_x, _leq)                                \
-        _dllst_sort(_dllst, _ptr4_iter_x, _leq, 1)
+#define dllst_sort(_dllst, _ptr4_iter_x)                                       \
+        dllst_sort_extd(_dllst, _ptr4_iter_x, DLLST_DEFAULT_LEQ_COMPARATOR, 1)
 
-#define _dllst_sort(_dllst, _ptr4_iter_x, _leq, _gap)                          \
+#define dllst_sort_extd(_dllst, _ptr4_iter_x, _leq, _gap)                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -457,8 +461,8 @@ STATEMENT_                                                                     \
             dllst_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);          \
             dllst_iter_advance((_ptr4_iter_x)[2], gap);                        \
                                                                                \
-            dllst_merge_range ((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],           \
-                               (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq);    \
+            dllst_merge_range_extd((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],       \
+                                   (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq);\
         }                                                                      \
     }                                                                          \
 )
@@ -489,12 +493,16 @@ STATEMENT_                                                                     \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int cstl = 0; cstl < (_r); cstl++)                                    \
-        _dllst_sort((_ptrn_dllst)[cstl],                                       \
-                    (_ptrn4_iter_x)[cstl], _leq, size_half_sub[cstl]);         \
+        dllst_sort_extd((_ptrn_dllst)[cstl], (_ptrn4_iter_x)[cstl], _leq,      \
+                        size_half_sub[cstl]);                                  \
 )
 
 
-#define dllst_sort_parallel(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n, _leq)    \
+#define dllst_sort_openmp(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n)            \
+        dllst_sort_openmp_extd(_dllst, _ptrn_dllst_x,                          \
+                               _ptrn4_iter_x, _n, DLLST_DEFAULT_LEQ_COMPARATOR)
+
+#define dllst_sort_openmp_extd(_dllst, _ptrn_dllst_x, _ptrn4_iter_x, _n, _leq) \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -520,7 +528,7 @@ STATEMENT_                                                                     \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int csp = 0; csp < (_n); csp++)                                       \
-        dllst_sort((_ptrn_dllst_x)[csp], (_ptrn4_iter_x)[csp], _leq);          \
+        dllst_sort_extd((_ptrn_dllst_x)[csp], (_ptrn4_iter_x)[csp], _leq, 1);  \
                                                                                \
     for (int csp = (_n); (csp = ((csp + (csp > 1 ? 1 : 0)) / 2)); )            \
         _dllst_sort_two_sub((_dllst), (_ptrn_dllst_x),                         \
@@ -649,9 +657,9 @@ STATEMENT_                                                                     \
 /* default comparators */
 
 
-#define DLLST_DEFAULT_COMP(_iter_a, _iter_b)                                   \
+#define DLLST_DEFAULT_LEQ_COMPARATOR(_iter_a, _iter_b)                         \
 (                                                                              \
-    dllst_iter_dref((_iter_a)) - dllst_iter_dref((_iter_b)) <= 0               \
+    dllst_iter_dref((_iter_a)) <= dllst_iter_dref((_iter_b))                   \
 )
 
 
