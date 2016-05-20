@@ -100,22 +100,22 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Access</td><td> TYPE&amp;</td><td>dllst_front (DLLST)</td>
+				<td rowspan="2">Access</td><td> TYPE&amp;</td><td>dllst_front (DLLST);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> TYPE&amp;</td><td>dllst_back (DLLST)</td>
+				<td style="display:none"></td><td> TYPE&amp;</td><td>dllst_back (DLLST);</td>
 				<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Capacity</td><td> int</td><td>dllst_size (DLLST)</td>
+				<td rowspan="2">Capacity</td><td> int</td><td>dllst_size (DLLST);</td>
 				<td>Return the number of the elements in the container.</br>Return 0 if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> bool</td><td>dllst_empty (DLLST)</td>
+				<td style="display:none"></td><td> bool</td><td>dllst_empty (DLLST);</td>
 				<td>Return TRUE iff the container is empty.</br>TRUE is usually represented by any numeric value not equal to zero.</td>
 			</tr>
 			<tr>
@@ -175,42 +175,42 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="9">Iterators</td><td> TYPE&amp;</td><td>dllst_iter_dref (ITER)</td>
+				<td rowspan="9">Iterators</td><td> TYPE&amp;</td><td>dllst_iter_dref (ITER);</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not invalid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>dllst_iter_copy (ITER_DST, ITER_SRC)</td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_copy (ITER_DST, ITER_SRC);</td>
 				<td>Copy the iterator from <font face="monospace">ITER_SRC</font> to <font face="monospace">ITER_DST</font>.</br>It's not acceptable to assign the iterator by assignment operator.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>dllst_iter_head (ITER, DLLST)</td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_head (ITER, DLLST);</td>
 				<td>Set the iterator to the head.</br>The head is a sentinel node that points to the first element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>dllst_iter_tail (ITER, DLLST)</td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_tail (ITER, DLLST);</td>
 				<td>Set the iterator to the tail.</br>The tail is a sentinel node that points to the last element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>dllst_iter_begin (ITER, DLLST)</td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_begin (ITER, DLLST);</td>
 				<td>Set the iterator to the first element usaully.</br>Set the iterator to the tail if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>dllst_iter_end (ITER, DLLST)</td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_end (ITER, DLLST);</td>
 				<td>Set the iterator to the last element usaully.</br>Set the iterator to the head if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void*</td><td>dllst_iter_incr (ITER)</td>
+				<td style="display:none"></td><td> void*</td><td>dllst_iter_incr (ITER);</td>
 				<td>Move forward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void*</td><td>dllst_iter_decr (ITER)</td>
+				<td style="display:none"></td><td> void*</td><td>dllst_iter_decr (ITER);</td>
 				<td>Move backward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
