@@ -387,12 +387,11 @@ int main(void)
                 INCR_LOOP_(cnt, 3)  dllst_iter_begin(iters[cnt], list);
                 INCR_LOOP_(cnt, 3)  dllst_iter_advance(iters[cnt], 8 * cnt);
 
-                dllst_merge_range(iters[0], iters[1], iters[2],
-                                  iters[3], DLLST_DEFAULT_COMP);
+                dllst_merge_range(iters[0], iters[1], iters[2], iters[3]);
                 break;
 
                 case 1:
-                dllst_sort(list, iters, DLLST_DEFAULT_COMP);
+                dllst_sort(list, iters);
                 break;
             }
 
@@ -426,7 +425,7 @@ int main(void)
 
         INCR_LOOP_(cnt, length)  dllst_push_back(list, rand());
 
-        dllst_sort(list, iters, DLLST_DEFAULT_COMP);
+        dllst_sort(list, iters);
 
         DLLST_TRAVERSAL(list, iter)
             printf("Max = %10d\r", dllst_iter_dref(iter));
@@ -456,7 +455,7 @@ int main(void)
         int length = 10000;
         INCR_LOOP_(cnt, length)  dllst_push_back(list, length - cnt);
 
-        dllst_sort_parallel(list, lists, iters, n, DLLST_DEFAULT_COMP);
+        dllst_sort_openmp(list, lists, iters, n);
 
         DLLST_TRAVERSAL(list, iter)
             printf("Ten thousand = %d\r", dllst_iter_dref(iter));
