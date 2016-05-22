@@ -4,14 +4,14 @@
 
 #include "../src/dllst.h"
 
-#define INCR_LOOP_(_a, _b)           for (int _a = 0; _a < (_b); _a++)
-#define INCR_LOOP2_(_a, _b, _c, _d)  INCR_LOOP_(_a, _b)  INCR_LOOP_(_c, _d)
+#define INCR_LOOP1(_a, _b)          for (int _a = 0; _a < (_b); _a++)
+#define INCR_LOOP2(_a, _b, _c, _d)  INCR_LOOP1(_a, _b)  INCR_LOOP1(_c, _d)
 
 
 int main(void)
 {
     /* Test 0 */
-    /* For demonstration */
+    /* Demonstration */
 
     printf("Test 0: \n\n");
 
@@ -33,7 +33,7 @@ int main(void)
 
 
     /* Test 1 */
-    /* Test push back */
+    /* Push Back */
 
     printf("\n\nTest 1: \n");
 
@@ -63,7 +63,7 @@ int main(void)
 
 
     /* Test 2 */
-    /* Test free */
+    /* Push Back */
 
     printf("\n\nTest 2: ");
 
@@ -83,7 +83,7 @@ int main(void)
 
 
     /* Test 3 */
-    /* Test push */
+    /* Push Back */
 
     printf("\n\nTest 3: ");
 
@@ -119,7 +119,7 @@ int main(void)
 
 
     /* Test 4 */
-    /* Test incr */
+    /* Iter Incr */
 
     printf("\n\nTest 4: ");
 
@@ -143,7 +143,7 @@ int main(void)
 
 
     /* Test 5 */
-    /* Test access */
+    /* Back and Front */
 
     printf("\n\nTest 5: ");
 
@@ -169,7 +169,7 @@ int main(void)
 
 
     /* Test 6 */
-    /* Test pop */
+    /* Push and Pop */
 
     printf("\n\nTest 6: ");
 
@@ -197,7 +197,7 @@ int main(void)
 
 
     /* Test 7 */
-    /* Test push and pop */
+    /* Push and Clear */
 
     printf("\n\nTest 7: \n");
 
@@ -220,7 +220,7 @@ int main(void)
 
 
     /* Test 8 */
-    /* Test packed structure */
+    /* Packed */
 
     printf("\n\nTest 8: \n\n");
 
@@ -247,7 +247,7 @@ int main(void)
 
 
     /* Test 9 */
-    /* Test insert and erase */
+    /* Insert and Erase */
 
     printf("\n\nTest 9: \n\n");
 
@@ -311,7 +311,7 @@ int main(void)
 
 
     /* Test 10 */
-    /* Test move */
+    /* Move Range */
 
     printf("\n\nTest 10: \n\n");
 
@@ -358,7 +358,7 @@ int main(void)
 
 
     /* Test 11 */
-    /* Test merge */
+    /* Merge Range */
 
     printf("\n\nTest 11: \n\n");
 
@@ -368,13 +368,13 @@ int main(void)
 
         dllst_iter(int) iter, iters[4];
         dllst_iter_init(iter, list);
-        INCR_LOOP_(cnt, 4)  dllst_iter_init(iters[cnt], list);
+        INCR_LOOP1(cnt, 4)  dllst_iter_init(iters[cnt], list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
         for (int cnt = 0; cnt < 2; cnt++)
         {
-            INCR_LOOP_(cnt, 16)  dllst_push_back(list, str1[cnt]);
+            INCR_LOOP1(cnt, 16)  dllst_push_back(list, str1[cnt]);
 
             DLLST_TRAVERSAL(list, iter)
                 printf("%d ", dllst_iter_dref(iter));
@@ -384,8 +384,8 @@ int main(void)
             switch (cnt)
             {
                 case 0:
-                INCR_LOOP_(cnt, 3)  dllst_iter_begin(iters[cnt], list);
-                INCR_LOOP_(cnt, 3)  dllst_iter_advance(iters[cnt], 8 * cnt);
+                INCR_LOOP1(cnt, 3)  dllst_iter_begin(iters[cnt], list);
+                INCR_LOOP1(cnt, 3)  dllst_iter_advance(iters[cnt], 8 * cnt);
 
                 dllst_merge_range(iters[0], iters[1], iters[2], iters[3]);
                 break;
@@ -408,7 +408,7 @@ int main(void)
 
 
     /* Test 12 */
-    /* Test sort */
+    /* Sort */
 
     printf("\n\nTest 12: \n\n");
 
@@ -418,12 +418,12 @@ int main(void)
 
         dllst_iter(int) iter, iters[4];
         dllst_iter_init(iter, list);
-        INCR_LOOP_(cnt, 4)  dllst_iter_init(iters[cnt], list);
+        INCR_LOOP1(cnt, 4)  dllst_iter_init(iters[cnt], list);
 
         int length = 1000;
         srand(time(NULL));
 
-        INCR_LOOP_(cnt, length)  dllst_push_back(list, rand());
+        INCR_LOOP1(cnt, length)  dllst_push_back(list, rand());
 
         dllst_sort(list, iters);
 
@@ -437,7 +437,7 @@ int main(void)
 
 
     /* Test 13 */
-    /* Test sort parallel */
+    /* Sort Parallel */
 
     printf("\n\nTest 13: \n\n");
 
@@ -446,14 +446,14 @@ int main(void)
 
         dllst(int) list, lists[n];
         dllst_init(list);
-        INCR_LOOP_(i, n) dllst_init(lists[i]);
+        INCR_LOOP1(i, n)  dllst_init(lists[i]);
 
         dllst_iter(int) iter, iters[n][4];
         dllst_iter_init(iter, list);
-        INCR_LOOP2_(i, n, j, 4)  dllst_iter_init(iters[i][j], lists[i]);
+        INCR_LOOP2(i, n, j, 4)  dllst_iter_init(iters[i][j], lists[i]);
 
         int length = 10000;
-        INCR_LOOP_(cnt, length)  dllst_push_back(list, length - cnt);
+        INCR_LOOP1(cnt, length)  dllst_push_back(list, length - cnt);
 
         dllst_sort_openmp(list, lists, iters, n);
 
@@ -463,7 +463,7 @@ int main(void)
         puts("");
 
         dllst_free(list);
-        INCR_LOOP_(i, n)  dllst_free(lists[i]);
+        INCR_LOOP1(i, n)  dllst_free(lists[i]);
     }
 
 
