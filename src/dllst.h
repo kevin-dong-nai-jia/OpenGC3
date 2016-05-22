@@ -423,20 +423,29 @@ STATEMENT_                                                                     \
 (                                                                              \
     dllst_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
-    while ((_iter_m).curr != (_iter_r).curr)                                   \
+    while (1)                                                                  \
     {                                                                          \
         while ((_iter_l).curr != (_iter_m).curr && _leq((_iter_l), (_iter_m))) \
             dllst_iter_incr((_iter_l));                                        \
+                                                                               \
+        if ((_iter_l).curr == (_iter_m).curr)                                  \
+        {                                                                      \
+            dllst_iter_copy((_iter_l), (_iter_r));                             \
+            dllst_iter_copy((_iter_m), (_iter_r));  break;                     \
+        }                                                                      \
                                                                                \
         while ((_iter_x).curr != (_iter_r).curr && _leq((_iter_x), (_iter_l))) \
             dllst_iter_incr((_iter_x));                                        \
                                                                                \
         dllst_move_range((_iter_l), (_iter_m), (_iter_x));                     \
         dllst_iter_copy ((_iter_m), (_iter_x));                                \
-    }                                                                          \
                                                                                \
-    dllst_iter_copy((_iter_l), (_iter_m));                                     \
-    dllst_iter_copy((_iter_r), (_iter_m));                                     \
+        if ((_iter_x).curr == (_iter_r).curr)                                  \
+        {                                                                      \
+            dllst_iter_copy((_iter_l), (_iter_x));                             \
+            dllst_iter_copy((_iter_r), (_iter_x));  break;                     \
+        }                                                                      \
+    }                                                                          \
 )
 
 
