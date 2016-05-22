@@ -64,23 +64,23 @@
 				<th style="display:none"></th>
 			</tr>
 			<tr>
-				<td rowspan="33">DLLST</td>
-				<td rowspan="4">Create</td><td> <u><i>def</i></u></td><td>dllst (TYPE) DLLST;</td>
+				<td rowspan="34">DLLST</td>
+				<td rowspan="4">Create</td><td> <u><i>struct</i></u></td><td>dllst (TYPE) DLLST;</td>
 				<td>Create a dllst container of type <font face="monospace">TYPE</font>.</br>Use a C struct to simulate a list container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>def</i></u></td><td>dllst_iter (TYPE) ITER;</td>
+				<td style="display:none"></td><td> <u><i>struct</i></u></td><td>dllst_iter (TYPE) ITER;</td>
 				<td>Create an iterator for the dllst container of type <font face="monospace">TYPE</font>.</br>The iterator might be invalid if the container is modified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>def</i></u></td><td>dllst_pckd (TYPE) DLLST;</td>
+				<td style="display:none"></td><td> <u><i>struct</i></u></td><td>dllst_pckd (TYPE) DLLST;</td>
 				<td>Create a packed dllst container of type <font face="monospace">TYPE</font>.</br>This decreases memory usage as much as possible.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>def</i></u></td><td>dllst_iter_pckd (TYPE) ITER;</td>
+				<td style="display:none"></td><td> <u><i>struct</i></u></td><td>dllst_iter_pckd (TYPE) ITER;</td>
 				<td>Create an iterator for packed dllst containers of type <font face="monospace">TYPE</font>.</br>This should be used by every packed dllst container to make sure the correctness.</td>
 			</tr>
 			<tr>
@@ -115,8 +115,8 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> bool</td><td>dllst_empty (DLLST);</td>
-				<td>Return TRUE iff the container is empty.</br>TRUE is usually represented by any numeric value not equal to zero.</td>
+				<td style="display:none"></td><td> int</td><td>dllst_empty (DLLST);</td>
+				<td>Check whether the container is empty.</br>Return 1 if the container is empty, and return 0 if it is not.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -170,7 +170,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></br> </td><td>dllst_sort_openmp (DLLST, &(DLLST_X[N]), </br>                   &(ITER_X[N][4]), N (= threads));</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></br> </td><td>dllst_sort_openmp (DLLST, &(DLLST_X[N]), </br>                   &(ITER_X[N][4]), N);</td>
 				<td>Sort all elements with default comparator <font face="monospace">DLLST_DEFAULT_LEQ_COMPARATOR</font>.</br><font face="monospace">N</font> is the max number of threads that will be used for OpenMP parallel computing.</td>
 			</tr>
 			<tr>
@@ -220,13 +220,18 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Traversal</td><td> <u>loop</u></td><td>DLLST_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
+				<td rowspan="2">Traversal</td><td> <u><i>loop</i></u></td><td>DLLST_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u>loop</u></td><td>DLLST_BACKWARD_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
+				<td style="display:none"></td><td> <u><i>loop</i></u></td><td>DLLST_BACKWARD_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements (backward) from the end to the beginning.</br>There is no effect if the container is empty.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td rowspan="1">Comparators</td><td> int</td><td>DLLST_DEFAULT_LEQ_COMPARATOR (ITER_L, ITER_R);</td>
+				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 if the value pointed by <font face="monospace">ITER_L</font> is not greater than the value pointed by <font face="monospace">ITER_R</font>.</td>
 			</tr>
 		</tbody>
 		</table>
