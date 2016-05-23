@@ -60,7 +60,7 @@ typedef void*  link_t;
 
 #define dllst_pckd(elem_t)  dllst_extd(elem_t, PACKED)
 
-#define dllst_extd(elem_t, _pack)                                              \
+#define dllst_extd(elem_t, _pack_)                                             \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -76,7 +76,7 @@ typedef void*  link_t;
         {                                                                      \
             link_t next;                                                       \
                                                                                \
-            PRAGMA_##_pack##_BEGIN                                             \
+            PRAGMA_##_pack_##_BEGIN                                            \
                                                                                \
             struct                                                             \
             {                                                                  \
@@ -85,7 +85,7 @@ typedef void*  link_t;
                                                                                \
             }   *pnode, nodes[1];                                              \
                                                                                \
-            PRAGMA_##_pack##_END                                               \
+            PRAGMA_##_pack_##_END                                              \
                                                                                \
         }   *pool, block;                                                      \
     }
@@ -95,7 +95,7 @@ typedef void*  link_t;
 
 #define dllst_iter_pckd(elem_t)  dllst_iter_extd(elem_t, PACKED)
 
-#define dllst_iter_extd(elem_t, PACK)                                          \
+#define dllst_iter_extd(elem_t, _pack_)                                        \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -103,7 +103,7 @@ typedef void*  link_t;
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
                                                                                \
-        dllst_extd(elem_t, PACK) *pdllst;                                      \
+        dllst_extd(elem_t, _pack_) *pdllst;                                    \
     }
 
 
