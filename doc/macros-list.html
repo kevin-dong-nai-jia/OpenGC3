@@ -64,7 +64,7 @@
 				<th style="display:none"></th>
 			</tr>
 			<tr>
-				<td rowspan="34">DLLST</td>
+				<td rowspan="38">DLLST</td>
 				<td rowspan="4">Create</td><td> <u><i>struct</i></u></td><td>dllst (TYPE) DLLST;</td>
 				<td>Create a dllst container of type <font face="monospace">TYPE</font>.</br>Use a C struct to simulate a list container.</td>
 			</tr>
@@ -175,7 +175,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="9">Iterators</td><td> TYPE&amp;</td><td>dllst_iter_dref (ITER);</td>
+				<td rowspan="13">Iterators</td><td> TYPE&amp;</td><td>dllst_iter_dref (ITER);</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not invalid.</td>
 			</tr>
 			<tr>
@@ -186,12 +186,12 @@
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> void</td><td>dllst_iter_head (ITER, DLLST);</td>
-				<td>Set the iterator to the head.</br>The head is a sentinel node that points to the first element.</td>
+				<td>Set the iterator to the head of the container.</br>The head of the container is the sentinel node that points to the first element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> void</td><td>dllst_iter_tail (ITER, DLLST);</td>
-				<td>Set the iterator to the tail.</br>The tail is a sentinel node that points to the last element.</td>
+				<td>Set the iterator to the tail of the container.</br>The tail of the container is the sentinel node that points to the last element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -205,13 +205,33 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_at_head (ITER);</td>
+				<td>Check whether the iterator points to the head of the container.</br>Return 1 if it is true. Otherwise, return 0.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_at_tail (ITER);</td>
+				<td>Check whether the iterator points to the tail of the container.</br>Return 1 if it is true. Otherwise, return 0.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_at_begin (ITER, DLLST);</td>
+				<td>Check whether the iterator points to the first element.</br>Return 1 if it is true. Otherwise, return 0.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
+				<td style="display:none"></td><td> void</td><td>dllst_iter_at_end (ITER, DLLST);</td>
+				<td>Check whether the iterator points to the last element.</br>Return 1 if it is true. Otherwise, return 0.</td>
+			</tr>
+			<tr>
+				<td style="display:none"></td>
 				<td style="display:none"></td><td> void*</td><td>dllst_iter_incr (ITER);</td>
-				<td>Move forward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
+				<td>Move the iterator forward by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> void*</td><td>dllst_iter_decr (ITER);</td>
-				<td>Move backward the iterator by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
+				<td>Move the iterator backward by one element.</br>Return NULL iff the iterator doesn't point to any element.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -220,12 +240,12 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Traversal</td><td> <u><i>loop</i></u></td><td>DLLST_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
+				<td rowspan="2">Traversal</td><td> <u>loop</u></td><td>DLLST_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements from the beginning to the end.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>loop</i></u></td><td>DLLST_BACKWARD_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
+				<td style="display:none"></td><td> <u>loop</u></td><td>DLLST_BACKWARD_TRAVERSAL (DLLST, ITER) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements (backward) from the end to the beginning.</br>There is no effect if the container is empty.</td>
 			</tr>
 			<tr>
