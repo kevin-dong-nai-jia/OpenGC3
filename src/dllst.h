@@ -25,16 +25,17 @@
 #define _DLLST_H_
 
 
-#include <omp.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include <omp.h>      /* for parallel computing */
+#include <stdio.h>    /* for printing out error messages */
+#include <stdlib.h>   /* for handling dllst memory pools */
+#include <stddef.h>   /* for defining ptrdiff_t */
+#include <stdint.h>   /* for defining uintptr_t */
+#include <stdbool.h>  /* for defining bool      */
 
 
 /* type definition */
 
-typedef void*  link_t;
+typedef void* link_t;
 
 
 /* pragma (struct) */
@@ -121,22 +122,20 @@ VOID_EXPR_                                                                     \
     (_dllst).tail = (link_t)&((_dllst).head),                                  \
     (_dllst).avsp = NULL,                                                      \
     (_dllst).pool = NULL,                                                      \
-                                                                               \
-    (_dllst).size = 0,                                                         \
-    (_dllst).ncnt = 0,                                                         \
-    (_dllst).vcnt = 0,                                                         \
+    (_dllst).size = (_dllst).ncnt = (_dllst).vcnt = 0,                         \
                                                                                \
     (_dllst).blkstart = ((_start) >= 1) ? (_start) : 1,                        \
     (_dllst).blkratio = ((_ratio) >= 1) ? (_ratio) : 1,                        \
-    (_dllst).blkthrsh = ((_thrsh) >= (_dllst).blkstart) ?                      \
-                                          (_thrsh) : (_dllst).blkstart,        \
+    (_dllst).blkthrsh = ((_thrsh) >= (_dllst).blkstart) ? (_thrsh) :           \
+                                                          (_dllst).blkstart,   \
                                                                                \
-    (((_dllst).xor_offset = ((char*)&((_dllst).block.nodes[0].xor) -           \
-                             (char*)&((_dllst).block.nodes[0].val))) %         \
-     sizeof((_dllst).block.nodes[0].val)) ?                                    \
+    (_dllst).xor_offset = ((char*)&((_dllst).block.nodes[0].xor) -             \
+                           (char*)&((_dllst).block.nodes[0].val)),             \
+                                                                               \
+    ((_dllst).xor_offset % (sizeof((_dllst).block.nodes[0].val))) ?            \
     (puts("FATAL ERROR: Misalignment Issue"), exit(EXIT_FAILURE), 0) :         \
     ((_dllst).val_offset = (_dllst).xor_offset * (-1) /                        \
-                           sizeof((_dllst).block.nodes[0].val))                \
+                           (sizeof((_dllst).block.nodes[0].val)))              \
 )
 
 
@@ -144,10 +143,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter).prev = NULL,                                                       \
-    (_iter).curr = NULL,                                                       \
-    (_iter).next = NULL,                                                       \
-                                                                               \
+    (_iter).prev = (_iter).curr = (_iter).next = NULL,                         \
     (_iter).pdllst = (void*)&(_dllst)                                          \
 )
 
@@ -185,8 +181,8 @@ STATEMENT_                                                                     \
                                 ((_dllst).ncnt *= (_dllst).blkratio) :         \
                                 ((_dllst).ncnt  = (_dllst).blkthrsh);          \
                                                                                \
-            (_dllst).pool = malloc(sizeof((_dllst).block) +                    \
-                                   sizeof((_dllst).block.nodes[0]) *           \
+            (_dllst).pool = malloc((sizeof((_dllst).block)) +                  \
+                                   (sizeof((_dllst).block.nodes[0])) *         \
                                    ((_dllst).ncnt - 1));                       \
                                                                                \
             if ((_dllst).pool == NULL)                                         \
@@ -280,11 +276,10 @@ STATEMENT_                                                                     \
     (_dllst).block.pnode->val = (_val);                                        \
     (_dllst).block.pnode->xor = XOR_2(&((_dllst)._name_), (_dllst)._name_);    \
                                                                                \
-    *(link_t*)                                                                 \
-    (_dllst)._name_ = XOR_3(&((_dllst)._name_),                                \
-                            *(link_t*)(_dllst)._name_,                         \
-                            &((_dllst).block.pnode->xor));                     \
-    (_dllst)._name_ = (link_t)&((_dllst).block.pnode->xor);                    \
+    *(link_t*)(_dllst)._name_ = XOR_3(&((_dllst)._name_),                      \
+                                      *(link_t*)(_dllst)._name_,               \
+                                      &((_dllst).block.pnode->xor));           \
+              (_dllst)._name_ = (link_t)&((_dllst).block.pnode->xor);          \
                                                                                \
     (_dllst).size++;                                                           \
 )
@@ -298,19 +293,17 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (!(dllst_empty((_dllst))))                                              \
-    {                                                                          \
-        link_t    _name_ =   (_dllst)._name_;                                  \
-        link_t p##_name_ = &((_dllst)._name_);                                 \
+    if (dllst_empty((_dllst)))  break;                                         \
                                                                                \
-        (_dllst)._name_ = XOR_2(p##_name_, *(link_t*)(_dllst)._name_);         \
-        *(link_t*)                                                             \
-        (_dllst)._name_ = XOR_3(p##_name_, *(link_t*)(_dllst)._name_, _name_); \
+    link_t pxor =   (_dllst)._name_ ;                                          \
+    link_t psen = &((_dllst)._name_);                                          \
                                                                                \
-        _dllst_node_clear(_name_, (_dllst));                                   \
+              (_dllst)._name_ = XOR_2(psen, *(link_t*)(_dllst)._name_);        \
+    *(link_t*)(_dllst)._name_ = XOR_3(psen, *(link_t*)(_dllst)._name_, pxor);  \
                                                                                \
-        (_dllst).size--;                                                       \
-    }                                                                          \
+    _dllst_node_clear(pxor, (_dllst));                                         \
+                                                                               \
+    (_dllst).size--;                                                           \
 )
 
 
@@ -318,26 +311,21 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter).prev != NULL)                                                  \
-    {                                                                          \
-        link_t pxor;                                                           \
+    if (dllst_iter_at_head(_iter))  break;                                     \
                                                                                \
-        _dllst_node_alloc((*(_iter).pdllst).block.pnode, *(_iter).pdllst);     \
+    link_t pxor;                                                               \
                                                                                \
-        (_iter).pdllst->block.pnode->val = (_val);                             \
+    _dllst_node_alloc((*(_iter).pdllst).block.pnode, *(_iter).pdllst);         \
+    (_iter).pdllst->block.pnode->val = (_val);                                 \
                                                                                \
-        (_iter).next = (_iter).curr;                                           \
-        (_iter).curr = pxor = &((_iter).pdllst->block.pnode->xor);             \
+    (_iter).next = (_iter).curr;                                               \
+    (_iter).curr = pxor = &((_iter).pdllst->block.pnode->xor);                 \
                                                                                \
-        *(link_t*)                                                             \
-        (_iter).curr = XOR_2((_iter).prev, (_iter).next);                      \
-        *(link_t*)                                                             \
-        (_iter).prev = XOR_3(*(link_t*)(_iter).prev, (_iter).next, pxor);      \
-        *(link_t*)                                                             \
-        (_iter).next = XOR_3(*(link_t*)(_iter).next, (_iter).prev, pxor);      \
+    *(link_t*)(_iter).curr = XOR_2((_iter).prev, (_iter).next);                \
+    *(link_t*)(_iter).prev = XOR_3(*(link_t*)(_iter).prev, (_iter).next, pxor);\
+    *(link_t*)(_iter).next = XOR_3(*(link_t*)(_iter).next, (_iter).prev, pxor);\
                                                                                \
-        (_iter).pdllst->size++;                                                \
-    }                                                                          \
+    (_iter).pdllst->size++;                                                    \
 )
 
 
@@ -345,22 +333,19 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter).prev != NULL && (_iter).next != NULL)                          \
-    {                                                                          \
-        link_t pxor = (_iter).curr;                                            \
-        (_iter).curr = (_iter).next;                                           \
+    if (dllst_iter_at_head(_iter) || dllst_iter_at_tail(_iter))  break;        \
                                                                                \
-        *(link_t*)                                                             \
-        (_iter).prev = XOR_3(*(link_t*)(_iter).prev, (_iter).next, pxor);      \
-        *(link_t*)                                                             \
-        (_iter).next = XOR_3(*(link_t*)(_iter).next, (_iter).prev, pxor);      \
+    link_t pxor = (_iter).curr;                                                \
                                                                                \
-        (_iter).next = XOR_2(*(link_t*)(_iter).curr, (_iter).prev);            \
+    *(link_t*)(_iter).prev = XOR_3(*(link_t*)(_iter).prev, (_iter).next, pxor);\
+    *(link_t*)(_iter).next = XOR_3(*(link_t*)(_iter).next, (_iter).prev, pxor);\
                                                                                \
-        _dllst_node_clear(pxor, *(_iter).pdllst);                              \
+    (_iter).curr = (_iter).next;                                               \
+    (_iter).next = XOR_2(*(link_t*)(_iter).curr, (_iter).prev);                \
                                                                                \
-        (_iter).pdllst->size--;                                                \
-    }                                                                          \
+    _dllst_node_clear(pxor, *(_iter).pdllst);                                  \
+                                                                               \
+    (_iter).pdllst->size--;                                                    \
 )
 
 
@@ -374,8 +359,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(dllst_empty((_dllst))))                                           \
-        dllst_pop_back((_dllst));                                              \
+    while (!(dllst_empty((_dllst))))  dllst_pop_back((_dllst));                \
 )
 
 
@@ -420,7 +404,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter_m).next == NULL)  break;                                        \
+    if (dllst_iter_at_tail(_iter_m))  break;                                   \
                                                                                \
     dllst_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
@@ -461,13 +445,13 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (dllst_empty(_dllst))  break;                                           \
                                                                                \
-    for (int cnt = 1, gap = (_gap); ((cnt != 2) && (cnt = 1)); gap <<= 1)      \
+    for (int cse = 1, gap = (_gap); ((cse != 2) && (cse = 1)); gap <<= 1)      \
     {                                                                          \
         dllst_iter_begin((_ptr4_iter_x)[0], (_dllst));                         \
         dllst_iter_begin((_ptr4_iter_x)[1], (_dllst));                         \
         dllst_iter_begin((_ptr4_iter_x)[2], (_dllst));                         \
                                                                                \
-        while ((_ptr4_iter_x)[1].next != NULL && cnt++)                        \
+        while (!(dllst_iter_at_tail((_ptr4_iter_x)[1])) && cse++)              \
         {                                                                      \
             dllst_iter_advance((_ptr4_iter_x)[1], gap);                        \
             dllst_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);          \
@@ -612,9 +596,18 @@ VOID_EXPR_                                                                     \
 )
 
 
+#define dllst_iter_at_head(_iter)           ((_iter).prev == NULL)
+
+#define dllst_iter_at_tail(_iter)           ((_iter).next == NULL)
+
+#define dllst_iter_at_begin(_iter, _dllst)  ((_iter).curr == (_dllst).head)
+
+#define dllst_iter_at_end(_iter, _dllst)    ((_iter).curr == (_dllst).tail)
+
+
 #define dllst_iter_incr(_iter)                                                 \
 (                                                                              \
-    ((_iter).next == NULL) ? (void*)(NULL) :                                   \
+    (dllst_iter_at_tail(_iter)) ? (void*)(NULL) :                              \
     (                                                                          \
         (_iter).prev = (_iter).curr,                                           \
         (_iter).curr = (_iter).next,                                           \
@@ -625,7 +618,7 @@ VOID_EXPR_                                                                     \
 
 #define dllst_iter_decr(_iter)                                                 \
 (                                                                              \
-    ((_iter).prev == NULL) ? (void*)(NULL) :                                   \
+    (dllst_iter_at_head(_iter)) ? (void*)(NULL) :                              \
     (                                                                          \
         (_iter).next = (_iter).curr,                                           \
         (_iter).curr = (_iter).prev,                                           \
@@ -640,10 +633,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     int diff = (_diff);                                                        \
                                                                                \
-    if (diff > 0)                                                              \
-        while (dllst_iter_incr((_iter)) && --diff);                            \
-    else if (diff < 0)                                                         \
-        while (dllst_iter_decr((_iter)) && ++diff);                            \
+    if (diff > 0)       while (dllst_iter_incr((_iter)) && --diff);            \
+    else if (diff < 0)  while (dllst_iter_decr((_iter)) && ++diff);            \
 )
 
 
