@@ -118,11 +118,7 @@ typedef void* link_t;
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_dllst).head = (link_t)&((_dllst).tail),                                  \
-    (_dllst).tail = (link_t)&((_dllst).head),                                  \
-    (_dllst).avsp = NULL,                                                      \
-    (_dllst).pool = NULL,                                                      \
-    (_dllst).size = (_dllst).ncnt = (_dllst).vcnt = 0,                         \
+    _dllst_reset_links((_dllst)),                                              \
                                                                                \
     (_dllst).blkstart = ((_start) >= 1) ? (_start) : 1,                        \
     (_dllst).blkratio = ((_ratio) >= 1) ? (_ratio) : 1,                        \
@@ -136,6 +132,18 @@ VOID_EXPR_                                                                     \
     (puts("FATAL ERROR: Misalignment Issue"), exit(EXIT_FAILURE), 0) :         \
     ((_dllst).val_offset = (_dllst).xor_offset * (-1) /                        \
                            (sizeof((_dllst).block.nodes[0].val)))              \
+)
+
+
+#define _dllst_reset_links(_dllst)                                             \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_dllst).head = (link_t)&((_dllst).tail),                                  \
+    (_dllst).tail = (link_t)&((_dllst).head),                                  \
+    (_dllst).avsp = NULL,                                                      \
+    (_dllst).pool = NULL,                                                      \
+    (_dllst).size = (_dllst).ncnt = (_dllst).vcnt = 0                          \
 )
 
 
@@ -157,6 +165,8 @@ VOID_EXPR_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _dllst_blocks_free((_dllst));                                              \
+                                                                               \
+    _dllst_reset_links((_dllst));                                              \
 )
 
 
