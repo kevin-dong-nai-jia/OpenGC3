@@ -10,9 +10,9 @@ C Container Collection is a large set of function-like macros that strictly conf
 
 ## List of Macros
 
-* [`dllst container`](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros-list.html) - a doubly linked list container
+* [`ccxll`](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros-list.html) - xor linked list container
 
-* `dcarr container` - a dynamic cyclic array container (planning)
+* `ccsll / ccdll` - (not implemented yet)
 
 ## Contributor
 
