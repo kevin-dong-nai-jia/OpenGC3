@@ -165,7 +165,6 @@ VOID_EXPR_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _ccxll_blocks_free((_ccxll));                                              \
-                                                                               \
     _ccxll_reset_links((_ccxll));                                              \
 )
 
@@ -369,7 +368,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(ccxll_empty((_ccxll))))  ccxll_pop_back((_ccxll));                \
+    while (!(ccxll_empty((_ccxll))))  {  ccxll_pop_back((_ccxll));  }          \
 )
 
 
@@ -643,8 +642,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     int diff = (_diff);                                                        \
                                                                                \
-    if (diff > 0)       while (ccxll_iter_incr((_iter)) && --diff);            \
-    else if (diff < 0)  while (ccxll_iter_decr((_iter)) && ++diff);            \
+    if (diff > 0)       {  while (ccxll_iter_incr((_iter)) && --diff);  }      \
+    else if (diff < 0)  {  while (ccxll_iter_decr((_iter)) && ++diff);  }      \
 )
 
 
@@ -652,7 +651,7 @@ STATEMENT_                                                                     \
 /* ccxll traversal */
 
 
-#define CCXLL_TRAVERSAL(_ccxll, _iter)  CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)
+#define CCXLL_TRAV(_ccxll, _iter)  CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)
 
 #define CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)                                 \
                                                                                \
