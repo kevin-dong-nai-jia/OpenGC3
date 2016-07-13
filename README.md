@@ -12,8 +12,6 @@ C Container Collection is a large set of function-like macros that strictly conf
 
 * [`ccxll`](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros-list.html) - xor linked list container
 
-* `ccsll / ccdll` - singly / doubly linked list container (not implemented yet)
-
 ## Contributor
 
 Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>>
