@@ -331,15 +331,15 @@ STATEMENT_                                                                     \
 
 
 #define ccxll_sort(_ccxll, _ptr4_iter_x)                                       \
-        ccxll_sort_extd(_ccxll, _ptr4_iter_x, XLEQ, 1)
+        ccxll_sort_extd(_ccxll, _ptr4_iter_x,  1, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _ptr4_iter_x, _leq, _gap)                      \
+#define ccxll_sort_extd(_ccxll, _ptr4_iter_x, _g, _leq)                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
-    for (int c_mg = 0, gap = (_gap); c_mg != 1 && !(c_mg = 0); gap <<= 1)      \
+    for (int c_mg = 0, gap = (_g); c_mg != 1 && !(c_mg = 0); gap <<= 1)        \
     {                                                                          \
         ccxll_iter_begin((_ptr4_iter_x)[0], (_ccxll));                         \
         ccxll_iter_begin((_ptr4_iter_x)[1], (_ccxll));                         \
@@ -383,8 +383,8 @@ STATEMENT_                                                                     \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int c_lf = 0; c_lf < (_r); c_lf++)                                    \
-        ccxll_sort_extd((_ptrn_ccxll)[c_lf], (_ptrn4_iter_x)[c_lf], _leq,      \
-                        size_half_sub[c_lf]);                                  \
+        ccxll_sort_extd((_ptrn_ccxll)[c_lf], (_ptrn4_iter_x)[c_lf],            \
+                        size_half_sub[c_lf], _leq);                            \
 )
 
 
@@ -396,7 +396,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     int size_all = (_ccxll).size;                                              \
-    int size_sub = (size_all / (_n)) + ((size_all % (_n) == 0) ? (0) : (1));   \
+    int size_sub = (size_all / (_n)) + (size_all % (_n) != 0);                 \
                                                                                \
     for (int c_th = 0; c_th < (_n); c_th++)                                    \
     {                                                                          \
@@ -417,9 +417,9 @@ STATEMENT_                                                                     \
                                                                                \
     _Pragma("omp parallel for")                                                \
     for (int c_th = 0; c_th < (_n); c_th++)                                    \
-        ccxll_sort_extd((_ptrn_ccxll_x)[c_th], (_ptrn4_iter_x)[c_th], _leq, 1);\
+        ccxll_sort_extd((_ptrn_ccxll_x)[c_th], (_ptrn4_iter_x)[c_th], 1, _leq);\
                                                                                \
-    for (int c_th = (_n); (c_th = ((c_th + (c_th > 1 ? 1 : 0)) / 2)); )        \
+    for (int c_th = (_n); (c_th = ((c_th + (c_th > 1)) / 2)); )                \
         _ccxll_sort_two_sub((_ccxll), (_ptrn_ccxll_x),                         \
                                       (_ptrn4_iter_x), c_th, _leq);            \
                                                                                \
@@ -521,11 +521,11 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccxll_iter_advance(_iter, _diff)                                       \
+#define ccxll_iter_advance(_iter, _d)                                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int diff = (_diff);                                                        \
+    int diff = (_d);                                                           \
                                                                                \
     if (diff > 0)       {  while (ccxll_iter_incr((_iter)) && --diff);  }      \
     else if (diff < 0)  {  while (ccxll_iter_decr((_iter)) && ++diff);  }      \
