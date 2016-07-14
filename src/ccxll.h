@@ -119,21 +119,20 @@ STATEMENT_                                                                     \
 
 
 
-/* link exclusive or */
+/* exclusive or */
 
 
 #define XOR_2(_addr_a, _addr_b)                                                \
 (                                                                              \
-    (link_t)((uintptr_t)(link_t)(_addr_a) ^ (uintptr_t)(link_t)(_addr_b))      \
+    (link_t)((uintptr_t)(void*)(_addr_a) ^ (uintptr_t)(void*)(_addr_b))        \
 )
 
 
 #define XOR_3(_addr_a, _addr_b, _addr_c)                                       \
 (                                                                              \
-    (link_t)((uintptr_t)(link_t)(_addr_a) ^                                    \
-             (uintptr_t)(link_t)(_addr_b) ^ (uintptr_t)(link_t)(_addr_c))      \
+    (link_t)((uintptr_t)(void*)(_addr_a) ^ (uintptr_t)(void*)(_addr_b) ^       \
+             (uintptr_t)(void*)(_addr_c))                                      \
 )
-
 
 
 /* ccxll access */
@@ -430,6 +429,25 @@ STATEMENT_                                                                     \
                      (_ptrn4_iter_x)[0][2]);                                   \
                                                                                \
     (_ccxll).size = size_all;                                                  \
+)
+
+
+#define ccxll_reverse_range(_iter_l, _iter_r)                                  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    *(link_t*)(_iter_l).next = XOR_3(*(link_t*)(_iter_l).next,                 \
+                                     (_iter_l).curr, (_iter_r).curr);          \
+    *(link_t*)(_iter_r).prev = XOR_3(*(link_t*)(_iter_r).prev,                 \
+                                     (_iter_r).curr, (_iter_l).curr);          \
+                                                                               \
+    *(link_t*)(_iter_l).curr = XOR_3(*(link_t*)(_iter_l).curr,                 \
+                                     (_iter_l).next, (_iter_r).prev);          \
+    *(link_t*)(_iter_r).curr = XOR_3(*(link_t*)(_iter_r).curr,                 \
+                                     (_iter_r).prev, (_iter_l).next);          \
+                                                                               \
+    (_iter_l).next = XOR_2((_iter_l).prev, *(link_t*)(_iter_l).curr);          \
+    (_iter_r).next = XOR_2((_iter_r).prev, *(link_t*)(_iter_r).curr);          \
 )
 
 
