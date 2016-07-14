@@ -450,5 +450,37 @@ int main(void)
     }
 
 
+    /* Test 14 */
+    /* Reverse Range */
+
+    printf("\n\nTest 14: \n\n");
+
+    {
+        ccxll(int) list;
+        ccxll_init(list);
+
+        ccxll_iter(int) iter, iter_l, iter_r;
+        ccxll_iter_init(iter, list);
+        ccxll_iter_init(iter_l, list);
+        ccxll_iter_init(iter_r, list);
+
+        for (int i = 0; i < 10; i++)
+            ccxll_push_back(list, i);
+
+        ccxll_iter_begin(iter_l, list);
+        ccxll_iter_begin(iter_r, list);
+        ccxll_iter_advance(iter_l, 2);
+        ccxll_iter_advance(iter_r, 7);
+
+        ccxll_reverse_range(iter_l, iter_r);
+
+        CCXLL_TRAV(list, iter)  printf("%d ", ccxll_iter_dref(iter));
+
+        puts("= 0 1 2 6 5 4 3 7 8 9");
+
+        ccxll_free(list);
+    }
+
+
     return 0;
 }
