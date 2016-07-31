@@ -21,25 +21,26 @@
 
 #define ccxll_extd(elem_t, _PACK_)                                             \
                                                                                \
-    struct  {                                                                  \
-        elem_t *head;                                                          \
-        elem_t *tail;                                                          \
-        elem_t *avsp;                                                          \
-        ptrdiff_t val_offset, xor_offset;                                      \
-        long long size, ncnt, vcnt, blkstart, blkratio, blkthrsh;              \
+    struct                                                                     \
+    {                                                                          \
+        elem_t *head;                             /* head sentinel "node" */   \
+        elem_t *tail;                             /* tail sentinel "node" */   \
+        elem_t *avsp;                             /* available space list */   \
                                                                                \
-        struct  {                                                              \
-            link_t next;                                                       \
+        long long size, ncnt, vcnt;               /* vacant nodes records */   \
+        ptrdiff_t val_offset, xor_offset;         /* node members offsets */   \
+        long long blkstart, blkratio, blkthrsh;   /* block increment info */   \
                                                                                \
-            PRAGMA##_PACK_##BGN                                                \
-            struct  {                                                          \
-                elem_t val;                                                    \
-                link_t xor;                                                    \
+        struct                                                                 \
+        {                                                                      \
+            link_t next;                          /* points to next block */   \
                                                                                \
-            }   *pnode, nodes[1];                                              \
+            PRAGMA##_PACK_##BGN                   /* packed struct pragma */   \
+            struct  {  elem_t val;  link_t xor;   /* val with an xor link */   \
+                    }  *pnode, nodes[1];          /* node structure array */   \
             PRAGMA##_PACK_##END                                                \
                                                                                \
-        }   *pool, block;                                                      \
+        }   *pool, block;                         /* points to 1-st block */   \
     }
 
 
@@ -49,10 +50,12 @@
 
 #define ccxll_iter_extd(elem_t, _PACK_)                                        \
                                                                                \
-    struct  {                                                                  \
+    struct                                                                     \
+    {                                                                          \
         elem_t *prev;                                                          \
         elem_t *curr;                                                          \
         elem_t *next;                                                          \
+                                                                               \
         ccxll_extd(elem_t, _PACK_) *pccxll;                                    \
     }
 
