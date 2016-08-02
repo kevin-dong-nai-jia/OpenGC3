@@ -360,33 +360,33 @@ STATEMENT_                                                                     \
 )
 
 
-#define _ccxll_sort_two_sub(_ccxll, _ptrn_ccxll, _ptrn4_iter_x, _r, _leq)      \
+#define _ccxlls_append_merge(_ccxll, _ptrn_ccxll, _ptrn4_iter_x, _h, _leq)     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int size_half_sub[(_r)];                                                   \
+    int size_sub[(_h)];                                                        \
                                                                                \
-    for (int c_lf = 0; c_lf < (_r); c_lf++)                                    \
-        size_half_sub[c_lf] = (_ptrn_ccxll)[c_lf].size;                        \
+    for (int c_lo = 0; c_lo < (_h); c_lo++)                                    \
+        size_sub[c_lo] = (_ptrn_ccxll)[c_lo].size;                             \
                                                                                \
-    for (int c_lf = 0, c_rg = (_r); ((c_lf < ((-1) * (_ccxll).size - 1)) &&    \
-                             ((_ptrn_ccxll)[c_rg].size != 0)); c_lf++, c_rg++) \
+    for (int c_lo = 0, c_hi = (_h); ((c_lo < ((-1) * (_ccxll).size - 1)) &&    \
+                             ((_ptrn_ccxll)[c_hi].size != 0)); c_lo++, c_hi++) \
     {                                                                          \
         (_ccxll).size += 1;                                                    \
-        (_ptrn_ccxll)[c_lf].size += (_ptrn_ccxll)[c_rg].size;                  \
-        (_ptrn_ccxll)[c_rg].size  = 0;                                         \
+        (_ptrn_ccxll)[c_lo].size += (_ptrn_ccxll)[c_hi].size;                  \
+        (_ptrn_ccxll)[c_hi].size  = 0;                                         \
                                                                                \
-        ccxll_iter_tail ((_ptrn4_iter_x)[c_lf][0], (_ptrn_ccxll)[c_lf]);       \
-        ccxll_iter_begin((_ptrn4_iter_x)[c_lf][1], (_ptrn_ccxll)[c_rg]);       \
-        ccxll_iter_tail ((_ptrn4_iter_x)[c_lf][2], (_ptrn_ccxll)[c_rg]);       \
-        ccxll_move_range((_ptrn4_iter_x)[c_lf][0], (_ptrn4_iter_x)[c_lf][1],   \
-                         (_ptrn4_iter_x)[c_lf][2]);                            \
+        ccxll_iter_tail ((_ptrn4_iter_x)[c_lo][0], (_ptrn_ccxll)[c_lo]);       \
+        ccxll_iter_begin((_ptrn4_iter_x)[c_lo][1], (_ptrn_ccxll)[c_hi]);       \
+        ccxll_iter_tail ((_ptrn4_iter_x)[c_lo][2], (_ptrn_ccxll)[c_hi]);       \
+        ccxll_move_range((_ptrn4_iter_x)[c_lo][0], (_ptrn4_iter_x)[c_lo][1],   \
+                         (_ptrn4_iter_x)[c_lo][2]);                            \
     }                                                                          \
                                                                                \
     _Pragma("omp parallel for")                                                \
-    for (int c_lf = 0; c_lf < (_r); c_lf++)                                    \
-        ccxll_sort_extd((_ptrn_ccxll)[c_lf], (_ptrn4_iter_x)[c_lf],            \
-                        size_half_sub[c_lf], _leq);                            \
+    for (int c_lo = 0; c_lo < (_h); c_lo++)                                    \
+        ccxll_sort_extd((_ptrn_ccxll)[c_lo], (_ptrn4_iter_x)[c_lo],            \
+                        size_sub[c_lo], _leq);                                 \
 )
 
 
@@ -422,8 +422,8 @@ STATEMENT_                                                                     \
         ccxll_sort_extd((_ptrn_ccxll_x)[c_th], (_ptrn4_iter_x)[c_th], 1, _leq);\
                                                                                \
     for (int c_th = (_n); (c_th = ((c_th + (c_th > 1)) / 2)); )                \
-        _ccxll_sort_two_sub((_ccxll), (_ptrn_ccxll_x),                         \
-                                      (_ptrn4_iter_x), c_th, _leq);            \
+        _ccxlls_append_merge((_ccxll), (_ptrn_ccxll_x),                        \
+                                       (_ptrn4_iter_x), c_th, _leq);           \
                                                                                \
     ccxll_iter_tail ((_ptrn4_iter_x)[0][0], (_ccxll));                         \
     ccxll_iter_begin((_ptrn4_iter_x)[0][1], (_ptrn_ccxll_x)[0]);               \
