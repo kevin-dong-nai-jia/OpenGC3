@@ -19,7 +19,7 @@
 
 #define ccxll_pckd(elem_t)  ccxll_extd(elem_t, _PACKED_)
 
-#define ccxll_extd(elem_t, _PACK_)                                             \
+#define ccxll_extd(elem_t, _ALIGN_)                                            \
                                                                                \
     struct                                                                     \
     {                                                                          \
@@ -35,10 +35,10 @@
         {                                                                      \
             link_t next;                          /* points to next block */   \
                                                                                \
-            PRAGMA##_PACK_##BGN                   /* packed struct pragma */   \
+            PRAGMA##_ALIGN_##BGN                  /* C struct align start */   \
             struct  {  elem_t val;  link_t xor;   /* val with an xor link */   \
                     }  *pnode, nodes[1];          /* node structure array */   \
-            PRAGMA##_PACK_##END                                                \
+            PRAGMA##_ALIGN_##END                                               \
                                                                                \
         }   *pool, block;                         /* points to 1-st block */   \
     }
@@ -48,15 +48,15 @@
 
 #define ccxll_iter_pckd(elem_t)  ccxll_iter_extd(elem_t, _PACKED_)
 
-#define ccxll_iter_extd(elem_t, _PACK_)                                        \
+#define ccxll_iter_extd(elem_t, _ALIGN_)                                       \
                                                                                \
     struct                                                                     \
     {                                                                          \
-        elem_t *prev;                                                          \
-        elem_t *curr;                                                          \
-        elem_t *next;                                                          \
-                                                                               \
-        ccxll_extd(elem_t, _PACK_) *pccxll;                                    \
+        elem_t    *prev;                                                       \
+        elem_t    *curr;                                                       \
+        elem_t    *next;                                                       \
+        ptrdiff_t val_offset;                                                  \
+        ccxll_extd(elem_t, _ALIGN_) *pccxll;                                   \
     }
 
 
@@ -104,6 +104,7 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter).prev = (_iter).curr = (_iter).next = NULL,                         \
+    (_iter).val_offset = (_ccxll).val_offset,                                  \
     (_iter).pccxll = (void*)&(_ccxll)                                          \
 )
 
@@ -458,7 +459,7 @@ STATEMENT_                                                                     \
 /* ccxll iterators */
 
 
-#define ccxll_iter_dref(_iter)  (*((_iter).curr + (_iter).pccxll->val_offset))
+#define ccxll_iter_dref(_iter)  (*((_iter).curr + (_iter).val_offset))
 
 
 #define ccxll_iter_copy(_iter_dst, _iter_src)                                  \
