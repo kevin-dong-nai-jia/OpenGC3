@@ -6,8 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <omp.h>
-
 #include "misc.h"
 #include "node.h"
 
@@ -23,24 +21,27 @@
                                                                                \
     struct                                                                     \
     {                                                                          \
-        elem_t *head;                             /* head sentinel "node" */   \
-        elem_t *tail;                             /* tail sentinel "node" */   \
-        elem_t *avsp;                             /* available space list */   \
+        elem_t     *head;                         /* head sentinel "node" */   \
+        elem_t     *tail;                         /* tail sentinel "node" */   \
+        elem_t     *avsp;                         /* available space list */   \
                                                                                \
-        long long size, ncnt, vcnt;               /* vacant nodes records */   \
-        ptrdiff_t val_offset, xor_offset;         /* node members offsets */   \
-        long long blkstart, blkratio, blkthrsh;   /* block increment info */   \
+        long long  size, ncnt, vcnt;              /* vacant nodes records */   \
+        ptrdiff_t  val_offset, xor_offset;        /* node members offsets */   \
+        long long  blkstart, blkratio, blkthrsh;  /* block increment info */   \
                                                                                \
         struct                                                                 \
         {                                                                      \
             link_t next;                          /* points to next block */   \
                                                                                \
             PRAGMA##_ALIGN_##BGN                  /* C struct align start */   \
-            struct  {  elem_t val;  link_t xor;   /* val with an xor link */   \
+            struct  {  elem_t val;  link_t xor;   /* val with an XOR link */   \
                     }  *pnode, nodes[1];          /* node structure array */   \
             PRAGMA##_ALIGN_##END                                               \
                                                                                \
         }   *pool, block;                         /* points to 1-st block */   \
+                                                                               \
+        struct  {  _ccxll_iter_core(elem_t)                                    \
+                }  **_it, iter;                   /* in-/ex- ternal iters */   \
     }
 
 
@@ -52,12 +53,17 @@
                                                                                \
     struct                                                                     \
     {                                                                          \
-        elem_t    *prev;                                                       \
-        elem_t    *curr;                                                       \
-        elem_t    *next;                                                       \
-        ptrdiff_t val_offset;                                                  \
+       _ccxll_iter_core(elem_t)                                                \
         ccxll_extd(elem_t, _ALIGN_) *pccxll;                                   \
     }
+
+
+#define _ccxll_iter_core(elem_t)                                               \
+                                                                               \
+        elem_t     *prev;                                                      \
+        elem_t     *curr;                                                      \
+        elem_t     *next;                                                      \
+        ptrdiff_t  val_offset;
 
 
 
@@ -74,8 +80,8 @@ VOID_EXPR_                                                                     \
                                                                                \
     (_ccxll).blkstart = ((_start) >= 1) ? (_start) : 1,                        \
     (_ccxll).blkratio = ((_ratio) >= 1) ? (_ratio) : 1,                        \
-    (_ccxll).blkthrsh = ((_thrsh) >= (_ccxll).blkstart) ? (_thrsh) :           \
-                                                          (_ccxll).blkstart,   \
+    (_ccxll).blkthrsh = ((_thrsh) >= (_ccxll).blkstart) ?                      \
+                         (_thrsh)  : (_ccxll).blkstart,                        \
                                                                                \
     (_ccxll).xor_offset = ((char*)&((_ccxll).block.nodes[0].xor) -             \
                            (char*)&((_ccxll).block.nodes[0].val)),             \
@@ -83,7 +89,10 @@ VOID_EXPR_                                                                     \
     ((_ccxll).xor_offset % (sizeof((_ccxll).block.nodes[0].val))) ?            \
     (fputs("FATAL ERROR: Misalignment", stderr), exit(EXIT_FAILURE), 0) :      \
     ((_ccxll).val_offset = (_ccxll).xor_offset * (-1) /                        \
-                           (sizeof((_ccxll).block.nodes[0].val)))              \
+                           (sizeof((_ccxll).block.nodes[0].val))),             \
+                                                                               \
+    (_ccxll)._it = NULL,                                                       \
+    _ccxll_iter_core_init((_ccxll).iter, (_ccxll))                             \
 )
 
 
@@ -103,9 +112,17 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter).prev = (_iter).curr = (_iter).next = NULL,                         \
-    (_iter).val_offset = (_ccxll).val_offset,                                  \
+    _ccxll_iter_core_init((_iter), (_ccxll)),                                  \
     (_iter).pccxll = (void*)&(_ccxll)                                          \
+)
+
+
+#define _ccxll_iter_core_init(_iter, _ccxll)                                   \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter).prev = (_iter).curr = (_iter).next = NULL,                         \
+    (_iter).val_offset = (_ccxll).val_offset                                   \
 )
 
 
@@ -295,6 +312,7 @@ STATEMENT_                                                                     \
 
 
 #define ccxll_merge_range(_iter_l, _iter_m, _iter_r, _iter_x)                  \
+                                                                               \
         ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, XLEQ)
 
 #define ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)       \
@@ -333,106 +351,42 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_sort(_ccxll, _ptr4_iter_x)                                       \
-        ccxll_sort_extd(_ccxll, _ptr4_iter_x,  1, XLEQ)
+#define ccxll_sort(_ccxll)  ccxll_sort_extd(_ccxll, 1, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _ptr4_iter_x, _g, _leq)                        \
+#define ccxll_sort_extd(_ccxll, _g, _leq)                                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
+    (_ccxll)._it = malloc(4 * sizeof(*(_ccxll)._it));                          \
+                                                                               \
+    for (int c_it = 0; c_it < 4; c_it++)                                       \
+        (_ccxll)._it[c_it] = malloc(sizeof(**(_ccxll)._it)),                   \
+        _ccxll_iter_core_init(*(_ccxll)._it[c_it], (_ccxll));                  \
+                                                                               \
     for (int c_mg = 0, gap = (_g); c_mg != 1 && !(c_mg = 0); gap <<= 1)        \
     {                                                                          \
-        ccxll_iter_begin((_ptr4_iter_x)[0], (_ccxll));                         \
-        ccxll_iter_begin((_ptr4_iter_x)[1], (_ccxll));                         \
-        ccxll_iter_begin((_ptr4_iter_x)[2], (_ccxll));                         \
+        ccxll_iter_begin(*(_ccxll)._it[0], (_ccxll));                          \
+        ccxll_iter_begin(*(_ccxll)._it[1], (_ccxll));                          \
+        ccxll_iter_begin(*(_ccxll)._it[2], (_ccxll));                          \
                                                                                \
-        while (!(ccxll_iter_at_tail((_ptr4_iter_x)[1])) && ++c_mg)             \
+        while (!(ccxll_iter_at_tail(*(_ccxll)._it[1])) && ++c_mg)              \
         {                                                                      \
-            ccxll_iter_advance((_ptr4_iter_x)[1], gap);                        \
-            ccxll_iter_copy   ((_ptr4_iter_x)[2], (_ptr4_iter_x)[1]);          \
-            ccxll_iter_advance((_ptr4_iter_x)[2], gap);                        \
+            ccxll_iter_advance(*(_ccxll)._it[1], gap);                         \
+            ccxll_iter_copy   (*(_ccxll)._it[2], *(_ccxll)._it[1]);            \
+            ccxll_iter_advance(*(_ccxll)._it[2], gap);                         \
                                                                                \
-            ccxll_merge_range_extd((_ptr4_iter_x)[0], (_ptr4_iter_x)[1],       \
-                                   (_ptr4_iter_x)[2], (_ptr4_iter_x)[3], _leq);\
+            ccxll_merge_range_extd(*(_ccxll)._it[0], *(_ccxll)._it[1],         \
+                                   *(_ccxll)._it[2], *(_ccxll)._it[3], _leq);  \
         }                                                                      \
     }                                                                          \
-)
-
-
-#define _ccxlls_append_merge(_ccxll, _ptrn_ccxll, _ptrn4_iter_x, _h, _leq)     \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    int size_sub[(_h)];                                                        \
+    for (int c_it = 0; c_it < 4; c_it++)                                       \
+        free((_ccxll)._it[c_it]);                                              \
                                                                                \
-    for (int c_lo = 0; c_lo < (_h); c_lo++)                                    \
-        size_sub[c_lo] = (_ptrn_ccxll)[c_lo].size;                             \
-                                                                               \
-    for (int c_lo = 0, c_hi = (_h); ((c_lo < ((-1) * (_ccxll).size - 1)) &&    \
-                             ((_ptrn_ccxll)[c_hi].size != 0)); c_lo++, c_hi++) \
-    {                                                                          \
-        (_ccxll).size += 1;                                                    \
-        (_ptrn_ccxll)[c_lo].size += (_ptrn_ccxll)[c_hi].size;                  \
-        (_ptrn_ccxll)[c_hi].size  = 0;                                         \
-                                                                               \
-        ccxll_iter_tail ((_ptrn4_iter_x)[c_lo][0], (_ptrn_ccxll)[c_lo]);       \
-        ccxll_iter_begin((_ptrn4_iter_x)[c_lo][1], (_ptrn_ccxll)[c_hi]);       \
-        ccxll_iter_tail ((_ptrn4_iter_x)[c_lo][2], (_ptrn_ccxll)[c_hi]);       \
-        ccxll_move_range((_ptrn4_iter_x)[c_lo][0], (_ptrn4_iter_x)[c_lo][1],   \
-                         (_ptrn4_iter_x)[c_lo][2]);                            \
-    }                                                                          \
-                                                                               \
-    _Pragma("omp parallel for")                                                \
-    for (int c_lo = 0; c_lo < (_h); c_lo++)                                    \
-        ccxll_sort_extd((_ptrn_ccxll)[c_lo], (_ptrn4_iter_x)[c_lo],            \
-                        size_sub[c_lo], _leq);                                 \
-)
-
-
-#define ccxll_sort_openmp(_ccxll, _ptrn_ccxll_x, _ptrn4_iter_x, _n)            \
-        ccxll_sort_openmp_extd(_ccxll, _ptrn_ccxll_x, _ptrn4_iter_x, _n, XLEQ)
-
-#define ccxll_sort_openmp_extd(_ccxll, _ptrn_ccxll_x, _ptrn4_iter_x, _n, _leq) \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    int size_all = (_ccxll).size;                                              \
-    int size_sub = (size_all / (_n)) + (size_all % (_n) != 0);                 \
-                                                                               \
-    for (int c_th = 0; c_th < (_n); c_th++)                                    \
-    {                                                                          \
-        bool suff = ((_ccxll).size >= size_sub);                               \
-                                                                               \
-        (_ptrn_ccxll_x)[c_th].size = suff ? size_sub : (_ccxll).size;          \
-        (_ccxll).size              = suff ? ((_ccxll).size - size_sub) : 0;    \
-                                                                               \
-        ccxll_iter_tail   ((_ptrn4_iter_x)[c_th][0], (_ptrn_ccxll_x)[c_th]);   \
-        ccxll_iter_begin  ((_ptrn4_iter_x)[c_th][1], (_ccxll));                \
-        ccxll_iter_begin  ((_ptrn4_iter_x)[c_th][2], (_ccxll));                \
-        ccxll_iter_advance((_ptrn4_iter_x)[c_th][2], size_sub);                \
-        ccxll_move_range  ((_ptrn4_iter_x)[c_th][0], (_ptrn4_iter_x)[c_th][1], \
-                           (_ptrn4_iter_x)[c_th][2]);                          \
-    }                                                                          \
-                                                                               \
-    (_ccxll).size = (-1) * (_n);                                               \
-                                                                               \
-    _Pragma("omp parallel for")                                                \
-    for (int c_th = 0; c_th < (_n); c_th++)                                    \
-        ccxll_sort_extd((_ptrn_ccxll_x)[c_th], (_ptrn4_iter_x)[c_th], 1, _leq);\
-                                                                               \
-    for (int c_th = (_n); (c_th = ((c_th + (c_th > 1)) / 2)); )                \
-        _ccxlls_append_merge((_ccxll), (_ptrn_ccxll_x),                        \
-                                       (_ptrn4_iter_x), c_th, _leq);           \
-                                                                               \
-    ccxll_iter_tail ((_ptrn4_iter_x)[0][0], (_ccxll));                         \
-    ccxll_iter_begin((_ptrn4_iter_x)[0][1], (_ptrn_ccxll_x)[0]);               \
-    ccxll_iter_tail ((_ptrn4_iter_x)[0][2], (_ptrn_ccxll_x)[0]);               \
-    ccxll_move_range((_ptrn4_iter_x)[0][0], (_ptrn4_iter_x)[0][1],             \
-                     (_ptrn4_iter_x)[0][2]);                                   \
-                                                                               \
-    (_ccxll).size = size_all;                                                  \
+    free((_ccxll)._it);                                                        \
+    (_ccxll)._it = NULL;                                                       \
 )
 
 
@@ -558,7 +512,9 @@ STATEMENT_                                                                     \
 /* ccxll traversal */
 
 
-#define CCXLL_TRAV(_ccxll, _iter)  CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)
+#define CCXLL_TRAV(_ccxll)                                                     \
+                                                                               \
+        CCXLL_FORWARD_TRAVERSAL((_ccxll), (_ccxll).iter)
 
 #define CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)                                 \
                                                                                \
