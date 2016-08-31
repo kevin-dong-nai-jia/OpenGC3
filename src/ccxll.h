@@ -116,17 +116,9 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    _ccxll_iter_core_init((_iter), (_ccxll)),                                  \
-    (_iter).pccxll = (void*)&(_ccxll)                                          \
-)
-
-
-#define _ccxll_iter_core_init(_iter, _ccxll)                                   \
-                                                                               \
-VOID_EXPR_                                                                     \
-(                                                                              \
     (_iter).prev = (_iter).curr = (_iter).next = NULL,                         \
-    (_iter).val_offset = (_ccxll).val_offset                                   \
+    (_iter).val_offset = (_ccxll).val_offset,                                  \
+    (_iter).pccxll = (void*)&(_ccxll)                                          \
 )
 
 
@@ -367,7 +359,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (int c_it = 0; c_it < 4; c_it++)                                       \
         (_ccxll)._it[c_it] = malloc(sizeof(**(_ccxll)._it)),                   \
-        _ccxll_iter_core_init(*(_ccxll)._it[c_it], (_ccxll));                  \
+        ccxll_iter_init(*(_ccxll)._it[c_it], (_ccxll));                        \
                                                                                \
     for (int c_mg = 0, gap = (_g); c_mg != 1 && !(c_mg = 0); gap <<= 1)        \
     {                                                                          \
