@@ -459,5 +459,37 @@ int main(void)
     }
 
 
+    /* Test 15 */
+    /* Swap */
+
+    printf("\n\nTest 15: \n\n");
+
+    {
+        ccxll(int) list_a, list_b;
+        ccxll_init(list_a);
+        ccxll_init(list_b);
+
+        for (int i = 0; i < 10; i++)
+        {
+            ccxll_push_back(list_a, 2 * i);
+            ccxll_push_back(list_b, 2 * i + 1);
+        }
+
+        for (int cnt = 0; cnt < 3; cnt++)
+        {
+            printf("#%d   A : ", cnt + 1);
+            CCXLL_TRAV(list_a)  printf("%d ", ccxll_iter_dref(list_a.iter));
+            printf("  /   B : ");
+            CCXLL_TRAV(list_b)  printf("%d ", ccxll_iter_dref(list_b.iter));
+            printf("\n");
+
+            ccxll_swap(list_a, list_b);
+        }
+
+        ccxll_free(list_a);
+        ccxll_free(list_b);
+    }
+
+
     return 0;
 }
