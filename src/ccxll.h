@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
 
 #include "misc.h"
@@ -95,8 +96,9 @@ VOID_EXPR_                                                                     \
     ((_ccxll).val_offset = (_ccxll).xor_offset * (-1) /                        \
                            (sizeof((_ccxll).block.nodes[0].val))),             \
                                                                                \
-    (_ccxll)._it = NULL, (_ccxll)._xl = NULL,                                  \
-    ccxll_iter_init((_ccxll).iter, (_ccxll))                                   \
+    (_ccxll)._it = NULL,                                                       \
+    ccxll_iter_init((_ccxll).iter, (_ccxll)),                                  \
+    (_ccxll)._xl = NULL                                                        \
 )
 
 
@@ -259,7 +261,32 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_swap(_ccxll_a, _ccxll_b)                                /* TODO */
+#define ccxll_swap(_ccxll_a, _ccxll_b)                                         \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    size_t sz_a = sizeof((_ccxll_a));                                          \
+    size_t sz_b = sizeof((_ccxll_b));                                          \
+                                                                               \
+    if (sz_a == sz_b)                                                          \
+    {                                                                          \
+        char *_ccxll_temp = malloc(sz_a);                                      \
+                                                                               \
+        memcpy(_ccxll_temp, &(_ccxll_a), sz_a);                                \
+        memcpy(&(_ccxll_a), &(_ccxll_b), sz_a);                                \
+        memcpy(&(_ccxll_b), _ccxll_temp, sz_a);                                \
+                                                                               \
+        link_t head_xor = XOR_2(&((_ccxll_a).head), &((_ccxll_b).head));       \
+        link_t tail_xor = XOR_2(&((_ccxll_a).head), &((_ccxll_b).head));       \
+                                                                               \
+        *(link_t*)(_ccxll_a).head = XOR_2(*(link_t*)(_ccxll_a).head, head_xor);\
+        *(link_t*)(_ccxll_a).tail = XOR_2(*(link_t*)(_ccxll_a).tail, tail_xor);\
+        *(link_t*)(_ccxll_b).head = XOR_2(*(link_t*)(_ccxll_b).head, head_xor);\
+        *(link_t*)(_ccxll_b).tail = XOR_2(*(link_t*)(_ccxll_b).tail, tail_xor);\
+                                                                               \
+        free(_ccxll_temp);                                                     \
+    }                                                                          \
+)
 
 
 #define ccxll_resize(_ccxll, _value)                                  /* TODO */
