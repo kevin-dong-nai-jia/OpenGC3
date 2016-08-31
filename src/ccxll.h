@@ -21,8 +21,17 @@
                                                                                \
     struct                                                                     \
     {                                                                          \
-        elem_t     *head;                         /* head sentinel "node" */   \
-        elem_t     *tail;                         /* tail sentinel "node" */   \
+        _ccxll_core(elem_t, _ALIGN_)                                           \
+         ccxll_iter_extd(elem_t, _ALIGN_)  **_it, iter;                        \
+                                                                               \
+        struct  {  _ccxll_core(elem_t, _ALIGN_)                                \
+                    ccxll_iter_extd(elem_t, _ALIGN_)  **_it, iter;  }  **_xl;  \
+    }
+
+#define _ccxll_core(elem_t, _ALIGN_)                                           \
+                                                                               \
+        elem_t     *head;                         /* head pseudo sentinel */   \
+        elem_t     *tail;                         /* tail pseudo sentinel */   \
         elem_t     *avsp;                         /* available space list */   \
                                                                                \
         long long  size, ncnt, vcnt;              /* vacant nodes records */   \
@@ -39,10 +48,6 @@
             PRAGMA##_ALIGN_##END                                               \
                                                                                \
         }   *pool, block;                         /* points to 1-st block */   \
-                                                                               \
-        struct  {  _ccxll_iter_core(elem_t)                                    \
-                }  **_it, iter;                   /* in-/ex- ternal iters */   \
-    }
 
 
 #define ccxll_iter(elem_t)       ccxll_iter_extd(elem_t, _PADDED_)
@@ -53,10 +58,9 @@
                                                                                \
     struct                                                                     \
     {                                                                          \
-       _ccxll_iter_core(elem_t)                                                \
-        ccxll_extd(elem_t, _ALIGN_) *pccxll;                                   \
+        _ccxll_iter_core(elem_t)                                               \
+        struct  {  _ccxll_core(elem_t, _ALIGN_)  }  *pccxll;                   \
     }
-
 
 #define _ccxll_iter_core(elem_t)                                               \
                                                                                \
@@ -70,7 +74,7 @@
 /* ccxll initialize */
 
 
-#define ccxll_init(_ccxll)  ccxll_init_extd(_ccxll, 16, 2, 65536)
+#define ccxll_init(_ccxll)  ccxll_init_extd(_ccxll, (1 << 4), 2, (1 << 16))
 
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
@@ -91,8 +95,8 @@ VOID_EXPR_                                                                     \
     ((_ccxll).val_offset = (_ccxll).xor_offset * (-1) /                        \
                            (sizeof((_ccxll).block.nodes[0].val))),             \
                                                                                \
-    (_ccxll)._it = NULL,                                                       \
-    _ccxll_iter_core_init((_ccxll).iter, (_ccxll))                             \
+    (_ccxll)._it = NULL, (_ccxll)._xl = NULL,                                  \
+    ccxll_iter_init((_ccxll).iter, (_ccxll))                                   \
 )
 
 
@@ -229,7 +233,7 @@ STATEMENT_                                                                     \
                                                                                \
     link_t pxor;                                                               \
                                                                                \
-    _node_alloc((*(_iter).pccxll).block.pnode, *(_iter).pccxll);               \
+    _node_alloc((_iter).pccxll->block.pnode, *(_iter).pccxll);                 \
     (_iter).pccxll->block.pnode->val = (_val);                                 \
                                                                                \
     (_iter).next = (_iter).curr;                                               \

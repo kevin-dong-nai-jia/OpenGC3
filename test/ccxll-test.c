@@ -19,8 +19,8 @@ int main(void)
         ccxll(char*) list;
         ccxll_init(list);
 
-        ccxll_push_back(list, "Hello Everybody:\n");
-        ccxll_push_back(list, "Welcome to the C Container Collection Proj.!\n");
+        ccxll_push_back(list, "Welcome to ");
+        ccxll_push_back(list, "the \"C Container Collection\" Project!\n");
 
         CCXLL_TRAV(list)  printf("%s", ccxll_iter_dref(list.iter));
         ccxll_free(list);
@@ -238,13 +238,13 @@ int main(void)
 
         CCXLL_TRAV(list)  printf("%d ", ccxll_iter_dref(list.iter));
 
-        ccxll_iter_head(iter, list);
+        ccxll_iter_head(list.iter, list);
 
         for (int cnt = 0; cnt <= 6; cnt++)
         {
-            ccxll_iter_incr(iter);
-            ccxll_insert(iter, 2 * cnt);
-            ccxll_iter_incr(iter);
+            ccxll_iter_incr(list.iter);
+            ccxll_insert(list.iter, 2 * cnt);
+            ccxll_iter_incr(list.iter);
         }
 
         printf("-> ");
@@ -261,10 +261,10 @@ int main(void)
         printf("-> ");
         CCXLL_TRAV(list)  printf("%d ", ccxll_iter_dref(list.iter));
 
-        ccxll_iter_begin(iter, list);
+        ccxll_iter_begin(list.iter, list);
 
         for (int cnt = 0; cnt <= 5; cnt++)
-            ccxll_erase(iter);
+            ccxll_erase(list.iter);
 
         printf("-> ");
         CCXLL_TRAV(list)  printf("%d ", ccxll_iter_dref(list.iter));
@@ -399,7 +399,7 @@ int main(void)
     /* Sort Parallel */
 
     printf("\n\nTest 13: \n\n");
-    puts("Currently not available");
+    puts("Parallel sort is currently not available.");
 
     {
         /*
