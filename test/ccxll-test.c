@@ -222,7 +222,7 @@ int main(void)
 
 
     /* Test 9 */
-    /* Insert and Erase */
+    /* Insert, Erase and Rearrange */
 
     printf("\n\nTest 9: \n\n");
 
@@ -258,6 +258,8 @@ int main(void)
             ccxll_erase(iter);
         }
 
+        ccxll_rearrange(list);
+
         printf("-> ");
         CCXLL_TRAV(list)  printf("%d ", ccxll_iter_dref(list.iter));
 
@@ -265,6 +267,8 @@ int main(void)
 
         for (int cnt = 0; cnt <= 5; cnt++)
             ccxll_erase(list.iter);
+
+        ccxll_rearrange(list);
 
         printf("-> ");
         CCXLL_TRAV(list)  printf("%d ", ccxll_iter_dref(list.iter));
