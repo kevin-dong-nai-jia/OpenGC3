@@ -43,10 +43,10 @@
         {                                                                      \
             link_t next;                          /* points to next block */   \
                                                                                \
-            PRAGMA##_ALIGN_##BGN                  /* C struct align start */   \
+            PRAGMA##_ALIGN_##BGN                  /* packed pragma starts */   \
             struct  {  elem_t val;  link_t xor;   /* val with an XOR link */   \
                     }  *pnode, nodes[1];          /* node structure array */   \
-            PRAGMA##_ALIGN_##END                                               \
+            PRAGMA##_ALIGN_##END                  /* the pragma ends here */   \
                                                                                \
         }   *pool, block;                         /* points to 1-st block */   \
 
@@ -77,7 +77,15 @@
 
 #define ccxll_init(_ccxll)  ccxll_init_extd(_ccxll, (1 << 4), 2, (1 << 16))
 
-#define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
+#define ccxll_init_extd(_ccxll, ...)                                           \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    _ccxll_init_core((_ccxll), __VA_ARGS__),                                   \
+    (_ccxll)._xl = NULL                                                        \
+)
+
+#define _ccxll_init_core(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -97,8 +105,7 @@ VOID_EXPR_                                                                     \
                            (sizeof((_ccxll).block.nodes[0].val))),             \
                                                                                \
     (_ccxll)._it = NULL,                                                       \
-    ccxll_iter_init((_ccxll).iter, (_ccxll)),                                  \
-    (_ccxll)._xl = NULL                                                        \
+    ccxll_iter_init((_ccxll).iter, (_ccxll))                                   \
 )
 
 
@@ -380,7 +387,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_empty(_ccxll))  break;                                           \
+    if (ccxll_empty(_ccxll) || (_ccxll)._it != NULL)  break;                   \
                                                                                \
     (_ccxll)._it = malloc(4 * sizeof(*(_ccxll)._it));                          \
                                                                                \
@@ -407,8 +414,8 @@ STATEMENT_                                                                     \
                                                                                \
     for (int c_it = 0; c_it < 4; c_it++)                                       \
         free((_ccxll)._it[c_it]);                                              \
-                                                                               \
     free((_ccxll)._it);                                                        \
+                                                                               \
     (_ccxll)._it = NULL;                                                       \
 )
 
@@ -429,6 +436,18 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter_l).next = XOR_2((_iter_l).prev, *(link_t*)(_iter_l).curr);          \
     (_iter_r).next = XOR_2((_iter_r).prev, *(link_t*)(_iter_r).curr);          \
+)
+
+
+
+/* default comparators */
+
+
+#define XLEQ  CCXLL_DEFAULT_LEQ_COMPARATOR
+
+#define CCXLL_DEFAULT_LEQ_COMPARATOR(_iter_a, _iter_b)                         \
+(                                                                              \
+    ccxll_iter_dref((_iter_a)) <= ccxll_iter_dref((_iter_b))                   \
 )
 
 
@@ -550,14 +569,31 @@ STATEMENT_                                                                     \
 
 
 
-/* default comparators */
+/* ccxll extensions */
 
 
-#define XLEQ  CCXLL_DEFAULT_LEQ_COMPARATOR
-
-#define CCXLL_DEFAULT_LEQ_COMPARATOR(_iter_a, _iter_b)                         \
+#define ccxll_rearrange(_ccxll)                                                \
+                                                                               \
+STATEMENT_                                                                     \
 (                                                                              \
-    ccxll_iter_dref((_iter_a)) <= ccxll_iter_dref((_iter_b))                   \
+    if ((_ccxll)._xl != NULL)  break;                                          \
+                                                                               \
+    (_ccxll)._xl    = malloc(sizeof( *(_ccxll)._xl));                          \
+    (_ccxll)._xl[0] = malloc(sizeof(**(_ccxll)._xl));                          \
+                                                                               \
+    _ccxll_init_core(*(_ccxll)._xl[0],  (_ccxll).blkstart,                     \
+                     (_ccxll).blkratio, (_ccxll).blkthrsh);                    \
+                                                                               \
+    CCXLL_TRAV((_ccxll))                                                       \
+        ccxll_push_back(*(_ccxll)._xl[0], ccxll_iter_dref((_ccxll).iter));     \
+                                                                               \
+    ccxll_swap(*(_ccxll)._xl[0], (_ccxll));                                    \
+    ccxll_free(*(_ccxll)._xl[0]);                                              \
+                                                                               \
+    free((_ccxll)._xl[0]);                                                     \
+    free((_ccxll)._xl);                                                        \
+                                                                               \
+    (_ccxll)._xl = NULL;                                                       \
 )
 
 
