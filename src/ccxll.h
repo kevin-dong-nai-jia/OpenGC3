@@ -448,9 +448,9 @@ STATEMENT_                                                                     \
 /* default comparators */
 
 
-#define XLEQ  CCXLL_DEFAULT_LEQ_COMPARATOR
+#define XLEQ  CCXLL_LEQ_COMPAR
 
-#define CCXLL_DEFAULT_LEQ_COMPARATOR(_iter_a, _iter_b)                         \
+#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)                                     \
 (                                                                              \
     ccxll_iter_dref((_iter_a)) <= ccxll_iter_dref((_iter_b))                   \
 )
@@ -460,7 +460,11 @@ STATEMENT_                                                                     \
 /* ccxll iterators */
 
 
-#define ccxll_iter_dref(_iter)  (*((_iter).curr + (_iter).val_offset))
+#define ccxll_iter_dref(_iter)       (*((_iter).curr + (_iter).val_offset))
+
+#define ccxll_iter_dref_prev(_iter)  (*((_iter).prev + (_iter).val_offset))
+
+#define ccxll_iter_dref_next(_iter)  (*((_iter).next + (_iter).val_offset))
 
 
 #define ccxll_iter_copy(_iter_dst, _iter_src)                                  \
