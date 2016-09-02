@@ -10,7 +10,7 @@ C Container Collection is a set of macros and it runs faster than most of the C+
 
 ## Container
 
-CCXLL : XOR Linked List \[ [Macros](http://people.cs.nctu.edu.tw/~dongnj/C-Container-Collection/doc/macros-list.html) / [Graph](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/tool/call-graph.pdf) / [Source](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/src/ccxll.h) \]
+CCXLL : XOR Linked List \[ [Macros](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/doc/macros-list.html) / [Graph](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/tool/call-graph.pdf) / [Source](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/src/ccxll.h) \]
 
 ## Contributor
 
