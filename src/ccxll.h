@@ -81,11 +81,16 @@
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    _ccxll_init_core((_ccxll), __VA_ARGS__),                                   \
+    _ccxll_init_extd((_ccxll), __VA_ARGS__),                                   \
     (_ccxll)._xl = NULL                                                        \
 )
 
-#define _ccxll_init_core(_ccxll, _start, _ratio, _thrsh)                       \
+#define _ccxll_init(_ccxll_dst, _ccxll_src)                                    \
+                                                                               \
+        _ccxll_init_extd((_ccxll_dst), (_ccxll_src).blkstart,                  \
+                         (_ccxll_src).blkratio, (_ccxll_src).blkthrsh)
+
+#define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
@@ -572,6 +577,15 @@ STATEMENT_                                                                     \
 /* ccxll extensions */
 
 
+#define ccxll_copy(_ccxll_dst, _ccxll_src)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    CCXLL_TRAV((_ccxll_src))                                                   \
+        ccxll_push_back(_ccxll_dst, ccxll_iter_dref((_ccxll_src).iter));       \
+)
+
+
 #define ccxll_rearrange(_ccxll)                                                \
                                                                                \
 STATEMENT_                                                                     \
@@ -580,13 +594,9 @@ STATEMENT_                                                                     \
                                                                                \
     (_ccxll)._xl    = malloc(sizeof( *(_ccxll)._xl));                          \
     (_ccxll)._xl[0] = malloc(sizeof(**(_ccxll)._xl));                          \
+    _ccxll_init(*(_ccxll)._xl[0], (_ccxll));                                   \
                                                                                \
-    _ccxll_init_core(*(_ccxll)._xl[0],  (_ccxll).blkstart,                     \
-                     (_ccxll).blkratio, (_ccxll).blkthrsh);                    \
-                                                                               \
-    CCXLL_TRAV((_ccxll))                                                       \
-        ccxll_push_back(*(_ccxll)._xl[0], ccxll_iter_dref((_ccxll).iter));     \
-                                                                               \
+    ccxll_copy(*(_ccxll)._xl[0], (_ccxll));                                    \
     ccxll_swap(*(_ccxll)._xl[0], (_ccxll));                                    \
     ccxll_free(*(_ccxll)._xl[0]);                                              \
                                                                                \
