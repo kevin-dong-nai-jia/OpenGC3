@@ -16,55 +16,54 @@ STATEMENT_                                                                     \
     {                                                                          \
         if ((_cc_ll).vcnt == 0)                                                \
         {                                                                      \
-            link_t pool_dup = (_cc_ll).pool;                                   \
+            (_cc_ll).pblock = (_cc_ll).pool;                                   \
                                                                                \
-            if ((_cc_ll).ncnt == 0)                                            \
-                (_cc_ll).vcnt = ((_cc_ll).ncnt  = (_cc_ll).blkstart);          \
+            if ((_cc_ll).used == 0)                                            \
+                (_cc_ll).vcnt = ((_cc_ll).used  = (_cc_ll).start);             \
             else                                                               \
-                (_cc_ll).vcnt = ((_cc_ll).ncnt  < (_cc_ll).blkthrsh) ?         \
-                                ((_cc_ll).ncnt *= (_cc_ll).blkratio) :         \
-                                ((_cc_ll).ncnt  = (_cc_ll).blkthrsh);          \
+                (_cc_ll).vcnt = ((_cc_ll).used  < (_cc_ll).thrsh) ?            \
+                                ((_cc_ll).used *= (_cc_ll).ratio) :            \
+                                ((_cc_ll).used  = (_cc_ll).thrsh);             \
                                                                                \
-            (_cc_ll).pool = malloc((sizeof((_cc_ll).block)) +                  \
-                                   (sizeof((_cc_ll).block.nodes[0])) *         \
-                                   ((_cc_ll).ncnt - 1));                       \
+            (_cc_ll).pool = malloc((sizeof(*(_cc_ll).pblock)) +                \
+                                   (sizeof( (_cc_ll).pblock->nodes)) *         \
+                                   (size_t)((_cc_ll).used - 1));               \
                                                                                \
             if ((_cc_ll).pool == NULL)                                         \
-                fputs("FATAL ERROR: Failed To Allocate", stderr),              \
+                fputs("FATAL ERROR: Failed To Allocate Memory", stderr),       \
                 exit(EXIT_FAILURE);                                            \
                                                                                \
-            *(link_t*)(_cc_ll).pool = pool_dup;                                \
+            (_cc_ll).pool->next = (_cc_ll).pblock;                             \
         }                                                                      \
                                                                                \
         (_pnode) = &((_cc_ll).pool->nodes[--(_cc_ll).vcnt]);                   \
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        (_pnode) = (void*)((_cc_ll).avsp + (_cc_ll).val_offset);               \
-        (_cc_ll).avsp = *(link_t*)(_cc_ll).avsp;                               \
+        (_pnode) = (_cc_ll).avsp;                                              \
+        (_cc_ll).avsp = (_cc_ll).avsp->lnk;                                    \
     }                                                                          \
 )
 
 
-#define _node_clear(_plink, _cc_ll)                                            \
+#define _node_clear(_pnode, _cc_ll)                                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    *(link_t*)(_plink) = (_cc_ll).avsp;                                        \
-    (_cc_ll).avsp = (_plink);                                                  \
+    (_pnode)->lnk = (_cc_ll).avsp;                                             \
+    (_cc_ll).avsp = (_pnode);                                                  \
 )
 
 
-#define _nodes_free(_cc_ll)                                                    \
+#define _block_free(_cc_ll)                                                    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     while ((_cc_ll).pool != NULL)                                              \
     {                                                                          \
-        link_t pool_dup = (_cc_ll).pool;                                       \
-                                                                               \
-        (_cc_ll).pool = *(link_t*)(_cc_ll).pool;                               \
-        free(pool_dup);                                                        \
+        (_cc_ll).pblock = (_cc_ll).pool;                                       \
+        (_cc_ll).pool   = (_cc_ll).pool->next;                                 \
+        free((_cc_ll).pblock);                                                 \
     }                                                                          \
 )
 
