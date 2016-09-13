@@ -1,11 +1,9 @@
 #ifndef _CC_XLL_H_
 #define _CC_XLL_H_
 
-#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdbool.h>
 
 #include "mem.h"
 #include "misc.h"
@@ -90,8 +88,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                   \
                                                                                \
-    for (int idx = 1; idx < ELEMOF_ARR((_ccxll).it); idx++)                    \
-        ccxll_iter_init((_ccxll).it[idx], (_ccxll));                           \
+    for (int _idx = 1; _idx < ELEMOF_ARR((_ccxll).it); _idx++)                 \
+        ccxll_iter_init((_ccxll).it[_idx], (_ccxll));                          \
 )
 
 
@@ -109,12 +107,22 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
+    _ccxll_init_base((_ccxll)),                                                \
+    (_ccxll).used =  (_ccxll).vcnt   =  0,                                     \
+    (_ccxll).avsp =  (_ccxll).pnode  =  NULL,                                  \
+    (_ccxll).pool =  (_ccxll).pblock =  NULL,                                  \
+    (_ccxll)._it  =  NULL,                                                     \
+    (_ccxll)._xl  =  NULL                                                      \
+)
+
+
+#define _ccxll_init_base(_ccxll)                                               \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_ccxll).size = 0,                                                         \
     (_ccxll).head.lnk = &((_ccxll).tail),                                      \
-    (_ccxll).tail.lnk = &((_ccxll).head),                                      \
-    (_ccxll).avsp = (_ccxll).pnode  = NULL,                                    \
-    (_ccxll).pool = (_ccxll).pblock = NULL,                                    \
-    (_ccxll).size = (_ccxll).used = (_ccxll).vcnt = 0,                         \
-    (_ccxll)._it = NULL, (_ccxll)._xl = NULL                                   \
+    (_ccxll).tail.lnk = &((_ccxll).head)                                       \
 )
 
 
@@ -285,21 +293,22 @@ STATEMENT_                                                                     \
                                                                                \
     if (sz_copy)                                                               \
     {                                                                          \
-        void *_ccxll_temp = malloc(sz_copy);                                   \
+        void *_ccxll_temp = NULL;                                              \
+        _safe_alloc(_ccxll_temp, sz_copy);                                     \
                                                                                \
         memcpy(_ccxll_temp, &(_ccxll_a), sz_copy);                             \
         memcpy(&(_ccxll_a), &(_ccxll_b), sz_copy);                             \
         memcpy(&(_ccxll_b), _ccxll_temp, sz_copy);                             \
                                                                                \
-        link_t lnk_h = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk));  \
-        link_t lnk_t = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk));  \
+        link_t lnk_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk)); \
+        link_t lnk_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk)); \
                                                                                \
-        (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, lnk_h);   \
-        (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, lnk_t);   \
-        (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, lnk_h);   \
-        (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, lnk_t);   \
+        (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, lnk_hd);  \
+        (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, lnk_tl);  \
+        (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, lnk_hd);  \
+        (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, lnk_tl);  \
                                                                                \
-        free(_ccxll_temp);                                                     \
+        _safe_free(_ccxll_temp);                                               \
     }                                                                          \
 )
 
@@ -396,29 +405,29 @@ STATEMENT_                                                                     \
                                                                                \
     (_ccxll)._it = malloc(4 * sizeof(*(_ccxll)._it));                          \
                                                                                \
-    for (int c_it = 0; c_it < 4; c_it++)                                       \
-        (_ccxll)._it[c_it] = malloc(sizeof(**(_ccxll)._it)),                   \
-        ccxll_iter_init(*(_ccxll)._it[c_it], (_ccxll));                        \
+    for (int _idx = 0; _idx < 4; _idx++)                                       \
+        (_ccxll)._it[_idx] = malloc(sizeof(**(_ccxll)._it)),                   \
+        ccxll_iter_init(*(_ccxll)._it[_idx], (_ccxll));                        \
                                                                                \
-    for (int c_mg = 0, gap = (_g); c_mg != 1 && !(c_mg = 0); gap <<= 1)        \
+    for (int _cmg = 0, _gap = (_g); _cmg != 1 && !(_cmg = 0); _gap <<= 1)      \
     {                                                                          \
         ccxll_iter_begin(*(_ccxll)._it[0], (_ccxll));                          \
         ccxll_iter_begin(*(_ccxll)._it[1], (_ccxll));                          \
         ccxll_iter_begin(*(_ccxll)._it[2], (_ccxll));                          \
                                                                                \
-        while (!(ccxll_iter_at_tail(*(_ccxll)._it[1])) && ++c_mg)              \
+        while (!(ccxll_iter_at_tail(*(_ccxll)._it[1])) && ++_cmg)              \
         {                                                                      \
-            ccxll_iter_advance(*(_ccxll)._it[1], gap);                         \
+            ccxll_iter_advance(*(_ccxll)._it[1], _gap);                        \
             ccxll_iter_copy   (*(_ccxll)._it[2], *(_ccxll)._it[1]);            \
-            ccxll_iter_advance(*(_ccxll)._it[2], gap);                         \
+            ccxll_iter_advance(*(_ccxll)._it[2], _gap);                        \
                                                                                \
             ccxll_merge_range_extd(*(_ccxll)._it[0], *(_ccxll)._it[1],         \
                                    *(_ccxll)._it[2], *(_ccxll)._it[3], _leq);  \
         }                                                                      \
     }                                                                          \
                                                                                \
-    for (int c_it = 0; c_it < 4; c_it++)                                       \
-        free((_ccxll)._it[c_it]);                                              \
+    for (int _idx = 0; _idx < 4; _idx++)                                       \
+        free((_ccxll)._it[_idx]);                                              \
     free((_ccxll)._it);                                                        \
                                                                                \
     (_ccxll)._it = NULL;                                                       \
@@ -558,10 +567,10 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int diff = (_d);                                                           \
+    int _diff = (_d);                                                          \
                                                                                \
-    if (diff > 0)       {  while (ccxll_iter_incr((_iter)) && --diff);  }      \
-    else if (diff < 0)  {  while (ccxll_iter_decr((_iter)) && ++diff);  }      \
+    if (_diff > 0)       {  while (ccxll_iter_incr((_iter)) && --_diff);  }    \
+    else if (_diff < 0)  {  while (ccxll_iter_decr((_iter)) && ++_diff);  }    \
 )
 
 
