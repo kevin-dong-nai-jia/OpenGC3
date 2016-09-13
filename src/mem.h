@@ -1,5 +1,5 @@
-#ifndef _NODE_H_
-#define _NODE_H_
+#ifndef _CC_MEM_H_
+#define _CC_MEM_H_
 
 #include <stdio.h>
 #include <stdlib.h>

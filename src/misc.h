@@ -1,5 +1,5 @@
-#ifndef _MISC_H_
-#define _MISC_H_
+#ifndef _CC_MISC_H_
+#define _CC_MISC_H_
 
 
 /* generic pointer */

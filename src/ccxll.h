@@ -1,5 +1,5 @@
-#ifndef _CCXLL_H_
-#define _CCXLL_H_
+#ifndef _CC_XLL_H_
+#define _CC_XLL_H_
 
 #include <stdio.h>
 #include <stddef.h>
@@ -7,8 +7,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "mem.h"
 #include "misc.h"
-#include "node.h"
 
 
 /* ccxll create */
