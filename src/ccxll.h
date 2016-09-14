@@ -36,8 +36,8 @@
                                                                                \
         union  _U_HDTL                                                         \
         {   link_t lnk;                                                        \
-            struct _S_NODE *stnl;                                              \
-        }   head, tail;                                                        \
+            struct _S_NODE *stnl;                 /* points to same addr */    \
+        }   head, tail;                           /* head tail sentinels */    \
                                                                                \
         struct _S_BLOCK                                                        \
         {   struct _S_BLOCK *next;                /* points to next block */   \
@@ -49,9 +49,9 @@
         struct _S_ITER                                                         \
         {   struct _S_NODE  *prev, *curr, *next;  /* adjacent ptr to node */   \
             struct _S_CCXLL *pccxll;              /* points to ccxll body */   \
-        }   **_it, it[((n_iter) >= 1) ? (n_iter + 1) : 1];                     \
+        }   **_it, it[((n_iter) >= 1 ? ((n_iter) + 1) : (1))];                 \
                                                                                \
-        struct _S_CCXLL **_xl;                                                 \
+        struct _S_CCXLL **_xl;                    /* internal use _it/_xl */   \
     }                                                                          \
 
 
