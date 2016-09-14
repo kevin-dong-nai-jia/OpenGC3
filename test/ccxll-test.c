@@ -288,7 +288,7 @@ int main(void)
 
     {
         ccxll_extd(int, 3, NORMAL) list;
-        ccxll_full_init(list);
+        ccxll_init_full(list);
 
         int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
                           {-4, 0, 3}, {0, 2, 0} , {1, 0, -1} , {1, -1, 1} };
@@ -327,7 +327,7 @@ int main(void)
 
     {
         ccxll_extd(int, 4, NORMAL) list;
-        ccxll_full_init(list);
+        ccxll_init_full(list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
@@ -403,7 +403,7 @@ int main(void)
 
     {
         ccxll_extd(int, 2, NORMAL) list;
-        ccxll_full_init(list);
+        ccxll_init_full(list);
 
         for (int i = 0; i < 10; i++)
             ccxll_push_back(list, i);

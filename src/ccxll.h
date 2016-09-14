@@ -78,11 +78,11 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccxll_full_init(_ccxll)                                                \
+#define ccxll_init_full(_ccxll)                                                \
                                                                                \
-        ccxll_full_init_extd((_ccxll), 16, 2, 65536)
+        ccxll_init_full_extd((_ccxll), 16, 2, 65536)
 
-#define ccxll_full_init_extd(_ccxll, _start, _ratio, _thrsh)                   \
+#define ccxll_init_full_extd(_ccxll, _start, _ratio, _thrsh)                   \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -242,8 +242,6 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    link_t lnk;                                                                \
-                                                                               \
     if (ccxll_iter_at_head(_iter))  break;                                     \
                                                                                \
     _node_alloc((_iter).pccxll->pnode, *(_iter).pccxll);                       \
@@ -253,11 +251,11 @@ STATEMENT_                                                                     \
     (_iter).next = (_iter).curr;                                               \
     (_iter).curr = (_iter).pccxll->pnode;                                      \
                                                                                \
-    lnk = &((_iter).pccxll->pnode->lnk);                                       \
+    link_t _ln = &((_iter).pccxll->pnode->lnk);                                \
                                                                                \
     (_iter).curr->lnk = XOR_2(&((_iter).prev->lnk), &((_iter).next->lnk));     \
-    (_iter).prev->lnk = XOR_3(  (_iter).prev->lnk , &((_iter).next->lnk), lnk);\
-    (_iter).next->lnk = XOR_3(  (_iter).next->lnk , &((_iter).prev->lnk), lnk);\
+    (_iter).prev->lnk = XOR_3(  (_iter).prev->lnk , &((_iter).next->lnk), _ln);\
+    (_iter).next->lnk = XOR_3(  (_iter).next->lnk , &((_iter).prev->lnk), _ln);\
                                                                                \
     (_iter).pccxll->size++;                                                    \
 )
@@ -267,12 +265,12 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    link_t lnk = &((_iter).curr->lnk);                                         \
+    link_t _ln = &((_iter).curr->lnk);                                         \
                                                                                \
     if (ccxll_iter_at_head(_iter) || ccxll_iter_at_tail(_iter))  break;        \
                                                                                \
-    (_iter).prev->lnk = XOR_3((_iter).prev->lnk, &((_iter).next->lnk), lnk);   \
-    (_iter).next->lnk = XOR_3((_iter).next->lnk, &((_iter).prev->lnk), lnk);   \
+    (_iter).prev->lnk = XOR_3((_iter).prev->lnk, &((_iter).next->lnk), _ln);   \
+    (_iter).next->lnk = XOR_3((_iter).next->lnk, &((_iter).prev->lnk), _ln);   \
                                                                                \
     _node_clear((_iter).curr, *(_iter).pccxll);                                \
                                                                                \
@@ -300,13 +298,13 @@ STATEMENT_                                                                     \
         memcpy(&(_ccxll_a), &(_ccxll_b), sz_copy);                             \
         memcpy(&(_ccxll_b), _ccxll_temp, sz_copy);                             \
                                                                                \
-        link_t lnk_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk)); \
-        link_t lnk_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk)); \
+        link_t _ln_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk)); \
+        link_t _ln_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk)); \
                                                                                \
-        (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, lnk_hd);  \
-        (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, lnk_tl);  \
-        (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, lnk_hd);  \
-        (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, lnk_tl);  \
+        (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, _ln_hd);  \
+        (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, _ln_tl);  \
+        (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, _ln_hd);  \
+        (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, _ln_tl);  \
                                                                                \
         _safe_free(_ccxll_temp);                                               \
     }                                                                          \
@@ -332,22 +330,27 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    link_t p_prev = (_iter_p).prev, p_curr = (_iter_p).curr;                   \
-    link_t l_prev = (_iter_l).prev, l_curr = (_iter_l).curr;                   \
-    link_t r_prev = (_iter_r).prev, r_curr = (_iter_r).curr;                   \
+    link_t _p_curr = &((_iter_p).curr->lnk);                                   \
+    link_t _l_curr = &((_iter_l).curr->lnk);                                   \
+    link_t _r_curr = &((_iter_r).curr->lnk);                                   \
                                                                                \
-    if (l_curr == r_curr || p_curr == l_curr || p_curr == r_curr)  break;      \
+    (_iter_p).prev->lnk = XOR_3((_iter_p).prev->lnk, _p_curr, _l_curr);        \
+    (_iter_l).prev->lnk = XOR_3((_iter_l).prev->lnk, _l_curr, _r_curr);        \
+    (_iter_r).prev->lnk = XOR_3((_iter_r).prev->lnk, _r_curr, _p_curr);        \
                                                                                \
-    (_iter_p).prev->lnk = XOR_3((_iter_p).prev->lnk, p_curr, l_curr);          \
-    (_iter_p).curr->lnk = XOR_3((_iter_p).curr->lnk, p_prev, r_prev);          \
-    (_iter_l).prev->lnk = XOR_3((_iter_l).prev->lnk, l_curr, r_curr);          \
-    (_iter_l).curr->lnk = XOR_3((_iter_l).curr->lnk, l_prev, p_prev);          \
-    (_iter_r).prev->lnk = XOR_3((_iter_r).prev->lnk, r_curr, p_curr);          \
-    (_iter_r).curr->lnk = XOR_3((_iter_r).curr->lnk, r_prev, l_prev);          \
+    (_iter_r).curr->lnk = XOR_3((_iter_r).curr->lnk, &((_iter_r).prev->lnk),   \
+                                                     &((_iter_l).prev->lnk));  \
+    (_iter_p).curr->lnk = XOR_3((_iter_p).curr->lnk, &((_iter_p).prev->lnk),   \
+                                                     &((_iter_r).prev->lnk));  \
+    (_iter_l).curr->lnk = XOR_3((_iter_l).curr->lnk, &((_iter_l).prev->lnk),   \
+                                                     &((_iter_p).prev->lnk));  \
                                                                                \
-    (_iter_p).next = ((_iter_p).next == l_curr) ? (r_curr) : ((_iter_p).next); \
-    (_iter_l).next = ((_iter_l).next == r_curr) ? (p_curr) : ((_iter_l).next); \
-    (_iter_r).next = ((_iter_r).next == p_curr) ? (l_curr) : ((_iter_r).next); \
+    (_iter_p).next = ((_iter_p).next != _l_curr) ?                             \
+                     (&((_iter_p).next->lnk)) : (_r_curr);                     \
+    (_iter_l).next = ((_iter_l).next != _r_curr) ?                             \
+                     (&((_iter_l).next->lnk)) : (_p_curr);                     \
+    (_iter_r).next = ((_iter_r).next != _p_curr) ?                             \
+                     (&((_iter_r).next->lnk)) : (_l_curr);                     \
                                                                                \
     (_iter_p).prev = XOR_2((_iter_p).curr->lnk, (_iter_p).next);               \
     (_iter_l).prev = XOR_2((_iter_l).curr->lnk, (_iter_l).next);               \
@@ -517,7 +520,7 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter).prev = (void*)&((_ccxll).head.lnk),                                \
-    (_iter).curr =          (_ccxll).head.stnl,                                \
+    (_iter).curr =          (_ccxll).head.lnk ,                                \
     (_iter).next =  XOR_2(&((_ccxll).head.lnk), (_ccxll).head.stnl->lnk)       \
 )
 
@@ -527,7 +530,7 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter).next = (void*)&((_ccxll).tail.lnk),                                \
-    (_iter).curr =          (_ccxll).tail.stnl,                                \
+    (_iter).curr =          (_ccxll).tail.lnk ,                                \
     (_iter).prev =  XOR_2(&((_ccxll).tail.lnk), (_ccxll).tail.stnl->lnk)       \
 )
 
