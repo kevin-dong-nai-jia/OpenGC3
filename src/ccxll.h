@@ -198,7 +198,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     _node_alloc((_ccxll).pnode, (_ccxll));                                     \
                                                                                \
-    (_ccxll).pnode->val  = (_val);                                             \
+    (_ccxll).pnode->val = (_val);                                              \
                                                                                \
     (_ccxll).pnode->lnk       = XOR_2(&((_ccxll)._hdtl_.lnk),                  \
                                         (_ccxll)._hdtl_.lnk);                  \
@@ -265,9 +265,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    link_t _ln = &((_iter).curr->lnk);                                         \
-                                                                               \
     if (ccxll_iter_at_head(_iter) || ccxll_iter_at_tail(_iter))  break;        \
+                                                                               \
+    link_t _ln = &((_iter).curr->lnk);                                         \
                                                                                \
     (_iter).prev->lnk = XOR_3((_iter).prev->lnk, &((_iter).next->lnk), _ln);   \
     (_iter).next->lnk = XOR_3((_iter).next->lnk, &((_iter).prev->lnk), _ln);   \
@@ -285,18 +285,18 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    size_t sz_ct_a = (size_t)((char*)&((_ccxll_a)._it) - (char*)&(_ccxll_a));  \
-    size_t sz_ct_b = (size_t)((char*)&((_ccxll_b)._it) - (char*)&(_ccxll_b));  \
-    size_t sz_copy = ((sz_ct_a == sz_ct_b) ? (sz_ct_a) : (0));                 \
+    size_t _sz_xla = (size_t)((char*)&((_ccxll_a)._it) - (char*)&(_ccxll_a));  \
+    size_t _sz_xlb = (size_t)((char*)&((_ccxll_b)._it) - (char*)&(_ccxll_b));  \
+    size_t _sz_cpy = ((_sz_xla == _sz_xlb) ? (_sz_xla) : (0));                 \
                                                                                \
-    if (sz_copy)                                                               \
+    if (_sz_cpy)                                                               \
     {                                                                          \
         void *_ccxll_temp = NULL;                                              \
-        _safe_alloc(_ccxll_temp, sz_copy);                                     \
+        _safe_alloc(_ccxll_temp, _sz_cpy);                                     \
                                                                                \
-        memcpy(_ccxll_temp, &(_ccxll_a), sz_copy);                             \
-        memcpy(&(_ccxll_a), &(_ccxll_b), sz_copy);                             \
-        memcpy(&(_ccxll_b), _ccxll_temp, sz_copy);                             \
+        memcpy(_ccxll_temp, &(_ccxll_a), _sz_cpy);                             \
+        memcpy(&(_ccxll_a), &(_ccxll_b), _sz_cpy);                             \
+        memcpy(&(_ccxll_b), _ccxll_temp, _sz_cpy);                             \
                                                                                \
         link_t _ln_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk)); \
         link_t _ln_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk)); \
@@ -566,14 +566,14 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccxll_iter_advance(_iter, _d)                                          \
+#define ccxll_iter_advance(_iter, _diff)                                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _diff = (_d);                                                          \
+    int _d = (_diff);                                                          \
                                                                                \
-    if (_diff > 0)       {  while (ccxll_iter_incr((_iter)) && --_diff);  }    \
-    else if (_diff < 0)  {  while (ccxll_iter_decr((_iter)) && ++_diff);  }    \
+    if (_d > 0)       {  while (ccxll_iter_incr((_iter)) && --_d);  }          \
+    else if (_d < 0)  {  while (ccxll_iter_decr((_iter)) && ++_d);  }          \
 )
 
 

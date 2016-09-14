@@ -32,7 +32,7 @@ typedef void* link_t;
 
 /* number of elem. */
 
-#define ELEMOF_ARR(ARR)  (int)(sizeof(ARR) / sizeof(ARR[0]))
+#define ELEMOF_ARR(PARR) ((int)(sizeof(PARR) / sizeof(PARR[0])))
 
 
 #endif
