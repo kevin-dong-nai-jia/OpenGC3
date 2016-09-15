@@ -285,29 +285,25 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    size_t _sz_xla = (size_t)((char*)&((_ccxll_a)._it) - (char*)&(_ccxll_a));  \
-    size_t _sz_xlb = (size_t)((char*)&((_ccxll_b)._it) - (char*)&(_ccxll_b));  \
-    size_t _sz_cpy = ((_sz_xla == _sz_xlb) ? (_sz_xla) : (0));                 \
+    size_t _size = (size_t)((char*)&((_ccxll_a)._it) -                         \
+                            (char*)& (_ccxll_a));                              \
                                                                                \
-    if (_sz_cpy)                                                               \
-    {                                                                          \
-        void *_ccxll_temp = NULL;                                              \
-        _safe_alloc(_ccxll_temp, _sz_cpy);                                     \
+    void *_ccxll_temp = NULL;                                                  \
+    _safe_alloc(_ccxll_temp, _size);                                           \
                                                                                \
-        memcpy(_ccxll_temp, &(_ccxll_a), _sz_cpy);                             \
-        memcpy(&(_ccxll_a), &(_ccxll_b), _sz_cpy);                             \
-        memcpy(&(_ccxll_b), _ccxll_temp, _sz_cpy);                             \
+    memcpy(_ccxll_temp, &(_ccxll_a), _size);                                   \
+    memcpy(&(_ccxll_a), &(_ccxll_b), _size);                                   \
+    memcpy(&(_ccxll_b), _ccxll_temp, _size);                                   \
                                                                                \
-        link_t _ln_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk)); \
-        link_t _ln_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk)); \
+    link_t _ln_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk));     \
+    link_t _ln_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk));     \
                                                                                \
-        (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, _ln_hd);  \
-        (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, _ln_tl);  \
-        (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, _ln_hd);  \
-        (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, _ln_tl);  \
+    (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, _ln_hd);      \
+    (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, _ln_tl);      \
+    (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, _ln_hd);      \
+    (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, _ln_tl);      \
                                                                                \
-        _safe_free(_ccxll_temp);                                               \
-    }                                                                          \
+    _safe_free(_ccxll_temp);                                                   \
 )
 
 
