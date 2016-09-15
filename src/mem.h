@@ -99,7 +99,6 @@ STATEMENT_                                                                     \
         _safe_free((_ccxll)._itxl_);                                           \
                                                                                \
     (_ccxll)._itxl_ = _list;                                                   \
-    (_ccxll)._itxl_ = _list;                                                   \
     (_ccxll)._itxl_[(_len + (_items))] = NULL;                                 \
                                                                                \
     for (int _idx = _len; _idx < _len + (_items); _idx++)                      \
