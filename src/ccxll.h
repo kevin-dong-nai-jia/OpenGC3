@@ -61,12 +61,12 @@
 
 #define ccxll_init(_ccxll)                                                     \
                                                                                \
-        ccxll_init_extd((_ccxll), 16, 2, 65536)
+        ccxll_init_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
 
 #define ccxll_init_from(_ccxll_dst, _ccxll_src)                                \
                                                                                \
-        ccxll_init_extd((_ccxll_dst),       (_ccxll_src).start,                \
-                        (_ccxll_src).ratio, (_ccxll_src).thrsh)
+        ccxll_init_extd(_ccxll_dst,        (_ccxll_src).start,                 \
+                       (_ccxll_src).ratio, (_ccxll_src).thrsh)
 
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
@@ -80,7 +80,7 @@ VOID_EXPR_                                                                     \
 
 #define ccxll_init_full(_ccxll)                                                \
                                                                                \
-        ccxll_init_full_extd((_ccxll), 16, 2, 65536)
+        ccxll_init_full_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
 
 #define ccxll_init_full_extd(_ccxll, _start, _ratio, _thrsh)                   \
                                                                                \
@@ -398,42 +398,40 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_sort(_ccxll)  ccxll_sort_extd(_ccxll, 1, XLEQ)
+#define ccxll_sort(_ccxll)                                                     \
+                                                                               \
+        ccxll_sort_extd(_ccxll,  1, XLEQ)
 
 #define ccxll_sort_extd(_ccxll, _g, _leq)                                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_empty(_ccxll) || (_ccxll)._it != NULL)  break;                   \
+    if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
-    (_ccxll)._it = malloc(4 * sizeof(*(_ccxll)._it));                          \
-                                                                               \
-    for (int _idx = 0; _idx < 4; _idx++)                                       \
-        (_ccxll)._it[_idx] = malloc(sizeof(**(_ccxll)._it)),                   \
-        ccxll_iter_init(*(_ccxll)._it[_idx], (_ccxll));                        \
+    int _base;                                                                 \
+    _it_alloc((_ccxll), 4, &_base);                                            \
                                                                                \
     for (int _cmg = 0, _gap = (_g); _cmg != 1 && !(_cmg = 0); _gap <<= 1)      \
     {                                                                          \
-        ccxll_iter_begin(*(_ccxll)._it[0], (_ccxll));                          \
-        ccxll_iter_begin(*(_ccxll)._it[1], (_ccxll));                          \
-        ccxll_iter_begin(*(_ccxll)._it[2], (_ccxll));                          \
+        ccxll_iter_begin(*(_ccxll)._it[_base + 0], (_ccxll));                  \
+        ccxll_iter_begin(*(_ccxll)._it[_base + 1], (_ccxll));                  \
+        ccxll_iter_begin(*(_ccxll)._it[_base + 2], (_ccxll));                  \
                                                                                \
-        while (!(ccxll_iter_at_tail(*(_ccxll)._it[1])) && ++_cmg)              \
+        while (!(ccxll_iter_at_tail(*(_ccxll)._it[_base + 1])) && ++_cmg)      \
         {                                                                      \
-            ccxll_iter_advance(*(_ccxll)._it[1], _gap);                        \
-            ccxll_iter_copy   (*(_ccxll)._it[2], *(_ccxll)._it[1]);            \
-            ccxll_iter_advance(*(_ccxll)._it[2], _gap);                        \
+            ccxll_iter_advance(*(_ccxll)._it[_base + 1], _gap);                \
+            ccxll_iter_copy   (*(_ccxll)._it[_base + 2],                       \
+                               *(_ccxll)._it[_base + 1]);                      \
+            ccxll_iter_advance(*(_ccxll)._it[_base + 2], _gap);                \
                                                                                \
-            ccxll_merge_range_extd(*(_ccxll)._it[0], *(_ccxll)._it[1],         \
-                                   *(_ccxll)._it[2], *(_ccxll)._it[3], _leq);  \
+            ccxll_merge_range_extd(*(_ccxll)._it[_base + 0],                   \
+                                   *(_ccxll)._it[_base + 1],                   \
+                                   *(_ccxll)._it[_base + 2],                   \
+                                   *(_ccxll)._it[_base + 3], _leq);            \
         }                                                                      \
     }                                                                          \
                                                                                \
-    for (int _idx = 0; _idx < 4; _idx++)                                       \
-        free((_ccxll)._it[_idx]);                                              \
-    free((_ccxll)._it);                                                        \
-                                                                               \
-    (_ccxll)._it = NULL;                                                       \
+    _it_free((_ccxll), 4);                                                     \
 )
 
 
@@ -614,20 +612,14 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_ccxll)._xl != NULL)  break;                                          \
+    int _base;                                                                 \
+    _xl_alloc((_ccxll), 1, &_base);                                            \
                                                                                \
-    (_ccxll)._xl    = malloc(sizeof( *(_ccxll)._xl));                          \
-    (_ccxll)._xl[0] = malloc(sizeof(**(_ccxll)._xl));                          \
-    ccxll_init_from(*(_ccxll)._xl[0], (_ccxll));                               \
+    ccxll_copy(*(_ccxll)._xl[_base], (_ccxll));                                \
+    ccxll_swap(*(_ccxll)._xl[_base], (_ccxll));                                \
+    ccxll_free(*(_ccxll)._xl[_base]);                                          \
                                                                                \
-    ccxll_copy(*(_ccxll)._xl[0], (_ccxll));                                    \
-    ccxll_swap(*(_ccxll)._xl[0], (_ccxll));                                    \
-    ccxll_free(*(_ccxll)._xl[0]);                                              \
-                                                                               \
-    free((_ccxll)._xl[0]);                                                     \
-    free((_ccxll)._xl   );                                                     \
-                                                                               \
-    (_ccxll)._xl = NULL;                                                       \
+    _xl_free((_ccxll), 1);                                                     \
 )
 
 

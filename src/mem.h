@@ -73,16 +73,70 @@ STATEMENT_                                                                     \
 /* _it / _xl management */
 
 
-#define _it_alloc(_it, _alloc_items)  /* TODO */                               \
+#define _it_alloc(_ccxll, _items, _pbase)                                      \
+                                                                               \
+        _stack_alloc(_ccxll, _items, _pbase, ccxll_iter_init, _it)
+
+#define _xl_alloc(_ccxll, _items, _pbase)                                      \
+                                                                               \
+        _stack_alloc(_ccxll, _items, _pbase, ccxll_init_from, _xl)
+
+#define _stack_alloc(_ccxll, _items, _pbase, _pinit, _itxl_)                   \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    size_t  _it_len  = 0;                                                      \
-    void   *_it_list = NULL;                                                   \
+    int   _len  = 0;                                                           \
+    void *_list = NULL;                                                        \
                                                                                \
-    if ((_it) != NULL)                                                         \
-        while ((_it)[_it_len++] != NULL);                                      \
+    if ((_ccxll)._itxl_ != NULL)                                               \
+        while ((_ccxll)._itxl_[++_len] != NULL);                               \
+                                                                               \
+    _safe_alloc(_list, (sizeof(**(_ccxll)._itxl_)) *                           \
+                       ((size_t)_len + (_items) + 1));                         \
+    memcpy(_list, (_ccxll)._itxl_, sizeof(**(_ccxll)._itxl_) * (size_t)_len);  \
+                                                                               \
+    if (_len != 0)                                                             \
+        _safe_free((_ccxll)._itxl_);                                           \
+                                                                               \
+    (_ccxll)._itxl_ = _list;                                                   \
+    (_ccxll)._itxl_ = _list;                                                   \
+    (_ccxll)._itxl_[(_len + (_items))] = NULL;                                 \
+                                                                               \
+    for (int _idx = _len; _idx < _len + (_items); _idx++)                      \
+    {                                                                          \
+        (_ccxll)._itxl_[_idx] = NULL;                                          \
+        _safe_alloc((_ccxll)._itxl_[_idx], sizeof(**(_ccxll)._itxl_));         \
+        _pinit(*(_ccxll)._itxl_[_idx], (_ccxll));                              \
+    }                                                                          \
+                                                                               \
+    *(_pbase) = _len;                                                          \
 )
+
+
+#define _it_free(_ccxll, _items)                                               \
+                                                                               \
+        _stack_free(_ccxll, _items, _it)
+
+#define _xl_free(_ccxll, _items)                                               \
+                                                                               \
+        _stack_free(_ccxll, _items, _xl)
+
+#define _stack_free(_ccxll, _items, _itxl_)                                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _len = 0;                                                              \
+                                                                               \
+    if ((_ccxll)._itxl_ != NULL)                                               \
+        while ((_ccxll)._itxl_[++_len] != NULL);                               \
+                                                                               \
+    for (int _idx = _len - 1; (_idx >= 0) && (_idx >= _len - (_items)); _idx--)\
+        _safe_free((_ccxll)._itxl_[_idx]);                                     \
+                                                                               \
+    if ((_len <= _items) && (_items != 0))                                     \
+        _safe_free((_ccxll)._itxl_);                                           \
+)
+
 
 
 /* safe (de-)allocation */
@@ -94,8 +148,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_void_ptr) != NULL)                                                   \
         _CC_ERROR(_CC_ERROR_MSG_MEMORY_LEAK);                                  \
-    else                                                                       \
-        (_void_ptr) = malloc((_alloc_bytes));                                  \
+                                                                               \
+    (_void_ptr) = malloc((_alloc_bytes));                                      \
 )
 
 
@@ -105,8 +159,9 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_void_ptr) == NULL)                                                   \
         _CC_ERROR(_CC_ERROR_MSG_DOUBLE_FREE);                                  \
-    else                                                                       \
-        free((_void_ptr)), (_void_ptr) = NULL;                                 \
+                                                                               \
+    free((_void_ptr));                                                         \
+    (_void_ptr) = NULL;                                                        \
 )
 
 
@@ -114,8 +169,8 @@ STATEMENT_                                                                     \
 /* error and fatal */
 
 
-#define _CC_ERROR_MSG_MEMORY_LEAK "Potential Memory Leak Problem."
-#define _CC_ERROR_MSG_DOUBLE_FREE "Potential Double Free Problem."
+#define _CC_ERROR_MSG_MEMORY_LEAK          "Potential Memory Leak Problem."
+#define _CC_ERROR_MSG_DOUBLE_FREE          "Potential Double Free Problem."
 
 #define _CC_ERROR(_CC_ERROR_MSG)                                               \
                                                                                \
