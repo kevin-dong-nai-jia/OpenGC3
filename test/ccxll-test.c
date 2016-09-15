@@ -460,7 +460,7 @@ int main(void)
     /* Test 16 */
     /* Resize */
 
-    printf("\n\nTest 16: \n\n");
+    printf("\n\nTest 16: \n");
 
     {
         ccxll(int) list;
@@ -469,7 +469,7 @@ int main(void)
         for (int cnt = 0; cnt < 16; cnt++)
             ccxll_push_back(list, cnt);
 
-        printf("Origin : ");
+        printf("\nOrigin : ");
 
         CCXLL_TRAV(list)
             printf("%d ", dref(list.it[0]));
@@ -487,6 +487,8 @@ int main(void)
 
         CCXLL_TRAV(list)
             printf("%d ", dref(list.it[0]));
+
+        puts("");
 
         ccxll_free(list);
     }
