@@ -2,9 +2,38 @@
 #define _CC_MEM_H_
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
+#include "msg.h"
 #include "misc.h"
+
+
+/* safe (de-)allocation */
+
+
+#define _safe_alloc(_void_ptr, _alloc_bytes)                                   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_void_ptr) != NULL)                                                   \
+        _CC_ERROR(_CC_ERROR_MSG_MEMORY_LEAK);                                  \
+                                                                               \
+    if (((_void_ptr) = malloc((_alloc_bytes))) == NULL)                        \
+        _CC_FATAL(_CC_FATAL_MSG_MALLOC_FAIL);                                  \
+)
+
+
+#define _safe_free(_void_ptr)                                                  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_void_ptr) == NULL)                                                   \
+        _CC_ERROR(_CC_ERROR_MSG_DOUBLE_FREE);                                  \
+                                                                               \
+    free((_void_ptr));                                                         \
+    (_void_ptr) = NULL;                                                        \
+)
+
 
 
 /* node operations */
@@ -19,6 +48,7 @@ STATEMENT_                                                                     \
         if ((_cc_ll).vcnt == 0)                                                \
         {                                                                      \
             (_cc_ll).pblock = (_cc_ll).pool;                                   \
+            (_cc_ll).pool   = NULL;                                            \
                                                                                \
             if ((_cc_ll).used == 0)                                            \
                 (_cc_ll).vcnt = ((_cc_ll).used  = (_cc_ll).start);             \
@@ -27,12 +57,9 @@ STATEMENT_                                                                     \
                                 ((_cc_ll).used *= (_cc_ll).ratio) :            \
                                 ((_cc_ll).used  = (_cc_ll).thrsh);             \
                                                                                \
-            (_cc_ll).pool = malloc((sizeof(*(_cc_ll).pblock)) +                \
-                                   (sizeof( (_cc_ll).pblock->nodes)) *         \
-                                   (size_t)((_cc_ll).used - 1));               \
-                                                                               \
-            if ((_cc_ll).pool == NULL)                                         \
-                _CC_FATAL(_CC_FATAL_MSG_ALLOC_FAIL);                           \
+            _safe_alloc((_cc_ll).pool, (sizeof(*(_cc_ll).pblock)) +            \
+                                       (sizeof( (_cc_ll).pblock->nodes)) *     \
+                                       (size_t)((_cc_ll).used - 1));           \
                                                                                \
             (_cc_ll).pool->next = (_cc_ll).pblock;                             \
         }                                                                      \
@@ -64,7 +91,7 @@ STATEMENT_                                                                     \
     {                                                                          \
         (_cc_ll).pblock = (_cc_ll).pool;                                       \
         (_cc_ll).pool   = (_cc_ll).pool->next;                                 \
-        free((_cc_ll).pblock);                                                 \
+        _safe_free((_cc_ll).pblock);                                           \
     }                                                                          \
 )
 
@@ -136,59 +163,6 @@ STATEMENT_                                                                     \
         _safe_free((_ccxll)._itxl_);                                           \
 )
 
-
-
-/* safe (de-)allocation */
-
-
-#define _safe_alloc(_void_ptr, _alloc_bytes)                                   \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_void_ptr) != NULL)                                                   \
-        _CC_ERROR(_CC_ERROR_MSG_MEMORY_LEAK);                                  \
-                                                                               \
-    (_void_ptr) = malloc((_alloc_bytes));                                      \
-)
-
-
-#define _safe_free(_void_ptr)                                                  \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_void_ptr) == NULL)                                                   \
-        _CC_ERROR(_CC_ERROR_MSG_DOUBLE_FREE);                                  \
-                                                                               \
-    free((_void_ptr));                                                         \
-    (_void_ptr) = NULL;                                                        \
-)
-
-
-
-/* error and fatal */
-
-
-#define _CC_ERROR_MSG_MEMORY_LEAK          "Potential Memory Leak Problem."
-#define _CC_ERROR_MSG_DOUBLE_FREE          "Potential Double Free Problem."
-
-#define _CC_ERROR(_CC_ERROR_MSG)                                               \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    fprintf(stderr, "> CCC::ERROR: %s\n", _CC_ERROR_MSG);                      \
-)
-
-
-#define _CC_FATAL_MSG_ALLOC_FAIL           "Memory Space Allocation Failure."
-#define _CC_FATAL_MSG_ALLOC_FAIL_EXITCODE  (-1)
-
-#define _CC_FATAL(_CC_FATAL_MSG)                                               \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    fprintf(stderr, "> CCC::FATAL: %s\n", _CC_FATAL_MSG);                      \
-    exit(_CC_FATAL_MSG##_EXITCODE);                                            \
-)
 
 
 #endif
