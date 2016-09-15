@@ -26,8 +26,8 @@
                                                                                \
     struct _S_CCXLL                                                            \
     {                                                                          \
-        long long int  size , used , vcnt ;       /* size and node record */   \
-        long long int  start, ratio, thrsh;       /* block increment info */   \
+        int size,  used,  vcnt;                   /* size and node record */   \
+        int start, ratio, thrsh;                  /* block increment info */   \
                                                                                \
         struct _S_NODE                                                         \
         {   link_t lnk;                                                        \
@@ -311,7 +311,15 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_resize(_ccxll, _value)                                  /* TODO */
+#define ccxll_resize(_ccxll, _items, _val)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _r = ccxll_size((_ccxll)) - (_items);                                  \
+                                                                               \
+    if (_r > 0)       {  while(_r--)  ccxll_pop_back ((_ccxll));          }    \
+    else if (_r < 0)  {  while(_r++)  ccxll_push_back((_ccxll), (_val));  }    \
+)
 
 
 #define ccxll_clear(_ccxll)                                                    \
@@ -402,7 +410,7 @@ STATEMENT_                                                                     \
                                                                                \
         ccxll_sort_extd(_ccxll,  1, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _g, _leq)                                      \
+#define ccxll_sort_extd(_ccxll, _g, _leq)    /* TODO : Optimization */         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -487,9 +495,7 @@ STATEMENT_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter_dst).prev = (_iter_src).prev,                                       \
-    (_iter_dst).curr = (_iter_src).curr,                                       \
-    (_iter_dst).next = (_iter_src).next                                        \
+    (_iter_dst) = (_iter_src)                                                  \
 )
 
 
@@ -568,10 +574,10 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _d = (_diff);                                                          \
+    int _a = (_diff);                                                          \
                                                                                \
-    if (_d > 0)       {  while (ccxll_iter_incr((_iter)) && --_d);  }          \
-    else if (_d < 0)  {  while (ccxll_iter_decr((_iter)) && ++_d);  }          \
+    if (_a > 0)       {  while (ccxll_iter_incr((_iter)) && --_a);  }          \
+    else if (_a < 0)  {  while (ccxll_iter_decr((_iter)) && ++_a);  }          \
 )
 
 
