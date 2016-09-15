@@ -4,8 +4,6 @@
 
 #include "../src/ccxll.h"
 
-#define INCR_LOOP(_a, _b)  for (int _a = 0; _a < (_b); _a++)
-
 
 int main(void)
 {
@@ -333,7 +331,8 @@ int main(void)
 
         for (int cnt = 0; cnt < 2; cnt++)
         {
-            INCR_LOOP(i, 16)  ccxll_push_back(list, str1[i]);
+            for (int i = 0; i < 16; i++)
+                ccxll_push_back(list, str1[i]);
 
             CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
 
@@ -342,8 +341,10 @@ int main(void)
             switch (cnt)
             {
                 case 0:
-                INCR_LOOP(j, 4)  ccxll_iter_begin  (list.it[j], list);
-                INCR_LOOP(j, 4)  ccxll_iter_advance(list.it[j], 8 * j);
+                for (int j = 0; j < 4; j++)
+                    ccxll_iter_begin  (list.it[j], list);
+                for (int j = 0; j < 4; j++)
+                    ccxll_iter_advance(list.it[j], 8 * j);
 
                 ccxll_merge_range(list.it[0], list.it[1],
                                   list.it[2], list.it[3]);
@@ -377,7 +378,8 @@ int main(void)
         int length = 1000;
         srand((unsigned)time(NULL));
 
-        INCR_LOOP(cnt, length)  ccxll_push_back(list, rand());
+        for (int cnt = 0; cnt < length; cnt++)
+            ccxll_push_back(list, rand());
 
         ccxll_sort(list);
 
@@ -452,6 +454,41 @@ int main(void)
 
         ccxll_free(list_a);
         ccxll_free(list_b);
+    }
+
+
+    /* Test 16 */
+    /* Resize */
+
+    printf("\n\nTest 16: \n\n");
+
+    {
+        ccxll(int) list;
+        ccxll_init(list);
+
+        for (int cnt = 0; cnt < 16; cnt++)
+            ccxll_push_back(list, cnt);
+
+        printf("Origin : ");
+
+        CCXLL_TRAV(list)
+            printf("%d ", dref(list.it[0]));
+
+        printf("\nRsz 10 : ");
+
+        ccxll_resize(list, 10, 0);
+
+        CCXLL_TRAV(list)
+            printf("%d ", dref(list.it[0]));
+
+        printf("\nRsz 16 : ");
+
+        ccxll_resize(list, 16, 10);
+
+        CCXLL_TRAV(list)
+            printf("%d ", dref(list.it[0]));
+
+        ccxll_free(list);
     }
 
 
