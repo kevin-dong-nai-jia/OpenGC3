@@ -7,8 +7,8 @@
 
 int main(void)
 {
-    /* Test 0 */
-    /* Demonstration */
+    // Test 0
+    // Demonstration
 
     printf("Test 0: \n\n");
 
@@ -25,8 +25,8 @@ int main(void)
     }
 
 
-    /* Test 1 */
-    /* Push Back */
+    // Test 1
+    // Push Back
 
     printf("\n\nTest 1: \n");
 
@@ -51,8 +51,8 @@ int main(void)
     }
 
 
-    /* Test 2 */
-    /* Push Back */
+    // Test 2
+    // Push Back
 
     printf("\n\nTest 2: ");
 
@@ -71,8 +71,8 @@ int main(void)
     }
 
 
-    /* Test 3 */
-    /* Push Back */
+    // Test 3
+    // Push Back
 
     printf("\n\nTest 3: ");
 
@@ -100,8 +100,8 @@ int main(void)
     }
 
 
-    /* Test 4 */
-    /* Iter Incr */
+    // Test 4
+    // Iter Incr
 
     printf("\n\nTest 4: ");
 
@@ -120,8 +120,8 @@ int main(void)
     }
 
 
-    /* Test 5 */
-    /* Back and Front */
+    // Test 5
+    // Back and Front
 
     printf("\n\nTest 5: ");
 
@@ -144,8 +144,8 @@ int main(void)
     }
 
 
-    /* Test 6 */
-    /* Push and Pop */
+    // Test 6
+    // Push and Pop
 
     printf("\n\nTest 6: ");
 
@@ -168,8 +168,8 @@ int main(void)
     }
 
 
-    /* Test 7 */
-    /* Push and Clear */
+    // Test 7
+    // Push and Clear
 
     printf("\n\nTest 7: \n");
 
@@ -193,8 +193,8 @@ int main(void)
     }
 
 
-    /* Test 8 */
-    /* Packed */
+    // Test 8
+    // Packed
 
     printf("\n\nTest 8: \n\n");
 
@@ -217,8 +217,8 @@ int main(void)
     }
 
 
-    /* Test 9 */
-    /* Insert, Erase and Rearrange */
+    // Test 9
+    // Insert, Erase and Rearrange
 
     printf("\n\nTest 9: \n\n");
 
@@ -279,8 +279,8 @@ int main(void)
     }
 
 
-    /* Test 10 */
-    /* Move Range */
+    // Test 10
+    // Move Range
 
     printf("\n\nTest 10: \n\n");
 
@@ -318,8 +318,8 @@ int main(void)
     }
 
 
-    /* Test 11 */
-    /* Merge Range */
+    // Test 11
+    // Merge Range
 
     printf("\n\nTest 11: \n\n");
 
@@ -366,8 +366,8 @@ int main(void)
     }
 
 
-    /* Test 12 */
-    /* Sort */
+    // Test 12
+    // Sort
 
     printf("\n\nTest 12: \n\n");
 
@@ -391,15 +391,15 @@ int main(void)
     }
 
 
-    /* Test 13 */
-    /* Sort Parallel */
+    // Test 13
+    // Sort Parallel
 
     printf("\n\nTest 13: \n\n");
     puts("Parallel sort is currently not available.");
 
 
-    /* Test 14 */
-    /* Reverse Range */
+    // Test 14
+    // Reverse Range
 
     printf("\n\nTest 14: \n\n");
 
@@ -425,8 +425,8 @@ int main(void)
     }
 
 
-    /* Test 15 */
-    /* Swap */
+    // Test 15
+    // Swap
 
     printf("\n\nTest 15: \n\n");
 
@@ -457,8 +457,8 @@ int main(void)
     }
 
 
-    /* Test 16 */
-    /* Resize */
+    // Test 16
+    // Resize
 
     printf("\n\nTest 16: \n");
 
