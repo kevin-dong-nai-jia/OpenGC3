@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-A collection of containers implemented by standard C macros.
+A collection of generic type-safe containers implemented by standard C macros.
 
 ## Description
 
