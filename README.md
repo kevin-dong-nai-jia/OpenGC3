@@ -14,8 +14,8 @@ CCXLL : XOR Linked List \[ [Macros](https://github.com/kevin-dong-nai-jia/C-Cont
 
 ## Contributor
 
-Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2016
+Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 / 2016
 
 ## License
 
-This project is distributed under [the MIT License](https://opensource.org/licenses/MIT).
+This project is distributed under [the MIT License](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/LICENSE).
