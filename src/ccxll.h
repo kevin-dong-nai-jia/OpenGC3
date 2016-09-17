@@ -483,7 +483,7 @@ STATEMENT_                                                                     \
 
 #define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)                                     \
 (                                                                              \
-    ccxll_iter_dref((_iter_a)) <= ccxll_iter_dref((_iter_b))                   \
+    dref((_iter_a)) <= dref((_iter_b))                                         \
 )
 
 
@@ -598,16 +598,20 @@ STATEMENT_                                                                     \
 /* ccxll traversal */
 
 
-#define CCXLL_TRAV(_ccxll)                                                     \
+#define  CCXLL_INCR(_ccxll, _th_iter)                                          \
                                                                                \
-        CCXLL_FORWARD_TRAVERSAL((_ccxll), (_ccxll).it[0])
+        _CCXLL_INCR((_ccxll), (_ccxll).it[(_th_iter)])
 
-#define CCXLL_FORWARD_TRAVERSAL(_ccxll, _iter)                                 \
+#define _CCXLL_INCR(_ccxll, _iter)                                             \
                                                                                \
     for (ccxll_iter_head((_iter), (_ccxll)); ccxll_iter_incr((_iter)); )
 
 
-#define CCXLL_BACKWARD_TRAVERSAL(_ccxll, _iter)                                \
+#define  CCXLL_DECR(_ccxll, _th_iter)                                          \
+                                                                               \
+        _CCXLL_DECR((_ccxll), (_ccxll).it[(_th_iter)])
+
+#define _CCXLL_DECR(_ccxll, _iter)                                             \
                                                                                \
     for (ccxll_iter_tail((_iter), (_ccxll)); ccxll_iter_decr((_iter)); )
 
@@ -622,8 +626,13 @@ STATEMENT_                                                                     \
 (                                                                              \
     ccxll_free((_ccxll_dst));                                                  \
                                                                                \
-    CCXLL_TRAV((_ccxll_src))                                                   \
-        ccxll_push_back((_ccxll_dst), ccxll_iter_dref((_ccxll_src).it[0]));    \
+    int _base_c;                                                               \
+    _it_alloc((_ccxll_src), 1, &_base_c);                                      \
+                                                                               \
+    _CCXLL_INCR((_ccxll_src), *(_ccxll_src)._it[_base_c])                      \
+        ccxll_push_back((_ccxll_dst), dref(*(_ccxll_src)._it[_base_c]));       \
+                                                                               \
+    _it_free((_ccxll_src), 1);                                                 \
 )
 
 

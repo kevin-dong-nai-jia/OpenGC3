@@ -19,7 +19,7 @@ int main(void)
         ccxll_push_back(list, "Welcome to ");
         ccxll_push_back(list, "the \"C Container Collection\" Project!\n");
 
-        CCXLL_TRAV(list)  printf("%s", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%s", dref(list.it[0]));
 
         ccxll_free(list);
     }
@@ -44,7 +44,7 @@ int main(void)
             ccxll_push_front(list, num_str[cnt++]);
             ccxll_push_back (list, num_str[cnt++]);
 
-            CCXLL_TRAV(list)  printf("%s ", dref(list.it[0]));
+            CCXLL_INCR(list, 0)  printf("%s ", dref(list.it[0]));
         }
 
         ccxll_free(list);
@@ -92,7 +92,7 @@ int main(void)
         ccxll_push_back(list, msg_1);
         ccxll_push_back(list, msg_2);
 
-        CCXLL_TRAV(list)
+        CCXLL_INCR(list, 0)
             printf("%s ", dref(list.it[0]).msg[0]),
             printf("%s ", dref(list.it[0]).msg[1]);
 
@@ -110,7 +110,7 @@ int main(void)
         ccxll_init(list);
         ccxll_iter_init(list.it[8], list);
 
-        CCXLL_FORWARD_TRAVERSAL(list, list.it[8])
+        CCXLL_INCR(list, 8)
             printf("%d", dref(list.it[8]));
 
         if (ccxll_iter_incr(list.it[8]) == NULL)
@@ -138,7 +138,7 @@ int main(void)
         ccxll_front(list) = "Element access ";
         ccxll_back (list) = "succeed.\n";
 
-        CCXLL_TRAV(list)  printf("%s", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%s", dref(list.it[0]));
 
         ccxll_free(list);
     }
@@ -162,7 +162,7 @@ int main(void)
         ccxll_push_back(list, 3);
         ccxll_pop_back (list);
 
-        CCXLL_TRAV(list)  printf("%d == 1\n", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d == 1\n", dref(list.it[0]));
 
         ccxll_free(list);
     }
@@ -207,7 +207,7 @@ int main(void)
 
         char var = 0;
 
-        CCXLL_TRAV(list)
+        CCXLL_INCR(list, 0)
             if (var != 127)  printf("%3d ", (var = dref(list.it[0])));
             else  break;
 
@@ -229,7 +229,7 @@ int main(void)
         for (int cnt = 0; cnt < 6; cnt++)
             ccxll_push_back(list, 2 * cnt + 1);
 
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         ccxll_iter_head(list.it[0], list);
 
@@ -243,7 +243,7 @@ int main(void)
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         ccxll_iter_begin(list.it[0], list);
 
@@ -256,7 +256,7 @@ int main(void)
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         ccxll_iter_begin(list.it[0], list);
 
@@ -266,14 +266,14 @@ int main(void)
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         ccxll_iter_begin(list.it[0], list);
 
         ccxll_erase(list.it[0]);
 
         puts("-> (none)");
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         ccxll_free(list);
     }
@@ -298,7 +298,7 @@ int main(void)
         ccxll_iter_head(list.it[2], list);
         ccxll_iter_head(list.it[3], list);
 
-        CCXLL_TRAV(list)  printf("%c ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%c ", dref(list.it[0]));
 
         for (int cnt = 0; cnt < 8; cnt++)
         {
@@ -309,7 +309,7 @@ int main(void)
             ccxll_move_range(list.it[1], list.it[2], list.it[3]);
 
             printf("/ ");
-            CCXLL_TRAV(list)  printf("%c ", dref(list.it[0]));
+            CCXLL_INCR(list, 0)  printf("%c ", dref(list.it[0]));
         }
 
         puts("= A C E D B F G /");
@@ -334,7 +334,7 @@ int main(void)
             for (int i = 0; i < 16; i++)
                 ccxll_push_back(list, str1[i]);
 
-            CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+            CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
             printf("-> ");
 
@@ -355,7 +355,7 @@ int main(void)
                 break;
             }
 
-            CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+            CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
             puts("");
 
@@ -383,7 +383,7 @@ int main(void)
 
         ccxll_sort(list);
 
-        CCXLL_TRAV(list)  printf("Max = %10d\r", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("Max = %10d\r", dref(list.it[0]));
 
         puts("");
 
@@ -417,7 +417,7 @@ int main(void)
 
         ccxll_reverse_range(list.it[1], list.it[2]);
 
-        CCXLL_TRAV(list)  printf("%d ", dref(list.it[0]));
+        CCXLL_INCR(list, 0)  printf("%d ", dref(list.it[0]));
 
         puts("= 0 1 2 6 5 4 3 7 8 9");
 
@@ -444,9 +444,9 @@ int main(void)
         for (int cnt = 0; cnt < 3; cnt++)
         {
             printf("#%d   A : ", cnt + 1);
-            CCXLL_TRAV(list_a)  printf("%d ", dref(list_a.it[0]));
+            CCXLL_INCR(list_a, 0)  printf("%d ", dref(list_a.it[0]));
             printf("  /   B : ");
-            CCXLL_TRAV(list_b)  printf("%d ", dref(list_b.it[0]));
+            CCXLL_INCR(list_b, 0)  printf("%d ", dref(list_b.it[0]));
             printf("\n");
 
             ccxll_swap(list_a, list_b);
@@ -471,21 +471,21 @@ int main(void)
 
         printf("\nOrigin : ");
 
-        CCXLL_TRAV(list)
+        CCXLL_INCR(list, 0)
             printf("%d ", dref(list.it[0]));
 
         printf("\nRsz 10 : ");
 
         ccxll_resize(list, 10, 0);
 
-        CCXLL_TRAV(list)
+        CCXLL_INCR(list, 0)
             printf("%d ", dref(list.it[0]));
 
         printf("\nRsz 16 : ");
 
         ccxll_resize(list, 16, 10);
 
-        CCXLL_TRAV(list)
+        CCXLL_INCR(list, 0)
             printf("%d ", dref(list.it[0]));
 
         puts("");
