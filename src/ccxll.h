@@ -25,7 +25,7 @@
                                                                                \
         ccxll_extd(elem_t, 0, PACKED)
 
-#define ccxll_extd(elem_t, n_iter, _ALIGN_)                                    \
+#define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
     struct _S_CCXLL                                                            \
     {                                                                          \
@@ -55,7 +55,7 @@
                 struct _S_CCXLL_NODE *pnode;                                   \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
             struct _S_CCXLL *pccxll;              /* points to ccxll body */   \
-        }   **_it, it[(n_iter) + 1];                                           \
+        }   **_it, it[(_n_iter) + 1];                                          \
                                                                                \
         struct _S_CCXLL **_xl;                    /* internal use _it/_xl */   \
     }                                                                          \
