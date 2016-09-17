@@ -293,29 +293,30 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_swap(_ccxll_a, _ccxll_b)    /* TODO: Refactoring */              \
+#define ccxll_swap(_ccxll_u, _ccxll_l)                                         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    size_t _size = (size_t)((char*)&((_ccxll_a)._it) -                         \
-                            (char*)& (_ccxll_a));                              \
+    int _base_w;                                                               \
+    _xl_alloc((_ccxll_u), 1, &_base_w);                                        \
                                                                                \
-    void *_ccxll_temp = NULL;                                                  \
-    _safe_alloc(_ccxll_temp, _size);                                           \
+    *(_ccxll_u)._xl[_base_w] = (_ccxll_u);                                     \
                                                                                \
-    memcpy(_ccxll_temp, &(_ccxll_a), _size);                                   \
-    memcpy(&(_ccxll_a), &(_ccxll_b), _size);                                   \
-    memcpy(&(_ccxll_b), _ccxll_temp, _size);                                   \
+    (_ccxll_u)._xl[_base_w]->_xl = (_ccxll_l)._xl;                             \
+    (_ccxll_l)._xl = (_ccxll_u)._xl;                                           \
                                                                                \
-    link_t _ln_hd = XOR_2(&((_ccxll_a).head.lnk), &((_ccxll_b).head.lnk));     \
-    link_t _ln_tl = XOR_2(&((_ccxll_a).tail.lnk), &((_ccxll_b).tail.lnk));     \
+    (_ccxll_u) =  (_ccxll_l);                                                  \
+    (_ccxll_l) = *(_ccxll_u)._xl[_base_w];                                     \
                                                                                \
-    (_ccxll_a).head.stnl->lnk = XOR_2((_ccxll_a).head.stnl->lnk, _ln_hd);      \
-    (_ccxll_a).tail.stnl->lnk = XOR_2((_ccxll_a).tail.stnl->lnk, _ln_tl);      \
-    (_ccxll_b).head.stnl->lnk = XOR_2((_ccxll_b).head.stnl->lnk, _ln_hd);      \
-    (_ccxll_b).tail.stnl->lnk = XOR_2((_ccxll_b).tail.stnl->lnk, _ln_tl);      \
+    link_t _ln_hd = XOR_2(&((_ccxll_u).head.lnk), &((_ccxll_l).head.lnk));     \
+    link_t _ln_tl = XOR_2(&((_ccxll_u).tail.lnk), &((_ccxll_l).tail.lnk));     \
                                                                                \
-    _safe_free(_ccxll_temp);                                                   \
+    (_ccxll_u).head.stnl->lnk = XOR_2((_ccxll_u).head.stnl->lnk, _ln_hd);      \
+    (_ccxll_u).tail.stnl->lnk = XOR_2((_ccxll_u).tail.stnl->lnk, _ln_tl);      \
+    (_ccxll_l).head.stnl->lnk = XOR_2((_ccxll_l).head.stnl->lnk, _ln_hd);      \
+    (_ccxll_l).tail.stnl->lnk = XOR_2((_ccxll_l).tail.stnl->lnk, _ln_tl);      \
+                                                                               \
+    _xl_free((_ccxll_u), 1);                                                   \
 )
 
 
@@ -429,26 +430,26 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
-    int _base;                                                                 \
-    _it_alloc((_ccxll), 4, &_base);                                            \
+    int _base_s;                                                               \
+    _it_alloc((_ccxll), 4, &_base_s);                                          \
                                                                                \
     for (int _cmg = 0, _gap = (_g); _cmg != 1 && !(_cmg = 0); _gap <<= 1)      \
     {                                                                          \
-        ccxll_iter_begin(*(_ccxll)._it[_base + 0], (_ccxll));                  \
-        ccxll_iter_begin(*(_ccxll)._it[_base + 1], (_ccxll));                  \
-        ccxll_iter_begin(*(_ccxll)._it[_base + 2], (_ccxll));                  \
+        ccxll_iter_begin(*(_ccxll)._it[_base_s + 0], (_ccxll));                \
+        ccxll_iter_begin(*(_ccxll)._it[_base_s + 1], (_ccxll));                \
+        ccxll_iter_begin(*(_ccxll)._it[_base_s + 2], (_ccxll));                \
                                                                                \
-        while (!(ccxll_iter_at_tail(*(_ccxll)._it[_base + 1])) && ++_cmg)      \
+        while (!(ccxll_iter_at_tail(*(_ccxll)._it[_base_s + 1])) && ++_cmg)    \
         {                                                                      \
-            ccxll_iter_advance(*(_ccxll)._it[_base + 1], _gap);                \
-            ccxll_iter_copy   (*(_ccxll)._it[_base + 2],                       \
-                               *(_ccxll)._it[_base + 1]);                      \
-            ccxll_iter_advance(*(_ccxll)._it[_base + 2], _gap);                \
+            ccxll_iter_advance(*(_ccxll)._it[_base_s + 1], _gap);              \
+            ccxll_iter_copy   (*(_ccxll)._it[_base_s + 2],                     \
+                               *(_ccxll)._it[_base_s + 1]);                    \
+            ccxll_iter_advance(*(_ccxll)._it[_base_s + 2], _gap);              \
                                                                                \
-            ccxll_merge_range_extd(*(_ccxll)._it[_base + 0],                   \
-                                   *(_ccxll)._it[_base + 1],                   \
-                                   *(_ccxll)._it[_base + 2],                   \
-                                   *(_ccxll)._it[_base + 3], _leq);            \
+            ccxll_merge_range_extd(*(_ccxll)._it[_base_s + 0],                 \
+                                   *(_ccxll)._it[_base_s + 1],                 \
+                                   *(_ccxll)._it[_base_s + 2],                 \
+                                   *(_ccxll)._it[_base_s + 3], _leq);          \
         }                                                                      \
     }                                                                          \
                                                                                \
@@ -637,12 +638,12 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base;                                                                 \
-    _xl_alloc((_ccxll), 1, &_base);                                            \
+    int _base_r;                                                               \
+    _xl_alloc((_ccxll), 1, &_base_r);                                          \
                                                                                \
-    ccxll_copy(*(_ccxll)._xl[_base], (_ccxll));                                \
-    ccxll_swap(*(_ccxll)._xl[_base], (_ccxll));                                \
-    ccxll_free(*(_ccxll)._xl[_base]);                                          \
+    ccxll_copy(*(_ccxll)._xl[_base_r], (_ccxll));                              \
+    ccxll_swap((_ccxll), *(_ccxll)._xl[_base_r]);                              \
+    ccxll_free(*(_ccxll)._xl[_base_r]);                                        \
                                                                                \
     _xl_free((_ccxll), 1);                                                     \
 )
