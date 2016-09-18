@@ -116,7 +116,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    _ccxll_init_base((_ccxll)),                                                \
+    _ccxll_init_seed((_ccxll)),                                                \
                                                                                \
     (_ccxll).used = (_ccxll).vcnt   = 0,                                       \
     (_ccxll).avsp = (_ccxll).pnode  = NULL,                                    \
@@ -129,7 +129,7 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define _ccxll_init_base(_ccxll)                                               \
+#define _ccxll_init_seed(_ccxll)                                               \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
