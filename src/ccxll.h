@@ -159,6 +159,8 @@ VOID_EXPR_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _block_free((_ccxll));                                                     \
+    _it_free((_ccxll));                                                        \
+    _xl_free((_ccxll));                                                        \
     _ccxll_init_core((_ccxll));                                                \
 )
 
@@ -310,7 +312,12 @@ STATEMENT_                                                                     \
     *(_ccxll_u)._xl[_base_w] = (_ccxll_u);                                     \
                                                                                \
     (_ccxll_u)._xl[_base_w]->_xl = (_ccxll_l)._xl;                             \
+    (_ccxll_u)._xl[_base_w]->_xl_base  = (_ccxll_l)._xl_base;                  \
+    (_ccxll_u)._xl[_base_w]->_xl_limit = (_ccxll_l)._xl_limit;                 \
+                                                                               \
     (_ccxll_l)._xl = (_ccxll_u)._xl;                                           \
+    (_ccxll_l)._xl_base  = (_ccxll_u)._xl_base;                                \
+    (_ccxll_l)._xl_limit = (_ccxll_u)._xl_limit;                               \
                                                                                \
     (_ccxll_u) =  (_ccxll_l);                                                  \
     (_ccxll_l) = *(_ccxll_u)._xl[_base_w];                                     \
@@ -323,7 +330,7 @@ STATEMENT_                                                                     \
     (_ccxll_l).head.stnl->lnk = XOR_2((_ccxll_l).head.stnl->lnk, _ln_hd);      \
     (_ccxll_l).tail.stnl->lnk = XOR_2((_ccxll_l).tail.stnl->lnk, _ln_tl);      \
                                                                                \
-    _xl_free((_ccxll_u), 1);                                                   \
+    _xl_clear((_ccxll_u), 1);                                                  \
 )
 
 
@@ -457,7 +464,7 @@ STATEMENT_                                                                     \
         }                                                                      \
     }                                                                          \
                                                                                \
-    _it_free((_ccxll), 4);                                                     \
+    _it_clear((_ccxll), 4);                                                    \
 )
 
 
@@ -641,7 +648,7 @@ STATEMENT_                                                                     \
     _CCXLL_INCR((_ccxll_src), *(_ccxll_src)._it[_base_c])                      \
         ccxll_push_back((_ccxll_dst), DREF(*(_ccxll_src)._it[_base_c]));       \
                                                                                \
-    _it_free((_ccxll_src), 1);                                                 \
+    _it_clear((_ccxll_src), 1);                                                \
 )
 
 
@@ -656,7 +663,7 @@ STATEMENT_                                                                     \
     ccxll_swap( (_ccxll), *(_ccxll)._xl[_base_r]);                             \
     ccxll_free(*(_ccxll)._xl[_base_r]);                                        \
                                                                                \
-    _xl_free((_ccxll), 1);                                                     \
+    _xl_clear((_ccxll), 1);                                                    \
 )
 
 
