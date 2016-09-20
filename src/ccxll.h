@@ -311,11 +311,11 @@ STATEMENT_                                                                     \
                                                                                \
     *(_ccxll_u)._xl[_base_w] = (_ccxll_u);                                     \
                                                                                \
-    (_ccxll_u)._xl[_base_w]->_xl = (_ccxll_l)._xl;                             \
+    (_ccxll_u)._xl[_base_w]->_xl       = (_ccxll_l)._xl;                       \
     (_ccxll_u)._xl[_base_w]->_xl_base  = (_ccxll_l)._xl_base;                  \
     (_ccxll_u)._xl[_base_w]->_xl_limit = (_ccxll_l)._xl_limit;                 \
                                                                                \
-    (_ccxll_l)._xl = (_ccxll_u)._xl;                                           \
+    (_ccxll_l)._xl       = (_ccxll_u)._xl;                                     \
     (_ccxll_l)._xl_base  = (_ccxll_u)._xl_base;                                \
     (_ccxll_l)._xl_limit = (_ccxll_u)._xl_limit;                               \
                                                                                \
@@ -338,10 +338,10 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _r = ccxll_size((_ccxll)) - (_items);                                  \
+    int _R = ccxll_size((_ccxll)) - (_items);                                  \
                                                                                \
-    if (_r > 0)       {  while(_r--)  ccxll_pop_back ((_ccxll));          }    \
-    else if (_r < 0)  {  while(_r++)  ccxll_push_back((_ccxll), (_val));  }    \
+    if (_R > 0)       {  while(_R--)  ccxll_pop_back ((_ccxll));          }    \
+    else if (_R < 0)  {  while(_R++)  ccxll_push_back((_ccxll), (_val));  }    \
 )
 
 
@@ -397,8 +397,6 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_iter_at_tail(_iter_m))  break;                                   \
-                                                                               \
     ccxll_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
     while (1)                                                                  \
@@ -435,7 +433,7 @@ STATEMENT_                                                                     \
                                                                                \
         ccxll_sort_extd(_ccxll,  1, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _g, _leq)    /* TODO : Optimization */         \
+#define ccxll_sort_extd(_ccxll, _gap, _leq)    /* TODO : Optimization */       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -444,18 +442,20 @@ STATEMENT_                                                                     \
     int _base_s;                                                               \
     _it_alloc((_ccxll), 4, &_base_s);                                          \
                                                                                \
-    for (int _cmg = 0, _gap = (_g); _cmg != 1 && !(_cmg = 0); _gap <<= 1)      \
+    for (int _G = (_gap); _G < ccxll_size((_ccxll)); _G <<= 1)                 \
     {                                                                          \
         ccxll_iter_begin(*(_ccxll)._it[_base_s + 0], (_ccxll));                \
         ccxll_iter_begin(*(_ccxll)._it[_base_s + 1], (_ccxll));                \
         ccxll_iter_begin(*(_ccxll)._it[_base_s + 2], (_ccxll));                \
                                                                                \
-        while (!(ccxll_iter_at_tail(*(_ccxll)._it[_base_s + 1])) && ++_cmg)    \
+        while (1)                                                              \
         {                                                                      \
-            ccxll_iter_advance(*(_ccxll)._it[_base_s + 1], _gap);              \
+            ccxll_iter_advance(*(_ccxll)._it[_base_s + 1], _G);                \
             ccxll_iter_copy   (*(_ccxll)._it[_base_s + 2],                     \
                                *(_ccxll)._it[_base_s + 1]);                    \
-            ccxll_iter_advance(*(_ccxll)._it[_base_s + 2], _gap);              \
+            ccxll_iter_advance(*(_ccxll)._it[_base_s + 2], _G);                \
+                                                                               \
+            if (ccxll_iter_at_tail(*(_ccxll)._it[_base_s + 1]))  break;        \
                                                                                \
             ccxll_merge_range_extd(*(_ccxll)._it[_base_s + 0],                 \
                                    *(_ccxll)._it[_base_s + 1],                 \
@@ -495,11 +495,7 @@ STATEMENT_                                                                     \
 
 #define XLEQ  CCXLL_LEQ_COMPAR
 
-#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)                                     \
-(                                                                              \
-    ccxll_iter_dref((_iter_a)) <= ccxll_iter_dref((_iter_b))                   \
-)
-
+#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
 
 
 /* ccxll iterators */
@@ -603,10 +599,10 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _a = (_diff);                                                          \
+    int _D = (_diff);                                                          \
                                                                                \
-    if (_a > 0)       {  while (ccxll_iter_incr((_iter)) && --_a);  }          \
-    else if (_a < 0)  {  while (ccxll_iter_decr((_iter)) && ++_a);  }          \
+    if (_D > 0)       {  while (ccxll_iter_incr((_iter)) && --_D);  }          \
+    else if (_D < 0)  {  while (ccxll_iter_decr((_iter)) && ++_D);  }          \
 )
 
 
