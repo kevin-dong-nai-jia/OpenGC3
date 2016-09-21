@@ -458,7 +458,7 @@ int main(void)
     // Test 16
     // Resize
 
-    printf("\n\nTest 16: \n");
+    printf("\n\nTest 16: \n\n");
 
     {
         ccxll(int) list;
@@ -467,7 +467,7 @@ int main(void)
         for (int cnt = 0; cnt < 16; cnt++)
             ccxll_push_back(list, cnt);
 
-        printf("\nOrigin : ");
+        printf("Origin : ");
 
         CCXLL_INCR(list, 0)
             printf("%d ", DREF(list.it[0]));
@@ -489,6 +489,56 @@ int main(void)
         puts("");
 
         ccxll_free(list);
+    }
+
+
+    // Test 17
+    // Move Range (Crossing)
+
+    printf("\n\nTest 17: \n\n");
+
+    {
+        ccxll_extd(int, 2, NORMAL) list_a, list_b;
+        ccxll_init_full(list_a);
+        ccxll_init_full(list_b);
+
+        for (int cnt = 0; cnt < 16; cnt += 2)
+            ccxll_push_back(list_a, cnt);
+
+        for (int cnt = 1; cnt < 16; cnt += 2)
+            ccxll_push_back(list_b, cnt);
+
+        CCXLL_INCR(list_a, 0)
+            printf("%d ", DREF(list_a.it[0]));
+        printf("/ ");
+        CCXLL_INCR(list_b, 0)
+            printf("%d ", DREF(list_b.it[0]));
+        printf("  size = %d ", ccxll_size(list_a));
+        printf("/ size = %d ", ccxll_size(list_b));
+
+        ccxll_iter_head(list_a.it[0], list_a);
+        ccxll_iter_head(list_a.it[1], list_a);
+        ccxll_iter_advance(list_a.it[0], 3);
+        ccxll_iter_advance(list_a.it[1], 6);
+
+        ccxll_iter_head(list_b.it[0], list_b);
+        ccxll_iter_advance(list_b.it[0], 3);
+
+        ccxll_move_range(list_b.it[0], list_a.it[0], list_a.it[1]);
+
+        puts("");
+        CCXLL_INCR(list_a, 0)
+            printf("%d ", DREF(list_a.it[0]));
+        printf("/ ");
+        CCXLL_INCR(list_b, 0)
+            printf("%d ", DREF(list_b.it[0]));
+        printf("  size = %d ", ccxll_size(list_a));
+        printf("/ size = %d ", ccxll_size(list_b));
+
+        puts("");
+
+        ccxll_free(list_a);
+        ccxll_free(list_b);
     }
 
 
