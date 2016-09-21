@@ -361,6 +361,23 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if ((_iter_p).pccxll != (_iter_l).pccxll)                                  \
+    {                                                                          \
+        int _base_m;                                                           \
+        _it_alloc(*(_iter_l).pccxll, 1, &_base_m);                             \
+                                                                               \
+        int _diff_m = 0;                                                       \
+        ccxll_iter_copy(*(_iter_l).pccxll->_it[_base_m], (_iter_l));           \
+        while ((_iter_l).curr.lnk != (_iter_r).curr.lnk && ++_diff_m)          \
+            ccxll_iter_incr((_iter_l));                                        \
+        ccxll_iter_copy((_iter_l), *(_iter_l).pccxll->_it[_base_m]);           \
+                                                                               \
+        (_iter_p).pccxll->size += _diff_m;                                     \
+        (_iter_l).pccxll->size -= _diff_m;                                     \
+                                                                               \
+        _it_clear(*(_iter_l).pccxll, 1);                                       \
+    }                                                                          \
+                                                                               \
     link_t *_p_c = &((_iter_p).curr.pnode->lnk);                               \
     link_t *_l_c = &((_iter_l).curr.pnode->lnk);                               \
     link_t *_r_c = &((_iter_r).curr.pnode->lnk);                               \
