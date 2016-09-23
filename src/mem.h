@@ -169,7 +169,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (int _idx = *(_pbase); _idx < *(_pbase) + (_items); _idx++)            \
     {                                                                          \
-        if ((_ccxll)->_itxl_[_idx] == NULL && #_ASTRD_ == "*")                 \
+        if ((_ccxll)->_itxl_[_idx] == NULL && *(#_ASTRD_) == '*')              \
             _safe_alloc((_ccxll)->_itxl_[_idx], sizeof(**(_ccxll)->_itxl_));   \
                                                                                \
         _pinit(_ASTRD_(_ccxll)->_itxl_[_idx], (_ccxll));                       \
