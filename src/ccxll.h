@@ -88,8 +88,7 @@
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_ccxll) == NULL)                                                      \
-        _ccxll_alloc((_ccxll));                                                \
+    _ccxll_alloc((_ccxll));                                                    \
                                                                                \
     _ccxll_init_core((_ccxll));                                                \
      ccxll_iter_init((_ccxll)->it, (_ccxll));                                  \
@@ -164,8 +163,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter) == NULL)                                                       \
-        _iter_alloc((_iter));                                                  \
+    _iter_alloc((_iter));                                                      \
                                                                                \
     ccxll_iter_init((_iter), (_ccxll));                                        \
 )
