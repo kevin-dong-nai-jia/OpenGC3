@@ -19,8 +19,8 @@ int main(void)
         ccxll_push_back(list, "Welcome to ");
         ccxll_push_back(list, "the \"C Container Collection\" Project!\n");
 
-        CCXLL_INCR(list->it)
-            printf("%s", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%s", DREF(ITER(list, 0)));
 
         ccxll_free(list);
     }
@@ -45,8 +45,8 @@ int main(void)
             ccxll_push_front(list, num_str[cnt++]);
             ccxll_push_back (list, num_str[cnt++]);
 
-            CCXLL_INCR(list->it)
-                printf("%s ", DREF(list->it));
+            CCXLL_INCR(ITER(list, 0))
+                printf("%s ", DREF(ITER(list, 0)));
         }
 
         ccxll_free(list);
@@ -94,9 +94,9 @@ int main(void)
         ccxll_push_back(list, msg_1);
         ccxll_push_back(list, msg_2);
 
-        CCXLL_INCR(list->it)
-            printf("%s ", DREF(list->it).msg[0]),
-            printf("%s ", DREF(list->it).msg[1]);
+        CCXLL_INCR(ITER(list, 0))
+            printf("%s ", DREF(ITER(list, 0)).msg[0]),
+            printf("%s ", DREF(ITER(list, 0)).msg[1]);
 
         ccxll_free(list);
     }
@@ -110,12 +110,12 @@ int main(void)
     {
         ccxll_extd(int, 9, NORMAL) list = NULL;
         ccxll_init(list);
-        ccxll_iter_init(&list->it[8], list);
+        ccxll_iter_init(ITER(list, 8), list);
 
-        CCXLL_INCR(&list->it[8])
-            printf("%d", DREF(&list->it[8]));
+        CCXLL_INCR(ITER(list, 8))
+            printf("%d", DREF(ITER(list, 8)));
 
-        if (ccxll_iter_incr(&list->it[8]) == NULL)
+        if (ccxll_iter_incr(ITER(list, 8)) == NULL)
             puts("The iterator points to the tail.");
 
         ccxll_free(list);
@@ -140,8 +140,8 @@ int main(void)
         ccxll_front(list) = "Element ";
         ccxll_back (list) = "access succeeds.\n";
 
-        CCXLL_INCR(list->it)
-            printf("%s", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%s", DREF(ITER(list, 0)));
 
         ccxll_free(list);
     }
@@ -165,8 +165,8 @@ int main(void)
         ccxll_push_back(list, 3);
         ccxll_pop_back (list);
 
-        CCXLL_INCR(list->it)
-            printf("%d == 1\n", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d == 1\n", DREF(ITER(list, 0)));
 
         ccxll_free(list);
     }
@@ -211,8 +211,8 @@ int main(void)
 
         char var = 0;
 
-        CCXLL_INCR(list->it)
-            if (var != 127)  printf("%3d ", (var = DREF(list->it)));
+        CCXLL_INCR(ITER(list, 0))
+            if (var != 127)  printf("%3d ", (var = DREF(ITER(list, 0))));
             else  break;
 
         puts("");
@@ -233,57 +233,57 @@ int main(void)
         for (int cnt = 0; cnt < 6; cnt++)
             ccxll_push_back(list, 2 * cnt + 1);
 
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
-        ccxll_iter_head(list->it);
+        ccxll_iter_head(ITER(list, 0));
 
         for (int cnt = 0; cnt <= 6; cnt++)
         {
-            ccxll_iter_incr(list->it);
-            ccxll_insert(list->it, 2 * cnt);
-            ccxll_iter_incr(list->it);
+            ccxll_iter_incr(ITER(list, 0));
+            ccxll_insert(ITER(list, 0), 2 * cnt);
+            ccxll_iter_incr(ITER(list, 0));
         }
 
-        CCXLL_INCR(list->it);
+        CCXLL_INCR(ITER(list, 0));
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
-        ccxll_iter_begin(list->it);
+        ccxll_iter_begin(ITER(list, 0));
 
         for (int cnt = 0; cnt <= 5; cnt++)
         {
-            ccxll_iter_incr(list->it);
-            ccxll_erase(list->it);
+            ccxll_iter_incr(ITER(list, 0));
+            ccxll_erase(ITER(list, 0));
         }
 
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
-        ccxll_iter_begin(list->it);
+        ccxll_iter_begin(ITER(list, 0));
 
         for (int cnt = 0; cnt <= 5; cnt++)
-            ccxll_erase(list->it);
+            ccxll_erase(ITER(list, 0));
 
         ccxll_rearrange(list);
 
         printf("-> ");
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
-        ccxll_iter_begin(list->it);
+        ccxll_iter_begin(ITER(list, 0));
 
-        ccxll_erase(list->it);
+        ccxll_erase(ITER(list, 0));
 
         puts("-> (none)");
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
         ccxll_free(list);
     }
@@ -296,7 +296,7 @@ int main(void)
 
     {
         ccxll_extd(int, 5, NORMAL) list = NULL;
-        ccxll_init_full(list);
+        ccxll_init(list);
 
         int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
                           {-4, 0, 3}, {0, 2, 0} , {1, 0, -1} , {1, -1, 1} };
@@ -305,21 +305,21 @@ int main(void)
             ccxll_push_back(list, cnt + 'A');
 
         for (int idx = 0; idx < 3; idx++)
-            ccxll_iter_head(&list->it[idx]);
+            ccxll_iter_head(ITER(list, idx));
 
-        CCXLL_INCR(&list->it[4])
-            printf("%c ", DREF(&list->it[4]));
+        CCXLL_INCR(ITER(list, 4))
+            printf("%c ", DREF(ITER(list, 4)));
 
         for (int cnt = 0; cnt < 8; cnt++)
         {
             for (int idx = 0; idx < 3; idx++)
-                ccxll_iter_advance(&list->it[idx], pos[cnt][idx]);
+                ccxll_iter_advance(ITER(list, idx), pos[cnt][idx]);
 
-            ccxll_move_range(&list->it[0], &list->it[1], &list->it[2]);
+            ccxll_move_range(ITER(list, 0), ITER(list, 1), ITER(list, 2));
 
             printf("/ ");
-            CCXLL_INCR(&list->it[4])
-                printf("%c ", DREF(&list->it[4]));
+            CCXLL_INCR(ITER(list, 4))
+                printf("%c ", DREF(ITER(list, 4)));
         }
 
         puts("= A C E D B F G /");
@@ -335,7 +335,7 @@ int main(void)
 
     {
         ccxll_extd(int, 4, NORMAL) list = NULL;
-        ccxll_init_full(list);
+        ccxll_init(list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
@@ -344,8 +344,8 @@ int main(void)
             for (int i = 0; i < 16; i++)
                 ccxll_push_back(list, str1[i]);
 
-            CCXLL_INCR(list->it)
-                printf("%d ", DREF(list->it));
+            CCXLL_INCR(ITER(list, 0))
+                printf("%d ", DREF(ITER(list, 0)));
 
             printf("-> ");
 
@@ -353,12 +353,12 @@ int main(void)
             {
                 case 0:
                 for (int j = 0; j < 4; j++)
-                    ccxll_iter_begin  (&list->it[j]);
+                    ccxll_iter_begin  (ITER(list, j));
                 for (int j = 0; j < 4; j++)
-                    ccxll_iter_advance(&list->it[j], 8 * j);
+                    ccxll_iter_advance(ITER(list, j), 8 * j);
 
-                ccxll_merge_range(&list->it[0], &list->it[1],
-                                  &list->it[2], &list->it[3]);
+                ccxll_merge_range(ITER(list, 0), ITER(list, 1),
+                                  ITER(list, 2), ITER(list, 3));
                 break;
 
                 case 1:
@@ -366,8 +366,8 @@ int main(void)
                 break;
             }
 
-            CCXLL_INCR(list->it)
-                printf("%d ", DREF(list->it));
+            CCXLL_INCR(ITER(list, 0))
+                printf("%d ", DREF(ITER(list, 0)));
 
             puts("");
 
@@ -395,8 +395,8 @@ int main(void)
 
         ccxll_sort(list);
 
-        CCXLL_INCR(list->it)
-            printf("Max = %10d\r", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("Max = %10d\r", DREF(ITER(list, 0)));
 
         puts("");
 
@@ -418,20 +418,20 @@ int main(void)
 
     {
         ccxll_extd(int, 2, NORMAL) list = NULL;
-        ccxll_init_full(list);
+        ccxll_init(list);
 
         for (int i = 0; i < 10; i++)
             ccxll_push_back(list, i);
 
-        ccxll_iter_begin(&list->it[0]);
-        ccxll_iter_begin(&list->it[1]);
-        ccxll_iter_advance(&list->it[0], 2);
-        ccxll_iter_advance(&list->it[1], 7);
+        ccxll_iter_begin(ITER(list, 0));
+        ccxll_iter_begin(ITER(list, 1));
+        ccxll_iter_advance(ITER(list, 0), 2);
+        ccxll_iter_advance(ITER(list, 1), 7);
 
-        ccxll_reverse_range(&list->it[0], &list->it[1]);
+        ccxll_reverse_range(ITER(list, 0), ITER(list, 1));
 
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
         puts("= 0 1 2 6 5 4 3 7 8 9");
 
@@ -458,11 +458,11 @@ int main(void)
         for (int cnt = 0; cnt < 3; cnt++)
         {
             printf("#%d   A : ", cnt + 1);
-            CCXLL_INCR(list_a->it)
-                printf("%d ", DREF(list_a->it));
+            CCXLL_INCR(ITER(list_a, 0))
+                printf("%d ", DREF(ITER(list_a, 0)));
             printf("  /   B : ");
-            CCXLL_INCR(list_b->it)
-                printf("%d ", DREF(list_b->it));
+            CCXLL_INCR(ITER(list_b, 0))
+                printf("%d ", DREF(ITER(list_b, 0)));
             printf("\n");
 
             ccxll_swap(list_a, list_b);
@@ -487,22 +487,22 @@ int main(void)
 
         printf("Origin : ");
 
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
         printf("\nRsz 10 : ");
 
         ccxll_resize(list, 10, 0);
 
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
         printf("\nRsz 16 : ");
 
         ccxll_resize(list, 16, 10);
 
-        CCXLL_INCR(list->it)
-            printf("%d ", DREF(list->it));
+        CCXLL_INCR(ITER(list, 0))
+            printf("%d ", DREF(ITER(list, 0)));
 
         puts("");
 
@@ -517,8 +517,8 @@ int main(void)
 
     {
         ccxll_extd(int, 2, NORMAL) list_a = NULL, list_b = NULL;
-        ccxll_init_full(list_a);
-        ccxll_init_full(list_b);
+        ccxll_init(list_a);
+        ccxll_init(list_b);
 
         for (int cnt = 0; cnt < 16; cnt += 2)
             ccxll_push_back(list_a, cnt);
@@ -526,30 +526,30 @@ int main(void)
         for (int cnt = 1; cnt < 16; cnt += 2)
             ccxll_push_back(list_b, cnt);
 
-        CCXLL_INCR(list_a->it)
-            printf("%d ", DREF(list_a->it));
+        CCXLL_INCR(ITER(list_a, 0))
+            printf("%d ", DREF(ITER(list_a, 0)));
         printf("/ ");
-        CCXLL_INCR(list_b->it)
-            printf("%d ", DREF(list_b->it));
+        CCXLL_INCR(ITER(list_b, 0))
+            printf("%d ", DREF(ITER(list_b, 0)));
         printf("  size = %d ", ccxll_size(list_a));
         printf("/ size = %d ", ccxll_size(list_b));
 
-        ccxll_iter_head(&list_a->it[0]);
-        ccxll_iter_head(&list_a->it[1]);
-        ccxll_iter_advance(&list_a->it[0], 3);
-        ccxll_iter_advance(&list_a->it[1], 6);
+        ccxll_iter_head(ITER(list_a, 0));
+        ccxll_iter_head(ITER(list_a, 1));
+        ccxll_iter_advance(ITER(list_a, 0), 3);
+        ccxll_iter_advance(ITER(list_a, 1), 6);
 
-        ccxll_iter_head(&list_b->it[0]);
-        ccxll_iter_advance(&list_b->it[0], 3);
+        ccxll_iter_head(ITER(list_b, 0));
+        ccxll_iter_advance(ITER(list_b, 0), 3);
 
-        ccxll_move_range(&list_b->it[0], &list_a->it[0], &list_a->it[1]);
+        ccxll_move_range(ITER(list_b, 0), ITER(list_a, 0), ITER(list_a, 1));
 
         puts("");
-        CCXLL_INCR(list_a->it)
-            printf("%d ", DREF(list_a->it));
+        CCXLL_INCR(ITER(list_a, 0))
+            printf("%d ", DREF(ITER(list_a, 0)));
         printf("/ ");
-        CCXLL_INCR(list_b->it)
-            printf("%d ", DREF(list_b->it));
+        CCXLL_INCR(ITER(list_b, 0))
+            printf("%d ", DREF(ITER(list_b, 0)));
         printf("  size = %d ", ccxll_size(list_a));
         printf("/ size = %d ", ccxll_size(list_b));
 
