@@ -79,6 +79,11 @@
                                                                                \
         ccxll_init_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
 
+#define ccxll_init_from(_ccxll_dst, _ccxll_src)                                \
+                                                                               \
+        ccxll_init_extd(_ccxll_dst,         (_ccxll_src)->start,               \
+                       (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
+
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
 STATEMENT_                                                                     \
@@ -654,7 +659,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     ccxll_free((_ccxll_dst));                                                  \
-    ccxll_init((_ccxll_dst));                                                  \
+    ccxll_init_from((_ccxll_dst), (_ccxll_src));                               \
                                                                                \
     int _base_c;                                                               \
     _it_alloc((_ccxll_src), 1, &_base_c);                                      \
