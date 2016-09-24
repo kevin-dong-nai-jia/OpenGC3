@@ -63,7 +63,7 @@ STATEMENT_                                                                     \
 
 #define _xl_alloc(_ccxll, _items, _pbase)                                      \
                                                                                \
-        _it_xl_alloc(_ccxll, _items, _pbase,  ccxll_init_from, _xl)
+        _it_xl_alloc(_ccxll, _items, _pbase, _ccxll_init_from, _xl)
 
 #define _it_xl_alloc(_ccxll, _items, _pbase, _pinit, _itxl_)                   \
                                                                                \
