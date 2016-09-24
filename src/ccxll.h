@@ -88,6 +88,7 @@
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    (_ccxll) = NULL;                                                           \
     _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                  \
                                                                                \
     for (int _idx = 0; _idx < ELEMOF_ARR((_ccxll)->it); _idx++)                \
