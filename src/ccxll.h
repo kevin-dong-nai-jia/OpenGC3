@@ -79,35 +79,30 @@
                                                                                \
         ccxll_init_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
 
-#define ccxll_init_from(_ccxll_dst, _ccxll_src)                                \
-                                                                               \
-        ccxll_init_extd(_ccxll_dst,         (_ccxll_src)->start,               \
-                       (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
-
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                  \
+                                                                               \
+    for (int _idx = 0; _idx < ELEMOF_ARR((_ccxll)->it); _idx++)                \
+        ccxll_iter_init(&((_ccxll)->it[_idx]), (_ccxll));                      \
+)
+
+
+#define _ccxll_init_from(_ccxll_dst, _ccxll_src)                               \
+                                                                               \
+        _ccxll_init_extd(_ccxll_dst,         (_ccxll_src)->start,              \
+                        (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
+
+#define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     _ccxll_alloc((_ccxll));                                                    \
                                                                                \
     _ccxll_init_core((_ccxll));                                                \
-     ccxll_iter_init((_ccxll)->it, (_ccxll));                                  \
     _ccxll_init_info((_ccxll), (_start), (_ratio), (_thrsh));                  \
-)
-
-
-#define ccxll_init_full(_ccxll)                                                \
-                                                                               \
-        ccxll_init_full_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
-
-#define ccxll_init_full_extd(_ccxll, _start, _ratio, _thrsh)                   \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                   \
-                                                                               \
-    for (int _idx = 1; _idx < ELEMOF_ARR((_ccxll)->it); _idx++)                \
-        ccxll_iter_init(&((_ccxll)->it[_idx]), (_ccxll));                      \
 )
 
 
@@ -530,10 +525,10 @@ STATEMENT_                                                                     \
 
 
 #define DREF       ccxll_iter_dref
-
 #define DREF_PREV  ccxll_iter_dref_prev
-
 #define DREF_NEXT  ccxll_iter_dref_next
+
+#define ITER(_ccxll, _nth_it)        (&(_ccxll)->it[(_nth_it)])
 
 #define ccxll_iter_dref(_iter)       ((_iter)->curr.pnode->val)
 
@@ -682,7 +677,6 @@ STATEMENT_                                                                     \
     ccxll_swap((_ccxll), (_ccxll)->_xl[_base_r]);                              \
                                                                                \
     _xl_clear((_ccxll), 1);                                                    \
-    _xl_free ((_ccxll));                                                       \
 )
 
 
