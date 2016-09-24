@@ -366,10 +366,12 @@ STATEMENT_                                                                     \
 /* ccxll operations */
 
 
-#define ccxll_move_range(_iter_p, _iter_l, _iter_r)                            \
+#define ccxll_move_range_seed(_iter_p, _iter_l, _iter_r)                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
+                                                                               \
     if ((_iter_p)->ccxll != (_iter_l)->ccxll)                                  \
     {                                                                          \
         int _base_m;                                                           \
@@ -426,6 +428,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if ((_iter_l)->ccxll != (_iter_m)->ccxll ||                                \
+        (_iter_m)->ccxll != (_iter_r)->ccxll)  break;                          \
+                                                                               \
     ccxll_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
     while (1)                                                                  \
@@ -446,8 +451,8 @@ STATEMENT_                                                                     \
                _leq((_iter_x), (_iter_l)))                                     \
             ccxll_iter_incr((_iter_x));                                        \
                                                                                \
-        ccxll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
-        ccxll_iter_copy ((_iter_m), (_iter_x));                                \
+        ccxll_move_range_seed((_iter_l), (_iter_m), (_iter_x));                \
+        ccxll_iter_copy      ((_iter_m), (_iter_x));                           \
                                                                                \
         if ((_iter_x)->curr.lnk == (_iter_r)->curr.lnk)                        \
         {                                                                      \
@@ -501,6 +506,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
+                                                                               \
     link_t *_l_c = &((_iter_l)->curr.pnode->lnk);                              \
     link_t *_r_c = &((_iter_r)->curr.pnode->lnk);                              \
     link_t *_l_p = &((_iter_l)->prev.pnode->lnk);                              \
