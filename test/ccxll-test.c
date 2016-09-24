@@ -315,7 +315,7 @@ int main(void)
             for (int idx = 0; idx < 3; idx++)
                 ccxll_iter_advance(ITER(list, idx), pos[cnt][idx]);
 
-            ccxll_move_range(ITER(list, 0), ITER(list, 1), ITER(list, 2));
+            ccxll_move_range_seed(ITER(list, 0), ITER(list, 1), ITER(list, 2));
 
             printf("/ ");
             CCXLL_INCR(ITER(list, 4))
@@ -542,7 +542,8 @@ int main(void)
         ccxll_iter_head(ITER(list_b, 0));
         ccxll_iter_advance(ITER(list_b, 0), 3);
 
-        ccxll_move_range(ITER(list_b, 0), ITER(list_a, 0), ITER(list_a, 1));
+        ccxll_move_range_seed(ITER(list_b, 0), ITER(list_a, 0),
+                                               ITER(list_a, 1));
 
         puts("");
         CCXLL_INCR(ITER(list_a, 0))
