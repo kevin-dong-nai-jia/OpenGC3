@@ -532,14 +532,15 @@ STATEMENT_                                                                     \
 #define DREF       ccxll_iter_dref
 #define DREF_PREV  ccxll_iter_dref_prev
 #define DREF_NEXT  ccxll_iter_dref_next
-
-#define ITER(_ccxll, _nth_it)        (&(_ccxll)->it[(_nth_it)])
+#define ITER       ccxll_iter
 
 #define ccxll_iter_dref(_iter)       ((_iter)->curr.pnode->val)
 
 #define ccxll_iter_dref_prev(_iter)  ((_iter)->prev.pnode->val)
 
 #define ccxll_iter_dref_next(_iter)  ((_iter)->next.pnode->val)
+
+#define ccxll_iter(_ccxll, _nth_it)  (&(_ccxll)->it[(_nth_it)])
 
 
 #define ccxll_iter_copy(_iter_dst, _iter_src)                                  \
