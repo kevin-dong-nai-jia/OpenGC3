@@ -13,7 +13,7 @@ int main(void)
     printf("Test 0: \n\n");
 
     {
-        ccxll(char*) list = NULL;
+        ccxll(char*) list;
         ccxll_init(list);
 
         ccxll_push_back(list, "Welcome to ");
@@ -32,7 +32,7 @@ int main(void)
     printf("\n\nTest 1: \n");
 
     {
-        ccxll(char*) list = NULL;
+        ccxll(char*) list;
         ccxll_init(list);
 
         char *num_str[10] = { "five" , "six", "four", "seven", "three",
@@ -59,7 +59,7 @@ int main(void)
     printf("\n\nTest 2: ");
 
     {
-        ccxll(int) list = NULL;
+        ccxll(int) list;
         ccxll_init(list);
 
         int cnt = 0;
@@ -81,7 +81,7 @@ int main(void)
     {
         typedef struct  {  char *msg[2];  }   msg_struct;
 
-        ccxll(msg_struct) list = NULL;
+        ccxll(msg_struct) list;
         ccxll_init(list);
 
         msg_struct msg_1, msg_2;
@@ -108,7 +108,7 @@ int main(void)
     printf("\n\nTest 4: ");
 
     {
-        ccxll_extd(int, 9, NORMAL) list = NULL;
+        ccxll_extd(int, 9, NORMAL) list;
         ccxll_init(list);
         ccxll_iter_init(ITER(list, 8), list);
 
@@ -128,7 +128,7 @@ int main(void)
     printf("\n\nTest 5: ");
 
     {
-        ccxll(char*) list = NULL;
+        ccxll(char*) list;
         ccxll_init(list);
 
         (void)ccxll_front(list);
@@ -153,7 +153,7 @@ int main(void)
     printf("\n\nTest 6: ");
 
     {
-        ccxll(int) list = NULL;
+        ccxll(int) list;
         ccxll_init(list);
 
         ccxll_pop_front(list);
@@ -178,7 +178,7 @@ int main(void)
     printf("\n\nTest 7: \n");
 
     {
-        ccxll(int) list = NULL;
+        ccxll(int) list;
         ccxll_init(list);
 
         puts("\nPushing back 10^7 elements...");
@@ -203,7 +203,7 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        ccxll_pckd(char) list = NULL;
+        ccxll_pckd(char) list;
         ccxll_init(list);
 
         for (int cnt = 0; cnt < 10000000; cnt++)
@@ -227,7 +227,7 @@ int main(void)
     printf("\n\nTest 9: \n\n");
 
     {
-        ccxll_pckd(int) list = NULL;
+        ccxll_pckd(int) list;
         ccxll_init(list);
 
         for (int cnt = 0; cnt < 6; cnt++)
@@ -295,7 +295,7 @@ int main(void)
     printf("\n\nTest 10: \n\n");
 
     {
-        ccxll_extd(int, 5, NORMAL) list = NULL;
+        ccxll_extd(int, 5, NORMAL) list;
         ccxll_init(list);
 
         int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
@@ -334,7 +334,7 @@ int main(void)
     printf("\n\nTest 11: \n\n");
 
     {
-        ccxll_extd(int, 4, NORMAL) list = NULL;
+        ccxll_extd(int, 4, NORMAL) list;
         ccxll_init(list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
@@ -384,7 +384,7 @@ int main(void)
     printf("\n\nTest 12: \n\n");
 
     {
-        ccxll(int) list = NULL;
+        ccxll(int) list;
         ccxll_init(list);
 
         int length = 1000;
@@ -417,7 +417,7 @@ int main(void)
     printf("\n\nTest 14: \n\n");
 
     {
-        ccxll_extd(int, 2, NORMAL) list = NULL;
+        ccxll_extd(int, 2, NORMAL) list;
         ccxll_init(list);
 
         for (int i = 0; i < 10; i++)
@@ -445,7 +445,7 @@ int main(void)
     printf("\n\nTest 15: \n\n");
 
     {
-        ccxll(int) list_a = NULL, list_b = NULL;
+        ccxll(int) list_a, list_b;
         ccxll_init(list_a);
         ccxll_init(list_b);
 
@@ -479,7 +479,7 @@ int main(void)
     printf("\n\nTest 16: \n\n");
 
     {
-        ccxll(int) list = NULL;
+        ccxll(int) list;
         ccxll_init(list);
 
         for (int cnt = 0; cnt < 16; cnt++)
@@ -516,7 +516,7 @@ int main(void)
     printf("\n\nTest 17: \n\n");
 
     {
-        ccxll_extd(int, 2, NORMAL) list_a = NULL, list_b = NULL;
+        ccxll_extd(int, 2, NORMAL) list_a, list_b;
         ccxll_init(list_a);
         ccxll_init(list_b);
 
