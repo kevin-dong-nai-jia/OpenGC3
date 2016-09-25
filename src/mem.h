@@ -69,11 +69,11 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _alloc = _it_xl_total((_ccxll), _itxl_);                     \
+    unsigned char _total = _it_xl_total((_ccxll), _itxl_);                     \
                                                                                \
     _stack_alloc((_ccxll), (_items), (_pbase), _itxl_);                        \
                                                                                \
-    for (int _idx = _alloc; _idx < *(_pbase) + (_items); _idx++)               \
+    for (int _idx = _total; _idx < *(_pbase) + (_items); _idx++)               \
         _pinit((_ccxll)->_itxl_[_idx], (_ccxll));                              \
 )
 
@@ -99,9 +99,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _it_alloc = _it_xl_total((_ccxll), _it);                     \
+    unsigned char _it_total = _it_xl_total((_ccxll), _it);                     \
                                                                                \
-    for (int _idx_it = 0; _idx_it < _it_alloc; _idx_it++)                      \
+    for (int _idx_it = 0; _idx_it < _it_total; _idx_it++)                      \
         _iter_free((_ccxll)->_it[_idx_it]);                                    \
                                                                                \
     _stack_free((_ccxll), _it);                                                \
@@ -112,9 +112,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _xl_alloc = _it_xl_total((_ccxll), _xl);                     \
+    unsigned char _xl_total = _it_xl_total((_ccxll), _xl);                     \
                                                                                \
-    for (int _idx_xl = 0; _idx_xl < _xl_alloc; _idx_xl++)                      \
+    for (int _idx_xl = 0; _idx_xl < _xl_total; _idx_xl++)                      \
     {                                                                          \
         _it_free((_ccxll)->_xl[_idx_xl]);                                      \
         _block_free((_ccxll)->_xl[_idx_xl]);                                   \
@@ -135,18 +135,14 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_items) > (_ccxll)->_itxl_##_limit && (_items) != 0)                  \
     {                                                                          \
-        void  *_list = NULL;                                                   \
-        size_t _sz   = sizeof(*(_ccxll)->_itxl_);                              \
+        size_t _size = sizeof(*(_ccxll)->_itxl_);                              \
+        unsigned char _itxl_total = _it_xl_total((_ccxll), _itxl_);            \
                                                                                \
-        _safe_alloc(_list, _sz * ((_ccxll)->_itxl_##_base + (_items)));        \
+        void **_tmp = (void*)&((_ccxll)->_itxl_);                              \
+        *_tmp = realloc(*_tmp, (_size * ((_ccxll)->_itxl_##_base + (_items))));\
                                                                                \
-        memcpy(_list, (_ccxll)->_itxl_, _sz * (_ccxll)->_itxl_##_base);        \
-                                                                               \
-        if (_it_xl_total((_ccxll), _itxl_) != 0)                               \
-            _safe_free((_ccxll)->_itxl_);                                      \
-        (_ccxll)->_itxl_ = _list;                                              \
-                                                                               \
-        memset((_ccxll)->_itxl_ + (_ccxll)->_itxl_##_base, 0, _sz * (_items)); \
+        memset((_ccxll)->_itxl_ + _itxl_total, 0,                              \
+               (_size * ((_ccxll)->_itxl_##_base + (_items) - _itxl_total)));  \
                                                                                \
         (_ccxll)->_itxl_##_limit = (_items);                                   \
     }                                                                          \
