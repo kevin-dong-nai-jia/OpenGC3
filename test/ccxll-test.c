@@ -334,7 +334,7 @@ int main(void)
     printf("\n\nTest 11: \n\n");
 
     {
-        ccxll_extd(int, 4, NORMAL) list;
+        ccxll_extd(int, 3, NORMAL) list;
         ccxll_init(list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
@@ -352,13 +352,12 @@ int main(void)
             switch (cnt)
             {
                 case 0:
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 3; j++)
                     ccxll_iter_begin  (ITER(list, j));
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 3; j++)
                     ccxll_iter_advance(ITER(list, j), 8 * j);
 
-                ccxll_merge_range(ITER(list, 0), ITER(list, 1),
-                                  ITER(list, 2), ITER(list, 3));
+                ccxll_merge_range(ITER(list, 0), ITER(list, 1), ITER(list, 2));
                 break;
 
                 case 1:

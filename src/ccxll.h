@@ -420,11 +420,24 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_merge_range(_iter_l, _iter_m, _iter_r, _iter_x)                  \
+#define  ccxll_merge_range(_iter_l, _iter_m, _iter_r)                          \
                                                                                \
-        ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, XLEQ)
+         ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, XLEQ)
 
-#define ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)       \
+#define  ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _base_e;                                                               \
+    _it_alloc((_iter_l)->ccxll, 1, &_base_e);                                  \
+                                                                               \
+    _ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
+                            (_iter_l)->ccxll->_it[_base_e], _leq);             \
+                                                                               \
+    _it_clear((_iter_l)->ccxll, 1);                                            \
+)
+
+#define _ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -474,7 +487,7 @@ STATEMENT_                                                                     \
     if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
     int _base_s;                                                               \
-    _it_alloc((_ccxll), 4, &_base_s);                                          \
+    _it_alloc((_ccxll), 3, &_base_s);                                          \
                                                                                \
     for (int _G = (_gap); _G < ccxll_size((_ccxll)); _G <<= 1)                 \
     {                                                                          \
@@ -493,12 +506,11 @@ STATEMENT_                                                                     \
                                                                                \
             ccxll_merge_range_extd((_ccxll)->_it[_base_s + 0],                 \
                                    (_ccxll)->_it[_base_s + 1],                 \
-                                   (_ccxll)->_it[_base_s + 2],                 \
-                                   (_ccxll)->_it[_base_s + 3], _leq);          \
+                                   (_ccxll)->_it[_base_s + 2], _leq);          \
         }                                                                      \
     }                                                                          \
                                                                                \
-    _it_clear((_ccxll), 4);                                                    \
+    _it_clear((_ccxll), 3);                                                    \
 )
 
 
