@@ -5,20 +5,12 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "mem.h"
+#include "pool.h"
 #include "misc.h"
+#include "snym.h"
 
 
 /* ccxll create */
-
-
-#define _T_CCXLL        ADDID(_T_CCXLL_      )
-#define _S_CCXLL_BODY   ADDID(_S_CCXLL_BODY_ )
-#define _S_CCXLL_NODE   ADDID(_S_CCXLL_NODE_ )
-#define _S_CCXLL_BLOCK  ADDID(_S_CCXLL_BLOCK_)
-#define _S_CCXLL_ITER   ADDID(_S_CCXLL_ITER_ )
-#define _U_CCXLL_HDTL   ADDID(_U_CCXLL_HDTL_ )
-#define _U_CCXLL_ITER   ADDID(_U_CCXLL_ITER_ )
 
 
 #define ccxll(elem_t)                                                          \
@@ -541,18 +533,11 @@ STATEMENT_                                                                     \
 /* default comparators */
 
 
-#define XLEQ  CCXLL_LEQ_COMPAR
-
 #define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
 
 
 /* ccxll iterators */
 
-
-#define DREF       ccxll_iter_dref
-#define DREF_PREV  ccxll_iter_dref_prev
-#define DREF_NEXT  ccxll_iter_dref_next
-#define ITER       ccxll_iter
 
 #define ccxll_iter_dref(_iter)       ((_iter)->curr.pnode->val)
 
