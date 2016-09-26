@@ -544,6 +544,7 @@ int main(void)
         ccxll_iter_advance(ITER(list_b), 3);
 
         ccxll_move_range_shared(ITER(list_b), ITER(list_a), ITER_NTH(list_a,1));
+        ccxll_iter_init(ITER(list_a), list_a);
 
         puts("");
         CCXLL_INCR(ITER(list_a))

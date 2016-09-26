@@ -371,6 +371,7 @@ STATEMENT_                                                                     \
                                                                                \
         (_iter_p)->ccxll->size += _dist_m;                                     \
         (_iter_l)->ccxll->size -= _dist_m;                                     \
+        (_iter_l)->ccxll = (_iter_p)->ccxll;                                   \
     }                                                                          \
                                                                                \
     link_t *_p_c = &((_iter_p)->curr.pnode->lnk);                              \
