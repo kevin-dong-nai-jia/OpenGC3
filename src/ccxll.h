@@ -366,19 +366,11 @@ STATEMENT_                                                                     \
                                                                                \
     if ((_iter_p)->ccxll != (_iter_l)->ccxll)                                  \
     {                                                                          \
-        int _base_m;                                                           \
-        _it_alloc((_iter_l)->ccxll, 1, &_base_m);                              \
+        int _dist_m;                                                           \
+        ccxll_iter_distance((_iter_l), (_iter_r), &_dist_m);                   \
                                                                                \
-        int _diff_m = 0;                                                       \
-        ccxll_iter_copy((_iter_l)->ccxll->_it[_base_m], (_iter_l));            \
-        while ((_iter_l)->curr.lnk != (_iter_r)->curr.lnk && ++_diff_m)        \
-            ccxll_iter_incr((_iter_l));                                        \
-        ccxll_iter_copy((_iter_l), (_iter_l)->ccxll->_it[_base_m]);            \
-                                                                               \
-        (_iter_p)->ccxll->size += _diff_m;                                     \
-        (_iter_l)->ccxll->size -= _diff_m;                                     \
-                                                                               \
-        _it_clear((_iter_l)->ccxll, 1);                                        \
+        (_iter_p)->ccxll->size += _dist_m;                                     \
+        (_iter_l)->ccxll->size -= _dist_m;                                     \
     }                                                                          \
                                                                                \
     link_t *_p_c = &((_iter_p)->curr.pnode->lnk);                              \
@@ -639,6 +631,26 @@ STATEMENT_                                                                     \
                                                                                \
     if (_D > 0)       {  while (ccxll_iter_incr((_iter)) && --_D);  }          \
     else if (_D < 0)  {  while (ccxll_iter_decr((_iter)) && ++_D);  }          \
+)
+
+
+#define ccxll_iter_distance(_iter_l, _iter_r, _pdist)                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _base_d;                                                               \
+    _it_alloc((_iter_l)->ccxll, 1, &_base_d);                                  \
+                                                                               \
+    *(_pdist) = 0;                                                             \
+                                                                               \
+    ccxll_iter_copy((_iter_l)->ccxll->_it[_base_d], (_iter_l));                \
+                                                                               \
+    while ((_iter_l)->curr.lnk != (_iter_r)->curr.lnk && ++(*(_pdist)))        \
+        ccxll_iter_incr((_iter_l));                                            \
+                                                                               \
+    ccxll_iter_copy((_iter_l), (_iter_l)->ccxll->_it[_base_d]);                \
+                                                                               \
+    _it_clear((_iter_l)->ccxll, 1);                                            \
 )
 
 
