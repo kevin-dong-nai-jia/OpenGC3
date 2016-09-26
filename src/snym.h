@@ -18,9 +18,11 @@
 #define DREF            ccxll_iter_dref
 #define DREF_PREV       ccxll_iter_dref_prev
 #define DREF_NEXT       ccxll_iter_dref_next
-#define ITER            ccxll_iter
 
 #define XLEQ            CCXLL_LEQ_COMPAR
+
+#define ITER_NTH        ccxll_iter
+#define ITER(_iter)     ITER_NTH(_iter, 0)
 
 
 #endif
