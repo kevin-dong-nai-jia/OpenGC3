@@ -358,7 +358,7 @@ STATEMENT_                                                                     \
 /* ccxll operations */
 
 
-#define ccxll_move_range_seed(_iter_p, _iter_l, _iter_r)                       \
+#define ccxll_move_range_shared(_iter_p, _iter_l, _iter_r)                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -456,8 +456,8 @@ STATEMENT_                                                                     \
                _leq((_iter_x), (_iter_l)))                                     \
             ccxll_iter_incr((_iter_x));                                        \
                                                                                \
-        ccxll_move_range_seed((_iter_l), (_iter_m), (_iter_x));                \
-        ccxll_iter_copy      ((_iter_m), (_iter_x));                           \
+        ccxll_move_range_shared((_iter_l), (_iter_m), (_iter_x));              \
+        ccxll_iter_copy        ((_iter_m), (_iter_x));                         \
                                                                                \
         if ((_iter_x)->curr.lnk == (_iter_r)->curr.lnk)                        \
         {                                                                      \
