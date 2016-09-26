@@ -1,10 +1,10 @@
-#ifndef _CC_MEM_H_
-#define _CC_MEM_H_
+#ifndef _CC_POOL_H_
+#define _CC_POOL_H_
 
 #include <stdio.h>
 #include <string.h>
 
-#include "msg.h"
+#include "mesg.h"
 #include "misc.h"
 
 

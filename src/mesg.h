@@ -1,5 +1,5 @@
-#ifndef _CC_MSG_H_
-#define _CC_MSG_H_
+#ifndef _CC_MESG_H_
+#define _CC_MESG_H_
 
 #include <stdio.h>
 #include <stdlib.h>
