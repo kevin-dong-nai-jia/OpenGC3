@@ -22,17 +22,9 @@ typedef void* link_t;
 #define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
-/* append __LINE__ */
-
-#define ADDID APPENDLINE
-#define CONCATLINE(N, L) N ## L
-#define EXPANDLINE(N, L) CONCATLINE(N, L)
-#define APPENDLINE(NAME) EXPANDLINE(NAME, __LINE__)
-
-
 /* number of elem. */
 
-#define ELEMOF_ARR(PARR) ((int)(sizeof(PARR) / sizeof(PARR[0])))
+#define ELEMOF_ARR(NAME) ((int)(sizeof(NAME) / sizeof(NAME[0])))
 
 
 #endif

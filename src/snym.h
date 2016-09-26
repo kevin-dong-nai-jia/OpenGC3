@@ -2,27 +2,32 @@
 #define _CC_SNYM_H_
 
 
-/* Internal */
+/* Internal Use Only */
 
-#define _T_CCXLL        ADDID(_T_CCXLL_      )
-#define _S_CCXLL_BODY   ADDID(_S_CCXLL_BODY_ )
-#define _S_CCXLL_NODE   ADDID(_S_CCXLL_NODE_ )
-#define _S_CCXLL_BLOCK  ADDID(_S_CCXLL_BLOCK_)
-#define _S_CCXLL_ITER   ADDID(_S_CCXLL_ITER_ )
-#define _U_CCXLL_HDTL   ADDID(_U_CCXLL_HDTL_ )
-#define _U_CCXLL_ITER   ADDID(_U_CCXLL_ITER_ )
+#define ADDID APPENDLINE
+#define CONCATLINE(N, L) N ## L
+#define EXPANDLINE(N, L) CONCATLINE(N, L)
+#define APPENDLINE(NAME) EXPANDLINE(NAME, __LINE__)
+
+#define _T_CCXLL         ADDID(_T_CCXLL_      )
+#define _S_CCXLL_BODY    ADDID(_S_CCXLL_BODY_ )
+#define _S_CCXLL_NODE    ADDID(_S_CCXLL_NODE_ )
+#define _S_CCXLL_BLOCK   ADDID(_S_CCXLL_BLOCK_)
+#define _S_CCXLL_ITER    ADDID(_S_CCXLL_ITER_ )
+#define _U_CCXLL_HDTL    ADDID(_U_CCXLL_HDTL_ )
+#define _U_CCXLL_ITER    ADDID(_U_CCXLL_ITER_ )
 
 
-/* External */
+/* Internal + External */
 
-#define DREF            ccxll_iter_dref
-#define DREF_PREV       ccxll_iter_dref_prev
-#define DREF_NEXT       ccxll_iter_dref_next
+#define DREF             ccxll_iter_dref
+#define DREF_PREV        ccxll_iter_dref_prev
+#define DREF_NEXT        ccxll_iter_dref_next
 
-#define XLEQ            CCXLL_LEQ_COMPAR
+#define XLEQ             CCXLL_LEQ_COMPAR
 
-#define ITER_NTH        ccxll_iter
-#define ITER(_iter)     ITER_NTH(_iter, 0)
+#define ITER_NTH         ccxll_iter
+#define ITER(_iter)      ITER_NTH(_iter, 0)
 
 
 #endif
