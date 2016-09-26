@@ -543,7 +543,7 @@ int main(void)
         ccxll_iter_head(ITER(list_b));
         ccxll_iter_advance(ITER(list_b), 3);
 
-        ccxll_move_range_shared(ITER(list_b), ITER(list_a), ITER(list_a));
+        ccxll_move_range_shared(ITER(list_b), ITER(list_a), ITER_NTH(list_a,1));
 
         puts("");
         CCXLL_INCR(ITER(list_a))
