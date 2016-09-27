@@ -391,14 +391,20 @@ STATEMENT_                                                                     \
 
 #define ccxll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
+        ccxll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
+
+#define ccxll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)                \
+                                                                               \
 STATEMENT_                                                                     \
 (                                                                              \
     if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
                                                                                \
     if ((_iter_p)->ccxll != (_iter_l)->ccxll)                                  \
     {                                                                          \
-        int _dist_m;                                                           \
-        ccxll_iter_distance((_iter_l), (_iter_r), &_dist_m);                   \
+        int _dist_m = (_dist);                                                 \
+                                                                               \
+        if (_dist_m < 0)                                                       \
+            ccxll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
                                                                                \
         (_iter_p)->ccxll->size += _dist_m;                                     \
         (_iter_l)->ccxll->size -= _dist_m;                                     \
@@ -435,19 +441,59 @@ STATEMENT_                                                                     \
 )
 
 
-#define  ccxll_merge_range(_iter_l, _iter_m, _iter_r)                          \
+#define ccxll_merge(_ccxll_d, _ccxll_s)                                        \
                                                                                \
-         ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, XLEQ)
+        ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ)
 
-#define  ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
+#define ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq)                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base_e;                                                               \
-    _it_alloc((_iter_l)->ccxll, 1, &_base_e);                                  \
+     int _base_p, _base_q;                                                     \
+     _it_alloc((_ccxll_d), 1, &_base_p);                                       \
+     _it_alloc((_ccxll_s), 2, &_base_q);                                       \
+                                                                               \
+     _ccxll_merge_extd((_ccxll_d), (_ccxll_s),                                 \
+                       (_ccxll_d)->_it[_base_p + 0],                           \
+                       (_ccxll_s)->_it[_base_q + 0],                           \
+                       (_ccxll_s)->_it[_base_q + 1], _leq);                    \
+                                                                               \
+     _it_clear((_ccxll_s), 2);                                                 \
+     _it_clear((_ccxll_d), 1);                                                 \
+)
+
+#define _ccxll_merge_extd(_ccxll_d, _ccxll_s, _iter_l, _iter_m, _iter_r, _leq) \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccxll_iter_tail ((_iter_l));                                               \
+    ccxll_iter_begin((_iter_m));                                               \
+    ccxll_iter_tail ((_iter_r));                                               \
+                                                                               \
+    ccxll_move_range_extd ((_iter_l), (_iter_m), (_iter_r),                    \
+                           ccxll_size((_iter_m)->ccxll));                      \
+                                                                               \
+    ccxll_iter_begin((_iter_l));                                               \
+    ccxll_iter_init ((_iter_r), (_ccxll_d));                                   \
+    ccxll_iter_tail ((_iter_r));                                               \
+                                                                               \
+    ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);             \
+)
+
+
+#define ccxll_merge_range(_iter_l, _iter_m, _iter_r)                           \
+                                                                               \
+        ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, XLEQ)
+
+#define ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _base_m;                                                               \
+    _it_alloc((_iter_l)->ccxll, 1, &_base_m);                                  \
                                                                                \
     _ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            (_iter_l)->ccxll->_it[_base_e], _leq);             \
+                            (_iter_l)->ccxll->_it[_base_m], _leq);             \
                                                                                \
     _it_clear((_iter_l)->ccxll, 1);                                            \
 )
@@ -476,7 +522,7 @@ STATEMENT_                                                                     \
         ccxll_iter_incr((_iter_x));                                            \
                                                                                \
         while ((_iter_x)->curr.lnk != (_iter_r)->curr.lnk &&                   \
-               _leq((_iter_x), (_iter_l)))                                     \
+               !_leq((_iter_l), (_iter_x)))                                    \
             ccxll_iter_incr((_iter_x));                                        \
                                                                                \
         ccxll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
@@ -600,8 +646,6 @@ VOID_EXPR_                                                                     \
 
 
 #define ccxll_iter_begin(_iter)                                                \
-                                                                               \
-VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter)->prev.lnk =      &((_iter)->ccxll->head.lnk),                      \
     (_iter)->curr.lnk =      &((_iter)->ccxll->head.stnl->lnk),                \
@@ -611,8 +655,6 @@ VOID_EXPR_                                                                     \
 
 
 #define ccxll_iter_end(_iter)                                                  \
-                                                                               \
-VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter)->next.lnk =      &((_iter)->ccxll->tail.lnk),                      \
     (_iter)->curr.lnk =      &((_iter)->ccxll->tail.stnl->lnk),                \
