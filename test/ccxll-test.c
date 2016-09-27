@@ -635,5 +635,51 @@ int main(void)
     }
 
 
+    // Test 19
+    // Merge (Crossing)
+
+    printf("\n\nTest 19: \n\n");
+
+    {
+        ccxll(int) list_a, list_b;
+        ccxll_init(list_a);
+        ccxll_init(list_b);
+
+        for (int cnt = 0; cnt < 10; cnt++)
+            ccxll_push_back(list_a, rand() % 10);
+        for (int cnt = 0; cnt < 10; cnt++)
+            ccxll_push_back(list_b, rand() % 10);
+
+        CCXLL_INCR(ITER(list_a))
+            printf("%d ", DREF(ITER(list_a)));
+        printf("/ ");
+        CCXLL_INCR(ITER(list_b))
+            printf("%d ", DREF(ITER(list_b)));
+        printf("\n");
+
+        ccxll_sort(list_a);
+        ccxll_sort(list_b);
+
+        CCXLL_INCR(ITER(list_a))
+            printf("%d ", DREF(ITER(list_a)));
+        printf("/ ");
+        CCXLL_INCR(ITER(list_b))
+            printf("%d ", DREF(ITER(list_b)));
+        printf("\n");
+
+        ccxll_merge(list_a, list_b);
+
+        CCXLL_INCR(ITER(list_a))
+            printf("%d ", DREF(ITER(list_a)));
+        printf("/ ");
+        CCXLL_INCR(ITER(list_b))
+            printf("%d ", DREF(ITER(list_b)));
+        printf("\n");
+
+        ccxll_free(list_a);
+        ccxll_free(list_b);
+    }
+
+
     return 0;
 }
