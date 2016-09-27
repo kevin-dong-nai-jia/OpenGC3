@@ -307,6 +307,7 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter)->curr.lnk =      (_iter)->next.lnk;                                \
     (_iter)->next.lnk = XOR2((_iter)->curr.node->lnk, (_iter)->prev.lnk);      \
+                                                                               \
     (_iter)->ccxll->size--;                                                    \
 )
 
@@ -355,7 +356,40 @@ STATEMENT_                                                                     \
 /* ccxll operations */
 
 
-#define ccxll_move_range_shared(_iter_p, _iter_l, _iter_r)                     \
+#define ccxll_move(_iter_p, _iter_i)                                           \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_iter_i)->curr.lnk == (_iter_p)->prev.lnk)  break;                    \
+                                                                               \
+    if (ccxll_iter_at_head(_iter_p) ||                                         \
+        ccxll_iter_at_head(_iter_i) || ccxll_iter_at_tail(_iter_i))  break;    \
+                                                                               \
+    (_iter_i)->prev.node->lnk = XOR3((_iter_i)->prev.node->lnk,                \
+                                     (_iter_i)->next.lnk, (_iter_i)->curr.lnk);\
+    (_iter_i)->next.node->lnk = XOR3((_iter_i)->next.node->lnk,                \
+                                     (_iter_i)->prev.lnk, (_iter_i)->curr.lnk);\
+                                                                               \
+    (_iter_i)->prev.lnk = (_iter_p)->prev.lnk;                                 \
+    (_iter_i)->next.lnk = (_iter_p)->curr.lnk;                                 \
+                                                                               \
+    (_iter_i)->curr.node->lnk = XOR2((_iter_i)->prev.lnk, (_iter_i)->next.lnk);\
+                                                                               \
+    (_iter_i)->prev.node->lnk = XOR3((_iter_i)->prev.node->lnk,                \
+                                     (_iter_i)->next.lnk, (_iter_i)->curr.lnk);\
+    (_iter_i)->next.node->lnk = XOR3((_iter_i)->next.node->lnk,                \
+                                     (_iter_i)->prev.lnk, (_iter_i)->curr.lnk);\
+                                                                               \
+    (_iter_p)->prev.lnk = (_iter_i)->curr.lnk;                                 \
+    (_iter_p)->next.lnk = XOR2((_iter_p)->prev.lnk, (_iter_p)->curr.node->lnk);\
+                                                                               \
+    (_iter_i)->ccxll->size--;                                                  \
+    (_iter_i)->ccxll = (_iter_p)->ccxll;                                       \
+    (_iter_i)->ccxll->size++;                                                  \
+)
+
+
+#define ccxll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -370,6 +404,8 @@ STATEMENT_                                                                     \
         (_iter_l)->ccxll->size -= _dist_m;                                     \
         (_iter_l)->ccxll = (_iter_p)->ccxll;                                   \
     }                                                                          \
+                                                                               \
+    if ((_iter_l)->curr.lnk == (_iter_r)->curr.lnk)  break;                    \
                                                                                \
     link_t _p_c = (_iter_p)->curr.lnk;                                         \
     link_t _l_c = (_iter_l)->curr.lnk;                                         \
@@ -443,8 +479,8 @@ STATEMENT_                                                                     \
                _leq((_iter_x), (_iter_l)))                                     \
             ccxll_iter_incr((_iter_x));                                        \
                                                                                \
-        ccxll_move_range_shared((_iter_l), (_iter_m), (_iter_x));              \
-        ccxll_iter_copy        ((_iter_m), (_iter_x));                         \
+        ccxll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
+        ccxll_iter_copy ((_iter_m), (_iter_x));                                \
                                                                                \
         if ((_iter_x)->curr.lnk == (_iter_r)->curr.lnk)                        \
         {                                                                      \
