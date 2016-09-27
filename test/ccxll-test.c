@@ -315,8 +315,7 @@ int main(void)
             for (int idx = 0; idx < 3; idx++)
                 ccxll_iter_advance(ITER_NTH(list, idx), pos[cnt][idx]);
 
-            ccxll_move_range_shared(ITER(list), ITER_NTH(list, 1),
-                                                ITER_NTH(list, 2));
+            ccxll_move_range(ITER(list), ITER_NTH(list, 1), ITER_NTH(list, 2));
 
             printf("/ ");
             CCXLL_INCR(ITER_NTH(list, 4))
@@ -543,7 +542,7 @@ int main(void)
         ccxll_iter_head(ITER(list_b));
         ccxll_iter_advance(ITER(list_b), 3);
 
-        ccxll_move_range_shared(ITER(list_b), ITER(list_a), ITER_NTH(list_a,1));
+        ccxll_move_range(ITER(list_b), ITER(list_a), ITER_NTH(list_a, 1));
         ccxll_iter_init(ITER(list_a), list_a);
 
         puts("");
@@ -556,6 +555,80 @@ int main(void)
         printf("/ size = %d ", ccxll_size(list_b));
 
         puts("");
+
+        ccxll_free(list_a);
+        ccxll_free(list_b);
+    }
+
+
+    // Test 18
+    // Move (Crossing)
+
+    printf("\n\nTest 18: \n\n");
+
+    {
+        ccxll_extd(int, 2, NORMAL) list_a, list_b;
+        ccxll_init(list_a);
+        ccxll_init(list_b);
+
+        for (int cnt = 0; cnt < 13; cnt++)
+        {
+            ccxll_push_back(list_a, cnt);
+            ccxll_push_back(list_b, cnt + 13);
+        }
+
+        CCXLL_INCR(ITER_NTH(list_a, 1))
+            printf("%2d ", DREF(ITER_NTH(list_a, 1)));
+        printf("   size = %d (A)\n", ccxll_size(list_a));
+        CCXLL_INCR(ITER_NTH(list_b, 1))
+            printf("%2d ", DREF(ITER_NTH(list_b, 1)));
+        printf("   size = %d (B)\n", ccxll_size(list_b));
+
+        ccxll_iter_begin(ITER(list_a));
+        ccxll_iter_begin(ITER(list_b));
+        ccxll_move(ITER(list_a), ITER(list_b));
+
+        CCXLL_INCR(ITER_NTH(list_a, 1))
+            printf("%2d ", DREF(ITER_NTH(list_a, 1)));
+        printf("size = %d (A)\n", ccxll_size(list_a));
+        CCXLL_INCR(ITER_NTH(list_b, 1))
+            printf("%2d ", DREF(ITER_NTH(list_b, 1)));
+        printf("\t  size = %d (B)\n", ccxll_size(list_b));
+
+        ccxll_iter_advance(ITER(list_a), 1);
+        ccxll_iter_advance(ITER(list_b), 1);
+        ccxll_move(ITER(list_a), ITER(list_b));
+
+        CCXLL_INCR(ITER_NTH(list_a, 1))
+            printf("%2d ", DREF(ITER_NTH(list_a, 1)));
+        printf("size = %d (A)\n", ccxll_size(list_a));
+        CCXLL_INCR(ITER_NTH(list_b, 1))
+            printf("%2d ", DREF(ITER_NTH(list_b, 1)));
+        printf("\t  size = %d (B)\n", ccxll_size(list_b));
+
+        ccxll_iter_advance(ITER(list_a), -2);
+        ccxll_iter_init(ITER(list_b), list_b);
+        ccxll_iter_tail(ITER(list_b));
+        ccxll_move(ITER(list_b), ITER(list_a));
+
+        CCXLL_INCR(ITER_NTH(list_a, 1))
+            printf("%2d ", DREF(ITER_NTH(list_a, 1)));
+        printf("   size = %d (A)\n", ccxll_size(list_a));
+        CCXLL_INCR(ITER_NTH(list_b, 1))
+            printf("%2d ", DREF(ITER_NTH(list_b, 1)));
+        printf("   size = %d (B)\n", ccxll_size(list_b));
+
+        ccxll_iter_head    (ITER(list_a));
+        ccxll_iter_tail    (ITER(list_b));
+        ccxll_iter_advance (ITER(list_b), -1);
+        ccxll_reverse_range(ITER(list_a), ITER(list_b));
+
+        CCXLL_INCR(ITER_NTH(list_a, 1))
+            printf("%2d ", DREF(ITER_NTH(list_a, 1)));
+        printf("   size = %d (A)\n", ccxll_size(list_a));
+        CCXLL_INCR(ITER_NTH(list_b, 1))
+            printf("%2d ", DREF(ITER_NTH(list_b, 1)));
+        printf("   size = %d (B)\n", ccxll_size(list_b));
 
         ccxll_free(list_a);
         ccxll_free(list_b);
