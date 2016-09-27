@@ -47,8 +47,8 @@
                                                                                \
         struct _S_CCXLL_ITER                                                   \
         {   union _U_CCXLL_ITER                                                \
-            {   link_t *lnk;                                                   \
-                struct _S_CCXLL_NODE *pnode;                                   \
+            {   link_t lnk;                                                    \
+                struct _S_CCXLL_NODE *node;                                    \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
             struct _S_CCXLL_BODY *ccxll;          /* points to ccxll body */   \
         }   it[(_n_iter)], **_it;                                              \
@@ -277,17 +277,17 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter)->ccxll->pnode->val = (_val);                                       \
                                                                                \
-    (_iter)->next.pnode = (_iter)->curr.pnode;                                 \
-    (_iter)->curr.pnode = (_iter)->ccxll->pnode;                               \
+    (_iter)->next.node = (_iter)->curr.node;                                   \
+    (_iter)->curr.node = (_iter)->ccxll->pnode;                                \
                                                                                \
-    (_iter)->curr.pnode->lnk = XOR_2(&((_iter)->prev.pnode->lnk),              \
-                                     &((_iter)->next.pnode->lnk));             \
-    (_iter)->prev.pnode->lnk = XOR_3(  (_iter)->prev.pnode->lnk ,              \
-                                     &((_iter)->next.pnode->lnk),              \
-                                     &((_iter)->ccxll->pnode->lnk));           \
-    (_iter)->next.pnode->lnk = XOR_3(  (_iter)->next.pnode->lnk ,              \
-                                     &((_iter)->prev.pnode->lnk),              \
-                                     &((_iter)->ccxll->pnode->lnk));           \
+    (_iter)->curr.node->lnk = XOR_2((_iter)->prev.lnk,                         \
+                                    (_iter)->next.lnk);                        \
+    (_iter)->prev.node->lnk = XOR_3((_iter)->prev.node->lnk,                   \
+                                    (_iter)->next.lnk,                         \
+                                    &((_iter)->ccxll->pnode->lnk));            \
+    (_iter)->next.node->lnk = XOR_3((_iter)->next.node->lnk,                   \
+                                    (_iter)->prev.lnk,                         \
+                                    &((_iter)->ccxll->pnode->lnk));            \
     (_iter)->ccxll->size++;                                                    \
 )
 
@@ -298,18 +298,18 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (ccxll_iter_at_head(_iter) || ccxll_iter_at_tail(_iter))  break;        \
                                                                                \
-    (_iter)->prev.pnode->lnk = XOR_3(  (_iter)->prev.pnode->lnk ,              \
-                                     &((_iter)->next.pnode->lnk),              \
-                                     &((_iter)->curr.pnode->lnk));             \
-    (_iter)->next.pnode->lnk = XOR_3(  (_iter)->next.pnode->lnk ,              \
-                                     &((_iter)->prev.pnode->lnk),              \
-                                     &((_iter)->curr.pnode->lnk));             \
+    (_iter)->prev.node->lnk = XOR_3((_iter)->prev.node->lnk,                   \
+                                     (_iter)->next.lnk,                        \
+                                     (_iter)->curr.lnk);                       \
+    (_iter)->next.node->lnk = XOR_3((_iter)->next.node->lnk,                   \
+                                     (_iter)->prev.lnk,                        \
+                                     (_iter)->curr.lnk);                       \
                                                                                \
-    _node_clear((_iter)->curr.pnode, (_iter)->ccxll);                          \
+    _node_clear((_iter)->curr.node, (_iter)->ccxll);                           \
                                                                                \
-    (_iter)->curr.lnk =         (_iter)->next.lnk;                             \
-    (_iter)->next.lnk = XOR_2(  (_iter)->curr.pnode->lnk,                      \
-                              &((_iter)->prev.pnode->lnk));                    \
+    (_iter)->curr.lnk =       (_iter)->next.lnk;                               \
+    (_iter)->next.lnk = XOR_2((_iter)->curr.node->lnk,                         \
+                              (_iter)->prev.lnk);                              \
     (_iter)->ccxll->size--;                                                    \
 )
 
@@ -350,7 +350,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(ccxll_empty((_ccxll))))  {  ccxll_pop_back((_ccxll));  }          \
+    while (!(ccxll_empty((_ccxll))))  ccxll_pop_back((_ccxll));                \
 )
 
 
@@ -374,33 +374,33 @@ STATEMENT_                                                                     \
         (_iter_l)->ccxll = (_iter_p)->ccxll;                                   \
     }                                                                          \
                                                                                \
-    link_t *_p_c = &((_iter_p)->curr.pnode->lnk);                              \
-    link_t *_l_c = &((_iter_l)->curr.pnode->lnk);                              \
-    link_t *_r_c = &((_iter_r)->curr.pnode->lnk);                              \
-    link_t *_p_p = &((_iter_p)->prev.pnode->lnk);                              \
-    link_t *_l_p = &((_iter_l)->prev.pnode->lnk);                              \
-    link_t *_r_p = &((_iter_r)->prev.pnode->lnk);                              \
+    link_t _p_c = (_iter_p)->curr.lnk;                                         \
+    link_t _l_c = (_iter_l)->curr.lnk;                                         \
+    link_t _r_c = (_iter_r)->curr.lnk;                                         \
+    link_t _p_p = (_iter_p)->prev.lnk;                                         \
+    link_t _l_p = (_iter_l)->prev.lnk;                                         \
+    link_t _r_p = (_iter_r)->prev.lnk;                                         \
                                                                                \
-    (_iter_p)->prev.pnode->lnk = XOR_3((_iter_p)->prev.pnode->lnk, _p_c, _l_c);\
-    (_iter_l)->prev.pnode->lnk = XOR_3((_iter_l)->prev.pnode->lnk, _l_c, _r_c);\
-    (_iter_r)->prev.pnode->lnk = XOR_3((_iter_r)->prev.pnode->lnk, _r_c, _p_c);\
+    (_iter_p)->prev.node->lnk = XOR_3((_iter_p)->prev.node->lnk, _p_c, _l_c);  \
+    (_iter_l)->prev.node->lnk = XOR_3((_iter_l)->prev.node->lnk, _l_c, _r_c);  \
+    (_iter_r)->prev.node->lnk = XOR_3((_iter_r)->prev.node->lnk, _r_c, _p_c);  \
                                                                                \
-    (_iter_p)->curr.pnode->lnk = XOR_3((_iter_p)->curr.pnode->lnk, _p_p, _r_p);\
-    (_iter_r)->curr.pnode->lnk = XOR_3((_iter_r)->curr.pnode->lnk, _r_p, _l_p);\
-    (_iter_l)->curr.pnode->lnk = XOR_3((_iter_l)->curr.pnode->lnk, _l_p, _p_p);\
+    (_iter_p)->curr.node->lnk = XOR_3((_iter_p)->curr.node->lnk, _p_p, _r_p);  \
+    (_iter_r)->curr.node->lnk = XOR_3((_iter_r)->curr.node->lnk, _r_p, _l_p);  \
+    (_iter_l)->curr.node->lnk = XOR_3((_iter_l)->curr.node->lnk, _l_p, _p_p);  \
                                                                                \
-    (_iter_p)->next.lnk = (  (_iter_p)->next.lnk != _l_c) ?                    \
-                          (&((_iter_p)->next.pnode->lnk)) : (_r_c);            \
-    (_iter_l)->next.lnk = (  (_iter_l)->next.lnk != _r_c) ?                    \
-                          (&((_iter_l)->next.pnode->lnk)) : (_p_c);            \
-    (_iter_r)->next.lnk = (  (_iter_r)->next.lnk != _p_c) ?                    \
-                          (&((_iter_r)->next.pnode->lnk)) : (_l_c);            \
+    (_iter_p)->next.lnk = ((_iter_p)->next.lnk != (_l_c)) ?                    \
+                          ((_iter_p)->next.lnk) : (_r_c);                      \
+    (_iter_l)->next.lnk = ((_iter_l)->next.lnk != (_r_c)) ?                    \
+                          ((_iter_l)->next.lnk) : (_p_c);                      \
+    (_iter_r)->next.lnk = ((_iter_r)->next.lnk != (_p_c)) ?                    \
+                          ((_iter_r)->next.lnk) : (_l_c);                      \
                                                                                \
-    (_iter_p)->prev.lnk = XOR_2((_iter_p)->curr.pnode->lnk,                    \
+    (_iter_p)->prev.lnk = XOR_2((_iter_p)->curr.node->lnk,                     \
                                 (_iter_p)->next.lnk);                          \
-    (_iter_l)->prev.lnk = XOR_2((_iter_l)->curr.pnode->lnk,                    \
+    (_iter_l)->prev.lnk = XOR_2((_iter_l)->curr.node->lnk,                     \
                                 (_iter_l)->next.lnk);                          \
-    (_iter_r)->prev.lnk = XOR_2((_iter_r)->curr.pnode->lnk,                    \
+    (_iter_r)->prev.lnk = XOR_2((_iter_r)->curr.node->lnk,                     \
                                 (_iter_r)->next.lnk);                          \
 )
 
@@ -505,17 +505,17 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
                                                                                \
-    link_t *_l_c = &((_iter_l)->curr.pnode->lnk);                              \
-    link_t *_r_c = &((_iter_r)->curr.pnode->lnk);                              \
-    link_t *_l_p = &((_iter_l)->prev.pnode->lnk);                              \
-    link_t *_r_p = &((_iter_r)->prev.pnode->lnk);                              \
-    link_t *_l_n = &((_iter_l)->next.pnode->lnk);                              \
+    link_t _l_c = (_iter_l)->curr.lnk;                                         \
+    link_t _r_c = (_iter_r)->curr.lnk;                                         \
+    link_t _l_p = (_iter_l)->prev.lnk;                                         \
+    link_t _r_p = (_iter_r)->prev.lnk;                                         \
+    link_t _l_n = (_iter_l)->next.lnk;                                         \
                                                                                \
-    (_iter_l)->next.pnode->lnk = XOR_3((_iter_l)->next.pnode->lnk, _l_c, _r_c);\
-    (_iter_r)->prev.pnode->lnk = XOR_3((_iter_r)->prev.pnode->lnk, _r_c, _l_c);\
+    (_iter_l)->next.node->lnk = XOR_3((_iter_l)->next.node->lnk, _l_c, _r_c);  \
+    (_iter_r)->prev.node->lnk = XOR_3((_iter_r)->prev.node->lnk, _r_c, _l_c);  \
                                                                                \
-    (_iter_l)->curr.pnode->lnk = XOR_3((_iter_l)->curr.pnode->lnk, _l_n, _r_p);\
-    (_iter_r)->curr.pnode->lnk = XOR_3((_iter_r)->curr.pnode->lnk, _l_n, _r_p);\
+    (_iter_l)->curr.node->lnk = XOR_3((_iter_l)->curr.node->lnk, _l_n, _r_p);  \
+    (_iter_r)->curr.node->lnk = XOR_3((_iter_r)->curr.node->lnk, _l_n, _r_p);  \
                                                                                \
     (_iter_l)->next.lnk = XOR_2(_l_p, _l_c);                                   \
     (_iter_r)->next.lnk = XOR_2(_r_p, _r_c);                                   \
@@ -532,11 +532,11 @@ STATEMENT_                                                                     \
 /* ccxll iterators */
 
 
-#define ccxll_iter_dref(_iter)       ((_iter)->curr.pnode->val)
+#define ccxll_iter_dref(_iter)       ((_iter)->curr.node->val)
 
-#define ccxll_iter_dref_prev(_iter)  ((_iter)->prev.pnode->val)
+#define ccxll_iter_dref_prev(_iter)  ((_iter)->prev.node->val)
 
-#define ccxll_iter_dref_next(_iter)  ((_iter)->next.pnode->val)
+#define ccxll_iter_dref_next(_iter)  ((_iter)->next.node->val)
 
 #define ccxll_iter(_ccxll, _nth_it)  (&(_ccxll)->it[(_nth_it)])
 
@@ -608,7 +608,7 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_iter)->prev.lnk =       (_iter)->curr.lnk,                           \
         (_iter)->curr.lnk =       (_iter)->next.lnk,                           \
-        (_iter)->next.lnk = XOR_2((_iter)->prev.lnk, (_iter)->curr.pnode->lnk) \
+        (_iter)->next.lnk = XOR_2((_iter)->prev.lnk, (_iter)->curr.node->lnk)  \
     )                                                                          \
 )
 
@@ -619,7 +619,7 @@ VOID_EXPR_                                                                     \
     (                                                                          \
         (_iter)->next.lnk =       (_iter)->curr.lnk,                           \
         (_iter)->curr.lnk =       (_iter)->prev.lnk,                           \
-        (_iter)->prev.lnk = XOR_2((_iter)->next.lnk, (_iter)->curr.pnode->lnk) \
+        (_iter)->prev.lnk = XOR_2((_iter)->next.lnk, (_iter)->curr.node->lnk)  \
     )                                                                          \
 )
 
