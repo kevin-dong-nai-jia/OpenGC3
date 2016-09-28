@@ -51,7 +51,7 @@
                 struct _S_CCXLL_NODE *node;                                    \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
             struct _S_CCXLL_BODY *ccxll;          /* points to ccxll body */   \
-        }   it[(_n_iter)], **_it;                                              \
+        }   **_it, (*itarr)[_n_iter];                                          \
                                                                                \
         struct _S_CCXLL_BODY **_xl;               /* internal use _it/_xl */   \
                                                                                \
@@ -82,9 +82,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     (_ccxll) = NULL;                                                           \
     _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                  \
-                                                                               \
-    for (int _idx = 0; _idx < ELEMOF_ARR((_ccxll)->it); _idx++)                \
-        ccxll_iter_init(&((_ccxll)->it[_idx]), (_ccxll));                      \
+    _itarr_alloc((_ccxll));                                                    \
 )
 
 
@@ -124,8 +122,9 @@ VOID_EXPR_                                                                     \
     (_ccxll)->avsp = (_ccxll)->pnode  = NULL,                                  \
     (_ccxll)->pool = (_ccxll)->pblock = NULL,                                  \
                                                                                \
-    (_ccxll)->_it = NULL,                                                      \
-    (_ccxll)->_xl = NULL,                                                      \
+    (_ccxll)->itarr = NULL,                                                    \
+    (_ccxll)->_it   = NULL,                                                    \
+    (_ccxll)->_xl   = NULL,                                                    \
     (_ccxll)->_it_base = (_ccxll)->_it_limit = 0,                              \
     (_ccxll)->_xl_base = (_ccxll)->_xl_limit = 0                               \
 )
@@ -166,13 +165,14 @@ STATEMENT_                                                                     \
 /* ccxll destroy */
 
 
-#define ccxll_free(_ccxll)                                                     \
+#define ccxll_free(_ccxll)                                                    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     _it_free((_ccxll));                                                        \
     _xl_free((_ccxll));                                                        \
     _block_free((_ccxll));                                                     \
+    _itarr_free((_ccxll));                                                     \
     _ccxll_free((_ccxll));                                                     \
 )
 
@@ -611,7 +611,7 @@ STATEMENT_                                                                     \
 
 #define ccxll_iter_dref_next(_iter)  ((_iter)->next.node->val)
 
-#define ccxll_iter(_ccxll, _nth_it)  (&(_ccxll)->it[(_nth_it)])
+#define ccxll_iter(_ccxll, _nth_it)  (&(*(_ccxll)->itarr)[(_nth_it)])
 
 
 #define ccxll_iter_copy(_iter_dst, _iter_src)                                  \

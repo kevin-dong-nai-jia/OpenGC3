@@ -49,6 +49,30 @@ STATEMENT_                                                                     \
 
 
 
+/* itarr management */
+
+
+#define _itarr_alloc(_ccxll)                                                   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _safe_alloc((_ccxll)->itarr, sizeof(*(_ccxll)->itarr));                    \
+                                                                               \
+    for (int _idx = 0; _idx < ELEMOF_ARR(*(_ccxll)->itarr); _idx++)            \
+        ccxll_iter_init(&((*(_ccxll)->itarr)[_idx]), (_ccxll));                \
+)
+
+
+#define _itarr_free(_ccxll)                                                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_ccxll)->itarr != NULL)                                               \
+        _safe_free((_ccxll)->itarr);                                           \
+)
+
+
+
 /* _it / _xl management */
 
 
@@ -118,6 +142,7 @@ STATEMENT_                                                                     \
     {                                                                          \
         _it_free((_ccxll)->_xl[_idx_xl]);                                      \
         _block_free((_ccxll)->_xl[_idx_xl]);                                   \
+        _itarr_free((_ccxll)->_xl[_idx_xl]);                                   \
         _ccxll_free((_ccxll)->_xl[_idx_xl]);                                   \
     }                                                                          \
                                                                                \
