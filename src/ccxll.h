@@ -425,15 +425,12 @@ STATEMENT_                                                                     \
     (_iter_r)->prev.node->lnk = XOR3((_iter_r)->prev.node->lnk, _r_c, _p_c);   \
                                                                                \
     (_iter_p)->curr.node->lnk = XOR3((_iter_p)->curr.node->lnk, _p_p, _r_p);   \
-    (_iter_r)->curr.node->lnk = XOR3((_iter_r)->curr.node->lnk, _r_p, _l_p);   \
     (_iter_l)->curr.node->lnk = XOR3((_iter_l)->curr.node->lnk, _l_p, _p_p);   \
+    (_iter_r)->curr.node->lnk = XOR3((_iter_r)->curr.node->lnk, _r_p, _l_p);   \
                                                                                \
-    (_iter_p)->next.lnk = ((_iter_p)->next.lnk != (_l_c)) ?                    \
-                          ((_iter_p)->next.lnk) : (_r_c);                      \
-    (_iter_l)->next.lnk = ((_iter_l)->next.lnk != (_r_c)) ?                    \
-                          ((_iter_l)->next.lnk) : (_p_c);                      \
-    (_iter_r)->next.lnk = ((_iter_r)->next.lnk != (_p_c)) ?                    \
-                          ((_iter_r)->next.lnk) : (_l_c);                      \
+    if ((_iter_p)->next.lnk == _l_c)  (_iter_p)->next.lnk = _r_c;              \
+    if ((_iter_l)->next.lnk == _r_c)  (_iter_l)->next.lnk = _p_c;              \
+    if ((_iter_r)->next.lnk == _p_c)  (_iter_r)->next.lnk = _l_c;              \
                                                                                \
     (_iter_p)->prev.lnk = XOR2((_iter_p)->curr.node->lnk, (_iter_p)->next.lnk);\
     (_iter_l)->prev.lnk = XOR2((_iter_l)->curr.node->lnk, (_iter_l)->next.lnk);\
@@ -510,7 +507,7 @@ STATEMENT_                                                                     \
     while (1)                                                                  \
     {                                                                          \
         while ((_iter_l)->curr.lnk != (_iter_m)->curr.lnk &&                   \
-               _leq((_iter_l), (_iter_m)))                                     \
+                _leq((_iter_l), (_iter_m)))                                    \
             ccxll_iter_incr((_iter_l));                                        \
                                                                                \
         if ((_iter_l)->curr.lnk == (_iter_m)->curr.lnk)                        \
@@ -718,8 +715,11 @@ STATEMENT_                                                                     \
                                                                                \
     ccxll_iter_copy((_iter_l)->ccxll->_it[_base_d], (_iter_l));                \
                                                                                \
-    while ((_iter_l)->curr.lnk != (_iter_r)->curr.lnk && ++(*(_pdist)))        \
-        ccxll_iter_incr((_iter_l));                                            \
+    while (ccxll_iter_incr((_iter_l)) && ++(*(_pdist)))                        \
+        if ((_iter_l)->curr.lnk == (_iter_r)->curr.lnk)  break;                \
+                                                                               \
+    if (ccxll_iter_at_tail((_iter_l)))                                         \
+        *(_pdist) = -1;                                                        \
                                                                                \
     ccxll_iter_copy((_iter_l), (_iter_l)->ccxll->_it[_base_d]);                \
                                                                                \
