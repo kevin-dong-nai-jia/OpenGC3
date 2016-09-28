@@ -681,5 +681,45 @@ int main(void)
     }
 
 
+    // Test 20
+    // Distance
+
+    printf("\n\nTest 20: \n\n");
+
+    {
+        ccxll(int) list_a, list_b;
+        ccxll_init(list_a);
+        ccxll_init(list_b);
+
+        for (int cnt = 0; cnt < 13; cnt++)
+            ccxll_push_back(list_a, cnt);
+        for (int cnt = 0; cnt < 13; cnt++)
+            ccxll_push_back(list_b, cnt);
+
+        ccxll_iter_head(ITER(list_a));
+        ccxll_iter_head(ITER(list_b));
+        ccxll_iter_advance(ITER(list_a), 0);
+        ccxll_iter_advance(ITER(list_b), 8);
+
+        int dist = 0;
+
+        ccxll_iter_distance(ITER(list_a), ITER(list_b), &dist);
+        printf("distance = %d / ", dist);
+
+        ccxll_iter_init(ITER(list_b), list_a);
+        ccxll_iter_head(ITER(list_b));
+        ccxll_iter_advance(ITER(list_b), 8);
+
+        ccxll_iter_distance(ITER(list_a), ITER(list_b), &dist);
+        printf("%d / ", dist);
+
+        ccxll_iter_distance(ITER(list_b), ITER(list_a), &dist);
+        printf("%d \n", dist);
+
+        ccxll_free(list_a);
+        ccxll_free(list_b);
+    }
+
+
     return 0;
 }
