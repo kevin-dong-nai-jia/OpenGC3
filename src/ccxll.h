@@ -704,26 +704,39 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_iter_distance(_iter_l, _iter_r, _pdist)                          \
+#define ccxll_iter_distance(_iter_a, _iter_b, _pdist)                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     int _base_d;                                                               \
-    _it_alloc((_iter_l)->ccxll, 1, &_base_d);                                  \
+    _it_alloc((_iter_a)->ccxll, 1, &_base_d);                                  \
                                                                                \
-    *(_pdist) = 0;                                                             \
+    ccxll_iter_copy((_iter_a)->ccxll->_it[_base_d], (_iter_a));                \
                                                                                \
-    ccxll_iter_copy((_iter_l)->ccxll->_it[_base_d], (_iter_l));                \
+    (*(_pdist)) = 0;                                                           \
                                                                                \
-    while (ccxll_iter_incr((_iter_l)) && ++(*(_pdist)))                        \
-        if ((_iter_l)->curr.lnk == (_iter_r)->curr.lnk)  break;                \
+    STATEMENT_                                                                 \
+    (                                                                          \
+        if ((_iter_a)->ccxll != (_iter_b)->ccxll)  break;                      \
                                                                                \
-    if (ccxll_iter_at_tail((_iter_l)))                                         \
-        *(_pdist) = -1;                                                        \
+        while ((_iter_a)->curr.lnk != (_iter_b)->curr.lnk && ++(*(_pdist)))    \
+               if (!(ccxll_iter_incr((_iter_a))))  break;                      \
                                                                                \
-    ccxll_iter_copy((_iter_l), (_iter_l)->ccxll->_it[_base_d]);                \
+        if ((_iter_a)->curr.lnk == (_iter_b)->curr.lnk)  break;                \
+        else  (*(_pdist)) = 0;                                                 \
                                                                                \
-    _it_clear((_iter_l)->ccxll, 1);                                            \
+        ccxll_iter_copy((_iter_a), (_iter_a)->ccxll->_it[_base_d]);            \
+                                                                               \
+        while ((_iter_a)->curr.lnk != (_iter_b)->curr.lnk && --(*(_pdist)))    \
+               if (!(ccxll_iter_decr((_iter_a))))  break;                      \
+                                                                               \
+        if ((_iter_a)->curr.lnk == (_iter_b)->curr.lnk)  break;                \
+        else  (*(_pdist)) = 0;                                                 \
+    );                                                                         \
+                                                                               \
+    ccxll_iter_copy((_iter_a), (_iter_a)->ccxll->_it[_base_d]);                \
+                                                                               \
+    _it_clear((_iter_a)->ccxll, 1);                                            \
 )
 
 
