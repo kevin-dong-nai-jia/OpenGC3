@@ -102,14 +102,15 @@ STATEMENT_                                                                     \
 )
 
 
-#define _ccxll_init_info(_ccxll, _start, _ratio, _thrsh)                       \
+#define _ccxll_init_seed(_ccxll)                                               \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_ccxll)->start = ((_start) > 0) ? (_start) : 1,                           \
-    (_ccxll)->ratio = ((_ratio) > 0) ? (_ratio) : 1,                           \
-    (_ccxll)->thrsh = ((_thrsh) > (_ccxll)->start) ? (_thrsh) : (_ccxll)->start\
+    (_ccxll)->size = 0,                                                        \
+    (_ccxll)->head.lnk = &((_ccxll)->tail),                                    \
+    (_ccxll)->tail.lnk = &((_ccxll)->head)                                     \
 )
+
 
 
 #define _ccxll_init_core(_ccxll)                                               \
@@ -130,15 +131,14 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define _ccxll_init_seed(_ccxll)                                               \
+#define _ccxll_init_info(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_ccxll)->size = 0,                                                        \
-    (_ccxll)->head.lnk = &((_ccxll)->tail),                                    \
-    (_ccxll)->tail.lnk = &((_ccxll)->head)                                     \
+    (_ccxll)->start = ((_start) > 0) ? (_start) : 1,                           \
+    (_ccxll)->ratio = ((_ratio) > 0) ? (_ratio) : 1,                           \
+    (_ccxll)->thrsh = ((_thrsh) > (_ccxll)->start) ? (_thrsh) : (_ccxll)->start\
 )
-
 
 #define ccxll_iter_init(_iter, _ccxll)                                         \
                                                                                \
@@ -284,10 +284,10 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter)->prev.node->lnk = XOR3((_iter)->prev.node->lnk,                    \
                                    (_iter)->next.lnk,                          \
-                                   &((_iter)->ccxll->pnode->lnk));             \
+                                 &((_iter)->ccxll->pnode->lnk));               \
     (_iter)->next.node->lnk = XOR3((_iter)->next.node->lnk,                    \
                                    (_iter)->prev.lnk,                          \
-                                   &((_iter)->ccxll->pnode->lnk));             \
+                                 &((_iter)->ccxll->pnode->lnk));               \
     (_iter)->ccxll->size++;                                                    \
 )
 
@@ -380,7 +380,7 @@ STATEMENT_                                                                     \
     (_iter_i)->next.node->lnk = XOR3((_iter_i)->next.node->lnk,                \
                                      (_iter_i)->prev.lnk, (_iter_i)->curr.lnk);\
                                                                                \
-    (_iter_p)->prev.lnk = (_iter_i)->curr.lnk;                                 \
+    (_iter_p)->prev.lnk =      (_iter_i)->curr.lnk;                            \
     (_iter_p)->next.lnk = XOR2((_iter_p)->prev.lnk, (_iter_p)->curr.node->lnk);\
                                                                                \
     (_iter_i)->ccxll->size--;                                                  \
@@ -713,10 +713,9 @@ STATEMENT_                                                                     \
                                                                                \
     ccxll_iter_copy((_iter_a)->ccxll->_it[_base_d], (_iter_a));                \
                                                                                \
-    (*(_pdist)) = 0;                                                           \
-                                                                               \
     STATEMENT_                                                                 \
     (                                                                          \
+        (*(_pdist)) = 0;                                                       \
         if ((_iter_a)->ccxll != (_iter_b)->ccxll)  break;                      \
                                                                                \
         while ((_iter_a)->curr.lnk != (_iter_b)->curr.lnk && ++(*(_pdist)))    \
