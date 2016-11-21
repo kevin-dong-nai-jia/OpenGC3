@@ -16,6 +16,7 @@
 !test/*.c
 
 !tool/
+!tool/*.c
 !tool/*.pdf
 
 !LICENSE
