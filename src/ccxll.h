@@ -165,7 +165,7 @@ STATEMENT_                                                                     \
 /* ccxll destroy */
 
 
-#define ccxll_free(_ccxll)                                                    \
+#define ccxll_free(_ccxll)                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -757,6 +757,20 @@ STATEMENT_                                                                     \
 /* ccxll extensions */
 
 
+#define ccxll_append(_ccxll_dst, _ccxll_src)                                   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _base_a;                                                               \
+    _it_alloc((_ccxll_src), 1, &_base_a);                                      \
+                                                                               \
+    CCXLL_INCR((_ccxll_src)->_it[_base_a])                                     \
+        ccxll_push_back((_ccxll_dst), DREF((_ccxll_src)->_it[_base_a]));       \
+                                                                               \
+    _it_clear((_ccxll_src), 1);                                                \
+)
+
+
 #define ccxll_copy(_ccxll_dst, _ccxll_src)                                     \
                                                                                \
 STATEMENT_                                                                     \
@@ -764,13 +778,7 @@ STATEMENT_                                                                     \
     ccxll_free((_ccxll_dst));                                                  \
     ccxll_init_from((_ccxll_dst), (_ccxll_src));                               \
                                                                                \
-    int _base_c;                                                               \
-    _it_alloc((_ccxll_src), 1, &_base_c);                                      \
-                                                                               \
-    CCXLL_INCR((_ccxll_src)->_it[_base_c])                                     \
-        ccxll_push_back((_ccxll_dst), DREF((_ccxll_src)->_it[_base_c]));       \
-                                                                               \
-    _it_clear((_ccxll_src), 1);                                                \
+    ccxll_append((_ccxll_dst), (_ccxll_src));                                  \
 )
 
 
