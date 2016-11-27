@@ -114,8 +114,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    (_ccxll)->_itxl_##_base  -= (_items);                                      \
-    (_ccxll)->_itxl_##_limit += (_items);                                      \
+    _stack_clear((_ccxll), (_items), _itxl_);                                  \
 )
 
 
@@ -175,6 +174,15 @@ STATEMENT_                                                                     \
     *(_pbase) = (_ccxll)->_itxl_##_base;                                       \
     (_ccxll)->_itxl_##_base  += (_items);                                      \
     (_ccxll)->_itxl_##_limit -= (_items);                                      \
+)
+
+
+#define _stack_clear(_ccxll, _items, _itxl_)                                   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    (_ccxll)->_itxl_##_base  -= (_items);                                      \
+    (_ccxll)->_itxl_##_limit += (_items);                                      \
 )
 
 
