@@ -73,14 +73,15 @@
 
 #define ccxll_init_from(_ccxll_dst, _ccxll_src)                                \
                                                                                \
-        ccxll_init_extd(_ccxll_dst,         (_ccxll_src)->start,               \
-                       (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
+        ccxll_init_extd((_ccxll_dst),        (_ccxll_src)->start,              \
+                        (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
 
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     (_ccxll) = NULL;                                                           \
+                                                                               \
     _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                  \
     _itarr_alloc((_ccxll));                                                    \
 )
@@ -88,8 +89,8 @@ STATEMENT_                                                                     \
 
 #define _ccxll_init_from(_ccxll_dst, _ccxll_src)                               \
                                                                                \
-        _ccxll_init_extd(_ccxll_dst,         (_ccxll_src)->start,              \
-                        (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
+        _ccxll_init_extd((_ccxll_dst),        (_ccxll_src)->start,             \
+                         (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
 
 #define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
@@ -171,6 +172,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     _it_free((_ccxll));                                                        \
     _xl_free((_ccxll));                                                        \
+                                                                               \
     _block_free((_ccxll));                                                     \
     _itarr_free((_ccxll));                                                     \
     _ccxll_free((_ccxll));                                                     \
@@ -446,20 +448,18 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-     int _base_p, _base_q;                                                     \
-     _it_alloc((_ccxll_d), 1, &_base_p);                                       \
-     _it_alloc((_ccxll_s), 2, &_base_q);                                       \
+     _it_alloc((_ccxll_d), 1, _base_p);                                        \
+     _it_alloc((_ccxll_s), 2, _base_q);                                        \
                                                                                \
-     _ccxll_merge_extd((_ccxll_d), (_ccxll_s),                                 \
-                       (_ccxll_d)->_it[_base_p + 0],                           \
-                       (_ccxll_s)->_it[_base_q + 0],                           \
-                       (_ccxll_s)->_it[_base_q + 1], _leq);                    \
+     _ccxll_merge_extd((_ccxll_d), _ITER((_ccxll_d), _base_p, 0),              \
+                                   _ITER((_ccxll_s), _base_q, 0),              \
+                                   _ITER((_ccxll_s), _base_q, 1), _leq);       \
                                                                                \
-     _it_clear((_ccxll_s), 2);                                                 \
      _it_clear((_ccxll_d), 1);                                                 \
+     _it_clear((_ccxll_s), 2);                                                 \
 )
 
-#define _ccxll_merge_extd(_ccxll_d, _ccxll_s, _iter_l, _iter_m, _iter_r, _leq) \
+#define _ccxll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq)           \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -486,11 +486,10 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base_m;                                                               \
-    _it_alloc((_iter_l)->ccxll, 1, &_base_m);                                  \
+    _it_alloc((_iter_l)->ccxll, 1, _base_m);                                   \
                                                                                \
     _ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            (_iter_l)->ccxll->_it[_base_m], _leq);             \
+                            _ITER((_iter_l)->ccxll, _base_m, 0), _leq);        \
                                                                                \
     _it_clear((_iter_l)->ccxll, 1);                                            \
 )
@@ -544,27 +543,26 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (ccxll_empty(_ccxll))  break;                                           \
                                                                                \
-    int _base_s;                                                               \
-    _it_alloc((_ccxll), 3, &_base_s);                                          \
+    _it_alloc((_ccxll), 3, _base_s);                                           \
                                                                                \
     for (int _G = (_gap); _G < ccxll_size((_ccxll)); _G <<= 1)                 \
     {                                                                          \
-        ccxll_iter_begin((_ccxll)->_it[_base_s + 0]);                          \
-        ccxll_iter_begin((_ccxll)->_it[_base_s + 1]);                          \
-        ccxll_iter_begin((_ccxll)->_it[_base_s + 2]);                          \
+        ccxll_iter_begin(_ITER(_ccxll, _base_s, 0));                           \
+        ccxll_iter_begin(_ITER(_ccxll, _base_s, 1));                           \
+        ccxll_iter_begin(_ITER(_ccxll, _base_s, 2));                           \
                                                                                \
         while (1)                                                              \
         {                                                                      \
-            ccxll_iter_advance((_ccxll)->_it[_base_s + 1], _G);                \
-            ccxll_iter_copy   ((_ccxll)->_it[_base_s + 2],                     \
-                               (_ccxll)->_it[_base_s + 1]);                    \
-            ccxll_iter_advance((_ccxll)->_it[_base_s + 2], _G);                \
+            ccxll_iter_advance(_ITER(_ccxll, _base_s, 1), _G);                 \
+            ccxll_iter_copy   (_ITER(_ccxll, _base_s, 2),                      \
+                               _ITER(_ccxll, _base_s, 1));                     \
+            ccxll_iter_advance(_ITER(_ccxll, _base_s, 2), _G);                 \
                                                                                \
-            if (ccxll_iter_at_tail((_ccxll)->_it[_base_s + 1]))  break;        \
+            if (ccxll_iter_at_tail(_ITER(_ccxll, _base_s, 1)))  break;         \
                                                                                \
-            ccxll_merge_range_extd((_ccxll)->_it[_base_s + 0],                 \
-                                   (_ccxll)->_it[_base_s + 1],                 \
-                                   (_ccxll)->_it[_base_s + 2], _leq);          \
+            ccxll_merge_range_extd(_ITER(_ccxll, _base_s, 0),                  \
+                                   _ITER(_ccxll, _base_s, 1),                  \
+                                   _ITER(_ccxll, _base_s, 2), _leq);           \
         }                                                                      \
     }                                                                          \
                                                                                \
@@ -708,10 +706,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base_d;                                                               \
-    _it_alloc((_iter_a)->ccxll, 1, &_base_d);                                  \
+    _it_alloc((_iter_a)->ccxll, 1, _base_d);                                   \
                                                                                \
-    ccxll_iter_copy((_iter_a)->ccxll->_it[_base_d], (_iter_a));                \
+    ccxll_iter_copy(_ITER((_iter_a)->ccxll, _base_d, 0), (_iter_a));           \
                                                                                \
     STATEMENT_                                                                 \
     (                                                                          \
@@ -724,7 +721,7 @@ STATEMENT_                                                                     \
         if ((_iter_a)->curr.lnk == (_iter_b)->curr.lnk)  break;                \
         else  (*(_pdist)) = 0;                                                 \
                                                                                \
-        ccxll_iter_copy((_iter_a), (_iter_a)->ccxll->_it[_base_d]);            \
+        ccxll_iter_copy((_iter_a), _ITER((_iter_a)->ccxll, _base_d, 0));       \
                                                                                \
         while ((_iter_a)->curr.lnk != (_iter_b)->curr.lnk && --(*(_pdist)))    \
                if (!(ccxll_iter_decr((_iter_a))))  break;                      \
@@ -733,7 +730,7 @@ STATEMENT_                                                                     \
         else  (*(_pdist)) = 0;                                                 \
     );                                                                         \
                                                                                \
-    ccxll_iter_copy((_iter_a), (_iter_a)->ccxll->_it[_base_d]);                \
+    ccxll_iter_copy((_iter_a), _ITER((_iter_a)->ccxll, _base_d, 0));           \
                                                                                \
     _it_clear((_iter_a)->ccxll, 1);                                            \
 )
@@ -761,11 +758,10 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base_a;                                                               \
-    _it_alloc((_ccxll_src), 1, &_base_a);                                      \
+    _it_alloc((_ccxll_src), 1, _base_a);                                       \
                                                                                \
-    CCXLL_INCR((_ccxll_src)->_it[_base_a])                                     \
-        ccxll_push_back((_ccxll_dst), DREF((_ccxll_src)->_it[_base_a]));       \
+    CCXLL_INCR(_ITER(_ccxll_src, _base_a, 0))                                  \
+        ccxll_push_back((_ccxll_dst), DREF(_ITER(_ccxll_src, _base_a, 0)));    \
                                                                                \
     _it_clear((_ccxll_src), 1);                                                \
 )

@@ -2,7 +2,7 @@
 #define _CC_SNYM_H_
 
 
-/* Internal Use Only */
+/* Internal Use */
 
 #define ADDID APPENDLINE
 #define CONCATLINE(N, L) N ## L
@@ -17,8 +17,14 @@
 #define _U_CCXLL_HDTL    ADDID(_U_CCXLL_HDTL_ )
 #define _U_CCXLL_ITER    ADDID(_U_CCXLL_ITER_ )
 
+#ifdef _CCC_STRICT
+#define _ITER(_ccxll, _name, _offset)  ((_ccxll)->_it[(_name) + (_offset)])
+#else
+#define _ITER(_ccxll, _name, _offset)  (&(_name)[(_offset)])
+#endif // _CCC_STRICT
 
-/* Internal + External */
+
+/* Abbreviation */
 
 #define DREF             ccxll_iter_dref
 #define DREF_PREV        ccxll_iter_dref_prev
@@ -27,7 +33,7 @@
 #define XLEQ             CCXLL_LEQ_COMPAR
 
 #define ITER_NTH         ccxll_iter
-#define ITER(_iter)      ITER_NTH(_iter, 0)
+#define ITER(_iter)      ccxll_iter(_iter, 0)
 
 
 #endif
