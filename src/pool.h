@@ -83,10 +83,10 @@ STATEMENT_                                                                     \
 
 #ifdef _CCC_STRICT
 
-#define _it_alloc(_ccxll, _items, _base)                                       \
+#define _it_alloc(_ccxll, _items, _name)                                       \
                                                                                \
-        int _base;                                                             \
-        _it_xl_alloc((_ccxll), (_items), &(_base), _ccxll_iter_init, _it)
+        int _name;                                                             \
+        _it_xl_alloc((_ccxll), (_items), &(_name), _ccxll_iter_init, _it)
 
 #else
 
@@ -100,9 +100,10 @@ STATEMENT_                                                                     \
 #endif // _CCC_STRICT
 
 
-#define _xl_alloc(_ccxll, _items, _pbase)                                      \
+#define _xl_alloc(_ccxll, _items, _name)                                       \
                                                                                \
-        _it_xl_alloc((_ccxll), (_items), (_pbase), _ccxll_init_from, _xl)
+        int _name;                                                             \
+        _it_xl_alloc((_ccxll), (_items), &(_name), _ccxll_init_from, _xl)
 
 
 #define _it_xl_alloc(_ccxll, _items, _pbase, _pinit, _itxl_)                   \
@@ -122,7 +123,7 @@ STATEMENT_                                                                     \
 
 #define _it_clear(_ccxll, _items)                                              \
                                                                                \
-        _it_xl_clear((_ccxll), (_items), _it)
+        _it_xl_clear(_ccxll, _items, _it)
 
 #else
 
@@ -133,7 +134,7 @@ STATEMENT_                                                                     \
 
 #define _xl_clear(_ccxll, _items)                                              \
                                                                                \
-        _it_xl_clear((_ccxll), (_items), _xl)
+        _it_xl_clear(_ccxll, _items, _xl)
 
 
 #define _it_xl_clear(_ccxll, _items, _itxl_)                                   \
@@ -166,6 +167,7 @@ STATEMENT_                                                                     \
     for (int _idx_xl = 0; _idx_xl < _xl_total; _idx_xl++)                      \
     {                                                                          \
         _it_free((_ccxll)->_xl[_idx_xl]);                                      \
+                                                                               \
         _block_free((_ccxll)->_xl[_idx_xl]);                                   \
         _itarr_free((_ccxll)->_xl[_idx_xl]);                                   \
         _ccxll_free((_ccxll)->_xl[_idx_xl]);                                   \

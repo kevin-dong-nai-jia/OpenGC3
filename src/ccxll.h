@@ -212,7 +212,7 @@ STATEMENT_                                                                     \
 
 #define ccxll_size(_ccxll)   ((_ccxll)->size)
 
-#define ccxll_empty(_ccxll)  (!(ccxll_size((_ccxll))))
+#define ccxll_empty(_ccxll)  ((ccxll_size((_ccxll))) == 0)
 
 
 
@@ -273,7 +273,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_iter_at_head(_iter))  break;                                     \
+    if (ccxll_iter_at_head((_iter)))  break;                                   \
                                                                                \
     _node_alloc((_iter)->ccxll->pnode, (_iter)->ccxll);                        \
                                                                                \
@@ -298,7 +298,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_iter_at_head(_iter) || ccxll_iter_at_tail(_iter))  break;        \
+    if (ccxll_iter_at_head((_iter)) || ccxll_iter_at_tail((_iter)))  break;    \
                                                                                \
     (_iter)->prev.node->lnk = XOR3((_iter)->prev.node->lnk,                    \
                                    (_iter)->next.lnk, (_iter)->curr.lnk);      \
@@ -364,8 +364,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_iter_i)->curr.lnk == (_iter_p)->prev.lnk)  break;                    \
                                                                                \
-    if (ccxll_iter_at_head(_iter_p) ||                                         \
-        ccxll_iter_at_head(_iter_i) || ccxll_iter_at_tail(_iter_i))  break;    \
+    if (ccxll_iter_at_head((_iter_p)) ||                                       \
+        ccxll_iter_at_head((_iter_i)) || ccxll_iter_at_tail((_iter_i)))  break;\
                                                                                \
     (_iter_i)->prev.node->lnk = XOR3((_iter_i)->prev.node->lnk,                \
                                      (_iter_i)->next.lnk, (_iter_i)->curr.lnk);\
@@ -541,28 +541,28 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_empty(_ccxll))  break;                                           \
+    if (ccxll_empty((_ccxll)))  break;                                         \
                                                                                \
     _it_alloc((_ccxll), 3, _base_s);                                           \
                                                                                \
     for (int _G = (_gap); _G < ccxll_size((_ccxll)); _G <<= 1)                 \
     {                                                                          \
-        ccxll_iter_begin(_ITER(_ccxll, _base_s, 0));                           \
-        ccxll_iter_begin(_ITER(_ccxll, _base_s, 1));                           \
-        ccxll_iter_begin(_ITER(_ccxll, _base_s, 2));                           \
+        ccxll_iter_begin(_ITER((_ccxll), _base_s, 0));                         \
+        ccxll_iter_begin(_ITER((_ccxll), _base_s, 1));                         \
+        ccxll_iter_begin(_ITER((_ccxll), _base_s, 2));                         \
                                                                                \
         while (1)                                                              \
         {                                                                      \
-            ccxll_iter_advance(_ITER(_ccxll, _base_s, 1), _G);                 \
-            ccxll_iter_copy   (_ITER(_ccxll, _base_s, 2),                      \
-                               _ITER(_ccxll, _base_s, 1));                     \
-            ccxll_iter_advance(_ITER(_ccxll, _base_s, 2), _G);                 \
+            ccxll_iter_advance(_ITER((_ccxll), _base_s, 1), _G);               \
+            ccxll_iter_copy   (_ITER((_ccxll), _base_s, 2),                    \
+                               _ITER((_ccxll), _base_s, 1));                   \
+            ccxll_iter_advance(_ITER((_ccxll), _base_s, 2), _G);               \
                                                                                \
-            if (ccxll_iter_at_tail(_ITER(_ccxll, _base_s, 1)))  break;         \
+            if (ccxll_iter_at_tail(_ITER((_ccxll), _base_s, 1)))  break;       \
                                                                                \
-            ccxll_merge_range_extd(_ITER(_ccxll, _base_s, 0),                  \
-                                   _ITER(_ccxll, _base_s, 1),                  \
-                                   _ITER(_ccxll, _base_s, 2), _leq);           \
+            ccxll_merge_range_extd(_ITER((_ccxll), _base_s, 0),                \
+                                   _ITER((_ccxll), _base_s, 1),                \
+                                   _ITER((_ccxll), _base_s, 2), _leq);         \
         }                                                                      \
     }                                                                          \
                                                                                \
@@ -760,8 +760,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     _it_alloc((_ccxll_src), 1, _base_a);                                       \
                                                                                \
-    CCXLL_INCR(_ITER(_ccxll_src, _base_a, 0))                                  \
-        ccxll_push_back((_ccxll_dst), DREF(_ITER(_ccxll_src, _base_a, 0)));    \
+    CCXLL_INCR(_ITER((_ccxll_src), _base_a, 0))                                \
+        ccxll_push_back((_ccxll_dst), DREF(_ITER((_ccxll_src), _base_a, 0)));  \
                                                                                \
     _it_clear((_ccxll_src), 1);                                                \
 )
@@ -782,8 +782,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _base_r;                                                               \
-    _xl_alloc((_ccxll), 1, &_base_r);                                          \
+    _xl_alloc((_ccxll), 1, _base_r);                                           \
                                                                                \
     ccxll_copy((_ccxll)->_xl[_base_r], (_ccxll));                              \
     ccxll_swap((_ccxll), (_ccxll)->_xl[_base_r]);                              \
