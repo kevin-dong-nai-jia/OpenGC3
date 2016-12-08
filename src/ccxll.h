@@ -314,7 +314,18 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_swap(_ccxll_u, _ccxll_l)                                         \
+#define ccxll_swap(_ccxll_a, _ccxll_b)                                         \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    void *_bup = (_ccxll_a);                                                   \
+                                                                               \
+    (_ccxll_a) = (_ccxll_b);                                                   \
+    (_ccxll_b) = _bup;                                                         \
+)
+
+
+#define _ccxll_swap(_ccxll_u, _ccxll_l)                                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -784,8 +795,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     _xl_alloc((_ccxll), 1, _base_r);                                           \
                                                                                \
-    ccxll_copy((_ccxll)->_xl[_base_r], (_ccxll));                              \
-    ccxll_swap((_ccxll), (_ccxll)->_xl[_base_r]);                              \
+     ccxll_copy((_ccxll)->_xl[_base_r], (_ccxll));                             \
+    _ccxll_swap((_ccxll), (_ccxll)->_xl[_base_r]);                             \
                                                                                \
     _xl_clear((_ccxll), 1);                                                    \
 )
