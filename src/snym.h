@@ -18,10 +18,12 @@
 #define _U_CCXLL_ITER    ADDID(_U_CCXLL_ITER_ )
 
 #ifdef _CCC_STRICT
-#define _ITER(_ccxll, _name, _offset)  ((_ccxll)->_it[(_name) + (_offset)])
+#define _ITER(_ccxll, _base, _offset)   ((_ccxll)->_it[(_base) + (_offset)])
 #else
-#define _ITER(_ccxll, _name, _offset)  (&(_name)[(_offset)])
+#define _ITER(_ccxll, _iter, _offset)   (&(_iter)[(_offset)])
 #endif // _CCC_STRICT
+
+#define _CCXLL(_ccxll, _base, _offset)  ((_ccxll)->_xl[(_base) + (_offset)])
 
 
 /* Abbreviation */
