@@ -459,15 +459,17 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-     _it_alloc((_ccxll_d), 1, _base_p);                                        \
-     _it_alloc((_ccxll_s), 2, _base_q);                                        \
+     if (ccxll_empty((_ccxll_s)))  break;                                      \
                                                                                \
-     _ccxll_merge_extd((_ccxll_d), _ITER((_ccxll_d), _base_p, 0),              \
-                                   _ITER((_ccxll_s), _base_q, 0),              \
-                                   _ITER((_ccxll_s), _base_q, 1), _leq);       \
+    _it_alloc((_ccxll_d), 1, _base_p);                                         \
+    _it_alloc((_ccxll_s), 2, _base_q);                                         \
                                                                                \
-     _it_clear((_ccxll_d), 1);                                                 \
-     _it_clear((_ccxll_s), 2);                                                 \
+    _ccxll_merge_extd((_ccxll_d), _ITER((_ccxll_d), _base_p, 0),               \
+                                  _ITER((_ccxll_s), _base_q, 0),               \
+                                  _ITER((_ccxll_s), _base_q, 1), _leq);        \
+                                                                               \
+    _it_clear((_ccxll_d), 1);                                                  \
+    _it_clear((_ccxll_s), 2);                                                  \
 )
 
 #define _ccxll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq)           \
@@ -546,38 +548,57 @@ STATEMENT_                                                                     \
 
 #define ccxll_sort(_ccxll)                                                     \
                                                                                \
-        ccxll_sort_extd(_ccxll,    1, XLEQ)
+        ccxll_sort_extd(_ccxll, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _gap, _leq)    /* TODO : Optimization */       \
+#define ccxll_sort_extd(_ccxll, _leq)                                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_empty((_ccxll)))  break;                                         \
+    _xl_alloc((_ccxll),  1, _base_c);                                          \
+    _xl_alloc((_ccxll), 64, _base_b);                                          \
+    _it_alloc((_ccxll),  2, _base_i);                                          \
                                                                                \
-    _it_alloc((_ccxll), 3, _base_s);                                           \
+    _ccxll_sort_extd( (_ccxll),                                                \
+                       _CCXLL((_ccxll), _base_c, 0),                           \
+                     &(_CCXLL((_ccxll), _base_b, 0)),                          \
+                       _ITER ((_ccxll), _base_i, 0),                           \
+                       _ITER ((_ccxll), _base_i, 1), _leq);                    \
                                                                                \
-    for (int _G = (_gap); _G < ccxll_size((_ccxll)); _G <<= 1)                 \
+    _xl_clear((_ccxll), 65);                                                   \
+    _it_clear((_ccxll),  2);                                                   \
+)
+
+#define _ccxll_sort_extd(_ccxll, _carry, _p64bucket, _iter_a, _iter_b, _leq)   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccxll_size((_ccxll)) <= 1)  break;                                     \
+                                                                               \
+    int _fill = 0, _curr;                                                      \
+                                                                               \
+    do                                                                         \
     {                                                                          \
-        ccxll_iter_begin(_ITER((_ccxll), _base_s, 0));                         \
-        ccxll_iter_begin(_ITER((_ccxll), _base_s, 1));                         \
-        ccxll_iter_begin(_ITER((_ccxll), _base_s, 2));                         \
+        ccxll_iter_init ((_iter_a), (_carry));                                 \
+        ccxll_iter_init ((_iter_b), (_ccxll));                                 \
+        ccxll_iter_begin((_iter_a));                                           \
+        ccxll_iter_begin((_iter_b));                                           \
                                                                                \
-        while (1)                                                              \
+        ccxll_move((_iter_a), (_iter_b));                                      \
+                                                                               \
+        for (_curr = 0; _curr != _fill &&                                      \
+                       !(ccxll_empty(*((_p64bucket) + _curr))); _curr++)       \
         {                                                                      \
-            ccxll_iter_advance(_ITER((_ccxll), _base_s, 1), _G);               \
-            ccxll_iter_copy   (_ITER((_ccxll), _base_s, 2),                    \
-                               _ITER((_ccxll), _base_s, 1));                   \
-            ccxll_iter_advance(_ITER((_ccxll), _base_s, 2), _G);               \
-                                                                               \
-            if (ccxll_iter_at_tail(_ITER((_ccxll), _base_s, 1)))  break;       \
-                                                                               \
-            ccxll_merge_range_extd(_ITER((_ccxll), _base_s, 0),                \
-                                   _ITER((_ccxll), _base_s, 1),                \
-                                   _ITER((_ccxll), _base_s, 2), _leq);         \
+            ccxll_merge_extd(*((_p64bucket) + _curr), (_carry), _leq);         \
+            ccxll_swap      (*((_p64bucket) + _curr), (_carry));               \
         }                                                                      \
-    }                                                                          \
+        ccxll_swap(*((_p64bucket) + _curr), (_carry));                         \
                                                                                \
-    _it_clear((_ccxll), 3);                                                    \
+        if (_curr == _fill)  _fill++;                                          \
+    }                                                                          \
+    while (!(ccxll_empty((_ccxll))));                                          \
+                                                                               \
+    for (_curr = 0; _curr < _fill; _curr++)                                    \
+        ccxll_merge_extd((_ccxll), *((_p64bucket) + _curr), _leq);             \
 )
 
 
@@ -795,8 +816,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     _xl_alloc((_ccxll), 1, _base_r);                                           \
                                                                                \
-     ccxll_copy((_ccxll)->_xl[_base_r], (_ccxll));                             \
-    _ccxll_swap((_ccxll), (_ccxll)->_xl[_base_r]);                             \
+     ccxll_copy(_CCXLL(_ccxll, _base_r, 0), (_ccxll));                         \
+    _ccxll_swap((_ccxll), _CCXLL(_ccxll, _base_r, 0));                         \
                                                                                \
     _xl_clear((_ccxll), 1);                                                    \
 )
