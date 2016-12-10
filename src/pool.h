@@ -83,10 +83,13 @@ STATEMENT_                                                                     \
 
 #ifdef _CCC_STRICT
 
-#define _it_alloc(_ccxll, _items, _name)                                       \
+#define _it_alloc(_ccxll, _items, _base)                                       \
                                                                                \
-        int _name;                                                             \
-        _it_xl_alloc((_ccxll), (_items), &(_name), _ccxll_iter_init, _it)
+        int _base;                                                             \
+        _it_xl_alloc((_ccxll), (_items), &(_base), _ccxll_iter_init, _it);     \
+                                                                               \
+        for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
+            ccxll_iter_init(_ITER((_ccxll), _base, _cnt), (_ccxll))
 
 #else
 
@@ -100,21 +103,21 @@ STATEMENT_                                                                     \
 #endif // _CCC_STRICT
 
 
-#define _xl_alloc(_ccxll, _items, _name)                                       \
+#define _xl_alloc(_ccxll, _items, _base)                                       \
                                                                                \
-        int _name;                                                             \
-        _it_xl_alloc((_ccxll), (_items), &(_name), _ccxll_init_from, _xl)
+        int _base;                                                             \
+        _it_xl_alloc((_ccxll), (_items), &(_base), _ccxll_init_from, _xl)
 
 
 #define _it_xl_alloc(_ccxll, _items, _pbase, _pinit, _itxl_)                   \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _total = _it_xl_total((_ccxll), _itxl_);                     \
+    unsigned char _itxl_total = _it_xl_total((_ccxll), _itxl_);                \
                                                                                \
     _stack_alloc((_ccxll), (_items), (_pbase), _itxl_);                        \
                                                                                \
-    for (int _idx = _total; _idx < (*(_pbase) + (_items)); _idx++)             \
+    for (int _idx = _itxl_total; _idx < (*(_pbase) + (_items)); _idx++)        \
         _pinit((_ccxll)->_itxl_[_idx], (_ccxll));                              \
 )
 
@@ -188,13 +191,13 @@ STATEMENT_                                                                     \
     if ((_items) > (_ccxll)->_itxl_##_limit && (_items) != 0)                  \
     {                                                                          \
         size_t _size = sizeof(*(_ccxll)->_itxl_);                              \
-        unsigned char _itxl_total = _it_xl_total((_ccxll), _itxl_);            \
+        unsigned char _stack_total = _it_xl_total((_ccxll), _itxl_);           \
                                                                                \
         void **_tmp = (void*)&((_ccxll)->_itxl_);                              \
         *_tmp = realloc(*_tmp, (_size * ((_ccxll)->_itxl_##_base + (_items))));\
                                                                                \
-        memset((_ccxll)->_itxl_ + _itxl_total, 0,                              \
-               (_size * ((_ccxll)->_itxl_##_base + (_items) - _itxl_total)));  \
+        memset((_ccxll)->_itxl_ + _stack_total, 0,                             \
+               (_size * ((_ccxll)->_itxl_##_base + (_items) - _stack_total))); \
                                                                                \
         (_ccxll)->_itxl_##_limit = (_items);                                   \
     }                                                                          \
