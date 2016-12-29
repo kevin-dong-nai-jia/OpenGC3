@@ -1,5 +1,5 @@
-#ifndef _CC_XLL_H_
-#define _CC_XLL_H_
+#ifndef CC_XLL_H
+#define CC_XLL_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -23,37 +23,37 @@
 
 #define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
-    typedef struct _S_CCXLL_BODY                                               \
+    typedef struct CC_S_CCXLL_BODY                                             \
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
                                                                                \
-        struct _S_CCXLL_NODE                                                   \
+        struct CC_S_CCXLL_NODE                                                 \
         {   link_t lnk;                                                        \
             elem_t val;                           /* val with an xor link */   \
         }   *avsp, *pnode;                        /* available space list */   \
                                                                                \
-        union  _U_CCXLL_HDTL                                                   \
+        union  CC_U_CCXLL_HDTL                                                 \
         {   link_t lnk;                                                        \
-            struct _S_CCXLL_NODE *stnl;           /* points to same addr. */   \
+            struct CC_S_CCXLL_NODE *stnl;         /* points to same addr. */   \
         }   head, tail;                           /* two pseudo sentinels */   \
                                                                                \
-        struct _S_CCXLL_BLOCK                                                  \
-        {   struct _S_CCXLL_BLOCK *next;          /* points to next block */   \
+        struct CC_S_CCXLL_BLOCK                                                \
+        {   struct CC_S_CCXLL_BLOCK *next;        /* points to next block */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
-            struct _S_CCXLL_NODE nodes[1];        /* node structure array */   \
+            struct CC_S_CCXLL_NODE nodes[1];      /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
-        struct _S_CCXLL_ITER                                                   \
-        {   union _U_CCXLL_ITER                                                \
+        struct CC_S_CCXLL_ITER                                                 \
+        {   union CC_U_CCXLL_ITER                                              \
             {   link_t lnk;                                                    \
-                struct _S_CCXLL_NODE *node;                                    \
+                struct CC_S_CCXLL_NODE *node;                                  \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
-            struct _S_CCXLL_BODY *ccxll;          /* points to ccxll body */   \
+            struct CC_S_CCXLL_BODY *ccxll;        /* points to ccxll body */   \
         }   **_it, (*itarr)[_n_iter];                                          \
                                                                                \
-        struct _S_CCXLL_BODY **_xl;               /* internal use _it/_xl */   \
+        struct CC_S_CCXLL_BODY **_xl;             /* internal use _it/_xl */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _xl_base, _xl_limit;                                     \
@@ -464,9 +464,9 @@ STATEMENT_                                                                     \
     _it_alloc((_ccxll_d), 1, _base_p);                                         \
     _it_alloc((_ccxll_s), 2, _base_q);                                         \
                                                                                \
-    _ccxll_merge_extd((_ccxll_d), _ITER((_ccxll_d), _base_p, 0),               \
-                                  _ITER((_ccxll_s), _base_q, 0),               \
-                                  _ITER((_ccxll_s), _base_q, 1), _leq);        \
+    _ccxll_merge_extd((_ccxll_d), _it_((_ccxll_d), _base_p, 0),                \
+                                  _it_((_ccxll_s), _base_q, 0),                \
+                                  _it_((_ccxll_s), _base_q, 1), _leq);         \
                                                                                \
     _it_clear((_ccxll_d), 1);                                                  \
     _it_clear((_ccxll_s), 2);                                                  \
@@ -502,7 +502,7 @@ STATEMENT_                                                                     \
     _it_alloc((_iter_l)->ccxll, 1, _base_m);                                   \
                                                                                \
     _ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            _ITER((_iter_l)->ccxll, _base_m, 0), _leq);        \
+                            _it_((_iter_l)->ccxll, _base_m, 0), _leq);         \
                                                                                \
     _it_clear((_iter_l)->ccxll, 1);                                            \
 )
@@ -559,10 +559,10 @@ STATEMENT_                                                                     \
     _it_alloc((_ccxll),  2, _base_i);                                          \
                                                                                \
     _ccxll_sort_extd( (_ccxll),                                                \
-                       _CCXLL((_ccxll), _base_c, 0),                           \
-                     &(_CCXLL((_ccxll), _base_b, 0)),                          \
-                       _ITER ((_ccxll), _base_i, 0),                           \
-                       _ITER ((_ccxll), _base_i, 1), _leq);                    \
+                       _xl_((_ccxll), _base_c, 0),                             \
+                     &(_xl_((_ccxll), _base_b, 0)),                            \
+                       _it_((_ccxll), _base_i, 0),                             \
+                       _it_((_ccxll), _base_i, 1), _leq);                      \
                                                                                \
     _xl_clear((_ccxll), 65);                                                   \
     _it_clear((_ccxll),  2);                                                   \
@@ -740,7 +740,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     _it_alloc((_iter_a)->ccxll, 1, _base_d);                                   \
                                                                                \
-    ccxll_iter_copy(_ITER((_iter_a)->ccxll, _base_d, 0), (_iter_a));           \
+    ccxll_iter_copy(_it_((_iter_a)->ccxll, _base_d, 0), (_iter_a));            \
                                                                                \
     STATEMENT_                                                                 \
     (                                                                          \
@@ -753,7 +753,7 @@ STATEMENT_                                                                     \
         if ((_iter_a)->curr.lnk == (_iter_b)->curr.lnk)  break;                \
         else  (*(_pdist)) = 0;                                                 \
                                                                                \
-        ccxll_iter_copy((_iter_a), _ITER((_iter_a)->ccxll, _base_d, 0));       \
+        ccxll_iter_copy((_iter_a), _it_((_iter_a)->ccxll, _base_d, 0));        \
                                                                                \
         while ((_iter_a)->curr.lnk != (_iter_b)->curr.lnk && --(*(_pdist)))    \
                if (!(ccxll_iter_decr((_iter_a))))  break;                      \
@@ -762,7 +762,7 @@ STATEMENT_                                                                     \
         else  (*(_pdist)) = 0;                                                 \
     );                                                                         \
                                                                                \
-    ccxll_iter_copy((_iter_a), _ITER((_iter_a)->ccxll, _base_d, 0));           \
+    ccxll_iter_copy((_iter_a), _it_((_iter_a)->ccxll, _base_d, 0));            \
                                                                                \
     _it_clear((_iter_a)->ccxll, 1);                                            \
 )
@@ -792,8 +792,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     _it_alloc((_ccxll_src), 1, _base_a);                                       \
                                                                                \
-    CCXLL_INCR(_ITER((_ccxll_src), _base_a, 0))                                \
-        ccxll_push_back((_ccxll_dst), DREF(_ITER((_ccxll_src), _base_a, 0)));  \
+    CCXLL_INCR(_it_((_ccxll_src), _base_a, 0))                                 \
+        ccxll_push_back((_ccxll_dst), DREF(_it_((_ccxll_src), _base_a, 0)));   \
                                                                                \
     _it_clear((_ccxll_src), 1);                                                \
 )
@@ -816,8 +816,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     _xl_alloc((_ccxll), 1, _base_r);                                           \
                                                                                \
-     ccxll_copy(_CCXLL(_ccxll, _base_r, 0), (_ccxll));                         \
-    _ccxll_swap((_ccxll), _CCXLL(_ccxll, _base_r, 0));                         \
+     ccxll_copy(_xl_(_ccxll, _base_r, 0), (_ccxll));                           \
+    _ccxll_swap((_ccxll), _xl_(_ccxll, _base_r, 0));                           \
                                                                                \
     _xl_clear((_ccxll), 1);                                                    \
 )

@@ -1,5 +1,5 @@
-#ifndef _CC_POOL_H_
-#define _CC_POOL_H_
+#ifndef CC_POOL_H
+#define CC_POOL_H
 
 #include <stdio.h>
 #include <string.h>
@@ -16,10 +16,10 @@
 STATEMENT_                                                                     \
 (                                                                              \
     if ((_void_ptr) != NULL)                                                   \
-        _CC_ERROR(_CC_ERROR_MSG_MEMORY_LEAK);                                  \
+        CC_ERROR(CC_ERROR_MSG_MEMORY_LEAK);                                    \
                                                                                \
     if (((_void_ptr) = malloc((_alloc_bytes))) == NULL)                        \
-        _CC_FATAL(_CC_FATAL_MSG_MALLOC_FAIL);                                  \
+        CC_FATAL(CC_FATAL_MSG_MALLOC_FAIL);                                    \
 )
 
 
@@ -28,7 +28,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     if ((_void_ptr) == NULL)                                                   \
-        _CC_ERROR(_CC_ERROR_MSG_DOUBLE_FREE);                                  \
+        CC_ERROR(CC_ERROR_MSG_DOUBLE_FREE);                                    \
                                                                                \
     free((_void_ptr));                                                         \
     (_void_ptr) = NULL;                                                        \
@@ -81,7 +81,7 @@ STATEMENT_                                                                     \
         ((_ccxll)->_itxl_##_base + (_ccxll)->_itxl_##_limit)
 
 
-#ifdef _CCC_STRICT
+#ifdef CCC_STRICT
 
 #define _it_alloc(_ccxll, _items, _base)                                       \
                                                                                \
@@ -89,7 +89,7 @@ STATEMENT_                                                                     \
         _it_xl_alloc((_ccxll), (_items), &(_base), _ccxll_iter_init, _it);     \
                                                                                \
         for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            ccxll_iter_init(_ITER((_ccxll), _base, _cnt), (_ccxll))
+            ccxll_iter_init(_it_((_ccxll), _base, _cnt), (_ccxll))
 
 #else
 
@@ -98,9 +98,9 @@ STATEMENT_                                                                     \
         __typeof__(**(_ccxll)->_it) _iter[(_items)];                           \
                                                                                \
         for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            ccxll_iter_init(_ITER((_ccxll), _iter, _cnt), (_ccxll))
+            ccxll_iter_init(_it_((_ccxll), _iter, _cnt), (_ccxll))
 
-#endif // _CCC_STRICT
+#endif // CCC_STRICT
 
 
 #define _xl_alloc(_ccxll, _items, _base)                                       \
@@ -122,7 +122,7 @@ STATEMENT_                                                                     \
 )
 
 
-#ifdef _CCC_STRICT
+#ifdef CCC_STRICT
 
 #define _it_clear(_ccxll, _items)                                              \
                                                                                \
@@ -132,7 +132,7 @@ STATEMENT_                                                                     \
 
 #define _it_clear(_ccxll, _items)
 
-#endif // _CCC_STRICT
+#endif // CCC_STRICT
 
 
 #define _xl_clear(_ccxll, _items)                                              \

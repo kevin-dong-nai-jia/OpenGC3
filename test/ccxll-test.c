@@ -1,3 +1,5 @@
+// #define CCC_STRICT
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
