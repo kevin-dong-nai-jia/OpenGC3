@@ -793,8 +793,7 @@ STATEMENT_                                                                     \
     ccxll_iter_head((_iter));                                                  \
                                                                                \
     for (__typeof__((_iter)->curr.node->val) *_pval;                           \
-         (ccxll_iter_incr((_iter))) &&                                         \
-         ((_pval) = &DREF((_iter)), 1); )
+         (ccxll_iter_incr((_iter))) && ((_pval) = &DREF((_iter)), 1); )
 
 #endif // CCC_STRICT
 
@@ -810,8 +809,7 @@ STATEMENT_                                                                     \
     ccxll_iter_tail((_iter));                                                  \
                                                                                \
     for (__typeof__((_iter)->curr.node->val) *_pval;                           \
-         (ccxll_iter_decr((_iter))) &&                                         \
-         ((_pval) = &DREF((_iter)), 1); )
+         (ccxll_iter_decr((_iter))) && ((_pval) = &DREF((_iter)), 1); )
 
 #endif // CCC_STRICT
 
