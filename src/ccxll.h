@@ -23,7 +23,20 @@
 
 #define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
-    typedef struct CC_S_CCXLL_BODY                                             \
+        typedef ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *_T_CCXLL;  _T_CCXLL
+
+
+#define ccxll_struct(elem_t)                                                   \
+                                                                               \
+        ccxll_struct_extd(elem_t, 1, NORMAL)
+
+#define ccxll_struct_pckd(elem_t)                                              \
+                                                                               \
+        ccxll_struct_extd(elem_t, 1, PACKED)
+
+#define ccxll_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
+                                                                               \
+    struct CC_S_CCXLL_BODY                                                     \
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
@@ -57,10 +70,7 @@
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _xl_base, _xl_limit;                                     \
-                                                                               \
-    }   *_T_CCXLL;                                                             \
-                                                                               \
-    _T_CCXLL
+    }
 
 
 
@@ -772,14 +782,42 @@ STATEMENT_                                                                     \
 /* ccxll traversal */
 
 
-#define  CCXLL_INCR(_iter)                                                     \
+#define CCXLL_INCR(_iter)                                                      \
                                                                                \
     for (ccxll_iter_head((_iter)); ccxll_iter_incr((_iter)); )
 
+#ifndef CCC_STRICT
 
-#define  CCXLL_DECR(_iter)                                                     \
+#define CCXLL_INCR_PVAL(_pval, _ccxll)                                         \
+                                                                               \
+    _it_alloc((_ccxll), 1, _base_n);                                           \
+                                                                               \
+    ccxll_iter_head(_it_((_ccxll), _base_n, 0));                               \
+                                                                               \
+    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+         (ccxll_iter_incr(_it_((_ccxll), _base_n, 0))) &&                      \
+         ((_pval) = &DREF(_it_((_ccxll), _base_n, 0)), 1); )                   \
+
+#endif // CCC_STRICT
+
+
+#define CCXLL_DECR(_iter)                                                      \
                                                                                \
     for (ccxll_iter_tail((_iter)); ccxll_iter_decr((_iter)); )
+
+#ifndef CCC_STRICT
+
+#define CCXLL_DECR_PVAL(_pval, _ccxll)                                         \
+                                                                               \
+    _it_alloc((_ccxll), 1, _base_n);                                           \
+                                                                               \
+    ccxll_iter_tail(_it_((_ccxll), _base_n, 0));                               \
+                                                                               \
+    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+         (ccxll_iter_decr(_it_((_ccxll), _base_n, 0))) &&                      \
+         ((_pval) = &DREF(_it_((_ccxll), _base_n, 0)), 1); )                   \
+
+#endif // CCC_STRICT
 
 
 
