@@ -788,15 +788,13 @@ STATEMENT_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define CCXLL_INCR_PVAL(_pval, _ccxll)                                         \
+#define CCXLL_INCR_DREF(_pval, _iter)                                          \
                                                                                \
-    _it_alloc((_ccxll), 1, _base_n);                                           \
+    ccxll_iter_head((_iter));                                                  \
                                                                                \
-    ccxll_iter_head(_it_((_ccxll), _base_n, 0));                               \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
-         (ccxll_iter_incr(_it_((_ccxll), _base_n, 0))) &&                      \
-         ((_pval) = &DREF(_it_((_ccxll), _base_n, 0)), 1); )                   \
+    for (__typeof__((_iter)->curr.node->val) *_pval;                           \
+         (ccxll_iter_incr((_iter))) &&                                         \
+         ((_pval) = &DREF((_iter)), 1); )
 
 #endif // CCC_STRICT
 
@@ -807,15 +805,13 @@ STATEMENT_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define CCXLL_DECR_PVAL(_pval, _ccxll)                                         \
+#define CCXLL_DECR_DREF(_pval, _iter)                                          \
                                                                                \
-    _it_alloc((_ccxll), 1, _base_n);                                           \
+    ccxll_iter_tail((_iter));                                                  \
                                                                                \
-    ccxll_iter_tail(_it_((_ccxll), _base_n, 0));                               \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
-         (ccxll_iter_decr(_it_((_ccxll), _base_n, 0))) &&                      \
-         ((_pval) = &DREF(_it_((_ccxll), _base_n, 0)), 1); )                   \
+    for (__typeof__((_iter)->curr.node->val) *_pval;                           \
+         (ccxll_iter_decr((_iter))) &&                                         \
+         ((_pval) = &DREF((_iter)), 1); )
 
 #endif // CCC_STRICT
 

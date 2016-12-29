@@ -724,7 +724,7 @@ int main(void)
 
     #ifndef CCC_STRICT
     // Test 21
-    // Pval Loop
+    // Loop
 
     printf("\n\nTest 21: \n\n");
 
@@ -735,7 +735,7 @@ int main(void)
         for (int cnt = 0; cnt < 16; cnt++)
             ccxll_push_back(list, cnt);
 
-        CCXLL_DECR_PVAL(pval, list)
+        CCXLL_INCR_DREF(pval, ITER(list))
             printf("%d ", *pval);
 
         puts("");
