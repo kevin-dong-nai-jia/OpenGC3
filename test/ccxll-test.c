@@ -722,6 +722,28 @@ int main(void)
         ccxll_free(list_b);
     }
 
+    #ifndef CCC_STRICT
+    // Test 21
+    // Pval Loop
+
+    printf("\n\nTest 21: \n\n");
+
+    {
+        ccxll(int) list;
+        ccxll_init(list);
+
+        for (int cnt = 0; cnt < 16; cnt++)
+            ccxll_push_back(list, cnt);
+
+        CCXLL_DECR_PVAL(pval, list)
+            printf("%d ", *pval);
+
+        puts("");
+
+        ccxll_free(list);
+    }
+    #endif // CCC_STRICT
+
 
     return 0;
 }
