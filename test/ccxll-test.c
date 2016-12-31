@@ -1,10 +1,9 @@
 // #define CCC_STRICT
+#include "../src/ccxll.h"
 
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../src/ccxll.h"
+#include <time.h>
 
 
 int main(void)
@@ -722,9 +721,10 @@ int main(void)
         ccxll_free(list_b);
     }
 
-    #ifndef CCC_STRICT
+
     // Test 21
     // Loop
+    #ifndef CCC_STRICT
 
     printf("\n\nTest 21: \n\n");
 

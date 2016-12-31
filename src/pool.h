@@ -1,11 +1,11 @@
 #ifndef CC_POOL_H
 #define CC_POOL_H
 
-#include <stdio.h>
-#include <string.h>
-
 #include "mesg.h"
 #include "misc.h"
+
+#include <stdio.h>
+#include <string.h>
 
 
 /* safe allocation */

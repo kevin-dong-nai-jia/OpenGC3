@@ -10,8 +10,8 @@
 /* error and fatal messages */
 
 
-const char CC_ERROR_MSG_MEMORY_LEAK[] = "Potential Memory Leak Problem.";
-const char CC_ERROR_MSG_DOUBLE_FREE[] = "Potential Double Free Problem.";
+static const char CC_ERROR_MSG_MEMORY_LEAK[] = "Potential Memory Leak.";
+static const char CC_ERROR_MSG_DOUBLE_FREE[] = "Potential Double Free.";
 
 #define CC_ERROR(CC_ERROR_MSG)                                                 \
                                                                                \
@@ -21,8 +21,8 @@ STATEMENT_                                                                     \
 )
 
 
-const char CC_FATAL_MSG_MALLOC_FAIL[] = "Memory Space Allocation Failure.";
-const int  CC_FATAL_MSG_MALLOC_FAIL_EXITCODE = -1;
+static const char CC_FATAL_MSG_MALLOC_FAIL[] = "Memory Allocation Failure.";
+static const int  CC_FATAL_MSG_MALLOC_FAIL_EXITCODE = -1;
 
 #define CC_FATAL(CC_FATAL_MSG)                                                 \
                                                                                \

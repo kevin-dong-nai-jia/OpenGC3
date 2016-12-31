@@ -1,13 +1,13 @@
 #ifndef CC_XLL_H
 #define CC_XLL_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-
 #include "pool.h"
 #include "misc.h"
 #include "snym.h"
+
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 
 /* ccxll create */
@@ -23,7 +23,9 @@
 
 #define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
-        typedef ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *_T_CCXLL;  _T_CCXLL
+        typedef ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *CC_T_CCXLL;       \
+                                                                               \
+        CC_T_CCXLL
 
 
 #define ccxll_struct(elem_t)                                                   \
@@ -643,15 +645,6 @@ STATEMENT_                                                                     \
 
 
 /* ccxll iterators */
-
-
-#define ccxll_iter_dref(_iter)       ((_iter)->curr.node->val)
-
-#define ccxll_iter_dref_prev(_iter)  ((_iter)->prev.node->val)
-
-#define ccxll_iter_dref_next(_iter)  ((_iter)->next.node->val)
-
-#define ccxll_iter(_ccxll, _nth_it)  (&(*(_ccxll)->itarr)[(_nth_it)])
 
 
 #define ccxll_iter_copy(_iter_dst, _iter_src)                                  \
