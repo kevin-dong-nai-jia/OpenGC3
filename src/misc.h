@@ -22,9 +22,9 @@ typedef void* link_t;
 #define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
-/* number of elem. */
+/* misc  */
 
-#define ELEMOF_ARR(NAME) ((int)(sizeof(NAME) / sizeof(NAME[0])))
+#define ELEMOF(ARRAY)    ((sizeof(ARRAY) / sizeof(ARRAY[0])))
 
 
 #endif

@@ -58,7 +58,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     _safe_alloc((_ccxll)->itarr, sizeof(*(_ccxll)->itarr));                    \
                                                                                \
-    for (int _idx = 0; _idx < ELEMOF_ARR(*(_ccxll)->itarr); _idx++)            \
+    for (int _idx = 0; _idx < (int)ELEMOF(*(_ccxll)->itarr); _idx++)           \
         ccxll_iter_init(&((*(_ccxll)->itarr)[_idx]), (_ccxll));                \
 )
 
@@ -81,7 +81,16 @@ STATEMENT_                                                                     \
         ((_ccxll)->_itxl_##_base + (_ccxll)->_itxl_##_limit)
 
 
-#ifdef CCC_STRICT
+#ifndef CCC_STRICT
+
+#define _it_alloc(_ccxll, _items, _iter)                                       \
+                                                                               \
+        __typeof__(**(_ccxll)->_it) _iter[(_items)];                           \
+                                                                               \
+        for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
+            ccxll_iter_init(_it_((_ccxll), _iter, _cnt), (_ccxll))
+
+#else
 
 #define _it_alloc(_ccxll, _items, _base)                                       \
                                                                                \
@@ -90,15 +99,6 @@ STATEMENT_                                                                     \
                                                                                \
         for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
             ccxll_iter_init(_it_((_ccxll), _base, _cnt), (_ccxll))
-
-#else
-
-#define _it_alloc(_ccxll, _items, _iter)                                       \
-                                                                               \
-        __typeof__(**(_ccxll)->_it) _iter[(_items)];                           \
-                                                                               \
-        for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            ccxll_iter_init(_it_((_ccxll), _iter, _cnt), (_ccxll))
 
 #endif // CCC_STRICT
 
@@ -122,15 +122,15 @@ STATEMENT_                                                                     \
 )
 
 
-#ifdef CCC_STRICT
+#ifndef CCC_STRICT
+
+#define _it_clear(_ccxll, _items)
+
+#else
 
 #define _it_clear(_ccxll, _items)                                              \
                                                                                \
         _it_xl_clear(_ccxll, _items, _it)
-
-#else
-
-#define _it_clear(_ccxll, _items)
 
 #endif // CCC_STRICT
 

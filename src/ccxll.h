@@ -241,7 +241,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     _node_alloc((_ccxll)->pnode, (_ccxll));                                    \
                                                                                \
-    (_ccxll)->pnode->val = (_val);                                             \
+    (_ccxll)->pnode->val       = (_val);                                       \
                                                                                \
     (_ccxll)->pnode->lnk       = XOR2(&((_ccxll)->_hdtl_.lnk),                 \
                                         (_ccxll)->_hdtl_.lnk);                 \
