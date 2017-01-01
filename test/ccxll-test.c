@@ -87,17 +87,17 @@ int main(void)
 
         msg_struct msg_1, msg_2;
 
-        msg_1.msg[0] = "Push";
-        msg_1.msg[1] = "back";
-        msg_2.msg[0] = "two";
+        msg_1.msg[0] = "Push ";
+        msg_1.msg[1] = "back ";
+        msg_2.msg[0] = "two ";
         msg_2.msg[1] = "structs.\n";
 
         ccxll_push_back(list, msg_1);
         ccxll_push_back(list, msg_2);
 
         CCXLL_INCR(ITER(list))
-            printf("%s ", DREF(ITER(list)).msg[0]),
-            printf("%s ", DREF(ITER(list)).msg[1]);
+            printf("%s", DREF(ITER(list)).msg[0]),
+            printf("%s", DREF(ITER(list)).msg[1]);
 
         ccxll_free(list);
     }
@@ -223,7 +223,7 @@ int main(void)
 
 
     // Test 9
-    // Insert, Erase and Rearrange
+    // Insert, Erase
 
     printf("\n\nTest 9: \n\n");
 
@@ -247,7 +247,6 @@ int main(void)
         }
 
         CCXLL_INCR(ITER(list));
-        ccxll_rearrange(list);
 
         printf("-> ");
         CCXLL_INCR(ITER(list))
@@ -261,8 +260,6 @@ int main(void)
             ccxll_erase(ITER(list));
         }
 
-        ccxll_rearrange(list);
-
         printf("-> ");
         CCXLL_INCR(ITER(list))
             printf("%d ", DREF(ITER(list)));
@@ -271,8 +268,6 @@ int main(void)
 
         for (int cnt = 0; cnt <= 5; cnt++)
             ccxll_erase(ITER(list));
-
-        ccxll_rearrange(list);
 
         printf("-> ");
         CCXLL_INCR(ITER(list))
@@ -330,7 +325,7 @@ int main(void)
 
 
     // Test 11
-    // Merge Range
+    // Merge Range and Sort
 
     printf("\n\nTest 11: \n\n");
 
@@ -723,24 +718,24 @@ int main(void)
 
 
     // Test 21
-    // Loop
+    // Demonstration
     #ifndef CCC_STRICT
 
     printf("\n\nTest 21: \n\n");
 
     {
-        ccxll(int) list;
-        ccxll_init(list);
+        ccxll(int) list;                        //  declare a list to store int
+        ccxll_init(list);                       //  initialize the list created
 
-        for (int cnt = 0; cnt < 16; cnt++)
-            ccxll_push_back(list, cnt);
+        for (int cnt = 8; cnt-- > 0; )
+            ccxll_push_back(list, rand());      //  insert 8 numbers at the end
 
-        CCXLL_INCR_DREF(pval, ITER(list))
-            printf("%d ", *pval);
+        ccxll_sort(list);                       //  sort the list in asc. order
 
-        puts("");
+        CCXLL_INCR_DREF(pnum, list)             //  traverse the list from left
+            printf("num = %d\n", *pnum);        //  deref the pointer to number
 
-        ccxll_free(list);
+        ccxll_free(list);                       //  free the list just as usual
     }
     #endif // CCC_STRICT
 
