@@ -19,10 +19,10 @@
 
 #ifndef CCC_STRICT
 #define _it_(_cc_ll, _iter, _offset)  (&(_iter)[(_offset)])
-#define _xl_(_cc_ll, _base, _offset)  ((_cc_ll)->_xl[(_base) + (_offset)])
+#define _ll_(_cc_ll, _base, _offset)  ((_cc_ll)->_ll[(_base) + (_offset)])
 #else
 #define _it_(_cc_ll, _base, _offset)  ((_cc_ll)->_it[(_base) + (_offset)])
-#define _xl_(_cc_ll, _base, _offset)  ((_cc_ll)->_xl[(_base) + (_offset)])
+#define _ll_(_cc_ll, _base, _offset)  ((_cc_ll)->_ll[(_base) + (_offset)])
 #endif
 
 
