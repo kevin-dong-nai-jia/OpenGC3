@@ -15,7 +15,7 @@ CCBST : Binary Search Tree
 ## Examples
 
 ```c
-//  An example of how to use ccxll container without CCC_STRICT defined
+//  an example of how to use ccxll container
 
 ccxll(int) list;                        //  declare a list to store int
 ccxll_init(list);                       //  initialize the list created
@@ -25,8 +25,8 @@ for (int cnt = 8; cnt-- > 0; )
 
 ccxll_sort(list);                       //  sort the list in asc. order
 
-CCXLL_INCR_DREF(pnum, ITER(list))       //  traverse the list from left
-    printf("%d ", *pnum);               //  deref the pointer to number
+CCXLL_INCR_DREF(pnum, list)             //  traverse the list from left
+    printf("num = %d\n", *pnum);        //  deref the pointer to number
 
 ccxll_free(list);                       //  free the list just as usual
 ```
@@ -40,7 +40,7 @@ C Container Collection is a set of macros and it runs faster than most of the C+
 
 ## Contributor
 
-Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 / 2016 / 2017
+Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
 
 ## License
 
