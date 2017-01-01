@@ -49,7 +49,6 @@ int main(void)
         if (!*(DREF(ITER(ls_token))))
             ccxll_erase(ITER(ls_token));
     }
-    ccxll_rearrange(ls_token);
 
 
     int first = 1;
@@ -69,9 +68,11 @@ int main(void)
     printf("digraph\n{\n");
 
     printf("    rankdir=LR\n");
-    printf("    node[ shape=rect style=\"rounded,filled\" ");
+    printf("    node [ shape=\"rect\" style=\"rounded,filled\" ");
+    printf("fillcolor=\"none\" fontname=\"noto\" ]\n\n");
 
-    printf("fillcolor=none fontname=\"ubuntu monospace\" ]\n");
+    printf("    { rank=\"sink\" XOR2 XOR3 }\n\n");
+
     CCXLL_INCR(ITER(ls_token))
     {
         if (DREF(ITER(ls_token)) == DREF(ITER(ls_macro)))
