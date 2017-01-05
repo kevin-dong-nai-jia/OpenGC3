@@ -2,7 +2,7 @@
 
 ## Containers
 
-* CCXLL : (E)XOR Linked List \[ [Source](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/src/ccxll.h) / [Graph](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/tool/call-graph.pdf) / [Usage](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/doc/macros-list.pdf) \]
+* CCXLL : XOR Linked List \[ [Source](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/src/ccxll.h) / [Call Graph](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/tool/call-graph.pdf) / [Usage](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/doc/macros-list.pdf) \]
 
 * CCDLL : Doubly Linked List
 
@@ -12,17 +12,17 @@
 
 ```c
 ccxll(int) list;                        //  declare a list of type int
-ccxll_init(list);                       //  initialize the list
+ccxll_init(list);                       //  initialize the list record
 
-for (int cnt = 8; cnt-- > 0; )          //
-    ccxll_push_back(list, rand());      //  insert some numbers to the end
+for (int cnt = 8; cnt-- > 0; )          //  
+    ccxll_push_back(list, rand());      //  insert 8 random numbers to the end
 
-ccxll_sort(list);                       //  sort elements in ascending order
+ccxll_sort(list);                       //  sort with the default compar. XLEQ
 
-CCXLL_INCR_DREF(pnum, list)             //  traverse forward
-    printf("num = %d\n", *pnum);        //  dereference the pointer to a number
+CCXLL_INCR_DREF(pnum, list)             //  traverse the list forward:
+    printf("num = %d\n", *pnum);        //  dereference the pointer to element
 
-ccxll_free(list);                       //  destroy the list
+ccxll_free(list);                       //  destroy the list after use
 ```
 
 See [test cases](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/test) for more fascinating examples!
@@ -34,7 +34,7 @@ C Container Collection (libCCC) is a set of macros and it runs faster than most 
 
 ## Contributor
 
-Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 / 2016 / 2017
+Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
 
 ## License
 
