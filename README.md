@@ -2,7 +2,7 @@
 
 ### Containers
 
-* CCXLL : XOR Linked List \[ [Graph](tool/call-graph.pdf) / [Usage](doc/macros-list.pdf) \]
+* [CCXLL](tool/call-graph.pdf) : [XOR Linked List](doc/ccxll-list.pdf)
 
 * CCDLL : Doubly Linked List
 
@@ -11,18 +11,18 @@
 ### An Example
 
 ```c
-ccxll(int) list;                    //  declare a list of type int
-ccxll_init(list);                   //  initialize the list record
+ccxll(int) list;                      //  declare a list of type int
+ccxll_init(list);                     //  initialize the list record
 
-for (int cnt = 8; cnt-- > 0; )      //  
-    ccxll_push_back(list, rand());  //  insert 8 random numbers to the end
+for (int cnt = 8; cnt-- > 0; )        //  
+    ccxll_push_back(list, rand());    //  insert 8 random numbers to the end
 
-ccxll_sort(list);                   //  sort with the default compar. XLEQ
+ccxll_sort(list);                     //  sort with the default compar. XLEQ
 
-CCXLL_INCR_DREF(pnum, list)         //  traverse the list forward:
-    printf("num = %d\n", *pnum);    //  dereference the pointer to element
+CCXLL_INCR_DREF(pnum, list)           //  traverse the list forward:
+    printf("num = %d\n", *pnum);      //  dereference the pointer to element
 
-ccxll_free(list);                   //  destroy the list after use
+ccxll_free(list);                     //  destroy the list after use
 ```
 
 See [test cases](test) for more fascinating examples!
@@ -39,3 +39,4 @@ Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
 ### License
 
 This project is distributed under [the MIT License](LICENSE).
+
