@@ -1,41 +1,41 @@
-# C Container Collection
+## C Container Collection
 
-## Containers
+### Containers
 
-* CCXLL : XOR Linked List \[ [Source](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/src/ccxll.h) / [Call Graph](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/tool/call-graph.pdf) / [Usage](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/doc/macros-list.pdf) \]
+* CCXLL : XOR Linked List \[ [Graph](tool/call-graph.pdf) / [Usage](doc/macros-list.pdf) \]
 
 * CCDLL : Doubly Linked List
 
 * CCBST : Binary Search Tree
 
-## An Example
+### An Example
 
 ```c
-ccxll(int) list;                        //  declare a list of type int
-ccxll_init(list);                       //  initialize the list record
+ccxll(int) list;                    //  declare a list of type int
+ccxll_init(list);                   //  initialize the list record
 
-for (int cnt = 8; cnt-- > 0; )          //  
-    ccxll_push_back(list, rand());      //  insert 8 random numbers to the end
+for (int cnt = 8; cnt-- > 0; )      //  
+    ccxll_push_back(list, rand());  //  insert 8 random numbers to the end
 
-ccxll_sort(list);                       //  sort with the default compar. XLEQ
+ccxll_sort(list);                   //  sort with the default compar. XLEQ
 
-CCXLL_INCR_DREF(pnum, list)             //  traverse the list forward:
-    printf("num = %d\n", *pnum);        //  dereference the pointer to element
+CCXLL_INCR_DREF(pnum, list)         //  traverse the list forward:
+    printf("num = %d\n", *pnum);    //  dereference the pointer to element
 
-ccxll_free(list);                       //  destroy the list after use
+ccxll_free(list);                   //  destroy the list after use
 ```
 
-See [test cases](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/test) for more fascinating examples!
+See [test cases](test) for more fascinating examples!
 
-## Description
+### Description
 
 C Container Collection (libCCC) is a set of macros and it runs faster than most of the C++ STL implementations since all macros are expanded at compile time. This project puts much emphasis on very low memory usage and high performance, and therefore the ccxll container is implemented by XOR doubly linked list with its own memory pool to avoid frequent memory allocation. Besides, each macro is strictly conformed to the C standard and fully tested under Valgrind for memory leak detection and other static code analysis tools for an out of bound check.
 
 
-## Contributor
+### Contributor
 
 Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
 
-## License
+### License
 
-This project is distributed under [the MIT License](https://github.com/kevin-dong-nai-jia/C-Container-Collection/blob/master/LICENSE).
+This project is distributed under [the MIT License](LICENSE).
