@@ -95,12 +95,12 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Access</td><td> TYPE&amp;</td><td>ccxll_front (CCXLL);</td>
+				<td rowspan="2">Access</td><td> <u><i>TYPE&amp;</i></u></td><td>ccxll_front (CCXLL);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> TYPE&amp;</td><td>ccxll_back (CCXLL);</td>
+				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>ccxll_back (CCXLL);</td>
 				<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
@@ -180,22 +180,22 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Comparators</td><td> LEQ</td><td>CCXLL_LEQ_COMPAR (ITER_L, ITER_R); (abbrev. XLEQ)</td>
+				<td rowspan="1">Comparators</td><td> <u><i>LEQ</i></u></td><td>CCXLL_LEQ_COMPAR (ITER_L, ITER_R); (abbrev. XLEQ)</td>
 				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 iff the value pointed by <font face="monospace">ITER_L</font> is not greater than the value pointed by <font face="monospace">ITER_R</font>.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="11">Iterators</td><td> ITER</td><td>ITER[_NTH] (CCXLL[, <i>num</i>]);</td>
+				<td rowspan="11">Iterators</td><td> <u><i>ITER</i></u></td><td>ITER[_NTH] (CCXLL[, <i>num</i>]);</td>
 				<td>Return the <i><font face="monospace">num</font></i>-th iterator of <font face="monospace">CCXLL</font>.</br>Return the zeroth iterator if <font face="monospace">_NTH</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> TYPE&amp;</td><td>DREF (ITER);</td>
+				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>DREF (ITER);</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not invalid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> TYPE&amp;</td><td>DREF_[PREV|NEXT] (ITER);</td>
+				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>DREF_[PREV|NEXT] (ITER);</td>
 				<td>Return a reference to the previous/next element.</br>It's an undefined behavior if the iterator is not invalid.</td>
 			</tr>
 			<tr>
@@ -240,12 +240,12 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Traversal</td><td> <u>loop</u></td><td>CCXLL_[INCR|DECR] (ITER) <u><i>stat</i></u>;</td>
+				<td rowspan="2">Traversal</td><td> <u><i>loop</i></u></td><td>CCXLL_[INCR|DECR] (ITER) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements forward/backward.</br>This is implemented by a single for statement.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u>loop</u></td><td>CCXLL_[INCR|DECR]_DREF (TYPE <b>*pval</b>, CCXLL) <u><i>stat</i></u>;</td>
+				<td style="display:none"></td><td> <u><i>loop</i></u></td><td>CCXLL_[INCR|DECR]_DREF (TYPE <b>*pval</b>, CCXLL) <u><i>stat</i></u>;</td>
 				<td>Traverse all elements forward/backward.</br>This macro will not be activated if <font face="monospace">CCC_STRICT</font> is defined.</td>
 			</tr>
 		</tbody>
