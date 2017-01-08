@@ -65,42 +65,42 @@
 			</tr>
 			<tr>
 				<td rowspan="37">CCXLL</td>
-				<td rowspan="3">Create</td><td> <u><i>CCXLL</i></u></td><td>ccxll (TYPE) list;</td>
+				<td rowspan="3">Create</td><td> <u><b>CCXLL</b></u></td><td>ccxll (TYPE) list;</td>
 				<td>Create a ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font>.</br>This is implemented by a C struct to construct a list container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>CCXLL</i></u></td><td>ccxll_pckd (TYPE) list;</td>
+				<td style="display:none"></td><td> <u><b>CCXLL<b></u></td><td>ccxll_pckd (TYPE) list;</td>
 				<td>Create a packed ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font>.</br>This is implemented by an aligned C struct to construct a list container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>CCXLL</i></u></td><td>ccxll_extd (TYPE, unsigned <i>num</i>, <b>align</b>) list;</td>
-				<td>Create a ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font> with <i><font face="monospace">num</font></i> iterators.</br>The container is packed when <b><font face="monospace">align</font></b> is <font face="monospace">PACKED</font>. Otherwise, set <font face="monospace">NORMAL</font> for default.</td>
+				<td style="display:none"></td><td> <u><b>CCXLL</b></u></td><td>ccxll_extd (TYPE, unsigned <i>num</i>, <i>align</i>) list;</td>
+				<td>Create a ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font> with <i><font face="monospace">num</font></i> iterators.</br>The container is packed when <i><font face="monospace">align</font></i> is <font face="monospace">PACKED</font>. Otherwise, set <font face="monospace">NORMAL</font> for default.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="2">Initialize</td><td> void</td><td>ccxll_init (CCXLL);</td>
-				<td>Initialize the ccxll container.</br>CAUTION: Every container must be initialized right after its creation.</td>
+				<td>Initialize the ccxll container.</br>Every container must be initialized right after its creation.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> void</td><td>ccxll_iter_init (ITER, CCXLL);</td>
-				<td>Initialize the iterator for the ccxll container.</br>CAUTION: Every iterator is implicitly initialized when the container it belongs to is initialized.</td>
+				<td>Initialize the iterator for the ccxll container.</br>Every iterator is implicitly initialized when the container it belongs to is initialized.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td rowspan="1">Destroy</td><td> <u><i>stat</i></u></td><td>ccxll_free (CCXLL);</td>
-				<td>Deallocate all elements in the container manually.</br>CAUTION: Every container should be destroyed before the program terminates.</td>
+				<td>Deallocate all elements in the container manually.</br>Every container should be destroyed before the program terminates.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="2">Access</td><td> <u><i>TYPE&amp;</i></u></td><td>ccxll_front (CCXLL);</td>
+				<td rowspan="2">Access</td><td> <u><b>TYPE&amp;</b></u></td><td>ccxll_front (CCXLL);</td>
 				<td>Return a reference to the first element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>ccxll_back (CCXLL);</td>
+				<td style="display:none"></td><td> <u><b>TYPE&amp;</b></u></td><td>ccxll_back (CCXLL);</td>
 				<td>Return a reference to the last element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
@@ -115,13 +115,13 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="9">Modifiers</td><td> <u><i>stat</i></u></td><td>ccxll_push_front (CCXLL, TYPE <b>value</b>);</td>
-				<td>Insert an element at the beginning.</br>This makes a copy of <b><font face="monospace">value</font></b> into the container.</td>
+				<td rowspan="9">Modifiers</td><td> <u><i>stat</i></u></td><td>ccxll_push_front (CCXLL, TYPE <i>value</i>);</td>
+				<td>Insert an element at the beginning.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_push_back (CCXLL, TYPE <b>value</b>);</td>
-				<td>Insert an element at the end.</br>This makes a copy of <b><font face="monospace">value</font></b> into the container.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_push_back (CCXLL, TYPE <i>value</i>);</td>
+				<td>Insert an element at the end.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -135,8 +135,8 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_insert (ITER, TYPE <b>value</b>);</td>
-				<td>Insert an element at the position where the iterator points.</br>This makes a copy of <b><font face="monospace">value</font></b> into the container.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_insert (ITER, TYPE <i>value</i>);</td>
+				<td>Insert an element at the position where the iterator points.</br>This makes a copy of <i><font face="monospace">value</font></i> into the container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -145,13 +145,13 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_swap (CCXLL_A, CCXLL_B);</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_swap (CCXLL <i>a</i>, CCXLL <i>b</i>);</td>
 				<td>Swap two containers of the same type.</br>It may cause unexpected errors if two containers are of different types.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_resize (CCXLL, int <i>num</i>, TYPE <b>value</b>);</td>
-				<td>Resize the container to contain <i><font face="monospace">num</font></i> elements.</br>If the current size is smaller than <i><font face="monospace">num</font></i> elements, then fills with <b><font face="monospace">value</font></b>. Otherwise, it truncates.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_resize (CCXLL, int <i>num</i>, TYPE <i>value</i>);</td>
+				<td>Resize the container to contain <i><font face="monospace">num</font></i> elements.</br>If the current size is smaller than <i><font face="monospace">num</font></i> elements, then fills with <i><font face="monospace">value</font></i>. Otherwise, it truncates.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -160,48 +160,48 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="4">Operations</td><td> <u><i>stat</i></u></td><td>ccxll_move_range (ITER_P, ITER_L, ITER_R);</td>
-				<td>Move the elements in the range <font face="monospace">[ITER_L, ITER_R)</font> to position where <font face="monospace">ITER_P</font> points.</br>These three iterators should be affiliated to the same ccxll container.</td>
+				<td rowspan="4">Operations</td><td> <u><i>stat</i></u></td><td>ccxll_move_range (ITER <i>pos</i>, ITER <i>left</i>, ITER <i>right</i>);</td>
+				<td>Move the elements in the range <font face="monospace">[<i>left</i>, <i>right</i>)</font> to position where <i><font face="monospace">pos</font></i> points.</br>These three iterators should be affiliated to the same ccxll container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_merge[_extd] (CCXLL_A, CCXLL_B[, (*LEQ)()]);</td>
-				<td>Merge two sorted lists from <font face="monospace">CCXLL_B</font> into <font face="monospace">CCXLL_A</font>.</br>Merge with the default comparator <font face="monospace">CCXLL_LEQ_COMPAR</font> if <font face="monospace">_extd</font> postfix is not specified.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_merge[_extd] (CCXLL <i>dst</i>, CCXLL <i>src</i> [, (*LEQ)()]);</td>
+				<td>Merge two sorted lists from <i><font face="monospace">src</font></i> into <i><font face="monospace">dst</font></i>.</br>Merge with the default comparator <font face="monospace">XLEQ</font> if <font face="monospace">_extd</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_sort[_extd] (CCXLL[, (*LEQ)()]);</td>
-				<td>Sort all elements in <font face="monospace">CCXLL</font>.</br>Sort with the default comparator <font face="monospace">CCXLL_LEQ_COMPAR</font> if <font face="monospace">_extd</font> postfix is not specified.</td>
+				<td>Sort all elements in the list.</br>Sort with the default comparator <font face="monospace">XLEQ</font> if <font face="monospace">_extd</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_reverse_range (ITER_L, ITER_R);</td>
-				<td>Reverse the elements in the range <font face="monospace">[ITER_L, ITER_R]</font>.</br>This performs in constant time no matter how large the range is.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_reverse_range (ITER <i>left</i>, ITER <i>right</i>);</td>
+				<td>Reverse the elements in the range <font face="monospace">[<i>left</i>, <i>right</i>]</font>.</br>This performs in constant time no matter how large the range is.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Comparators</td><td> <u><i>LEQ</i></u></td><td>CCXLL_LEQ_COMPAR (ITER_L, ITER_R); (abbrev. XLEQ)</td>
-				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 iff the value pointed by <font face="monospace">ITER_L</font> is not greater than the value pointed by <font face="monospace">ITER_R</font>.</td>
+				<td rowspan="1">Comparators</td><td> <u><b>LEQ</b></u></td><td>CCXLL_LEQ_COMPAR (ITER <i>a</i>, ITER <i>b</i>); (abbrev. XLEQ)</td>
+				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 iff the value pointed by <i><font face="monospace">a</font></i> is not greater than the value pointed by <i><font face="monospace">b</font></i>. Otherwise, return 0.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="11">Iterators</td><td> <u><i>ITER</i></u></td><td>ITER[_NTH] (CCXLL[, <i>num</i>]);</td>
-				<td>Return the <i><font face="monospace">num</font></i>-th iterator of <font face="monospace">CCXLL</font>.</br>Return the zeroth iterator if <font face="monospace">_NTH</font> postfix is not specified.</td>
+				<td rowspan="11">Iterators</td><td> <u><b>ITER</b></u></td><td>ITER[_NTH] (CCXLL [, unsigned <i>num</i>]);</td>
+				<td>Return the <i><font face="monospace">num</font></i> -th iterator of the list.</br>Return the zero-th iterator if <font face="monospace">_NTH</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>DREF (ITER);</td>
-				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not invalid.</td>
+				<td style="display:none"></td><td> <u><b>TYPE&amp;</b></u></td><td>DREF (ITER);</td>
+				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not (semi-)valid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>TYPE&amp;</i></u></td><td>DREF_[PREV|NEXT] (ITER);</td>
-				<td>Return a reference to the previous/next element.</br>It's an undefined behavior if the iterator is not invalid.</td>
+				<td style="display:none"></td><td> <u><b>TYPE&amp;</b></u></td><td>DREF_[PREV|NEXT] (ITER);</td>
+				<td>Return a reference to the previous/next element.</br>It's an undefined behavior if the iterator is not valid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> void</td><td>ccxll_iter_copy (ITER_DST, ITER_SRC);</td>
-				<td>Copy the iterator from <font face="monospace">ITER_SRC</font> to <font face="monospace">ITER_DST</font>.</br>It's not acceptable to assign the iterator by assignment operator.</td>
+				<td style="display:none"></td><td> void</td><td>ccxll_iter_copy (ITER <i>dst</i>, ITER <i>src</i>);</td>
+				<td>Copy the iterator from <i><font face="monospace">src</font></i> to <i><font face="monospace">dst</font></i>.</br>It's not acceptable to assign the iterator by assignment operator.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -230,13 +230,13 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_advance (ITER, int <b>diff</b>);</td>
-				<td>Move the iterator by <b><font face="monospace">diff</font></b> element(s). (regard forward as positive)</br>The iterator will stop at the sentinel node if there is no element left to iterate over.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_advance (ITER, int <i>diff</i>);</td>
+				<td>Move the iterator by <i><font face="monospace">diff</font></i> element(s). (regard forward as positive)</br>The iterator will stop at the sentinel node if there is no element left to iterate over.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_distance (ITER_A, ITER_B, int *<b>dist</b>);</td>
-				<td>Return the distance between <font face="monospace">ITER_A</font> and <font face="monospace">ITER_B</font> through the pointer <b><font face="monospace">dist</font></b>.</br>Return 0 if the distance between them cannot be determined.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_distance (ITER <i>a</i>, ITER <i>b<i>, int *<i>dist</i>);</td>
+				<td>Return the distance between <i><font face="monospace">a</font></i> and <i><font face="monospace">b</font></i> through <i><font face="monospace">dist</font></i>.</br>Return 0 if the distance between them cannot be determined.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -245,8 +245,8 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>loop</i></u></td><td>CCXLL_[INCR|DECR]_DREF (TYPE <b>*pval</b>, CCXLL) <u><i>stat</i></u>;</td>
-				<td>Traverse all elements forward/backward.</br>This macro will not be activated if <font face="monospace">CCC_STRICT</font> is defined.</td>
+				<td style="display:none"></td><td> <u><i>loop</i></u></td><td>CCXLL_[INCR|DECR]_DREF (TYPE <i>*pval</i>, CCXLL) <u><i>stat</i></u>;</td>
+				<td>Traverse all elements forward/backward, and set the address of each element into <i><font face="monospace">pval</font></i>.</br>This macro will not be activated if <font face="monospace">CCC_STRICT</font> is defined.</td>
 			</tr>
 		</tbody>
 		</table>
