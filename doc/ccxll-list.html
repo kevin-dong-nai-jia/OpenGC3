@@ -65,18 +65,18 @@
 			</tr>
 			<tr>
 				<td rowspan="34">CCXLL</td>
-				<td rowspan="3">Create</td><td> <u><b>CCXLL</b></u></td><td>ccxll (TYPE) list;</td>
-				<td>Create a ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font>.</br>This is implemented by a C struct to construct a list container.</td>
+				<td rowspan="3">Create</td><td> <u><b>CCXLL</b></u></td><td>ccxll (<b>TYPE</b>) list;</td>
+				<td>Create a ccxll container <font face="monospace">list</font> of type <b><font face="monospace">TYPE</font></b> with an iterator.</br>This is implemented by a C struct to construct a list container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><b>CCXLL<b></u></td><td>ccxll_pckd (TYPE) list;</td>
-				<td>Create a packed ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font>.</br>This is implemented by an aligned C struct to construct a list container.</td>
+				<td style="display:none"></td><td> <u><b>CCXLL<b></u></td><td>ccxll_pckd (<b>TYPE</b>) list;</td>
+				<td>Create a packed ccxll container <font face="monospace">list</font> of type <b><font face="monospace">TYPE</font></b> with an iterator.</br>This is implemented by an aligned C struct to construct a list container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><b>CCXLL</b></u></td><td>ccxll_extd (TYPE, unsigned <i>num</i>, <i>align</i>) list;</td>
-				<td>Create a ccxll container <font face="monospace">list</font> of type <font face="monospace">TYPE</font> with <i><font face="monospace">num</font></i> iterators.</br>The container is packed when <i><font face="monospace">align</font></i> is <font face="monospace">PACKED</font>. Otherwise, set <font face="monospace">NORMAL</font> for default.</td>
+				<td style="display:none"></td><td> <u><b>CCXLL</b></u></td><td>ccxll_extd (<b>TYPE</b>, unsigned <i>num</i>, <b>ALIGN</b>) list;</td>
+				<td>Create a ccxll container <font face="monospace">list</font> of type <b><font face="monospace">TYPE</font></b> with <i><font face="monospace">num</font></i> iterators.</br>The container is packed when <b><font face="monospace">ALIGN</font></b> is <font face="monospace">PACKED</font>. Otherwise, set <font face="monospace">NORMAL</font> for default.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Access</td><td> <u><b>TYPE&amp;</b></u></td><td>ccxll_[front|back] (CCXLL);</td>
+				<td rowspan="1">Access</td><td> <b>TYPE&amp;</b></td><td>ccxll_[front|back] (CCXLL);</td>
 				<td>Return a reference to the first/last element.</br>It's an undefined behavior if the container is empty.</td>
 			</tr>
 			<tr>
@@ -165,22 +165,22 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Comparators</td><td> <u><b>LEQ</b></u></td><td>CCXLL_LEQ_COMPAR (ITER <i>a</i>, ITER <i>b</i>); (abbrev. XLEQ)</td>
+				<td rowspan="1">Comparators</td><td> <b>LEQ</b></td><td>CCXLL_LEQ_COMPAR (ITER <i>a</i>, ITER <i>b</i>); (abbrev. XLEQ)</td>
 				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 iff the value pointed by <i><font face="monospace">a</font></i> is not greater than the value pointed by <i><font face="monospace">b</font></i>. Otherwise, return 0.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="11">Iterators</td><td> <u><b>ITER</b></u></td><td>ITER[_NTH] (CCXLL [, unsigned <i>num</i>]);</td>
+				<td rowspan="11">Iterators</td><td> <b>ITER</b></td><td>ITER[_NTH] (CCXLL [, unsigned <i>num</i>]);</td>
 				<td>Return the <i><font face="monospace">num</font></i> -th iterator of the list.</br>Return the zero-th iterator if <font face="monospace">_NTH</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><b>TYPE&amp;</b></u></td><td>DREF (ITER);</td>
+				<td style="display:none"></td><td> <b>TYPE&amp;</b></td><td>DREF (ITER);</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not (semi-)valid.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><b>TYPE&amp;</b></u></td><td>DREF_[PREV|NEXT] (ITER);</td>
+				<td style="display:none"></td><td> <b>TYPE&amp;</b></td><td>DREF_[PREV|NEXT] (ITER);</td>
 				<td>Return a reference to the previous/next element.</br>It's an undefined behavior if the iterator is not valid.</td>
 			</tr>
 			<tr>
@@ -220,7 +220,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_distance (ITER <i>a</i>, ITER <i>b<i>, int *<i>dist</i>);</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_iter_distance (ITER <i>a</i>, ITER <i>b</i>, int *<i>dist</i>);</td>
 				<td>Return the distance between <i><font face="monospace">a</font></i> and <i><font face="monospace">b</font></i> through <i><font face="monospace">dist</font></i>.</br>Return 0 if the distance between them cannot be determined.</td>
 			</tr>
 			<tr>
