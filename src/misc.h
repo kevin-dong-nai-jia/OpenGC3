@@ -16,15 +16,23 @@ typedef void* link_t;
 #define PRAGMA_PACKED_END  _Pragma("pack(pop)"    )
 
 
-/* syntax wrappers */
+/* line ID append */
+
+#define ADDID APPENDLINE
+#define CONCATLINE(N, L)  N ## L
+#define EXPANDLINE(N, L)  CONCATLINE(N, L)
+#define APPENDLINE(NAME)  EXPANDLINE(NAME, __LINE__)
+
+
+/* syntax wrapper */
 
 #define STATEMENT_(...)  do {__VA_ARGS__} while (0)
 #define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
-/* misc  */
+/* miscellaneous  */
 
-#define ELEMOF(ARRAY)    ((sizeof(ARRAY) / sizeof(ARRAY[0])))
+#define ELEMOF(ARRAY)  ((sizeof(ARRAY) / sizeof(ARRAY[0])))
 
 
 #endif

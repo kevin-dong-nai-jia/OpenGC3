@@ -13,6 +13,14 @@
 /* ccxll create */
 
 
+#define CCXLL_BODY  ADDID(CCXLL_BODY_)
+#define CCXLL_NODE  ADDID(CCXLL_NODE_)
+#define CCXLL_BLCK  ADDID(CCXLL_BLCK_)
+#define CCXLL_ITER  ADDID(CCXLL_ITER_)
+#define CCXLL_HDTL  ADDID(CCXLL_HDTL_)
+#define CCXLL_ADJC  ADDID(CCXLL_ADJC_)
+
+
 #define ccxll(elem_t)                                                          \
                                                                                \
         ccxll_extd(elem_t, 1, NORMAL)
@@ -24,6 +32,7 @@
 #define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
         typedef                                                                \
+                                                                               \
         ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *CC_T_CCXLL;  CC_T_CCXLL
 
 
@@ -37,37 +46,37 @@
 
 #define ccxll_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
                                                                                \
-    struct CC_S_CCXLL_BODY                                                     \
+    struct CCXLL_BODY                                                          \
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
                                                                                \
-        struct CC_S_CCXLL_NODE                                                 \
+        struct CCXLL_NODE                                                      \
         {   link_t lnk;                                                        \
             elem_t val;                           /* val with an xor link */   \
         }   *avsp, *pnode;                        /* available space list */   \
                                                                                \
-        union  CC_U_CCXLL_HDTL                                                 \
+        union  CCXLL_HDTL                                                      \
         {   link_t lnk;                                                        \
-            struct CC_S_CCXLL_NODE *stnl;         /* points to same addr. */   \
+            struct CCXLL_NODE *stnl;              /* points to same addr. */   \
         }   head, tail;                           /* two pseudo sentinels */   \
                                                                                \
-        struct CC_S_CCXLL_BLOCK                                                \
-        {   struct CC_S_CCXLL_BLOCK *next;        /* points to next block */   \
+        struct CCXLL_BLCK                                                      \
+        {   struct CCXLL_BLCK *next;              /* points to next block */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
-            struct CC_S_CCXLL_NODE nodes[1];      /* node structure array */   \
+            struct CCXLL_NODE nodes[1];           /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
-        struct CC_S_CCXLL_ITER                                                 \
-        {   union CC_U_CCXLL_ITER                                              \
+        struct CCXLL_ITER                                                      \
+        {   union CCXLL_ADJC                                                   \
             {   link_t lnk;                                                    \
-                struct CC_S_CCXLL_NODE *node;                                  \
+                struct CCXLL_NODE *node;                                       \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
-            struct CC_S_CCXLL_BODY *ccxll;        /* points to ccxll body */   \
+            struct CCXLL_BODY *ccxll;             /* points to ccxll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
-        struct CC_S_CCXLL_BODY **_ll;             /* internal use _it/_ll */   \
+        struct CCXLL_BODY **_ll;                  /* internal use _it _ll */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _ll_base, _ll_limit;                                     \
