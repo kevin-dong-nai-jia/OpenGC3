@@ -2,11 +2,6 @@
 #define CC_MISC_H
 
 
-/* generic pointer */
-
-typedef void* link_t;
-
-
 /* compiler pragma */
 
 #define PRAGMA_NORMAL_BGN

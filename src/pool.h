@@ -264,7 +264,7 @@ STATEMENT_                                                                     \
     else                                                                       \
     {                                                                          \
         (_pnode)       = (_cc_ll)->avsp;                                       \
-        (_cc_ll)->avsp = (_cc_ll)->avsp->lnk;                                  \
+        (_cc_ll)->avsp = (_cc_ll)->avsp->lnk[0];                               \
     }                                                                          \
 )
 
@@ -273,8 +273,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    (_pnode)->lnk  = (_cc_ll)->avsp;                                           \
-    (_cc_ll)->avsp = (_pnode);                                                 \
+    (_pnode)->lnk[0] = (_cc_ll)->avsp;                                         \
+    (_cc_ll)->avsp   = (_pnode);                                               \
 )
 
 
