@@ -14,7 +14,7 @@
 /* line ID append */
 
 #define ADDID APPENDLINE
-#define CONCATLINE(N, L)  N ## L
+#define CONCATLINE(N, L)  N ## _ ## L
 #define EXPANDLINE(N, L)  CONCATLINE(N, L)
 #define APPENDLINE(NAME)  EXPANDLINE(NAME, __LINE__)
 

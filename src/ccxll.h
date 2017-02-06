@@ -14,12 +14,13 @@
 
 #define XOR lnk[0]
 
-#define CCXLL_BODY  ADDID(CCXLL_BODY_)
-#define CCXLL_NODE  ADDID(CCXLL_NODE_)
-#define CCXLL_BLCK  ADDID(CCXLL_BLCK_)
-#define CCXLL_ITER  ADDID(CCXLL_ITER_)
-#define CCXLL_HDTL  ADDID(CCXLL_HDTL_)
-#define CCXLL_ADJC  ADDID(CCXLL_ADJC_)
+#define CCXLL       ADDID(CCXLL)
+#define CCXLL_BODY  ADDID(CCXLL_BODY)
+#define CCXLL_NODE  ADDID(CCXLL_NODE)
+#define CCXLL_BLCK  ADDID(CCXLL_BLCK)
+#define CCXLL_ITER  ADDID(CCXLL_ITER)
+#define CCXLL_HDTL  ADDID(CCXLL_HDTL)
+#define CCXLL_ADJC  ADDID(CCXLL_ADJC)
 
 
 /* ccxll create */
@@ -35,9 +36,7 @@
 
 #define ccxll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
-        typedef                                                                \
-                                                                               \
-        ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *CC_T_CCXLL;  CC_T_CCXLL
+        typedef ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *CCXLL;  CCXLL
 
 
 typedef void* link_t;

@@ -15,11 +15,12 @@
 #define PRV lnk[0]
 #define NXT lnk[1]
 
-#define CCDLL_BODY  ADDID(CCDLL_BODY_)
-#define CCDLL_NODE  ADDID(CCDLL_NODE_)
-#define CCDLL_BLCK  ADDID(CCDLL_BLCK_)
-#define CCDLL_ITER  ADDID(CCDLL_ITER_)
-#define CCDLL_CURR  ADDID(CCDLL_CURR_)
+#define CCDLL       ADDID(CCDLL)
+#define CCDLL_BODY  ADDID(CCDLL_BODY)
+#define CCDLL_NODE  ADDID(CCDLL_NODE)
+#define CCDLL_BLCK  ADDID(CCDLL_BLCK)
+#define CCDLL_ITER  ADDID(CCDLL_ITER)
+#define CCDLL_CURR  ADDID(CCDLL_CURR)
 
 
 /* ccdll create */
@@ -35,9 +36,7 @@
 
 #define ccdll_extd(elem_t, _n_iter, _ALIGN_)                                   \
                                                                                \
-        typedef                                                                \
-                                                                               \
-        ccdll_struct_extd(elem_t, _n_iter, _ALIGN_) *CC_T_CCDLL;  CC_T_CCDLL
+        typedef ccdll_struct_extd(elem_t, _n_iter, _ALIGN_) *CCDLL;  CCDLL
 
 
 #define ccdll_struct(elem_t)                                                   \
