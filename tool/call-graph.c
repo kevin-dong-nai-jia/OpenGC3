@@ -58,7 +58,7 @@ int main(void)
 
     CCXLL_INCR(ITER(ls_token))
         if (!(ccxll_iter_at_begin(ITER(ls_token))) &&
-            strcmp(DREF_PREV(ITER(ls_token)), "#define") == 0 &&
+            strcmp(XREF_PREV(ITER(ls_token)), "#define") == 0 &&
             (!( '_' == (DREF(ITER(ls_token))[0]) &&
                 isupper(DREF(ITER(ls_token))[1]))))
             ccxll_push_back(ls_macro, DREF(ITER(ls_token)));
@@ -96,7 +96,7 @@ int main(void)
             if (!(ccxll_iter_at_end(ITER(ls_token))) &&
                 strcmp(DREF(ITER    (ls_token)),
                        DREF(ITER_NTH(ls_macro, 1))) == 0 &&
-                DREF_NEXT(ITER(ls_token))[0] == '(')
+                XREF_NEXT(ITER(ls_token))[0] == '(')
                 printf(" %s", DREF(ITER(ls_token)));
         }
     }

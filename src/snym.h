@@ -18,8 +18,10 @@
 #define XLEQ  CCXLL_LEQ_COMPAR
 
 #define DREF(_iter)       ((_iter)->curr.node->val)
-#define DREF_PREV(_iter)  ((_iter)->prev.node->val)
-#define DREF_NEXT(_iter)  ((_iter)->next.node->val)
+#define DREF_PREV(_iter)  ((_iter)->curr.node->PRV->val)
+#define DREF_NEXT(_iter)  ((_iter)->curr.node->NXT->val)
+#define XREF_PREV(_iter)  ((_iter)->prev.node->val)
+#define XREF_NEXT(_iter)  ((_iter)->next.node->val)
 
 #define ITER(_cc_ll)               (ITER_NTH(_cc_ll, 0))
 #define ITER_NTH(_cc_ll, _nth_it)  (&(*(_cc_ll)->itarr)[(_nth_it)])
