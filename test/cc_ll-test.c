@@ -67,23 +67,21 @@ int main(void)
     }
 
 
-    #ifdef DEBUG_CCXLL
-
     // Test 2
     // Push Back
 
     printf("\n\nTest 2: ");
 
     {
-        ccxll(int) list;
-        ccxll_init(list);
+        ctnr()(int) list;
+        ctnr(_init)(list);
 
         int cnt = 0;
 
         while (cnt < 10000000)
-            ccxll_push_back(list, cnt++);
+            ctnr(_push_back)(list, cnt++);
 
-        ccxll_free(list);
+        ctnr(_free)(list);
 
         puts("Test deallocation.");
     }
@@ -97,8 +95,8 @@ int main(void)
     {
         typedef struct  {  char *msg[2];  }   msg_struct;
 
-        ccxll(msg_struct) list;
-        ccxll_init(list);
+        ctnr()(msg_struct) list;
+        ctnr(_init)(list);
 
         msg_struct msg_1, msg_2;
 
@@ -107,14 +105,14 @@ int main(void)
         msg_2.msg[0] = "two ";
         msg_2.msg[1] = "structs.\n";
 
-        ccxll_push_back(list, msg_1);
-        ccxll_push_back(list, msg_2);
+        ctnr(_push_back)(list, msg_1);
+        ctnr(_push_back)(list, msg_2);
 
-        CCXLL_INCR(ITER(list))
+        CTNR(_INCR)(ITER(list))
             printf("%s", DREF(ITER(list)).msg[0]),
             printf("%s", DREF(ITER(list)).msg[1]);
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
 
@@ -124,17 +122,17 @@ int main(void)
     printf("\n\nTest 4: ");
 
     {
-        ccxll_extd(int, 9, NORMAL) list;
-        ccxll_init(list);
-        ccxll_iter_init(ITER_NTH(list, 8), list);
+        ctnr(_extd)(int, 9, NORMAL) list;
+        ctnr(_init)(list);
+        ctnr(_iter_init)(ITER_NTH(list, 8), list);
 
-        CCXLL_INCR(ITER_NTH(list, 8))
+        CTNR(_INCR)(ITER_NTH(list, 8))
             printf("%d", DREF(ITER_NTH(list, 8)));
 
-        if (ccxll_iter_incr(ITER_NTH(list, 8)) == NULL)
+        if (ctnr(_iter_incr)(ITER_NTH(list, 8)) == NULL)
             puts("The iterator points to the tail.");
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
 
@@ -144,22 +142,22 @@ int main(void)
     printf("\n\nTest 5: ");
 
     {
-        ccxll(char*) list;
-        ccxll_init(list);
+        ctnr()(char*) list;
+        ctnr(_init)(list);
 
-        (void)ccxll_front(list);
-        (void)ccxll_back(list);
+        (void)ctnr(_front)(list);
+        (void)ctnr(_back )(list);
 
-        ccxll_push_front(list, "Failed ");
-        ccxll_push_front(list, "to access.\n");
+        ctnr(_push_front)(list, "Failed ");
+        ctnr(_push_front)(list, "to access.\n");
 
-        ccxll_front(list) = "Element ";
-        ccxll_back (list) = "access succeeds.\n";
+        ctnr(_front)(list) = "Element ";
+        ctnr(_back )(list) = "access succeeds.\n";
 
-        CCXLL_INCR(ITER(list))
+        CTNR(_INCR)(ITER(list))
             printf("%s", DREF(ITER(list)));
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
 
@@ -169,22 +167,22 @@ int main(void)
     printf("\n\nTest 6: ");
 
     {
-        ccxll(int) list;
-        ccxll_init(list);
+        ctnr()(int) list;
+        ctnr(_init)(list);
 
-        ccxll_pop_front(list);
+        ctnr(_pop_front)(list);
 
-        ccxll_push_front(list, 9);
-        ccxll_pop_front (list);
+        ctnr(_push_front)(list, 9);
+        ctnr(_pop_front )(list);
 
-        ccxll_push_back(list, 1);
-        ccxll_push_back(list, 3);
-        ccxll_pop_back (list);
+        ctnr(_push_back)(list, 1);
+        ctnr(_push_back)(list, 3);
+        ctnr(_pop_back )(list);
 
-        CCXLL_INCR(ITER(list))
+        CTNR(_INCR)(ITER(list))
             printf("%d == 1\n", DREF(ITER(list)));
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
 
@@ -194,22 +192,22 @@ int main(void)
     printf("\n\nTest 7: \n");
 
     {
-        ccxll(int) list;
-        ccxll_init(list);
+        ctnr()(int) list;
+        ctnr(_init)(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ccxll_push_back(list, cnt);
-        puts("Clearing the ccxll ctnrainer...");
+            ctnr(_push_back)(list, cnt);
+        puts("Clearing the container...");
 
-        ccxll_clear(list);
+        ctnr(_clear)(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ccxll_push_back(list, cnt);
-        puts("Deallocating the ccxll ctnrainer...");
+            ctnr(_push_back)(list, cnt);
+        puts("Deallocating the container...");
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
 
@@ -219,23 +217,24 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        ccxll_pckd(char) list;
-        ccxll_init(list);
+        ctnr(_pckd)(char) list;
+        ctnr(_init)(list);
 
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ccxll_push_back(list, (char)cnt);
+            ctnr(_push_back)(list, (char)cnt);
 
         char var = 0;
 
-        CCXLL_INCR(ITER(list))
+        CTNR(_INCR)(ITER(list))
             if (var != 127)  printf("%3d ", (var = DREF(ITER(list))));
             else  break;
 
         puts("");
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
+    #ifdef DEBUG_CCXLL
 
     // Test 9
     // Insert, Erase

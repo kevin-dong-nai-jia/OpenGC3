@@ -201,6 +201,24 @@ STATEMENT_                                                                     \
 
 
 
+/* ccdll access */
+
+
+#define ccdll_front(_ccdll)  ((_ccdll)->head.NXT->val)
+
+#define ccdll_back(_ccdll)   ((_ccdll)->tail.PRV->val)
+
+
+
+/* ccdll capacity */
+
+
+#define ccdll_size(_ccdll)   ((_ccdll)->size)
+
+#define ccdll_empty(_ccdll)  ((ccdll_size((_ccdll))) == 0)
+
+
+
 /* ccdll modifiers */
 
 
@@ -226,6 +244,35 @@ STATEMENT_                                                                     \
 )
 
 
+#define  ccdll_pop_front(_ccdll)  _ccdll_pop(_ccdll, head, NXT)
+
+#define  ccdll_pop_back(_ccdll)   _ccdll_pop(_ccdll, tail, PRV)
+
+#define _ccdll_pop(_ccdll, _hdtl_, _np_)                                       \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccdll_empty((_ccdll)))  break;                                         \
+                                                                               \
+    (_ccdll)->pnode = (_ccdll)->_hdtl_._np_;                                   \
+                                                                               \
+    (_ccdll)->pnode->PRV->NXT = (_ccdll)->pnode->NXT;                          \
+    (_ccdll)->pnode->NXT->PRV = (_ccdll)->pnode->PRV;                          \
+                                                                               \
+    _node_clear((_ccdll)->pnode, (_ccdll));                                    \
+                                                                               \
+    (_ccdll)->size--;                                                          \
+)
+
+
+#define ccdll_clear(_ccdll)                                                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    while (!(ccdll_empty((_ccdll))))  ccdll_pop_back((_ccdll));                \
+)
+
+
 
 /* ccdll iterators */
 
@@ -238,10 +285,22 @@ VOID_EXPR_                                                                     \
 )
 
 
+#define ccdll_iter_at_head(_iter)   ((_iter)->curr.node->PRV == NULL)
+
+#define ccdll_iter_at_tail(_iter)   ((_iter)->curr.node->NXT == NULL)
+
+
 #define ccdll_iter_incr(_iter)                                                 \
 (                                                                              \
-    (_iter)->curr.node = (_iter)->curr.node->NXT,                              \
-    (_iter)->curr.node->NXT                                                    \
+    (ccdll_iter_at_tail(_iter)) ? (NULL) :                                     \
+    ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
+)
+
+
+#define ccdll_iter_decr(_iter)                                                 \
+(                                                                              \
+    (ccdll_iter_at_head(_iter)) ? (NULL) :                                     \
+    ((_iter)->curr.node = (_iter)->curr.node->PRV)->PRV                        \
 )
 
 
