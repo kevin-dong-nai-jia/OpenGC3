@@ -1,5 +1,18 @@
+#define DEBUG_CCDLL
 // #define CCC_STRICT
+
+#ifdef  DEBUG_CCXLL
 #include "../src/ccxll.h"
+#define CONT(FUNC)  CCXLL##FUNC
+#define cont(func)  ccxll##func
+#endif // DEBUG_CCXLL
+
+#ifdef  DEBUG_CCDLL
+#include "../src/ccdll.h"
+#define CONT(FUNC)  CCDLL##FUNC
+#define cont(func)  ccdll##func
+#endif // DEBUG_CCDLL
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,18 +27,19 @@ int main(void)
     printf("Test 0: \n\n");
 
     {
-        ccxll(char*) list;
-        ccxll_init(list);
+        cont()(char*) list;
+        cont(_init)(list);
 
-        ccxll_push_back(list, "Welcome to ");
-        ccxll_push_back(list, "the \"C Container Collection\" Project!\n");
+        cont(_push_back)(list, "Welcome to ");
+        cont(_push_back)(list, "the \"C Container Collection\" Project!\n");
 
-        CCXLL_INCR(ITER(list))
+        CONT(_INCR)(ITER(list))
             printf("%s", DREF(ITER(list)));
 
-        ccxll_free(list);
+        cont(_free)(list);
     }
 
+    #ifdef DEBUG_CCXLL
 
     // Test 1
     // Push Back
@@ -739,6 +753,8 @@ int main(void)
     }
     #endif // CCC_STRICT
 
+
+    #endif
 
     return 0;
 }
