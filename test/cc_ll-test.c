@@ -3,14 +3,14 @@
 
 #ifdef  DEBUG_CCXLL
 #include "../src/ccxll.h"
-#define CONT(FUNC)  CCXLL##FUNC
-#define cont(func)  ccxll##func
+#define CTNR(FUNC)  CCXLL##FUNC
+#define ctnr(func)  ccxll##func
 #endif // DEBUG_CCXLL
 
 #ifdef  DEBUG_CCDLL
 #include "../src/ccdll.h"
-#define CONT(FUNC)  CCDLL##FUNC
-#define cont(func)  ccdll##func
+#define CTNR(FUNC)  CCDLL##FUNC
+#define ctnr(func)  ccdll##func
 #endif // DEBUG_CCDLL
 
 
@@ -27,19 +27,18 @@ int main(void)
     printf("Test 0: \n\n");
 
     {
-        cont()(char*) list;
-        cont(_init)(list);
+        ctnr()(char*) list;
+        ctnr(_init)(list);
 
-        cont(_push_back)(list, "Welcome to ");
-        cont(_push_back)(list, "the \"C Container Collection\" Project!\n");
+        ctnr(_push_back)(list, "Welcome to ");
+        ctnr(_push_back)(list, "the \"C Container Collection\" Project!\n");
 
-        CONT(_INCR)(ITER(list))
+        CTNR(_INCR)(ITER(list))
             printf("%s", DREF(ITER(list)));
 
-        cont(_free)(list);
+        ctnr(_free)(list);
     }
 
-    #ifdef DEBUG_CCXLL
 
     // Test 1
     // Push Back
@@ -47,8 +46,8 @@ int main(void)
     printf("\n\nTest 1: \n");
 
     {
-        ccxll(char*) list;
-        ccxll_init(list);
+        ctnr()(char*) list;
+        ctnr(_init)(list);
 
         char *num_str[10] = { "five" , "six", "four", "seven", "three",
                               "eight", "two", "nine", "one"  , "ten"    };
@@ -57,16 +56,18 @@ int main(void)
 
         while (puts("") && cnt < 10)
         {
-            ccxll_push_front(list, num_str[cnt++]);
-            ccxll_push_back (list, num_str[cnt++]);
+            ctnr(_push_front)(list, num_str[cnt++]);
+            ctnr(_push_back )(list, num_str[cnt++]);
 
-            CCXLL_INCR(ITER(list))
+            CTNR(_INCR)(ITER(list))
                 printf("%s ", DREF(ITER(list)));
         }
 
-        ccxll_free(list);
+        ctnr(_free)(list);
     }
 
+
+    #ifdef DEBUG_CCXLL
 
     // Test 2
     // Push Back
@@ -199,14 +200,14 @@ int main(void)
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
             ccxll_push_back(list, cnt);
-        puts("Clearing the ccxll container...");
+        puts("Clearing the ccxll ctnrainer...");
 
         ccxll_clear(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
             ccxll_push_back(list, cnt);
-        puts("Deallocating the ccxll container...");
+        puts("Deallocating the ccxll ctnrainer...");
 
         ccxll_free(list);
     }
@@ -753,8 +754,8 @@ int main(void)
     }
     #endif // CCC_STRICT
 
+    #endif // DEBUG_CCXLL
 
-    #endif
 
     return 0;
 }

@@ -204,7 +204,11 @@ STATEMENT_                                                                     \
 /* ccdll modifiers */
 
 
-#define  ccdll_push_back(_ccdll, _val)                                         \
+#define ccdll_push_front(_ccdll, _val) _ccdll_push(_ccdll, _val, head, NXT, PRV)
+
+#define ccdll_push_back(_ccdll, _val)  _ccdll_push(_ccdll, _val, tail, PRV, NXT)
+
+#define _ccdll_push(_ccdll, _val, _hdtl_, _pn_1_, _pn_2_)                      \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -212,8 +216,8 @@ STATEMENT_                                                                     \
                                                                                \
     (_ccdll)->pnode->val = (_val);                                             \
                                                                                \
-    (_ccdll)->pnode->PRV =   (_ccdll)->tail.PRV;                               \
-    (_ccdll)->pnode->NXT = &((_ccdll)->tail);                                  \
+    (_ccdll)->pnode->_pn_1_ =   (_ccdll)->_hdtl_._pn_1_;                       \
+    (_ccdll)->pnode->_pn_2_ = &((_ccdll)->_hdtl_);                             \
                                                                                \
     (_ccdll)->pnode->PRV->NXT = (_ccdll)->pnode;                               \
     (_ccdll)->pnode->NXT->PRV = (_ccdll)->pnode;                               \
