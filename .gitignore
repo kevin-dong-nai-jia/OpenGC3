@@ -1,9 +1,4 @@
-# Ignore all
-
 *
-
-
-# But not these...
 
 !doc
 !doc/*.html
@@ -14,6 +9,10 @@
 
 !test/
 !test/*.c
+
+!tex/
+!tex/*.tex
+!tex/*.pdf
 
 !tool/
 !tool/*.c
