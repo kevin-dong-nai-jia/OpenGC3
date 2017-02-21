@@ -95,11 +95,7 @@ STATEMENT_                                                                     \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _it_ll_alloc((_cc_ll), (_items), &(_base),                             \
-                     _##_cc_ll_##_iter_init, _it);                             \
-                                                                               \
-        for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            _cc_ll_##_iter_init(_it_((_cc_ll), _base, _cnt), (_cc_ll))
+        _it_ll_alloc((_cc_ll), (_items), &(_base), _##_cc_ll_##_iter_init, _it)
 
 #endif // CCC_STRICT
 
@@ -115,11 +111,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _itll_total = _it_ll_total((_cc_ll), _itll_);                \
-                                                                               \
     _stack_alloc((_cc_ll), (_items), (_pbase), _itll_);                        \
                                                                                \
-    for (int _idx = _itll_total; _idx < (*(_pbase) + (_items)); _idx++)        \
+    for (int _idx = (*(_pbase)); _idx < (*(_pbase) + (_items)); _idx++)        \
         _pinit((_cc_ll)->_itll_[_idx], (_cc_ll));                              \
 )
 
