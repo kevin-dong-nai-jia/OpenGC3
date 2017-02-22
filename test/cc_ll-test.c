@@ -7,14 +7,14 @@
 
 #ifdef  DEBUG_CCXLL
 #include "../src/ccxll.h"
-#define CTNR(FUNC)  CCXLL##FUNC
-#define ctnr(func)  ccxll##func
+#define PREFIX(FUNC)  CCXLL##FUNC
+#define prefix(func)  ccxll##func
 #endif // DEBUG_CCXLL
 
 #ifdef  DEBUG_CCDLL
 #include "../src/ccdll.h"
-#define CTNR(FUNC)  CCDLL##FUNC
-#define ctnr(func)  ccdll##func
+#define PREFIX(FUNC)  CCDLL##FUNC
+#define prefix(func)  ccdll##func
 #endif // DEBUG_CCDLL
 
 
@@ -31,16 +31,16 @@ int main(void)
     printf("Test 0: \n\n");
 
     {
-        ctnr()(char*) list;
-        ctnr(_init)(list);
+        prefix()(char*) list;
+        prefix(_init)(list);
 
-        ctnr(_push_back)(list, "Welcome to ");
-        ctnr(_push_back)(list, "the \"C Container Collection\" Project!\n");
+        prefix(_push_back)(list, "Welcome to ");
+        prefix(_push_back)(list, "the \"C Container Collection\" Project!\n");
 
-        CTNR(_INCR)(ITER(list))
-            printf("%s", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%s", LREF(ITER(list)));
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -50,8 +50,8 @@ int main(void)
     printf("\n\nTest 1: \n");
 
     {
-        ctnr()(char*) list;
-        ctnr(_init)(list);
+        prefix()(char*) list;
+        prefix(_init)(list);
 
         char *num_str[10] = { "five" , "six", "four", "seven", "three",
                               "eight", "two", "nine", "one"  , "ten"    };
@@ -60,14 +60,14 @@ int main(void)
 
         while (puts("") && cnt < 10)
         {
-            ctnr(_push_front)(list, num_str[cnt++]);
-            ctnr(_push_back )(list, num_str[cnt++]);
+            prefix(_push_front)(list, num_str[cnt++]);
+            prefix(_push_back )(list, num_str[cnt++]);
 
-            CTNR(_INCR)(ITER(list))
-                printf("%s ", DREF(ITER(list)));
+            PREFIX(_INCR)(ITER(list))
+                printf("%s ", LREF(ITER(list)));
         }
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -77,15 +77,15 @@ int main(void)
     printf("\n\nTest 2: ");
 
     {
-        ctnr()(int) list;
-        ctnr(_init)(list);
+        prefix()(int) list;
+        prefix(_init)(list);
 
         int cnt = 0;
 
         while (cnt < 10000000)
-            ctnr(_push_back)(list, cnt++);
+            prefix(_push_back)(list, cnt++);
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
 
         puts("Test deallocation.");
     }
@@ -99,8 +99,8 @@ int main(void)
     {
         typedef struct  {  char *msg[2];  }   msg_struct;
 
-        ctnr()(msg_struct) list;
-        ctnr(_init)(list);
+        prefix()(msg_struct) list;
+        prefix(_init)(list);
 
         msg_struct msg_1, msg_2;
 
@@ -109,14 +109,14 @@ int main(void)
         msg_2.msg[0] = "two ";
         msg_2.msg[1] = "structs.\n";
 
-        ctnr(_push_back)(list, msg_1);
-        ctnr(_push_back)(list, msg_2);
+        prefix(_push_back)(list, msg_1);
+        prefix(_push_back)(list, msg_2);
 
-        CTNR(_INCR)(ITER(list))
-            printf("%s", DREF(ITER(list)).msg[0]),
-            printf("%s", DREF(ITER(list)).msg[1]);
+        PREFIX(_INCR)(ITER(list))
+            printf("%s", LREF(ITER(list)).msg[0]),
+            printf("%s", LREF(ITER(list)).msg[1]);
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -126,17 +126,17 @@ int main(void)
     printf("\n\nTest 4: ");
 
     {
-        ctnr(_extd)(int, 9, NORMAL) list;
-        ctnr(_init)(list);
-        ctnr(_iter_init)(ITER_NTH(list, 8), list);
+        prefix(_extd)(int, 9, NORMAL) list;
+        prefix(_init)(list);
+        prefix(_iter_init)(ITER_NTH(list, 8), list);
 
-        CTNR(_INCR)(ITER_NTH(list, 8))
-            printf("%d", DREF(ITER_NTH(list, 8)));
+        PREFIX(_INCR)(ITER_NTH(list, 8))
+            printf("%d", LREF(ITER_NTH(list, 8)));
 
-        if (ctnr(_iter_incr)(ITER_NTH(list, 8)) == NULL)
+        if (prefix(_iter_incr)(ITER_NTH(list, 8)) == NULL)
             puts("The iterator points to the tail.");
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -146,22 +146,22 @@ int main(void)
     printf("\n\nTest 5: ");
 
     {
-        ctnr()(char*) list;
-        ctnr(_init)(list);
+        prefix()(char*) list;
+        prefix(_init)(list);
 
-        (void)ctnr(_front)(list);
-        (void)ctnr(_back )(list);
+        (void)prefix(_front)(list);
+        (void)prefix(_back )(list);
 
-        ctnr(_push_front)(list, "Failed ");
-        ctnr(_push_front)(list, "to access.\n");
+        prefix(_push_front)(list, "Failed ");
+        prefix(_push_front)(list, "to access.\n");
 
-        ctnr(_front)(list) = "Element ";
-        ctnr(_back )(list) = "access succeeds.\n";
+        prefix(_front)(list) = "Element ";
+        prefix(_back )(list) = "access succeeds.\n";
 
-        CTNR(_INCR)(ITER(list))
-            printf("%s", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%s", LREF(ITER(list)));
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -171,22 +171,22 @@ int main(void)
     printf("\n\nTest 6: ");
 
     {
-        ctnr()(int) list;
-        ctnr(_init)(list);
+        prefix()(int) list;
+        prefix(_init)(list);
 
-        ctnr(_pop_front)(list);
+        prefix(_pop_front)(list);
 
-        ctnr(_push_front)(list, 9);
-        ctnr(_pop_front )(list);
+        prefix(_push_front)(list, 9);
+        prefix(_pop_front )(list);
 
-        ctnr(_push_back)(list, 1);
-        ctnr(_push_back)(list, 3);
-        ctnr(_pop_back )(list);
+        prefix(_push_back)(list, 1);
+        prefix(_push_back)(list, 3);
+        prefix(_pop_back )(list);
 
-        CTNR(_INCR)(ITER(list))
-            printf("%d == 1\n", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d == 1\n", LREF(ITER(list)));
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -196,22 +196,22 @@ int main(void)
     printf("\n\nTest 7: \n");
 
     {
-        ctnr()(int) list;
-        ctnr(_init)(list);
+        prefix()(int) list;
+        prefix(_init)(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ctnr(_push_back)(list, cnt);
+            prefix(_push_back)(list, cnt);
         puts("Clearing the container...");
 
-        ctnr(_clear)(list);
+        prefix(_clear)(list);
 
         puts("\nPushing back 10^7 elements...");
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ctnr(_push_back)(list, cnt);
+            prefix(_push_back)(list, cnt);
         puts("Deallocating the container...");
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
 
@@ -221,24 +221,23 @@ int main(void)
     printf("\n\nTest 8: \n\n");
 
     {
-        ctnr(_pckd)(char) list;
-        ctnr(_init)(list);
+        prefix(_pckd)(char) list;
+        prefix(_init)(list);
 
         for (int cnt = 0; cnt < 10000000; cnt++)
-            ctnr(_push_back)(list, (char)cnt);
+            prefix(_push_back)(list, (char)cnt);
 
         char var = 0;
 
-        CTNR(_INCR)(ITER(list))
-            if (var != 127)  printf("%3d ", (var = DREF(ITER(list))));
+        PREFIX(_INCR)(ITER(list))
+            if (var != 127)  printf("%3d ", (var = LREF(ITER(list))));
             else  break;
 
         puts("");
 
-        ctnr(_free)(list);
+        prefix(_free)(list);
     }
 
-    #ifdef DEBUG_CCXLL
 
     // Test 9
     // Insert, Erase
@@ -246,61 +245,63 @@ int main(void)
     printf("\n\nTest 9: \n\n");
 
     {
-        ccxll_pckd(int) list;
-        ccxll_init(list);
+        prefix(_pckd)(int) list;
+        prefix(_init)(list);
 
         for (int cnt = 0; cnt < 6; cnt++)
-            ccxll_push_back(list, 2 * cnt + 1);
+            prefix(_push_back)(list, 2 * cnt + 1);
 
-        CCXLL_INCR(ITER(list))
-            printf("%d ", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d ", LREF(ITER(list)));
 
-        ccxll_iter_head(ITER(list));
+        prefix(_iter_head)(ITER(list));
 
         for (int cnt = 0; cnt <= 6; cnt++)
         {
-            ccxll_iter_incr(ITER(list));
-            ccxll_insert(ITER(list), 2 * cnt);
-            ccxll_iter_incr(ITER(list));
+            prefix(_iter_incr)(ITER(list));
+            prefix(_insert)(ITER(list), 2 * cnt);
+            prefix(_iter_incr)(ITER(list));
         }
 
-        CCXLL_INCR(ITER(list));
+        PREFIX(_INCR)(ITER(list));
 
         printf("-> ");
-        CCXLL_INCR(ITER(list))
-            printf("%d ", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d ", LREF(ITER(list)));
 
-        ccxll_iter_begin(ITER(list));
+        prefix(_iter_begin)(ITER(list));
 
         for (int cnt = 0; cnt <= 5; cnt++)
         {
-            ccxll_iter_incr(ITER(list));
-            ccxll_erase(ITER(list));
+            prefix(_iter_incr)(ITER(list));
+            prefix(_erase)(ITER(list));
         }
 
         printf("-> ");
-        CCXLL_INCR(ITER(list))
-            printf("%d ", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d ", LREF(ITER(list)));
 
-        ccxll_iter_begin(ITER(list));
+        prefix(_iter_begin)(ITER(list));
 
         for (int cnt = 0; cnt <= 5; cnt++)
-            ccxll_erase(ITER(list));
+            prefix(_erase)(ITER(list));
 
         printf("-> ");
-        CCXLL_INCR(ITER(list))
-            printf("%d ", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d ", LREF(ITER(list)));
 
-        ccxll_iter_begin(ITER(list));
+        prefix(_iter_begin)(ITER(list));
 
-        ccxll_erase(ITER(list));
+        prefix(_erase)(ITER(list));
 
         puts("-> (none)");
-        CCXLL_INCR(ITER(list))
-            printf("%d ", DREF(ITER(list)));
+        PREFIX(_INCR)(ITER(list))
+            printf("%d ", LREF(ITER(list)));
 
-        ccxll_free(list);
+        prefix(_free)(list);
     }
+
+    #ifdef DEBUG_CCXLL
 
 
     // Test 10
