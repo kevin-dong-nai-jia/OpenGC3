@@ -1,3 +1,7 @@
+#pragma GCC push_options
+#pragma GCC optimize ("O1")
+// or -fno-strict-aliasing
+
 #define DEBUG_CCDLL
 // #define CCC_STRICT
 
@@ -758,3 +762,5 @@ int main(void)
 
     return 0;
 }
+
+#pragma GCC pop_options
