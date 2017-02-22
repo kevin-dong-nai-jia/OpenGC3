@@ -355,35 +355,14 @@ STATEMENT_                                                                     \
 )
 
 
-#define _ccxll_swap(_ccxll_u, _ccxll_l)                                        \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    void    *_bup = (_ccxll_l);                                                \
-    void *_xl_bup = (_ccxll_l)->_xl;                                           \
-    unsigned char _xl_base_bup  = (_ccxll_l)->_xl_base;                        \
-    unsigned char _xl_limit_bup = (_ccxll_l)->_xl_limit;                       \
-                                                                               \
-    (_ccxll_l)->_xl       = (_ccxll_u)->_xl;                                   \
-    (_ccxll_l)->_xl_base  = (_ccxll_u)->_xl_base;                              \
-    (_ccxll_l)->_xl_limit = (_ccxll_u)->_xl_limit;                             \
-    (_ccxll_l)            = (_ccxll_u);                                        \
-                                                                               \
-    (_ccxll_u)->_xl       = _xl_bup;                                           \
-    (_ccxll_u)->_xl_base  = _xl_base_bup;                                      \
-    (_ccxll_u)->_xl_limit = _xl_limit_bup;                                     \
-    (_ccxll_u)            = _bup;                                              \
-)
-
-
 #define ccxll_resize(_ccxll, _items, _val)                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _R = ccxll_size((_ccxll)) - (_items);                                  \
+    int _size = ccxll_size((_ccxll)) - (_items);                               \
                                                                                \
-    if (_R > 0)       {  while(_R--)  ccxll_pop_back ((_ccxll));          }    \
-    else if (_R < 0)  {  while(_R++)  ccxll_push_back((_ccxll), (_val));  }    \
+    if (_size > 0)       while(_size--)  ccxll_pop_back ((_ccxll));            \
+    else if (_size < 0)  while(_size++)  ccxll_push_back((_ccxll), (_val));    \
 )
 
 
@@ -391,7 +370,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(ccxll_empty((_ccxll))))  ccxll_pop_back((_ccxll));                \
+    while (!(ccxll_empty((_ccxll))))  {  ccxll_pop_back ((_ccxll));  }         \
 )
 
 
@@ -584,9 +563,11 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _ll_alloc((_ccxll),  1, _base_c, ccxll);                                   \
-    _ll_alloc((_ccxll), 64, _base_b, ccxll);                                   \
-    _it_alloc((_ccxll),  2, _base_i, ccxll);                                   \
+    int _buck = log2(ccxll_size((_ccxll))) + 1;                                \
+                                                                               \
+    _ll_alloc((_ccxll),     1, _base_c, ccxll);                                \
+    _ll_alloc((_ccxll), _buck, _base_b, ccxll);                                \
+    _it_alloc((_ccxll),     2, _base_i, ccxll);                                \
                                                                                \
     _ccxll_sort_extd( (_ccxll),                                                \
                        _ll_((_ccxll), _base_c, 0),                             \
@@ -594,7 +575,7 @@ STATEMENT_                                                                     \
                        _it_((_ccxll), _base_i, 0),                             \
                        _it_((_ccxll), _base_i, 1), _leq);                      \
                                                                                \
-    _ll_clear((_ccxll), 65);                                                   \
+    _ll_clear((_ccxll), _buck + 1);                                            \
     _it_clear((_ccxll),  2);                                                   \
 )
 
@@ -748,10 +729,10 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _D = (_diff);                                                          \
+    int _len = (_diff);                                                        \
                                                                                \
-    if (_D > 0)       {  while (ccxll_iter_incr((_iter)) && --_D);  }          \
-    else if (_D < 0)  {  while (ccxll_iter_decr((_iter)) && ++_D);  }          \
+    if (_len > 0)       {  while (ccxll_iter_incr((_iter)) && --_len);  }      \
+    else if (_len < 0)  {  while (ccxll_iter_decr((_iter)) && ++_len);  }      \
 )
 
 
