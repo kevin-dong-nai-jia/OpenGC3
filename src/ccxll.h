@@ -5,6 +5,7 @@
 #include "misc.h"
 #include "snym.h"
 
+#include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
