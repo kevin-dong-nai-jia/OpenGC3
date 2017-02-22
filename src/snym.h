@@ -17,6 +17,7 @@
 
 #define XLEQ  CCXLL_LEQ_COMPAR
 
+#define LREF(_iter)       ((_iter)->curr.node->val)
 #define DREF(_iter)       ((_iter)->curr.node->val)
 #define DREF_PREV(_iter)  ((_iter)->curr.node->PRV->val)
 #define DREF_NEXT(_iter)  ((_iter)->curr.node->NXT->val)
