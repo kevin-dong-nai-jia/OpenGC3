@@ -5,6 +5,7 @@
 #include "misc.h"
 #include "snym.h"
 
+#include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -265,6 +266,44 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccdll_insert(_iter, _val)                                              \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccdll_iter_at_head((_iter)))  break;                                   \
+                                                                               \
+    _node_alloc((_iter)->ccdll->pnode, (_iter)->ccdll);                        \
+                                                                               \
+    (_iter)->ccdll->pnode->val = (_val);                                       \
+                                                                               \
+    (_iter)->ccdll->pnode->PRV = (_iter)->curr.node->PRV;                      \
+    (_iter)->ccdll->pnode->NXT = (_iter)->curr.node;                           \
+                                                                               \
+    (_iter)->curr.node->PRV->NXT = (_iter)->ccdll->pnode;                      \
+    (_iter)->curr.node->PRV      = (_iter)->ccdll->pnode;                      \
+    (_iter)->curr.node           = (_iter)->ccdll->pnode;                      \
+                                                                               \
+    (_iter)->ccdll->size++;                                                    \
+)
+
+
+#define ccdll_erase(_iter)                                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccdll_iter_at_head((_iter)) || ccdll_iter_at_tail((_iter)))  break;    \
+                                                                               \
+    (_iter)->curr.node->PRV->NXT = (_iter)->curr.node->NXT;                    \
+    (_iter)->curr.node->NXT->PRV = (_iter)->curr.node->PRV;                    \
+                                                                               \
+    _node_clear((_iter)->curr.node, (_iter)->ccdll);                           \
+                                                                               \
+    (_iter)->curr.node = (_iter)->curr.node->NXT;                              \
+                                                                               \
+    (_iter)->ccdll->size--;                                                    \
+)
+
+
 #define ccdll_clear(_ccdll)                                                    \
                                                                                \
 STATEMENT_                                                                     \
@@ -277,6 +316,14 @@ STATEMENT_                                                                     \
 /* ccdll iterators */
 
 
+#define ccdll_iter_copy(_iter_dst, _iter_src)                                  \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    *(_iter_dst) = *(_iter_src)                                                \
+)
+
+
 #define ccdll_iter_head(_iter)                                                 \
                                                                                \
 VOID_EXPR_                                                                     \
@@ -285,9 +332,39 @@ VOID_EXPR_                                                                     \
 )
 
 
+#define ccdll_iter_tail(_iter)                                                 \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = &((_iter)->ccdll->tail)                               \
+)
+
+
+#define ccdll_iter_begin(_iter)                                                \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = ((_iter)->ccdll->head.NXT)                            \
+)
+
+
+#define ccdll_iter_end(_iter)                                                  \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = ((_iter)->ccdll->tail.PRV)                            \
+)
+
+
 #define ccdll_iter_at_head(_iter)   ((_iter)->curr.node->PRV == NULL)
 
 #define ccdll_iter_at_tail(_iter)   ((_iter)->curr.node->NXT == NULL)
+
+#define ccdll_iter_at_begin(_iter)  ( (_iter)->curr.node->PRV ==               \
+                                    &((_iter)->ccdll->head))
+
+#define ccdll_iter_at_end(_iter)    ( (_iter)->curr.node->NXT ==               \
+                                    &((_iter)->ccdll->tail))
 
 
 #define ccdll_iter_incr(_iter)                                                 \
