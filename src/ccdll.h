@@ -304,6 +304,17 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccdll_swap(_ccdll_a, _ccdll_b)                                         \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    void *_bup = (_ccdll_a);                                                   \
+                                                                               \
+    (_ccdll_a) = (_ccdll_b);                                                   \
+    (_ccdll_b) = _bup;                                                         \
+)
+
+
 #define ccdll_clear(_ccdll)                                                    \
                                                                                \
 STATEMENT_                                                                     \
@@ -316,6 +327,30 @@ STATEMENT_                                                                     \
 /* ccdll operations */
 
 
+#define ccdll_move(_iter_p, _iter_i)                                           \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_iter_i)->curr.node == (_iter_p)->curr.node->PRV)  break;             \
+                                                                               \
+    if (ccdll_iter_at_head((_iter_p)) ||                                       \
+        ccdll_iter_at_head((_iter_i)) || ccdll_iter_at_tail((_iter_i)))  break;\
+                                                                               \
+    (_iter_i)->curr.node->PRV->NXT = (_iter_i)->curr.node->NXT;                \
+    (_iter_i)->curr.node->NXT->PRV = (_iter_i)->curr.node->PRV;                \
+                                                                               \
+    (_iter_i)->curr.node->PRV      = (_iter_p)->curr.node->PRV;                \
+    (_iter_i)->curr.node->NXT      = (_iter_p)->curr.node;                     \
+                                                                               \
+    (_iter_p)->curr.node->PRV      = (_iter_i)->curr.node;                     \
+    (_iter_i)->curr.node->PRV->NXT = (_iter_i)->curr.node;                     \
+                                                                               \
+    (_iter_i)->ccdll->size--;                                                  \
+    (_iter_i)->ccdll = (_iter_p)->ccdll;                                       \
+    (_iter_i)->ccdll->size++;                                                  \
+)
+
+
 #define ccdll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
         ccdll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
@@ -326,7 +361,16 @@ STATEMENT_                                                                     \
 (                                                                              \
     if ((_iter_l)->ccdll != (_iter_r)->ccdll)  break;                          \
                                                                                \
-    if ((_iter_p)->ccdll != (_iter_l)->ccdll)   {  /* NOT IMPLEMENTED */  }    \
+    if ((_iter_p)->ccdll != (_iter_l)->ccdll)                                  \
+    {                                                                          \
+        int _dist_m = (_dist);                                                 \
+                                                                               \
+        if (_dist_m < 0)  {  /* NOT IMPLEMENTED */  }                          \
+                                                                               \
+        (_iter_p)->ccdll->size += _dist_m;                                     \
+        (_iter_l)->ccdll->size -= _dist_m;                                     \
+        (_iter_l)->ccdll = (_iter_p)->ccdll;                                   \
+    }                                                                          \
                                                                                \
     if ((_iter_l)->curr.node == (_iter_r)->curr.node)  break;                  \
                                                                                \
@@ -345,6 +389,166 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter_r)->curr.node = _bup;                                               \
 )
+
+
+#define ccdll_merge(_ccdll_d, _ccdll_s)                                        \
+                                                                               \
+        ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ)
+
+#define ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                             \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+     if (ccdll_empty((_ccdll_s)))  break;                                      \
+                                                                               \
+    _it_alloc((_ccdll_d), 1, _base_p, ccdll);                                  \
+    _it_alloc((_ccdll_s), 2, _base_q, ccdll);                                  \
+                                                                               \
+    _ccdll_merge_extd((_ccdll_d), _it_((_ccdll_d), _base_p, 0),                \
+                                  _it_((_ccdll_s), _base_q, 0),                \
+                                  _it_((_ccdll_s), _base_q, 1), _leq);         \
+                                                                               \
+    _it_clear((_ccdll_d), 1);                                                  \
+    _it_clear((_ccdll_s), 2);                                                  \
+)
+
+#define _ccdll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq)           \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccdll_iter_tail ((_iter_l));                                               \
+    ccdll_iter_begin((_iter_m));                                               \
+    ccdll_iter_tail ((_iter_r));                                               \
+                                                                               \
+    ccdll_move_range_extd ((_iter_l), (_iter_m), (_iter_r),                    \
+                           ccdll_size((_iter_m)->ccdll));                      \
+                                                                               \
+    ccdll_iter_begin((_iter_l));                                               \
+    ccdll_iter_init ((_iter_r), (_ccdll_d));                                   \
+    ccdll_iter_tail ((_iter_r));                                               \
+                                                                               \
+    ccdll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);             \
+)
+
+
+#define ccdll_merge_range(_iter_l, _iter_m, _iter_r)                           \
+                                                                               \
+        ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, DLEQ)
+
+#define ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _it_alloc((_iter_l)->ccdll, 1, _base_m, ccdll);                            \
+                                                                               \
+    _ccdll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
+                            _it_((_iter_l)->ccdll, _base_m, 0), _leq);         \
+                                                                               \
+    _it_clear((_iter_l)->ccdll, 1);                                            \
+)
+
+#define _ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_iter_l)->ccdll != (_iter_m)->ccdll ||                                \
+        (_iter_m)->ccdll != (_iter_r)->ccdll)  break;                          \
+                                                                               \
+    ccdll_iter_copy((_iter_x), (_iter_m));                                     \
+                                                                               \
+    while (1)                                                                  \
+    {                                                                          \
+        while ((_iter_l)->curr.node != (_iter_m)->curr.node &&                 \
+                _leq((_iter_l), (_iter_m)))                                    \
+            ccdll_iter_incr((_iter_l));                                        \
+                                                                               \
+        if ((_iter_l)->curr.node == (_iter_m)->curr.node)                      \
+        {                                                                      \
+            ccdll_iter_copy((_iter_l), (_iter_r));                             \
+            ccdll_iter_copy((_iter_m), (_iter_r));  break;                     \
+        }                                                                      \
+                                                                               \
+        ccdll_iter_incr((_iter_x));                                            \
+                                                                               \
+        while ((_iter_x)->curr.node != (_iter_r)->curr.node &&                 \
+               !_leq((_iter_l), (_iter_x)))                                    \
+            ccdll_iter_incr((_iter_x));                                        \
+                                                                               \
+        ccdll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
+        ccdll_iter_copy ((_iter_m), (_iter_x));                                \
+                                                                               \
+        if ((_iter_x)->curr.node == (_iter_r)->curr.node)                      \
+        {                                                                      \
+            ccdll_iter_copy((_iter_l), (_iter_x));                             \
+            ccdll_iter_copy((_iter_r), (_iter_x));  break;                     \
+        }                                                                      \
+    }                                                                          \
+)
+
+
+#define ccdll_sort(_ccdll)                                                     \
+                                                                               \
+        ccdll_sort_extd(_ccdll, DLEQ)
+
+#define ccdll_sort_extd(_ccdll, _leq)                                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _buck = log2(ccdll_size((_ccdll))) + 1;                                \
+                                                                               \
+    _ll_alloc((_ccdll),     1, _base_c, ccdll);                                \
+    _ll_alloc((_ccdll), _buck, _base_b, ccdll);                                \
+    _it_alloc((_ccdll),     2, _base_i, ccdll);                                \
+                                                                               \
+    _ccdll_sort_extd( (_ccdll),                                                \
+                       _ll_((_ccdll), _base_c, 0),                             \
+                     &(_ll_((_ccdll), _base_b, 0)),                            \
+                       _it_((_ccdll), _base_i, 0),                             \
+                       _it_((_ccdll), _base_i, 1), _leq);                      \
+                                                                               \
+    _ll_clear((_ccdll), _buck + 1);                                            \
+    _it_clear((_ccdll),  2);                                                   \
+)
+
+#define _ccdll_sort_extd(_ccdll, _carry, _p64bucket, _iter_a, _iter_b, _leq)   \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccdll_size((_ccdll)) <= 1)  break;                                     \
+                                                                               \
+    int _fill = 0, _curr;                                                      \
+                                                                               \
+    do                                                                         \
+    {                                                                          \
+        ccdll_iter_init ((_iter_a), (_carry));                                 \
+        ccdll_iter_init ((_iter_b), (_ccdll));                                 \
+        ccdll_iter_begin((_iter_a));                                           \
+        ccdll_iter_begin((_iter_b));                                           \
+                                                                               \
+        ccdll_move((_iter_a), (_iter_b));                                      \
+                                                                               \
+        for (_curr = 0; _curr != _fill &&                                      \
+                       !(ccdll_empty(*((_p64bucket) + _curr))); _curr++)       \
+        {                                                                      \
+            ccdll_merge_extd(*((_p64bucket) + _curr), (_carry), _leq);         \
+            ccdll_swap      (*((_p64bucket) + _curr), (_carry));               \
+        }                                                                      \
+        ccdll_swap(*((_p64bucket) + _curr), (_carry));                         \
+                                                                               \
+        if (_curr == _fill)  _fill++;                                          \
+    }                                                                          \
+    while (!(ccdll_empty((_ccdll))));                                          \
+                                                                               \
+    for (_curr = 0; _curr < _fill; _curr++)                                    \
+        ccdll_merge_extd((_ccdll), *((_p64bucket) + _curr), _leq);             \
+)
+
+
+
+/* default comparators */
+
+
+#define CCDLL_LEQ_COMPAR(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
 
 
 

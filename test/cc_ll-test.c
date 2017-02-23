@@ -340,8 +340,6 @@ int main(void)
         prefix(_free)(list);
     }
 
-    #ifdef DEBUG_CCXLL
-
 
     // Test 11
     // Merge Range and Sort
@@ -349,17 +347,17 @@ int main(void)
     printf("\n\nTest 11: \n\n");
 
     {
-        ccxll_extd(int, 3, NORMAL) list;
-        ccxll_init(list);
+        prefix(_extd)(int, 3, NORMAL) list;
+        prefix(_init)(list);
 
         int str1[] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
 
         for (int cnt = 0; cnt < 2; cnt++)
         {
             for (int i = 0; i < 16; i++)
-                ccxll_push_back(list, str1[i]);
+                prefix(_push_back)(list, str1[i]);
 
-            CCXLL_INCR(ITER(list))
+            PREFIX(_INCR)(ITER(list))
                 printf("%d ", LREF(ITER(list)));
 
             printf("-> ");
@@ -368,29 +366,31 @@ int main(void)
             {
                 case 0:
                 for (int j = 0; j < 3; j++)
-                    ccxll_iter_begin  (ITER_NTH(list, j));
+                    prefix(_iter_begin)  (ITER_NTH(list, j));
                 for (int j = 0; j < 3; j++)
-                    ccxll_iter_advance(ITER_NTH(list, j), 8 * j);
+                    prefix(_iter_advance)(ITER_NTH(list, j), 8 * j);
 
-                ccxll_merge_range(ITER(list), ITER_NTH(list, 1),
-                                              ITER_NTH(list, 2));
+                prefix(_merge_range)(ITER(list), ITER_NTH(list, 1),
+                                                 ITER_NTH(list, 2));
                 break;
 
                 case 1:
-                ccxll_sort(list);
+                prefix(_sort)(list);
                 break;
             }
 
-            CCXLL_INCR(ITER(list))
+            PREFIX(_INCR)(ITER(list))
                 printf("%d ", LREF(ITER(list)));
 
             puts("");
 
-            ccxll_clear(list);
+            prefix(_clear)(list);
         }
 
-        ccxll_free(list);
+        prefix(_free)(list);
     }
+
+    #ifdef DEBUG_CCXLL
 
 
     // Test 12
