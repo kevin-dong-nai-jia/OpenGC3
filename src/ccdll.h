@@ -313,6 +313,41 @@ STATEMENT_                                                                     \
 
 
 
+/* ccdll operations */
+
+
+#define ccdll_move_range(_iter_p, _iter_l, _iter_r)                            \
+                                                                               \
+        ccdll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
+
+#define ccdll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_iter_l)->ccdll != (_iter_r)->ccdll)  break;                          \
+                                                                               \
+    if ((_iter_p)->ccdll != (_iter_l)->ccdll)   {  /* NOT IMPLEMENTED */  }    \
+                                                                               \
+    if ((_iter_l)->curr.node == (_iter_r)->curr.node)  break;                  \
+                                                                               \
+    void *_bup = (_iter_r)->curr.node;                                         \
+                                                                               \
+    (_iter_r)->curr.node = (_iter_r)->curr.node->PRV;                          \
+                                                                               \
+    (_iter_l)->curr.node->PRV->NXT = (_iter_r)->curr.node->NXT;                \
+    (_iter_r)->curr.node->NXT->PRV = (_iter_l)->curr.node->PRV;                \
+                                                                               \
+    (_iter_l)->curr.node->PRV      = (_iter_p)->curr.node->PRV;                \
+    (_iter_p)->curr.node->PRV->NXT = (_iter_l)->curr.node;                     \
+                                                                               \
+    (_iter_r)->curr.node->NXT      = (_iter_p)->curr.node;                     \
+    (_iter_p)->curr.node->PRV      = (_iter_r)->curr.node;                     \
+                                                                               \
+    (_iter_r)->curr.node = _bup;                                               \
+)
+
+
+
 /* ccdll iterators */
 
 
@@ -381,8 +416,19 @@ VOID_EXPR_                                                                     \
 )
 
 
+#define ccdll_iter_advance(_iter, _diff)                                       \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _len = (_diff);                                                        \
+                                                                               \
+    if (_len > 0)       {  while (ccdll_iter_incr((_iter)) && --_len);  }      \
+    else if (_len < 0)  {  while (ccdll_iter_decr((_iter)) && ++_len);  }      \
+)
 
-/* ccdll traversal */
+
+
+/* ccdll traversor */
 
 
 #define CCDLL_INCR(_iter)                                                      \
@@ -391,7 +437,7 @@ VOID_EXPR_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define CCDLL_INCR_DREF(_pval, _ccdll)                                         \
+#define CCDLL_INCR_AUTO(_pval, _ccdll)                                         \
                                                                                \
     ccdll_iter_head((_ccdll)->_iter);                                          \
                                                                                \
