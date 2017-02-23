@@ -772,7 +772,7 @@ STATEMENT_                                                                     \
 
 
 
-/* ccxll traversal */
+/* ccxll traversor */
 
 
 #define CCXLL_INCR(_iter)                                                      \
@@ -781,7 +781,7 @@ STATEMENT_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define CCXLL_INCR_DREF(_pval, _ccxll)                                         \
+#define CCXLL_INCR_AUTO(_pval, _ccxll)                                         \
                                                                                \
     ccxll_iter_head((_ccxll)->_iter);                                          \
                                                                                \
@@ -798,7 +798,7 @@ STATEMENT_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define CCXLL_DECR_DREF(_pval, _ccxll)                                         \
+#define CCXLL_DECR_AUTO(_pval, _ccxll)                                         \
                                                                                \
                                                                                \
     ccxll_iter_tail((_ccxll)->_iter);                                          \
