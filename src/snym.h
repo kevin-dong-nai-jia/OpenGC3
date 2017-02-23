@@ -15,12 +15,14 @@
 
 /* Abbreviation */
 
+#define DLEQ  CCDLL_LEQ_COMPAR
 #define XLEQ  CCXLL_LEQ_COMPAR
 
 #define LREF(_iter)       ((_iter)->curr.node->val)
 #define DREF(_iter)       ((_iter)->curr.node->val)
 #define DREF_PREV(_iter)  ((_iter)->curr.node->PRV->val)
 #define DREF_NEXT(_iter)  ((_iter)->curr.node->NXT->val)
+#define XREF(_iter)       ((_iter)->curr.node->val)
 #define XREF_PREV(_iter)  ((_iter)->prev.node->val)
 #define XREF_NEXT(_iter)  ((_iter)->next.node->val)
 
