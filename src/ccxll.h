@@ -641,7 +641,7 @@ STATEMENT_                                                                     \
 /* default comparators */
 
 
-#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
+#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
 
 
 /* ccxll iterators */
@@ -787,7 +787,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
          (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &DREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); )
 
 #endif // CCC_STRICT
 
@@ -805,7 +805,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
          (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &DREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); )
 
 #endif // CCC_STRICT
 
@@ -821,7 +821,7 @@ STATEMENT_                                                                     \
     _it_alloc((_ccxll_src), 1, _base_a, ccxll);                                \
                                                                                \
     CCXLL_INCR(_it_((_ccxll_src), _base_a, 0))                                 \
-        ccxll_push_back((_ccxll_dst), DREF(_it_((_ccxll_src), _base_a, 0)));   \
+        ccxll_push_back((_ccxll_dst), XREF(_it_((_ccxll_src), _base_a, 0)));   \
                                                                                \
     _it_clear((_ccxll_src), 1);                                                \
 )
