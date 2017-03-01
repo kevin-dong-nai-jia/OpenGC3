@@ -231,9 +231,21 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _node_alloc((_ccdll)->pnode, (_ccdll));                                    \
+    _ccdll_push_alloc(_ccdll, _hdtl_, _pn_1_, _pn_2_);                         \
                                                                                \
-    (_ccdll)->pnode->val = (_val);                                             \
+    (_ccdll)->_hdtl_._pn_1_->val = (_val);                                     \
+)
+
+
+#define ccdll_push_front_alloc(_ccdll) _ccdll_push_alloc(_ccdll, head, NXT, PRV)
+
+#define ccdll_push_back_alloc(_ccdll)  _ccdll_push_alloc(_ccdll, tail, PRV, NXT)
+
+#define _ccdll_push_alloc(_ccdll, _hdtl_, _pn_1_, _pn_2_)                      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _node_alloc((_ccdll)->pnode, (_ccdll));                                    \
                                                                                \
     (_ccdll)->pnode->_pn_1_ =   (_ccdll)->_hdtl_._pn_1_;                       \
     (_ccdll)->pnode->_pn_2_ = &((_ccdll)->_hdtl_);                             \
@@ -460,7 +472,7 @@ STATEMENT_                                                                     \
     {                                                                          \
         while ((_iter_l)->curr.node != (_iter_m)->curr.node &&                 \
                 _leq((_iter_l), (_iter_m)))                                    \
-            ccdll_iter_incr((_iter_l));                                        \
+            (void)ccdll_iter_incr((_iter_l));                                  \
                                                                                \
         if ((_iter_l)->curr.node == (_iter_m)->curr.node)                      \
         {                                                                      \
@@ -468,11 +480,11 @@ STATEMENT_                                                                     \
             ccdll_iter_copy((_iter_m), (_iter_r));  break;                     \
         }                                                                      \
                                                                                \
-        ccdll_iter_incr((_iter_x));                                            \
+        (void)ccdll_iter_incr((_iter_x));                                      \
                                                                                \
         while ((_iter_x)->curr.node != (_iter_r)->curr.node &&                 \
                !_leq((_iter_l), (_iter_x)))                                    \
-            ccdll_iter_incr((_iter_x));                                        \
+            (void)ccdll_iter_incr((_iter_x));                                  \
                                                                                \
         ccdll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
         ccdll_iter_copy ((_iter_m), (_iter_x));                                \
