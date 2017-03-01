@@ -114,7 +114,8 @@ STATEMENT_                                                                     \
     _stack_alloc((_cc_ll), (_items), (_pbase), _itll_);                        \
                                                                                \
     for (int _idx = (*(_pbase)); _idx < (*(_pbase) + (_items)); _idx++)        \
-        _pinit((_cc_ll)->_itll_[_idx], (_cc_ll));                              \
+        if ((_cc_ll)->_itll_[_idx] == NULL)                                    \
+            _pinit((_cc_ll)->_itll_[_idx], (_cc_ll));                          \
 )
 
 
@@ -189,12 +190,14 @@ STATEMENT_                                                                     \
         unsigned char _stack_total = _it_ll_total((_cc_ll), _itll_);           \
                                                                                \
         void **_tmp = (void*)&((_cc_ll)->_itll_);                              \
-        *_tmp = realloc(*_tmp, (_size * ((_cc_ll)->_itll_##_base + (_items))));\
+        *_tmp = realloc(*_tmp, (_size * (unsigned)((_cc_ll)->_itll_##_base +   \
+                                                   (_items))));                \
                                                                                \
         memset((_cc_ll)->_itll_ + _stack_total, 0,                             \
-               (_size * ((_cc_ll)->_itll_##_base + (_items) - _stack_total))); \
+               (_size * (unsigned)((_cc_ll)->_itll_##_base +                   \
+                                   (_items) - _stack_total)));                 \
                                                                                \
-        (_cc_ll)->_itll_##_limit = (_items);                                   \
+        (_cc_ll)->_itll_##_limit = (unsigned char)(_items);                    \
     }                                                                          \
                                                                                \
     *(_pbase) = (_cc_ll)->_itll_##_base;                                       \
