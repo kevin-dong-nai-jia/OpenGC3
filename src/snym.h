@@ -12,6 +12,12 @@
 #define _ll_(_cc_ll, _base, _offset)  ((_cc_ll)->_ll[(_base) + (_offset)])
 #endif
 
+#ifndef CCC_STRICT
+#define _unlikely(_expr)  (__builtin_expect(!!(_expr), 0))
+#else
+#define _unlikely(_expr)  (_expr)
+#endif
+
 
 /* Abbreviation */
 
