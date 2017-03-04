@@ -104,7 +104,7 @@ STATEMENT_                                                                     \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _it_ll_alloc((_cc_ll), (_items), &(_base), _##_cc_ll_##_init_from, _ll)
+        _it_ll_alloc((_cc_ll), (_items), &(_base), _##_cc_ll_##_init, _ll)
 
 
 #define _it_ll_alloc(_cc_ll, _items, _pbase, _pinit, _itll_)                   \
@@ -114,8 +114,7 @@ STATEMENT_                                                                     \
     _stack_alloc((_cc_ll), (_items), (_pbase), _itll_);                        \
                                                                                \
     for (int _idx = (*(_pbase)); _idx < (*(_pbase) + (_items)); _idx++)        \
-        if ((_cc_ll)->_itll_[_idx] == NULL)                                    \
-            _pinit((_cc_ll)->_itll_[_idx], (_cc_ll));                          \
+        _pinit((_cc_ll)->_itll_[_idx], (_cc_ll), !((_cc_ll)->_itll_[_idx]));   \
 )
 
 
