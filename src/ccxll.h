@@ -97,34 +97,29 @@ typedef void* link_t;
                                                                                \
         ccxll_init_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
 
-#define ccxll_init_from(_ccxll_dst, _ccxll_src)                                \
-                                                                               \
-        ccxll_init_extd((_ccxll_dst),        (_ccxll_src)->start,              \
-                        (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
-
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     (_ccxll) = NULL;                                                           \
                                                                                \
-    _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh));                  \
+    _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh), 1);               \
                                                                                \
     _itarr_alloc((_ccxll), ccxll);                                             \
-    _ccxll_iter_init((_ccxll)->_iter, (_ccxll));                               \
+    _ccxll_iter_init((_ccxll)->_iter, (_ccxll), 1);                            \
 )
 
 
-#define _ccxll_init_from(_ccxll_dst, _ccxll_src)                               \
+#define _ccxll_init(_ccxll_dst, _ccxll_src, _alloc)                            \
                                                                                \
-        _ccxll_init_extd((_ccxll_dst),        (_ccxll_src)->start,             \
-                         (_ccxll_src)->ratio, (_ccxll_src)->thrsh)
+        _ccxll_init_extd((_ccxll_dst), -1, -1, -1, (_alloc))
 
-#define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                       \
+#define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _cc_ll_alloc((_ccxll));                                                    \
+    if ((_alloc))                                                              \
+        _cc_ll_alloc((_ccxll));                                                \
                                                                                \
     _ccxll_init_core((_ccxll));                                                \
     _ccxll_init_info((_ccxll), (_start), (_ratio), (_thrsh));                  \
@@ -181,11 +176,12 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define _ccxll_iter_init(_iter, _ccxll)                                        \
+#define _ccxll_iter_init(_iter, _ccxll, _alloc)                                \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _iter_alloc((_iter));                                                      \
+    if ((_alloc))                                                              \
+        _iter_alloc((_iter));                                                  \
                                                                                \
     ccxll_iter_init((_iter), (_ccxll));                                        \
 )
@@ -383,10 +379,11 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter_i)->curr.XOR == (_iter_p)->prev.XOR)  break;                    \
+    if (_unlikely((_iter_i)->curr.XOR == (_iter_p)->prev.XOR))  break;         \
                                                                                \
-    if (ccxll_iter_at_head((_iter_p)) ||                                       \
-        ccxll_iter_at_head((_iter_i)) || ccxll_iter_at_tail((_iter_i)))  break;\
+    if (_unlikely(ccxll_iter_at_head((_iter_p)) ||                             \
+                  ccxll_iter_at_head((_iter_i)) ||                             \
+                  ccxll_iter_at_tail((_iter_i))))  break;                      \
                                                                                \
     (_iter_i)->prev.node->XOR = XOR3((_iter_i)->prev.node->XOR,                \
                                      (_iter_i)->next.XOR, (_iter_i)->curr.XOR);\
@@ -420,9 +417,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
+    if (_unlikely((_iter_l)->ccxll != (_iter_r)->ccxll))  break;               \
                                                                                \
-    if ((_iter_p)->ccxll != (_iter_l)->ccxll)                                  \
+    if (_unlikely((_iter_p)->ccxll != (_iter_l)->ccxll))                       \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
@@ -434,7 +431,7 @@ STATEMENT_                                                                     \
         (_iter_l)->ccxll = (_iter_p)->ccxll;                                   \
     }                                                                          \
                                                                                \
-    if ((_iter_l)->curr.XOR == (_iter_r)->curr.XOR)  break;                    \
+    if (_unlikely((_iter_l)->curr.XOR == (_iter_r)->curr.XOR))  break;         \
                                                                                \
     link_t _p_c = (_iter_p)->curr.XOR;                                         \
     link_t _l_c = (_iter_l)->curr.XOR;                                         \
@@ -469,7 +466,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-     if (ccxll_empty((_ccxll_s)))  break;                                      \
+     if (_unlikely(ccxll_empty((_ccxll_s))))  break;                           \
                                                                                \
     _it_alloc((_ccxll_d), 1, _base_p, ccxll);                                  \
     _it_alloc((_ccxll_s), 2, _base_q, ccxll);                                  \
@@ -521,8 +518,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter_l)->ccxll != (_iter_m)->ccxll ||                                \
-        (_iter_m)->ccxll != (_iter_r)->ccxll)  break;                          \
+    if (_unlikely((_iter_l)->ccxll != (_iter_m)->ccxll ||                      \
+                  (_iter_m)->ccxll != (_iter_r)->ccxll))  break;               \
                                                                                \
     ccxll_iter_copy((_iter_x), (_iter_m));                                     \
                                                                                \
@@ -532,7 +529,7 @@ STATEMENT_                                                                     \
                 _leq((_iter_l), (_iter_m)))                                    \
             ccxll_iter_incr((_iter_l));                                        \
                                                                                \
-        if ((_iter_l)->curr.XOR == (_iter_m)->curr.XOR)                        \
+        if (_unlikely((_iter_l)->curr.XOR == (_iter_m)->curr.XOR))             \
         {                                                                      \
             ccxll_iter_copy((_iter_l), (_iter_r));                             \
             ccxll_iter_copy((_iter_m), (_iter_r));  break;                     \
@@ -547,7 +544,7 @@ STATEMENT_                                                                     \
         ccxll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
         ccxll_iter_copy ((_iter_m), (_iter_x));                                \
                                                                                \
-        if ((_iter_x)->curr.XOR == (_iter_r)->curr.XOR)                        \
+        if (_unlikely((_iter_x)->curr.XOR == (_iter_r)->curr.XOR))             \
         {                                                                      \
             ccxll_iter_copy((_iter_l), (_iter_x));                             \
             ccxll_iter_copy((_iter_r), (_iter_x));  break;                     \
@@ -584,7 +581,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccxll_size((_ccxll)) <= 1)  break;                                     \
+    if (_unlikely(ccxll_size((_ccxll)) <= 1))  break;                          \
                                                                                \
     int _fill = 0, _curr;                                                      \
                                                                                \
@@ -605,7 +602,7 @@ STATEMENT_                                                                     \
         }                                                                      \
         ccxll_swap(*((_p64bucket) + _curr), (_carry));                         \
                                                                                \
-        if (_curr == _fill)  _fill++;                                          \
+        if (_unlikely(_curr == _fill))  _fill++;                               \
     }                                                                          \
     while (!(ccxll_empty((_ccxll))));                                          \
                                                                                \
