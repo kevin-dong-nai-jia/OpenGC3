@@ -89,34 +89,29 @@
                                                                                \
         ccdll_init_extd(_ccdll, 1 << 4, 1 << 1, 1 << 16)
 
-#define ccdll_init_from(_ccdll_dst, _ccdll_src)                                \
-                                                                               \
-        ccdll_init_extd((_ccdll_dst),        (_ccdll_src)->start,              \
-                        (_ccdll_src)->ratio, (_ccdll_src)->thrsh)
-
 #define ccdll_init_extd(_ccdll, _start, _ratio, _thrsh)                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     (_ccdll) = NULL;                                                           \
                                                                                \
-    _ccdll_init_extd((_ccdll), (_start), (_ratio), (_thrsh));                  \
+    _ccdll_init_extd((_ccdll), (_start), (_ratio), (_thrsh), 1);               \
                                                                                \
     _itarr_alloc((_ccdll), ccdll);                                             \
-    _ccdll_iter_init((_ccdll)->_iter, (_ccdll));                               \
+    _ccdll_iter_init((_ccdll)->_iter, (_ccdll), 1);                            \
 )
 
 
-#define _ccdll_init_from(_ccdll_dst, _ccdll_src)                               \
+#define _ccdll_init(_ccdll_dst, _ccdll_src, _alloc)                            \
                                                                                \
-        _ccdll_init_extd((_ccdll_dst),        (_ccdll_src)->start,             \
-                         (_ccdll_src)->ratio, (_ccdll_src)->thrsh)
+        _ccdll_init_extd((_ccdll_dst), -1, -1, -1, (_alloc))
 
-#define _ccdll_init_extd(_ccdll, _start, _ratio, _thrsh)                       \
+#define _ccdll_init_extd(_ccdll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _cc_ll_alloc((_ccdll));                                                    \
+    if ((_alloc))                                                              \
+        _cc_ll_alloc((_ccdll));                                                \
                                                                                \
     _ccdll_init_core((_ccdll));                                                \
     _ccdll_init_info((_ccdll), (_start), (_ratio), (_thrsh));                  \
@@ -173,11 +168,12 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define _ccdll_iter_init(_iter, _ccdll)                                        \
+#define _ccdll_iter_init(_iter, _ccdll, _alloc)                                \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _iter_alloc((_iter));                                                      \
+    if ((_alloc))                                                              \
+        _iter_alloc((_iter));                                                  \
                                                                                \
     ccdll_iter_init((_iter), (_ccdll));                                        \
 )
