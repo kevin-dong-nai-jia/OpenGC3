@@ -112,7 +112,7 @@ STATEMENT_                                                                     \
 
 #define _ccxll_init(_ccxll_dst, _ccxll_src, _alloc)                            \
                                                                                \
-        _ccxll_init_extd((_ccxll_dst), -1, -1, -1, (_alloc))
+        _ccxll_init_extd(_ccxll_dst, -1,     -1,     -1, _alloc)
 
 #define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \

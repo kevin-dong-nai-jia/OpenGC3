@@ -104,7 +104,7 @@ STATEMENT_                                                                     \
 
 #define _ccdll_init(_ccdll_dst, _ccdll_src, _alloc)                            \
                                                                                \
-        _ccdll_init_extd((_ccdll_dst), -1, -1, -1, (_alloc))
+        _ccdll_init_extd(_ccdll_dst, -1,     -1,     -1, _alloc)
 
 #define _ccdll_init_extd(_ccdll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \
