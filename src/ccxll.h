@@ -448,9 +448,9 @@ STATEMENT_                                                                     \
     (_iter_l)->curr.node->XOR = XOR3((_iter_l)->curr.node->XOR, _l_p, _p_p);   \
     (_iter_r)->curr.node->XOR = XOR3((_iter_r)->curr.node->XOR, _r_p, _l_p);   \
                                                                                \
-    if ((_iter_p)->next.XOR == _l_c)  (_iter_p)->next.XOR = _r_c;              \
-    if ((_iter_l)->next.XOR == _r_c)  (_iter_l)->next.XOR = _p_c;              \
-    if ((_iter_r)->next.XOR == _p_c)  (_iter_r)->next.XOR = _l_c;              \
+    if (_unlikely((_iter_p)->next.XOR == _l_c))  (_iter_p)->next.XOR = _r_c;   \
+    if           ((_iter_l)->next.XOR == _r_c)   (_iter_l)->next.XOR = _p_c;   \
+    if (_unlikely((_iter_r)->next.XOR == _p_c))  (_iter_r)->next.XOR = _l_c;   \
                                                                                \
     (_iter_p)->prev.XOR = XOR2((_iter_p)->curr.node->XOR, (_iter_p)->next.XOR);\
     (_iter_l)->prev.XOR = XOR2((_iter_l)->curr.node->XOR, (_iter_l)->next.XOR);\
