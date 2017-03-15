@@ -2,25 +2,25 @@
 
 ### Containers
 
-* [CCXLL](tool/ccxll-call.pdf) : [XOR Linked List](doc/ccxll-list.pdf)
+|  Type                             |  Description                          |
+|-----------------------------------|:-------------------------------------:|
+| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
+|  `ccdll(T)`                       |  Doubly Linked List                   |
+|  `ccgbt(T)`                       |  General Binary Tree                  |
 
-* CCDLL : Doubly Linked List
-
-* CCBST : Binary Search Tree
-
-### An Example
+### Example
 
 ```c
 ccxll(int) list;                      //  declare a list of type int
 ccxll_init(list);                     //  initialize the list record
 
 for (int cnt = 8; cnt-- > 0; )        //
-    ccxll_push_back(list, rand());    //  insert 8 random numbers to the end
+    ccxll_push_back(list, rand());    //  insert "rand()" to the end
 
-ccxll_sort(list);                     //  sort with the default compar. XLEQ
+ccxll_sort(list);                     //  sort with comparator: XLEQ
 
 CCXLL_INCR_AUTO(pnum, list)           //  traverse the list forward:
-    printf("num = %d\n", *pnum);      //  dereference the pointer to element
+    printf("num = %d\n", *pnum);      //  access elems through iters
 
 ccxll_free(list);                     //  destroy the list after use
 ```
