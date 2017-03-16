@@ -31,38 +31,41 @@
 
 #define ccgbt(elem_t)                                                          \
                                                                                \
-        ccgbt_extd(elem_t, 1, NORMAL)
+        ccgbt_extd(elem_t, NORMAL)
 
 #define ccgbt_pckd(elem_t)                                                     \
                                                                                \
-        ccgbt_extd(elem_t, 1, PACKED)
+        ccgbt_extd(elem_t, PACKED)
 
-#define ccgbt_extd(elem_t, _n_iter, _ALIGN_)                                   \
+#define ccgbt_extd(elem_t, _ALIGN_)		                                       \
                                                                                \
-        typedef ccgbt_struct_extd(elem_t, _n_iter, _ALIGN_) *CCGBT;  CCGBT
+        typedef ccgbt_struct_extd(elem_t, _ALIGN_) *CCGBT;  CCGBT
 
 
 #define ccgbt_struct(elem_t)                                                   \
                                                                                \
-        ccgbt_struct_extd(elem_t, 1, NORMAL)
+        ccgbt_struct_extd(elem_t, 2, NORMAL)
 
 #define ccgbt_struct_pckd(elem_t)                                              \
                                                                                \
-        ccgbt_struct_extd(elem_t, 1, PACKED)
+        ccgbt_struct_extd(elem_t, 2, PACKED)
 
-#define ccgbt_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
+#define ccgbt_struct_extd(elem_t, _LvN_iter, _ALIGN_)                          \
                                                                                \
         struct CCGBT_BODY                                                      \
         {                                                                      \
             /* size and node record */                                         \
             int size,  used,  vcnt;                                            \
                                                                                \
-            /* start: 1st alloc node num, ratio: growth ratio   */             \
-            /* thrsh: max growth num                            */             \
-            /* example: start = 2, ratio = 2, thrsh = 17        */             \
-            /* -> 2, 4, 8, 16, 32, 17, 17,...                   */             \
-            /* block increment info */                                         \
-            int start, ratio, thrsh;                                           \
+            /* start: 1st alloc node num, ratio: growth ratio      */          \
+            /* thrsh: max growth num                               */          \
+            /* example: start = 2, ratio = 2, thrsh = 17           */          \
+            /* -> 2, 4, 8, 16, 32, 17, 17,...                      */          \
+            /* block increment info for linked list                */          \
+            /* int start, ratio, thrsh;                            */          \
+                                                                               \
+            /* Depth to generate new branch when insert reach leaf */          \
+            int start;                                                         \
                                                                                \
             struct CCGBT_NODE                                                  \
             {                                                                  \
