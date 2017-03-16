@@ -742,18 +742,18 @@ int main(void)
     printf("\n\nTest 21: \n\n");
 
     {
-        ccxll(int) list;                        //  declare a list to store int
-        ccxll_init(list);                       //  initialize the list created
+        ccxll(int) list;                        //  declare a list of type int
+        ccxll_init(list);                       //  initialize the list record
 
-        for (int cnt = 8; cnt-- > 0; )
-            ccxll_push_back(list, rand());      //  insert 8 numbers at the end
+        for (int cnt = 8; cnt-- > 0; )          //
+            ccxll_push_back(list, rand());      //  insert "rand()" to the end
 
-        ccxll_sort(list);                       //  sort the list in asc. order
+        ccxll_sort(list);                       //  sort with comparator: XLEQ
 
-        CCXLL_INCR_AUTO(pnum, list)             //  traverse the list from left
-            printf("num = %d\n", *pnum);        //  deref the pointer to number
+        CCXLL_INCR_AUTO(pnum, list)             //  traverse the list forward:
+            printf("num = %d\n", *pnum);        //  access elems through iters
 
-        ccxll_free(list);                       //  free the list just as usual
+        ccxll_free(list);                       //  destroy the list after use
     }
     #endif // CCC_STRICT
 
