@@ -8,7 +8,10 @@
 !src/*.h
 
 !test/
-!test/*.c
+!test/list
+!test/list/*.c
+!test/tree
+!test/tree/*.c
 
 !tex/
 !tex/*.tex
