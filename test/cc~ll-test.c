@@ -1,8 +1,3 @@
-#pragma GCC push_options
-#pragma GCC optimize ("O1")
-// or -fno-strict-aliasing
-
-#define DEBUG_CCDLL
 // #define CCC_STRICT
 
 #ifdef  DEBUG_CCXLL
@@ -16,6 +11,10 @@
 #define PREFIX(FUNC)  CCDLL##FUNC
 #define prefix(func)  ccdll##func
 #endif // DEBUG_CCDLL
+
+#if !defined(DEBUG_CCXLL) && !defined(DEBUG_CCDLL)
+#error "should be included from : cc[bx]ll-test.c"
+#endif
 
 
 #include <stdio.h>
@@ -763,5 +762,3 @@ int main(void)
 
     return 0;
 }
-
-#pragma GCC pop_options
