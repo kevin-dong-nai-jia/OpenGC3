@@ -1,13 +1,13 @@
 // #define CCC_STRICT
 
 #ifdef  DEBUG_CCXLL
-#include "../src/ccxll.h"
+#include "../../src/ccxll.h"
 #define PREFIX(FUNC)  CCXLL##FUNC
 #define prefix(func)  ccxll##func
 #endif // DEBUG_CCXLL
 
 #ifdef  DEBUG_CCDLL
-#include "../src/ccdll.h"
+#include "../../src/ccdll.h"
 #define PREFIX(FUNC)  CCDLL##FUNC
 #define prefix(func)  ccdll##func
 #endif // DEBUG_CCDLL
