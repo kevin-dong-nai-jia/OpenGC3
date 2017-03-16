@@ -18,7 +18,27 @@ int main(void)
         ccgbt(char*) tree;
         ccgbt_init(tree);
 
-        // TODO
+        ccgbt_iter_root   (ITER(tree));
+        ccgbt_insert_left (ITER(tree), "Welcome to ");
+        ccgbt_insert_right(ITER(tree), "the ");
+
+        ccgbt_iter_parent (ITER(tree));
+        ccgbt_insert_left (ITER(tree), "\"C Container Collection\" ");
+        ccgbt_insert_right(ITER(tree), "Project!\n");
+
+        ccgbt_iter_root   (ITER(tree));
+        ccgbt_iter_left   (ITER(tree));
+        printf("%s",  GREF(ITER(tree)));
+
+        ccgbt_iter_right  (ITER(tree));
+        printf("%s",  GREF(ITER(tree)));
+
+        ccgbt_iter_parent (ITER(tree));
+        ccgbt_iter_left   (ITER(tree));
+        printf("%s",  GREF(ITER(tree)));
+
+        ccgbt_iter_right  (ITER(tree));
+        printf("%s",  GREF(ITER(tree)));
 
         ccgbt_free(tree);
     }

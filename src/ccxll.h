@@ -82,10 +82,10 @@ typedef void* link_t;
             struct CCXLL_BODY *ccxll;             /* points to ccxll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
-        struct CCXLL_BODY **_ll;                  /* internal use _it _ll */   \
+        struct CCXLL_BODY **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
-        unsigned char _ll_base, _ll_limit;                                     \
+        unsigned char _co_base, _co_limit;                                     \
     }
 
 
@@ -119,7 +119,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     if ((_alloc))                                                              \
-        _cc_ll_alloc((_ccxll));                                                \
+        _cont_alloc((_ccxll));                                                 \
                                                                                \
     _ccxll_init_core((_ccxll));                                                \
     _ccxll_init_info((_ccxll), (_start), (_ratio), (_thrsh));                  \
@@ -139,9 +139,9 @@ VOID_EXPR_                                                                     \
     (_ccxll)->itarr = NULL,                                                    \
     (_ccxll)->_iter = NULL,                                                    \
     (_ccxll)->_it   = NULL,                                                    \
-    (_ccxll)->_ll   = NULL,                                                    \
+    (_ccxll)->_co   = NULL,                                                    \
     (_ccxll)->_it_base = (_ccxll)->_it_limit = 0,                              \
-    (_ccxll)->_ll_base = (_ccxll)->_ll_limit = 0                               \
+    (_ccxll)->_co_base = (_ccxll)->_co_limit = 0                               \
 )
 
 
@@ -196,12 +196,12 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _it_free((_ccxll));                                                        \
-    _ll_free((_ccxll));                                                        \
+    _co_free((_ccxll));                                                        \
                                                                                \
     _iter_free ((_ccxll)->_iter);                                              \
     _itarr_free((_ccxll));                                                     \
     _block_free((_ccxll));                                                     \
-    _cc_ll_free((_ccxll));                                                     \
+    _cont_free ((_ccxll));                                                     \
 )
 
 
@@ -563,17 +563,17 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _buck = log2(ccxll_size((_ccxll))) + 1;                                \
                                                                                \
-    _ll_alloc((_ccxll),     1, _base_c, ccxll);                                \
-    _ll_alloc((_ccxll), _buck, _base_b, ccxll);                                \
+    _co_alloc((_ccxll),     1, _base_c, ccxll);                                \
+    _co_alloc((_ccxll), _buck, _base_b, ccxll);                                \
     _it_alloc((_ccxll),     2, _base_i, ccxll);                                \
                                                                                \
     _ccxll_sort_extd( (_ccxll),                                                \
-                       _ll_((_ccxll), _base_c, 0),                             \
-                     &(_ll_((_ccxll), _base_b, 0)),                            \
+                       _co_((_ccxll), _base_c, 0),                             \
+                     &(_co_((_ccxll), _base_b, 0)),                            \
                        _it_((_ccxll), _base_i, 0),                             \
                        _it_((_ccxll), _base_i, 1), _leq);                      \
                                                                                \
-    _ll_clear((_ccxll), _buck + 1);                                            \
+    _co_clear((_ccxll), _buck + 1);                                            \
     _it_clear((_ccxll),  2);                                                   \
 )
 

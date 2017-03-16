@@ -74,10 +74,10 @@
             struct CCDLL_BODY *ccdll;             /* points to ccdll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
-        struct CCDLL_BODY **_ll;                  /* internal use _it _ll */   \
+        struct CCDLL_BODY **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
-        unsigned char _ll_base, _ll_limit;                                     \
+        unsigned char _co_base, _co_limit;                                     \
     }
 
 
@@ -111,7 +111,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     if ((_alloc))                                                              \
-        _cc_ll_alloc((_ccdll));                                                \
+        _cont_alloc((_ccdll));                                                 \
                                                                                \
     _ccdll_init_core((_ccdll));                                                \
     _ccdll_init_info((_ccdll), (_start), (_ratio), (_thrsh));                  \
@@ -131,9 +131,9 @@ VOID_EXPR_                                                                     \
     (_ccdll)->itarr = NULL,                                                    \
     (_ccdll)->_iter = NULL,                                                    \
     (_ccdll)->_it   = NULL,                                                    \
-    (_ccdll)->_ll   = NULL,                                                    \
+    (_ccdll)->_co   = NULL,                                                    \
     (_ccdll)->_it_base = (_ccdll)->_it_limit = 0,                              \
-    (_ccdll)->_ll_base = (_ccdll)->_ll_limit = 0                               \
+    (_ccdll)->_co_base = (_ccdll)->_co_limit = 0                               \
 )
 
 
@@ -188,12 +188,12 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _it_free((_ccdll));                                                        \
-    _ll_free((_ccdll));                                                        \
+    _co_free((_ccdll));                                                        \
                                                                                \
     _iter_free ((_ccdll)->_iter);                                              \
     _itarr_free((_ccdll));                                                     \
     _block_free((_ccdll));                                                     \
-    _cc_ll_free((_ccdll));                                                     \
+    _cont_free ((_ccdll));                                                     \
 )
 
 
@@ -505,17 +505,17 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _buck = log2(ccdll_size((_ccdll))) + 1;                                \
                                                                                \
-    _ll_alloc((_ccdll),     1, _base_c, ccdll);                                \
-    _ll_alloc((_ccdll), _buck, _base_b, ccdll);                                \
+    _co_alloc((_ccdll),     1, _base_c, ccdll);                                \
+    _co_alloc((_ccdll), _buck, _base_b, ccdll);                                \
     _it_alloc((_ccdll),     2, _base_i, ccdll);                                \
                                                                                \
     _ccdll_sort_extd( (_ccdll),                                                \
-                       _ll_((_ccdll), _base_c, 0),                             \
-                     &(_ll_((_ccdll), _base_b, 0)),                            \
+                       _co_((_ccdll), _base_c, 0),                             \
+                     &(_co_((_ccdll), _base_b, 0)),                            \
                        _it_((_ccdll), _base_i, 0),                             \
                        _it_((_ccdll), _base_i, 1), _leq);                      \
                                                                                \
-    _ll_clear((_ccdll), _buck + 1);                                            \
+    _co_clear((_ccdll), _buck + 1);                                            \
     _it_clear((_ccdll),  2);                                                   \
 )
 

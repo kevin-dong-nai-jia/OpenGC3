@@ -36,142 +36,138 @@ STATEMENT_                                                                     \
 
 
 
-/* cc_ll / iter management */
+/* cont / iter */
 
 
-#define _cc_ll_alloc(_cc_ll)  _safe_alloc((_cc_ll), sizeof(*(_cc_ll)))
+#define _cont_alloc(_cont)  _safe_alloc((_cont), sizeof(*(_cont)))
 
-#define _cc_ll_free(_cc_ll)   _safe_free ((_cc_ll))
+#define _cont_free(_cont)   _safe_free ((_cont))
 
-#define _iter_alloc(_iter)    _safe_alloc((_iter),  sizeof(*(_iter)))
+#define _iter_alloc(_iter)  _safe_alloc((_iter), sizeof(*(_iter)))
 
-#define _iter_free(_iter)     _safe_free ((_iter))
-
-
-
-/* itarr management */
+#define _iter_free(_iter)   _safe_free ((_iter))
 
 
-#define _itarr_alloc(_cc_ll, _cc_ll_)                                          \
+
+/* itarr */
+
+
+#define _itarr_alloc(_cont, _name_)                                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _safe_alloc((_cc_ll)->itarr, sizeof(*(_cc_ll)->itarr));                    \
+    _safe_alloc((_cont)->itarr, sizeof(*(_cont)->itarr));                      \
                                                                                \
-    for (int _idx = 0; _idx < (int)ELEMOF(*(_cc_ll)->itarr); _idx++)           \
-        _cc_ll_##_iter_init(&((*(_cc_ll)->itarr)[_idx]), (_cc_ll));            \
+    for (int _idx = 0; _idx < (int)ELEMOF(*(_cont)->itarr); _idx++)            \
+        _name_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont));               \
 )
 
 
-#define _itarr_free(_cc_ll)                                                    \
+#define _itarr_free(_cont)                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _safe_free((_cc_ll)->itarr);                                               \
+    _safe_free((_cont)->itarr);                                                \
 )
 
 
 
-/* _it / _ll management */
+/* _it / _co management */
 
 
-#define _it_ll_total(_cc_ll, _itll_)                                           \
+#define _it_co_total(_cont, _it_co_)                                           \
                                                                                \
-        ((_cc_ll)->_itll_##_base + (_cc_ll)->_itll_##_limit)
+        ((_cont)->_it_co_##_base + (_cont)->_it_co_##_limit)
 
 
 #ifndef CCC_STRICT
 
-#define _it_alloc(_cc_ll, _items, _iter, _cc_ll_)                              \
+#define _it_alloc(_cont, _items, _iter, _name_)                                \
                                                                                \
-        __typeof__(**(_cc_ll)->_it) _iter[(_items)];                           \
+        __typeof__(**(_cont)->_it) _iter[(_items)];                            \
                                                                                \
         for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            _cc_ll_##_iter_init(_it_((_cc_ll), _iter, _cnt), (_cc_ll))
+            _name_##_iter_init(_it_((_cont), _iter, _cnt), (_cont))
 
 #else
 
-#define _it_alloc(_cc_ll, _items, _base, _cc_ll_)                              \
+#define _it_alloc(_cont, _items, _base, _name_)                                \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _it_ll_alloc((_cc_ll), (_items), &(_base), _##_cc_ll_##_iter_init, _it)
+        _it_co_alloc((_cont), (_items), &(_base), _##_name_##_iter_init, _it)
 
 #endif // CCC_STRICT
 
 
-#define _ll_alloc(_cc_ll, _items, _base, _cc_ll_)                              \
+#define _co_alloc(_cont, _items, _base, _name_)                                \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _it_ll_alloc((_cc_ll), (_items), &(_base), _##_cc_ll_##_init, _ll)
+        _it_co_alloc((_cont), (_items), &(_base), _##_name_##_init, _co)
 
 
-#define _it_ll_alloc(_cc_ll, _items, _pbase, _pinit, _itll_)                   \
+#define _it_co_alloc(_cont, _items, _pbase, _pinit, _it_co_)                   \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _stack_alloc((_cc_ll), (_items), (_pbase), _itll_);                        \
+    _stack_alloc((_cont), (_items), (_pbase), _it_co_);                        \
                                                                                \
     for (int _idx = (*(_pbase)); _idx < (*(_pbase) + (_items)); _idx++)        \
-        _pinit((_cc_ll)->_itll_[_idx], (_cc_ll), !((_cc_ll)->_itll_[_idx]));   \
+        _pinit((_cont)->_it_co_[_idx], (_cont), !((_cont)->_it_co_[_idx]));    \
 )
 
 
 #ifndef CCC_STRICT
 
-#define _it_clear(_cc_ll, _items)
+#define _it_clear(_cont, _items)
 
 #else
 
-#define _it_clear(_cc_ll, _items)                                              \
+#define _it_clear(_cont, _items)                                               \
                                                                                \
-        _it_ll_clear(_cc_ll, _items, _it)
+        _it_co_clear(_cont, _items, _it)
 
 #endif // CCC_STRICT
 
 
-#define _ll_clear(_cc_ll, _items)                                              \
+#define _co_clear(_cont, _items)                                               \
                                                                                \
-        _it_ll_clear(_cc_ll, _items, _ll)
+        _it_co_clear(_cont, _items, _co)
 
 
-#define _it_ll_clear(_cc_ll, _items, _itll_)                                   \
+#define _it_co_clear(_cont, _items, _it_co_)                                   \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    _stack_clear((_cc_ll), (_items), _itll_);                                  \
-)
+        _stack_clear(_cont, _items, _it_co_)
 
 
-#define _it_free(_cc_ll)                                                       \
+#define _it_free(_cont)                                                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _it_total = _it_ll_total((_cc_ll), _it);                     \
+    unsigned char _it_total = _it_co_total((_cont), _it);                      \
                                                                                \
     for (int _idx_it = 0; _idx_it < _it_total; _idx_it++)                      \
-        _iter_free((_cc_ll)->_it[_idx_it]);                                    \
+        _iter_free((_cont)->_it[_idx_it]);                                     \
                                                                                \
-    _stack_free((_cc_ll), _it);                                                \
+    _stack_free((_cont), _it);                                                 \
 )
 
 
-#define _ll_free(_cc_ll)                                                       \
+#define _co_free(_cont)                                                        \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _ll_total = _it_ll_total((_cc_ll), _ll);                     \
+    unsigned char _co_total = _it_co_total((_cont), _co);                      \
                                                                                \
-    for (int _idx_ll = 0; _idx_ll < _ll_total; _idx_ll++)                      \
+    for (int _idx_co = 0; _idx_co < _co_total; _idx_co++)                      \
     {                                                                          \
-        _it_free((_cc_ll)->_ll[_idx_ll]);                                      \
-                                                                               \
-        _block_free((_cc_ll)->_ll[_idx_ll]);                                   \
-        _cc_ll_free((_cc_ll)->_ll[_idx_ll]);                                   \
+        _it_free   ((_cont)->_co[_idx_co]);                                    \
+        _block_free((_cont)->_co[_idx_co]);                                    \
+        _cont_free ((_cont)->_co[_idx_co]);                                    \
     }                                                                          \
                                                                                \
-    _stack_free((_cc_ll), _ll);                                                \
+    _stack_free((_cont), _co);                                                 \
 )
 
 
@@ -179,50 +175,50 @@ STATEMENT_                                                                     \
 /* stack management */
 
 
-#define _stack_alloc(_cc_ll, _items, _pbase, _itll_)                           \
+#define _stack_alloc(_cont, _items, _pbase, _it_co_)                           \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_items) > (_cc_ll)->_itll_##_limit && (_items) != 0)                  \
+    if ((_items) > (_cont)->_it_co_##_limit && (_items) != 0)                  \
     {                                                                          \
-        size_t _size = sizeof(*(_cc_ll)->_itll_);                              \
-        unsigned char _stack_total = _it_ll_total((_cc_ll), _itll_);           \
+        size_t _size = sizeof(*(_cont)->_it_co_);                              \
+        unsigned char _stack_total = _it_co_total((_cont), _it_co_);           \
                                                                                \
-        void **_tmp = (void*)&((_cc_ll)->_itll_);                              \
-        *_tmp = realloc(*_tmp, (_size * (unsigned)((_cc_ll)->_itll_##_base +   \
+        void **_tmp = (void*)&((_cont)->_it_co_);                              \
+        *_tmp = realloc(*_tmp, (_size * (unsigned)((_cont)->_it_co_##_base +   \
                                                    (_items))));                \
                                                                                \
-        memset((_cc_ll)->_itll_ + _stack_total, 0,                             \
-               (_size * (unsigned)((_cc_ll)->_itll_##_base +                   \
+        memset((_cont)->_it_co_ + _stack_total, 0,                             \
+               (_size * (unsigned)((_cont)->_it_co_##_base +                   \
                                    (_items) - _stack_total)));                 \
                                                                                \
-        (_cc_ll)->_itll_##_limit = (unsigned char)(_items);                    \
+        (_cont)->_it_co_##_limit = (unsigned char)(_items);                    \
     }                                                                          \
                                                                                \
-    *(_pbase) = (_cc_ll)->_itll_##_base;                                       \
-    (_cc_ll)->_itll_##_base  += (_items);                                      \
-    (_cc_ll)->_itll_##_limit -= (_items);                                      \
+    *(_pbase) = (_cont)->_it_co_##_base;                                       \
+    (_cont)->_it_co_##_base  += (_items);                                      \
+    (_cont)->_it_co_##_limit -= (_items);                                      \
 )
 
 
-#define _stack_clear(_cc_ll, _items, _itll_)                                   \
+#define _stack_clear(_cont, _items, _it_co_)                                   \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    (_cc_ll)->_itll_##_base  -= (_items);                                      \
-    (_cc_ll)->_itll_##_limit += (_items);                                      \
+    (_cont)->_it_co_##_base  -= (_items);                                      \
+    (_cont)->_it_co_##_limit += (_items);                                      \
 )
 
 
-#define _stack_free(_cc_ll, _itll_)                                            \
+#define _stack_free(_cont, _it_co_)                                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_it_ll_total((_cc_ll), _itll_) != 0)                                   \
-        _safe_free((_cc_ll)->_itll_);                                          \
+    if (_it_co_total((_cont), _it_co_) != 0)                                   \
+        _safe_free((_cont)->_it_co_);                                          \
                                                                                \
-    (_cc_ll)->_itll_##_base  = 0;                                              \
-    (_cc_ll)->_itll_##_limit = 0;                                              \
+    (_cont)->_it_co_##_base  = 0;                                              \
+    (_cont)->_it_co_##_limit = 0;                                              \
 )
 
 
@@ -230,59 +226,59 @@ STATEMENT_                                                                     \
 /* node / block management */
 
 
-#define _node_alloc(_pnode, _cc_ll)                                            \
+#define _node_alloc(_pnode, _cont)                                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_cc_ll)->avsp == NULL)                                                \
+    if ((_cont)->avsp == NULL)                                                 \
     {                                                                          \
-        if ((_cc_ll)->vcnt == 0)                                               \
+        if ((_cont)->vcnt == 0)                                                \
         {                                                                      \
-            (_cc_ll)->pblock = (_cc_ll)->pool;                                 \
-            (_cc_ll)->pool   = NULL;                                           \
+            (_cont)->pblock = (_cont)->pool;                                   \
+            (_cont)->pool   = NULL;                                            \
                                                                                \
-            if ((_cc_ll)->used == 0)                                           \
-                (_cc_ll)->vcnt = ((_cc_ll)->used  = (_cc_ll)->start);          \
+            if ((_cont)->used == 0)                                            \
+                (_cont)->vcnt = ((_cont)->used  = (_cont)->start);             \
             else                                                               \
-                (_cc_ll)->vcnt = ((_cc_ll)->used  < (_cc_ll)->thrsh) ?         \
-                                 ((_cc_ll)->used *= (_cc_ll)->ratio) :         \
-                                 ((_cc_ll)->used  = (_cc_ll)->thrsh);          \
+                (_cont)->vcnt = ((_cont)->used  < (_cont)->thrsh) ?            \
+                                ((_cont)->used *= (_cont)->ratio) :            \
+                                ((_cont)->used  = (_cont)->thrsh);             \
                                                                                \
-            _safe_alloc((_cc_ll)->pool, (sizeof(*(_cc_ll)->pblock)) +          \
-                                        (sizeof( (_cc_ll)->pblock->nodes)) *   \
-                                        (size_t)((_cc_ll)->used - 1));         \
+            _safe_alloc((_cont)->pool, (sizeof(*(_cont)->pblock)) +            \
+                                       (sizeof( (_cont)->pblock->nodes)) *     \
+                                       (size_t)((_cont)->used - 1));           \
                                                                                \
-            (_cc_ll)->pool->next = (_cc_ll)->pblock;                           \
+            (_cont)->pool->next = (_cont)->pblock;                             \
         }                                                                      \
                                                                                \
-        (_pnode) = &((_cc_ll)->pool->nodes[--(_cc_ll)->vcnt]);                 \
+        (_pnode) = &((_cont)->pool->nodes[--(_cont)->vcnt]);                   \
     }                                                                          \
     else                                                                       \
     {                                                                          \
-        (_pnode)       = (_cc_ll)->avsp;                                       \
-        (_cc_ll)->avsp = (_cc_ll)->avsp->lnk[0];                               \
+        (_pnode)      = (_cont)->avsp;                                         \
+        (_cont)->avsp = (_cont)->avsp->lnk[0];                                 \
     }                                                                          \
 )
 
 
-#define _node_clear(_pnode, _cc_ll)                                            \
+#define _node_clear(_pnode, _cont)                                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    (_pnode)->lnk[0] = (_cc_ll)->avsp;                                         \
-    (_cc_ll)->avsp   = (_pnode);                                               \
+    (_pnode)->lnk[0] = (_cont)->avsp;                                          \
+    (_cont)->avsp    = (_pnode);                                               \
 )
 
 
-#define _block_free(_cc_ll)                                                    \
+#define _block_free(_cont)                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while ((_cc_ll)->pool != NULL)                                             \
+    while ((_cont)->pool != NULL)                                              \
     {                                                                          \
-        (_cc_ll)->pblock = (_cc_ll)->pool;                                     \
-        (_cc_ll)->pool   = (_cc_ll)->pool->next;                               \
-        _safe_free((_cc_ll)->pblock);                                          \
+        (_cont)->pblock = (_cont)->pool;                                       \
+        (_cont)->pool   = (_cont)->pool->next;                                 \
+        _safe_free((_cont)->pblock);                                           \
     }                                                                          \
 )
 
