@@ -5,11 +5,11 @@
 /* Internal Use */
 
 #ifndef CCC_STRICT
-#define _it_(_cc_ll, _iter, _offset)  (&(_iter)[(_offset)])
-#define _ll_(_cc_ll, _base, _offset)  ((_cc_ll)->_ll[(_base) + (_offset)])
+#define _it_(_cont, _iter, _offset)  (&(_iter)[(_offset)])
+#define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #else
-#define _it_(_cc_ll, _base, _offset)  ((_cc_ll)->_it[(_base) + (_offset)])
-#define _ll_(_cc_ll, _base, _offset)  ((_cc_ll)->_ll[(_base) + (_offset)])
+#define _it_(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
+#define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #endif
 
 #ifndef CCC_STRICT
@@ -24,16 +24,21 @@
 #define DLEQ  CCDLL_LEQ_COMPAR
 #define XLEQ  CCXLL_LEQ_COMPAR
 
-#define LREF(_iter)       ((_iter)->curr.node->val)
-#define DREF(_iter)       ((_iter)->curr.node->val)
-#define DREF_PREV(_iter)  ((_iter)->curr.node->PRV->val)
-#define DREF_NEXT(_iter)  ((_iter)->curr.node->NXT->val)
-#define XREF(_iter)       ((_iter)->curr.node->val)
-#define XREF_PREV(_iter)  ((_iter)->prev.node->val)
-#define XREF_NEXT(_iter)  ((_iter)->next.node->val)
+#define LREF(_iter)         ((_iter)->curr.node->val)
+#define DREF(_iter)         ((_iter)->curr.node->val)
+#define DREF_PREV(_iter)    ((_iter)->curr.node->PRV->val)
+#define DREF_NEXT(_iter)    ((_iter)->curr.node->NXT->val)
+#define XREF(_iter)         ((_iter)->curr.node->val)
+#define XREF_PREV(_iter)    ((_iter)->prev.node->val)
+#define XREF_NEXT(_iter)    ((_iter)->next.node->val)
 
-#define ITER(_cc_ll)               (ITER_NTH(_cc_ll, 0))
-#define ITER_NTH(_cc_ll, _nth_it)  (&(*(_cc_ll)->itarr)[(_nth_it)])
+#define GREF(_iter)         ((_iter)->curr.node->val)
+#define GREF_PARENT(_iter)  ((_iter)->curr.node->PRN->val)
+#define GREF_LEFT(_iter)    ((_iter)->curr.node->LFT->val)
+#define GREF_RIGHT(_iter)   ((_iter)->curr.node->RGH->val)
+
+#define ITER(_cont)               (ITER_NTH(_cont, 0))
+#define ITER_NTH(_cont, _nth_it)  (&(*(_cont)->itarr)[(_nth_it)])
 
 
 #endif
