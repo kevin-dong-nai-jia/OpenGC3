@@ -17,6 +17,11 @@
 #define LFT lnk[1]
 #define RGH lnk[2]
 
+
+/* Attach line number to struct instance name.
+ * To ensure each instance is unique.
+ */
+
 #define CCGBT       ADDID(CCGBT)
 #define CCGBT_BODY  ADDID(CCGBT_BODY)
 #define CCGBT_NODE  ADDID(CCGBT_NODE)
@@ -44,35 +49,43 @@
 
 #define ccgbt_struct(elem_t)                                                   \
                                                                                \
-        ccgbt_struct_extd(elem_t, 2, NORMAL)
+        ccgbt_struct_extd(elem_t, 1, NORMAL)
 
 #define ccgbt_struct_pckd(elem_t)                                              \
                                                                                \
-        ccgbt_struct_extd(elem_t, 2, PACKED)
+        ccgbt_struct_extd(elem_t, 1, PACKED)
 
-#define ccgbt_struct_extd(elem_t, _LvN_iter, _ALIGN_)                          \
+#define ccgbt_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
                                                                                \
-        struct CCGBT_BODY                                                      \
+    struct CCGBT_BODY                                                          \
+    {                                                                          \
+        /* size and node record */                                             \
+        int size,  used,  vcnt;                                                \
+                                                                               \
+        /* start: 1st alloc node num, ratio: growth ratio      */              \
+        /* thrsh: max growth num                               */              \
+        /* example: start = 2, ratio = 2, thrsh = 17           */              \
+        /* -> 2, 4, 8, 16, 32, 17, 17,...                      */              \
+        /* block increment info for linked list                */              \
+        /* int start, ratio, thrsh;                            */              \
+                                                                               \
+        /* Depth to generate new branch when insert reach leaf */              \
+        int start;                                                             \
+                                                                               \
+        struct CCGBT_NODE                                                      \
         {                                                                      \
-            /* size and node record */                                         \
-            int size,  used,  vcnt;                                            \
+            struct CCGBT_NODE *lnk[3];                                         \
+            elem_t val;                                                        \
+        }   *avsp, *pnode, *sentinel;                                          \
                                                                                \
-            /* start: 1st alloc node num, ratio: growth ratio      */          \
-            /* thrsh: max growth num                               */          \
-            /* example: start = 2, ratio = 2, thrsh = 17           */          \
-            /* -> 2, 4, 8, 16, 32, 17, 17,...                      */          \
-            /* block increment info for linked list                */          \
-            /* int start, ratio, thrsh;                            */          \
-                                                                               \
-            /* Depth to generate new branch when insert reach leaf */          \
-            int start;                                                         \
-                                                                               \
-            struct CCGBT_NODE                                                  \
-            {                                                                  \
-                struct CCGBT_NODE *lnk[3];                                     \
-                elem_t val;                                                    \
-            }   *avsp, *pnode, *stnl;                                          \
-        }
+        struct CCGBT_BLCK                                                      \
+        {                                                                      \
+            struct CCGBT_BLCK *next;          /* points to next block */       \
+            PRAGMA_##_ALIGN_##_BGN            /* packed pragma starts */       \
+            struct CCGBT_NODE nodes[1];       /* node structure array */       \
+            PRAGMA_##_ALIGN_##_END            /* the pragma ends here */       \
+        }   *pool, *pblock                    /* points to 1-st block */       \                                                                 \
+    }
 
 
 

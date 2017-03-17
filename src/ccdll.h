@@ -54,7 +54,7 @@
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
-                                                                               \
+        /* node struct */                                                      \
         struct CCDLL_NODE                                                      \
         {   struct CCDLL_NODE *lnk[2];                                         \
             elem_t val;                           /* val with prv and nxt */   \
@@ -70,10 +70,11 @@
         struct CCDLL_ITER                                                      \
         {   struct CCDLL_CURR                                                  \
             {   struct CCDLL_NODE *node;                                       \
-            }   curr;                             /* points to curr  node */   \
-            struct CCDLL_BODY *ccdll;             /* points to ccdll body */   \
-        }   (*itarr)[_n_iter], *_iter, **_it;                                  \
+            }   curr;                             /* points to curr   node */  \
+            struct CCDLL_BODY *ccdll;             /* points to ccdll  body */  \
+        }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
                                                                                \
+        /* Auxiliary container for special function */                         \
         struct CCDLL_BODY **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
