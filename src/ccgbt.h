@@ -62,15 +62,9 @@
         /* size and node record */                                             \
         int size,  used,  vcnt;                                                \
                                                                                \
-        /* start: 1st alloc node num, ratio: growth ratio      */              \
-        /* thrsh: max growth num                               */              \
-        /* example: start = 2, ratio = 2, thrsh = 17           */              \
-        /* -> 2, 4, 8, 16, 32, 17, 17,...                      */              \
         /* block increment info for linked list                */              \
         /* int start, ratio, thrsh;                            */              \
-                                                                               \
-        /* Depth to generate new branch when insert reach leaf */              \
-        int start;                                                             \
+        int start, ratio, thrsh;                                               \
                                                                                \
         struct CCGBT_NODE                                                      \
         {                                                                      \
@@ -78,13 +72,34 @@
             elem_t val;                                                        \
         }   *avsp, *pnode, *sentinel;                                          \
                                                                                \
+        /* A group of nodes, is the instance of pool.h, and managed by it */   \
+        /* start: 1st alloc node num in a blck, ratio: growth ratio       */   \
+        /* thrsh: max nodes in a blck growth num                          */   \
+        /* look for int start, ratio, thrsh                               */   \
+        /* example: start = 2, ratio = 2, thrsh = 17                      */   \
+        /* -> 2, 4, 8, 16, 32, 17, 17,... nodes per blcks next time.      */   \
         struct CCGBT_BLCK                                                      \
         {                                                                      \
             struct CCGBT_BLCK *next;          /* points to next block */       \
             PRAGMA_##_ALIGN_##_BGN            /* packed pragma starts */       \
             struct CCGBT_NODE nodes[1];       /* node structure array */       \
             PRAGMA_##_ALIGN_##_END            /* the pragma ends here */       \
-        }   *pool, *pblock                    /* points to 1-st block */       \                                                                 \
+        }   *pool, *pblock                    /* points to 1-st block */       \
+                                                                               \
+                                                                               \
+        struct CCGBT_ITER                                                      \
+        {   struct CCGBT_CURR                                                  \
+            {   struct CCGBT_NODE *node;                                       \
+            }   curr;                             /* points to curr   node */  \
+            struct CCGBT_BODY *ccgbt;             /* points to ccdll  body */  \
+        }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
+                                                                               \
+                                                                               \
+        /* Auxiliary container for special function */                         \
+        struct CCGBT_BODY **_co;                  /* internal use _it _co */   \
+                                                                               \
+        unsigned char _it_base, _it_limit;                                     \
+        unsigned char _co_base, _co_limit;                                     \                                                                 \
     }
 
 
@@ -92,6 +107,8 @@
 /* ccdll initialize */
 
 
-
+#define ccgbt_init(_ccgbt)                                                     \
+                                                                               \
+        ccgbt_init_extd(_ccgbt, 1 << 4, 1 << 1, 1 << 16)
 
 #endif
