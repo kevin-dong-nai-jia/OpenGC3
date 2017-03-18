@@ -23,7 +23,7 @@
  */
 
 #define CCGBT       ADDID(CCGBT)
-#define CCGBT_BODY  ADDID(CCGBT_BODY)
+#define CCGBT_CONT  ADDID(CCGBT_CONT)
 #define CCGBT_NODE  ADDID(CCGBT_NODE)
 #define CCGBT_BLCK  ADDID(CCGBT_BLCK)
 #define CCGBT_ITER  ADDID(CCGBT_ITER)
@@ -36,15 +36,15 @@
 
 #define ccgbt(elem_t)                                                          \
                                                                                \
-        ccgbt_extd(elem_t, NORMAL)
+        ccgbt_extd(elem_t, 1, NORMAL)
 
 #define ccgbt_pckd(elem_t)                                                     \
                                                                                \
-        ccgbt_extd(elem_t, PACKED)
+        ccgbt_extd(elem_t, 1, PACKED)
 
-#define ccgbt_extd(elem_t, _ALIGN_)		                                       \
+#define ccgbt_extd(elem_t, _n_iter, _ALIGN_)		                           \
                                                                                \
-        typedef ccgbt_struct_extd(elem_t, _ALIGN_) *CCGBT;  CCGBT
+        typedef ccgbt_struct_extd(elem_t, _n_iter, _ALIGN_) *CCGBT;  CCGBT
 
 
 #define ccgbt_struct(elem_t)                                                   \
@@ -57,20 +57,23 @@
 
 #define ccgbt_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
                                                                                \
-    struct CCGBT_BODY                                                          \
+    struct CCGBT_CONT                                                          \
     {                                                                          \
         /* size and node record */                                             \
+        /* size is used node, used is used nodes in latest blck */             \
+        /* vcnt is new "fresh" node in latest blck              */             \
         int size,  used,  vcnt;                                                \
                                                                                \
         /* block increment info for linked list                */              \
         /* int start, ratio, thrsh;                            */              \
         int start, ratio, thrsh;                                               \
                                                                                \
+        /* root is sentinel/root node */                                       \
         struct CCGBT_NODE                                                      \
         {                                                                      \
             struct CCGBT_NODE *lnk[3];                                         \
             elem_t val;                                                        \
-        }   *avsp, *pnode, *sentinel;                                          \
+        }   *avsp, *pnode, root;                                               \
                                                                                \
         /* A group of nodes, is the instance of pool.h, and managed by it */   \
         /* start: 1st alloc node num in a blck, ratio: growth ratio       */   \
@@ -84,31 +87,232 @@
             PRAGMA_##_ALIGN_##_BGN            /* packed pragma starts */       \
             struct CCGBT_NODE nodes[1];       /* node structure array */       \
             PRAGMA_##_ALIGN_##_END            /* the pragma ends here */       \
-        }   *pool, *pblock                    /* points to 1-st block */       \
+        }   *pool, *pblock;                   /* points to 1-st block */       \
                                                                                \
                                                                                \
         struct CCGBT_ITER                                                      \
-        {   struct CCGBT_CURR                                                  \
-            {   struct CCGBT_NODE *node;                                       \
+        {                                                                      \
+            struct CCGBT_CURR                                                  \
+            {                                                                  \
+                struct CCGBT_NODE *node;                                       \
             }   curr;                             /* points to curr   node */  \
-            struct CCGBT_BODY *ccgbt;             /* points to ccdll  body */  \
+            struct CCGBT_CONT *ccgbt;             /* points to ccg  body */    \
         }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
                                                                                \
                                                                                \
         /* Auxiliary container for special function */                         \
-        struct CCGBT_BODY **_co;                  /* internal use _it _co */   \
+        struct CCGBT_CONT **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
-        unsigned char _co_base, _co_limit;                                     \                                                                 \
+        unsigned char _co_base, _co_limit;                                     \
     }
 
 
 
-/* ccdll initialize */
+/* ccgbt initialize */
 
 
 #define ccgbt_init(_ccgbt)                                                     \
                                                                                \
         ccgbt_init_extd(_ccgbt, 1 << 4, 1 << 1, 1 << 16)
+
+#define ccgbt_init_extd(_ccgbt, _start, _ratio, _thrsh)                        \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    (_ccgbt) = NULL;                                                           \
+                                                                               \
+    _ccgbt_init_extd((_ccgbt), (_start), (_ratio), (_thrsh), 1);               \
+                                                                               \
+    _itarr_alloc((_ccgbt), _ccgbt);                                            \
+    _ccgbt_iter_init((_ccgbt)->_iter, (_ccgbt), 1);                            \
+)
+
+
+#define _ccgbt_init(_ccgbt_dst, _ccgbt_src, _alloc)                            \
+                                                                               \
+        _ccgbt_init_extd(_ccgbt_dst, -1,     -1,     -1, _alloc)
+
+#define _ccgbt_init_extd(_ccgbt, _start, _ratio, _thrsh, _alloc)               \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_ccgbt))                                                              \
+        _cont_alloc((_ccgbt));                                                 \
+                                                                               \
+    _ccgbt_init_core((_ccgbt));                                                \
+    _ccgbt_init_info((_ccgbt), (_start), (_ratio), (_thrsh));                  \
+)
+
+
+#define _ccgbt_init_core(_ccgbt)                                               \
+    /* when return value is meaningful, use () */                              \
+(                                                                              \
+    _ccgbt_init_seed((_ccgbt)),                                                \
+                                                                               \
+    (_ccgbt)->used = (_ccgbt)->vcnt   = 0,                                     \
+    (_ccgbt)->avsp = (_ccgbt)->pnode  = NULL,                                  \
+    (_ccgbt)->pool = (_ccgbt)->pblock = NULL,                                  \
+                                                                               \
+    (_ccgbt)->itarr = NULL,                                                    \
+    (_ccgbt)->_iter = NULL,                                                    \
+    (_ccgbt)->_it   = NULL,                                                    \
+    (_ccgbt)->_co   = NULL,                                                    \
+    (_ccgbt)->_it_base = (_ccgbt)->_it_limit = 0,                              \
+    (_ccgbt)->_co_base = (_ccgbt)->_co_limit = 0                               \
+)
+
+
+#define _ccgbt_init_seed(_ccgbt)                                               \
+/* when return value is meaningless, use VOID_EXPR_() */                       \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_ccgbt)->size = 0,                                                        \
+    (_ccgbt)->root.PRN = NULL,                                                 \
+    (_ccgbt)->root.LFT = NULL,                                                 \
+    (_ccgbt)->root.RGH = NULL                                                  \
+)
+
+
+#define _ccgbt_init_info(_ccgbt, _start, _ratio, _thrsh)                       \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_ccgbt)->start = ((_start) > 0) ? (_start) : 1,                           \
+    (_ccgbt)->ratio = ((_ratio) > 0) ? (_ratio) : 1,                           \
+    (_ccgbt)->thrsh = ((_thrsh) > (_ccgbt)->start) ? (_thrsh) : (_ccgbt)->start\
+)
+
+
+#define ccgbt_iter_init(_iter, _ccgbt)                                         \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = NULL,                                                 \
+    (_iter)->ccgbt = (_ccgbt)                                                  \
+)
+
+
+#define _ccgbt_iter_init(_iter, _ccgbt, _alloc)                                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_alloc))                                                              \
+        _iter_alloc((_iter));                                                  \
+                                                                               \
+    ccgbt_iter_init((_iter), (_ccgbt));                                        \
+)
+
+
+
+/* ccgbt destroy */
+
+
+#define ccgbt_free(_ccgbt)                                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _it_free    ((_ccgbt));                                                    \
+    _co_free    ((_ccgbt));                                                    \
+                                                                               \
+    _iter_free  ((_ccgbt)->_iter);                                             \
+    _itarr_free ((_ccgbt));                                                    \
+    _block_free ((_ccgbt));                                                    \
+    _cont_free  ((_ccgbt));                                                    \
+)
+
+
+
+/* ccgbt access */
+//todo
+
+#define ccgbt_root(_ccgbt)  ((_ccgbt)->root.val)
+
+
+
+/* ccgbt capacity */
+
+
+#define ccgbt_size(_ccgbt)   ((_ccgbt)->size)
+
+#define ccgbt_empty(_ccgbt)  ((ccgbt_size((_ccgbt))) == 0)
+
+
+
+/* ccgbt modifiers */
+
+
+#define ccgbt_insert_left(_ccgbt, _val)
+
+
+#define ccgbt_insert_right(_ccgbt, _val)
+
+
+#define ccgbt_swap(_ccgbt_a, _ccgbt_b)                                         \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    void *_bup = (_ccgbt_a);                                                   \
+                                                                               \
+    (_ccgbt_a) = (_ccgbt_b);                                                   \
+    (_ccgbt_b) = _bup;                                                         \
+)
+
+
+
+/* ccdll operations */
+
+
+/* default comparators */
+
+
+/* ccdll iterators */
+
+
+#define ccgbt_iter_copy(_iter_dst, _iter_src)                                  \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    *(_iter_dst) = *(_iter_src)                                                \
+)
+
+
+#define ccgbt_iter_root(_iter)                                                 \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = &((_iter)->ccgbt->root)                               \
+)
+
+
+#define ccgbt_iter_left(_iter)                                                 \
+(                                                                              \
+    ((_iter)->curr.node->LFT) ?                                                \
+    ((_iter)->curr.node = (_iter)->curr.node->LFT)->LFT : (NULL)               \
+)
+
+
+#define ccgbt_iter_right(_iter)                                                \
+(                                                                              \
+    ((_iter)->curr.node->RGH) ?                                                \
+    ((_iter)->curr.node = (_iter)->curr.node->RGH)->RGH : (NULL)               \
+)
+
+
+#define ccgbt_iter_parent(_iter)                                               \
+(                                                                              \
+	(ccgbt_iter_at_root(_iter)) ? (NULL) :                                     \
+    ((_iter)->curr.node = (_iter)->curr.node->PRN)->PRN                        \
+)
+
+#define ccgbt_iter_at_root(_iter) ((_iter)->curr.node = &((_iter)->ccgbt->root))
+
+
+/* ccdll traversor */
+
+
+
+
+
+
 
 #endif
