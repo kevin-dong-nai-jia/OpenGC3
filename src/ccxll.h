@@ -16,7 +16,7 @@
 #define XOR lnk[0]
 
 #define CCXLL       ADDID(CCXLL)
-#define CCXLL_BODY  ADDID(CCXLL_BODY)
+#define CCXLL_CONT  ADDID(CCXLL_CONT)
 #define CCXLL_NODE  ADDID(CCXLL_NODE)
 #define CCXLL_BLCK  ADDID(CCXLL_BLCK)
 #define CCXLL_ITER  ADDID(CCXLL_ITER)
@@ -52,7 +52,7 @@ typedef void* link_t;
 
 #define ccxll_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
                                                                                \
-    struct CCXLL_BODY                                                          \
+    struct CCXLL_CONT                                                          \
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
@@ -79,10 +79,10 @@ typedef void* link_t;
             {   link_t lnk[1];                                                 \
                 struct CCXLL_NODE *node;                                       \
             }   prev, curr, next;                 /* adjacent ptr to node */   \
-            struct CCXLL_BODY *ccxll;             /* points to ccxll body */   \
+            struct CCXLL_CONT *ccxll;             /* points to ccxll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
-        struct CCXLL_BODY **_co;                  /* internal use _it _co */   \
+        struct CCXLL_CONT **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _co_base, _co_limit;                                     \

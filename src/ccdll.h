@@ -17,7 +17,7 @@
 #define NXT lnk[1]
 
 #define CCDLL       ADDID(CCDLL)
-#define CCDLL_BODY  ADDID(CCDLL_BODY)
+#define CCDLL_CONT  ADDID(CCDLL_CONT)
 #define CCDLL_NODE  ADDID(CCDLL_NODE)
 #define CCDLL_BLCK  ADDID(CCDLL_BLCK)
 #define CCDLL_ITER  ADDID(CCDLL_ITER)
@@ -50,7 +50,7 @@
 
 #define ccdll_struct_extd(elem_t, _n_iter, _ALIGN_)                            \
                                                                                \
-    struct CCDLL_BODY                                                          \
+    struct CCDLL_CONT                                                          \
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
@@ -70,12 +70,11 @@
         struct CCDLL_ITER                                                      \
         {   struct CCDLL_CURR                                                  \
             {   struct CCDLL_NODE *node;                                       \
-            }   curr;                             /* points to curr   node */  \
-            struct CCDLL_BODY *ccdll;             /* points to ccdll  body */  \
-        }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
+            }   curr;                             /* points to curr  node */   \
+            struct CCDLL_CONT *ccdll;             /* points to ccdll body */   \
+        }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
-        /* Auxiliary container for special function */                         \
-        struct CCDLL_BODY **_co;                  /* internal use _it _co */   \
+        struct CCDLL_CONT **_co;                  /* internal use _it _co */   \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _co_base, _co_limit;                                     \
