@@ -59,7 +59,7 @@ int main(void)
         ccgbt_push_left   (ITER(tree), 'I');
         ccgbt_push_left   (ITER(tree), 'J');
         ccgbt_insert_right(ITER(tree), 'K');
-        ccgbt_rotate      (ITER(tree));
+        ccgbt_swap_subtree(ITER(tree));
 
         ccgbt_push_left   (ITER(tree), 'L');
         ccgbt_insert_right(ITER(tree), 'M');
@@ -83,6 +83,8 @@ int main(void)
         ccgbt_erase_left  (ITER(tree));
 
         printf("%c%c\n", ccgbt_left(ITER(tree)), ccgbt_right(ITER(tree)));
+
+        ccgbt_free(tree);
     }
 
 
