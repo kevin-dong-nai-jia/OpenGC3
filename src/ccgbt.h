@@ -314,6 +314,16 @@ STATEMENT_                                                                     \
     _it_clear((_iter)->ccgbt, 2)\
 )
 
+/* swap two chile tree... */
+#define ccgbt_rotate(_iter)                                                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    void *_tmp = (_iter)->curr.node->LFT;                                      \
+    (_iter)->curr.node->RGH = (_iter)->curr.node->LFT;                         \
+    (_iter)->curr.node->LFT = _tmp;                                            \
+)
+
 
 #define ccgbt_swap(_ccgbt_a, _ccgbt_b)                                         \
                                                                                \
