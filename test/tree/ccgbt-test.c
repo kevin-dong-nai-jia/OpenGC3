@@ -42,6 +42,8 @@ int main(void)
         ccgbt_iter_right  (ITER(tree));
         printf("%s",  GREF(ITER(tree)));
 
+        puts("");
+
         ccgbt_free(tree);
     }
 
