@@ -280,10 +280,20 @@ STATEMENT_                                                                     \
 
 
 //todo
-#define ccgbt_erase_left(_iter)
+#define ccgbt_erase_left(_iter)                                                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if(ccgbt_iter_at_root(_iter)) break;
+)
 
 
-#define ccgbt_erase_right(_iter)
+#define ccgbt_erase_right(_iter)                                               \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (ccgbt_iter_at_root(_iter)) break;
+)
 
 
 #define ccgbt_swap(_ccgbt_a, _ccgbt_b)                                         \
