@@ -70,8 +70,7 @@
                                                                                \
         /* root is sentinel/root node */                                       \
         struct CCGBT_NODE                                                      \
-        {                                                                      \
-            struct CCGBT_NODE *lnk[3];                                         \
+        {   struct CCGBT_NODE *lnk[3];                                         \
             elem_t val;                                                        \
             /* *pnode is aux blck */                                           \
         }   *avsp, *pnode, root;                                               \
@@ -83,8 +82,7 @@
         /* example: start = 2, ratio = 2, thrsh = 17                      */   \
         /* -> 2, 4, 8, 16, 32, 17, 17,... nodes per blcks next time.      */   \
         struct CCGBT_BLCK                                                      \
-        {                                                                      \
-            struct CCGBT_BLCK *next;          /* points to next block */       \
+        {   struct CCGBT_BLCK *next;          /* points to next block */       \
             PRAGMA_##_ALIGN_##_BGN            /* packed pragma starts */       \
             struct CCGBT_NODE nodes[1];       /* node structure array */       \
             PRAGMA_##_ALIGN_##_END            /* the pragma ends here */       \
@@ -93,10 +91,8 @@
                                                                                \
                                                                                \
         struct CCGBT_ITER                                                      \
-        {                                                                      \
-            struct CCGBT_CURR                                                  \
-            {                                                                  \
-                struct CCGBT_NODE *node;                                       \
+        {   struct CCGBT_CURR                                                  \
+            {   struct CCGBT_NODE *node;                                       \
             }   curr;                             /* points to curr   node */  \
             struct CCGBT_CONT *ccgbt;             /* points to ccg  body */    \
         }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
@@ -250,15 +246,20 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _node_alloc((_iter)->ccgbt->pnode, (_iter)->ccgbt);                        \
+                                                                               \
     (_iter)->ccgbt->pnode->val = (_val);                                       \
+                                                                               \
     (_iter)->ccgbt->pnode->RGH = NULL;                                         \
-	(_iter)->ccgbt->pnode->LFT = (_iter)->curr.node->LFT;                      \
+    (_iter)->ccgbt->pnode->LFT = (_iter)->curr.node->LFT;                      \
     (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
-    if((_iter)->curr.node->LFT)                                                \
+                                                                               \
+    if ((_iter)->curr.node->LFT)                                               \
         (_iter)->curr.node->LFT->PRN = (_iter)->ccgbt->pnode;                  \
-	(_iter)->curr.node->LFT = (_iter)->ccgbt->pnode;                           \
-	(_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
-	(_iter)->ccgbt->size++;                                                    \
+                                                                               \
+    (_iter)->curr.node->LFT = (_iter)->ccgbt->pnode;                           \
+    (_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
+                                                                               \
+    (_iter)->ccgbt->size++;                                                    \
 )
 
 
@@ -267,17 +268,21 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     _node_alloc((_iter)->ccgbt->pnode, (_iter)->ccgbt);                        \
+                                                                               \
     (_iter)->ccgbt->pnode->val = (_val);                                       \
+                                                                               \
     (_iter)->ccgbt->pnode->LFT = NULL;                                         \
-	(_iter)->ccgbt->pnode->RGH = (_iter)->curr.node->RGH;                      \
+    (_iter)->ccgbt->pnode->RGH = (_iter)->curr.node->RGH;                      \
     (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
-    if((_iter)->curr.node->RGH)                                                \
+                                                                               \
+    if ((_iter)->curr.node->RGH)                                               \
         (_iter)->curr.node->RGH->PRN = (_iter)->ccgbt->pnode;                  \
-	(_iter)->curr.node->RGH = (_iter)->ccgbt->pnode;                           \
-	(_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
-	(_iter)->ccgbt->size++;                                                    \
+                                                                               \
+    (_iter)->curr.node->RGH = (_iter)->ccgbt->pnode;                           \
+    (_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
+                                                                               \
+    (_iter)->ccgbt->size++;                                                    \
 )
-
 
 //todo
 #define ccgbt_erase_left(_iter)
@@ -301,7 +306,7 @@ STATEMENT_                                                                     \
 /* ccgbt operations */
 
 
-/* default comparators */
+/* ccgbt comparators */
 
 
 /* ccgbt iterators */
@@ -339,9 +344,10 @@ VOID_EXPR_                                                                     \
 
 #define ccgbt_iter_parent(_iter)                                               \
 (                                                                              \
-    (ccgbt_iter_at_root(_iter)) ? (NULL) :                                     \
-    ((_iter)->curr.node = (_iter)->curr.node->PRN)->PRN                        \
+    ((_iter)->curr.node->PRN) ?                                                \
+    ((_iter)->curr.node = (_iter)->curr.node->PRN)->PRN : (NULL)               \
 )
+
 
 #define ccgbt_iter_at_root(_iter)                                              \
 (                                                                              \
@@ -349,11 +355,8 @@ VOID_EXPR_                                                                     \
 )
 
 
+
 /* ccgbt traversor */
-
-
-
-
 
 
 
