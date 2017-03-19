@@ -148,7 +148,8 @@ STATEMENT_                                                                     \
 
 
 #define _ccgbt_init_core(_ccgbt)                                               \
-    /* when return value is meaningful, use () */                              \
+                                                                               \
+VOID_EXPR_                                                                     \
 (                                                                              \
     _ccgbt_init_seed((_ccgbt)),                                                \
                                                                                \
@@ -322,6 +323,7 @@ VOID_EXPR_                                                                     \
 
 
 #define ccgbt_iter_left(_iter)                                                 \
+    /* when return value is meaningful, use () */                              \
 (                                                                              \
     ((_iter)->curr.node->LFT) ?                                                \
     ((_iter)->curr.node = (_iter)->curr.node->LFT)->LFT : (NULL)               \
@@ -342,8 +344,9 @@ VOID_EXPR_                                                                     \
 )
 
 #define ccgbt_iter_at_root(_iter)                                              \
-                                                                               \
-    ((_iter)->curr.node == &((_iter)->ccgbt->root))
+(                                                                              \
+    (_iter)->curr.node == &((_iter)->ccgbt->root)                              \
+)
 
 
 /* ccgbt traversor */
