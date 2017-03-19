@@ -243,46 +243,35 @@ STATEMENT_                                                                     \
 
 #define ccgbt_insert_left(_iter, _val)                                         \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    _node_alloc((_iter)->ccgbt->pnode, (_iter)->ccgbt);                        \
-                                                                               \
-    (_iter)->ccgbt->pnode->val = (_val);                                       \
-                                                                               \
-    (_iter)->ccgbt->pnode->RGH = NULL;                                         \
-    (_iter)->ccgbt->pnode->LFT = (_iter)->curr.node->LFT;                      \
-    (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
-                                                                               \
-    if ((_iter)->curr.node->LFT)                                               \
-        (_iter)->curr.node->LFT->PRN = (_iter)->ccgbt->pnode;                  \
-                                                                               \
-    (_iter)->curr.node->LFT = (_iter)->ccgbt->pnode;                           \
-    (_iter)->curr.node      = (_iter)->ccgbt->pnode->PRN;                      \
-                                                                               \
-    (_iter)->ccgbt->size++;                                                    \
-)
+        _ccgbt_insert(_iter, _val, LFT, RGH)
 
 
 #define ccgbt_insert_right(_iter, _val)                                        \
                                                                                \
+        _ccgbt_insert(_iter, _val, RGH, LFT)
+
+       /* _pn_0_: target side, _pn_1_: opposite side */
+#define _ccgbt_insert(_iter, _val, _pn_0_, _pn_1_) 
+                                                                               \
 STATEMENT_                                                                     \
 (                                                                              \
     _node_alloc((_iter)->ccgbt->pnode, (_iter)->ccgbt);                        \
                                                                                \
     (_iter)->ccgbt->pnode->val = (_val);                                       \
                                                                                \
-    (_iter)->ccgbt->pnode->LFT = NULL;                                         \
-    (_iter)->ccgbt->pnode->RGH = (_iter)->curr.node->RGH;                      \
-    (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
+    (_iter)->ccgbt->pnode->_pn_1_ = NULL;                                      \
+    (_iter)->ccgbt->pnode->_pn_0_ = (_iter)->curr.node->_pn_0_;                \
+    (_iter)->ccgbt->pnode->_pn_0_ = (_iter)->curr.node;                        \
                                                                                \
-    if ((_iter)->curr.node->RGH)                                               \
-        (_iter)->curr.node->RGH->PRN = (_iter)->ccgbt->pnode;                  \
+    if ((_iter)->curr.node->_pn_0_)                                            \
+        (_iter)->curr.node->_pn_0_->PRN = (_iter)->ccgbt->pnode;               \
                                                                                \
-    (_iter)->curr.node->RGH = (_iter)->ccgbt->pnode;                           \
-    (_iter)->curr.node      = (_iter)->ccgbt->pnode->PRN;                      \
+    (_iter)->curr.node->_pn_0_ = (_iter)->ccgbt->pnode;                        \
+    (_iter)->curr.node      = (_iter)->ccgbt->pnode->_pn_0_;                   \
                                                                                \
     (_iter)->ccgbt->size++;                                                    \
 )
+
 
 //todo
 #define ccgbt_erase_left(_iter)                                                \
@@ -290,8 +279,9 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     if(!((_iter)->curr.node.PRN)) break;                                       \
-    /* alloc a group of new aux iters */                                       \
-    _it_alloc((_iter)->ccgbt, 2, (_iter), _base_l);\
+    /* alloc a group of new aux iters.       */                                \
+    /* In this case, we alloc two aux iters. */                                \
+    _it_alloc((_iter)->ccgbt, 2, (_iter), _base_l);                            \
                                                                                \
     (_base_l)->curr.node = (_iter)->curr.node;\
     (_base_r)->curr.node = (_iter)->curr.node;\
@@ -307,15 +297,15 @@ STATEMENT_                                                                     \
     if(!((_iter)->curr.node.PRN)) break;                                       \
                                                                                \
     if((_iter)->curr.node.RGH)                                                 \
-    {\
-	
+    {                                                                          \
+	\
 	}\
     if((_iter)->curr.node.LFT)                                                 \
 	{\
-
+    \
 	}\
     _it_alloc((_iter)->ccgbt, 1, (_iter), _base_l);\
-    (_base_l)->curr.node = (_iter)->curr.node;
+    (_base_l)->curr.node = (_iter)->curr.node;                                 \
                                                                                \
     _it_clear((_iter)->ccgbt, 2)\
 )
