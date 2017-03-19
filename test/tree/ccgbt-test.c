@@ -48,7 +48,7 @@ int main(void)
 
     // Test 1
     // insert / push / erase / rotate ...
-
+/*
     printf("Test 1: \n\n");
 
     {
@@ -84,7 +84,7 @@ int main(void)
 
         printf("%c%c\n", ccgbt_left(ITER(tree)), ccgbt_right(ITER(tree)));
     }
-
+*/
 
     return 0;
 }

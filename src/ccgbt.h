@@ -251,23 +251,27 @@ STATEMENT_                                                                     \
         _ccgbt_insert(_iter, _val, RGH, LFT)
 
        /* _pn_0_: target side, _pn_1_: opposite side */
-#define _ccgbt_insert(_iter, _val, _pn_0_, _pn_1_) 
+#define _ccgbt_insert(_iter, _val, _pn_0_, _pn_1_)                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    /* _node_alloc(_pnode,_cont) : to alloc a new node (provided by pool.h) */ \
+    /* _pnode = pointer to newly allocated node                             */ \
+    /* _cont = pointer to this container. @(_iter)-ccgbt                    */ \
+                                                                               \
     _node_alloc((_iter)->ccgbt->pnode, (_iter)->ccgbt);                        \
                                                                                \
     (_iter)->ccgbt->pnode->val = (_val);                                       \
                                                                                \
     (_iter)->ccgbt->pnode->_pn_1_ = NULL;                                      \
     (_iter)->ccgbt->pnode->_pn_0_ = (_iter)->curr.node->_pn_0_;                \
-    (_iter)->ccgbt->pnode->_pn_0_ = (_iter)->curr.node;                        \
+    (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
                                                                                \
     if ((_iter)->curr.node->_pn_0_)                                            \
         (_iter)->curr.node->_pn_0_->PRN = (_iter)->ccgbt->pnode;               \
                                                                                \
     (_iter)->curr.node->_pn_0_ = (_iter)->ccgbt->pnode;                        \
-    (_iter)->curr.node      = (_iter)->ccgbt->pnode->_pn_0_;                   \
+    /*(_iter)->curr.node      = (_iter)->ccgbt->pnode->PRN;      */            \
                                                                                \
     (_iter)->ccgbt->size++;                                                    \
 )
