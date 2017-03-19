@@ -49,7 +49,7 @@ int main(void)
 
 
     // Test 1
-    // insert / push / erase / rotate ...
+    // Insert / Push / Erase / Swap ...
 
     printf("Test 1: \n\n");
 
@@ -85,6 +85,52 @@ int main(void)
         ccgbt_erase_left  (ITER(tree));
 
         printf("%c%c\n", ccgbt_left(ITER(tree)), ccgbt_right(ITER(tree)));
+
+        ccgbt_free(tree);
+    }
+
+
+    // Test 2
+    // Traversal
+
+    printf("Test 2: \n\n");
+
+    {
+        ccgbt(int) tree;
+        ccgbt_init(tree);
+
+        ccgbt_iter_root   (ITER(tree));
+        ccgbt_insert_left (ITER(tree), '*');
+        ccgbt_insert_right(ITER(tree), '*');
+
+        ccgbt_iter_left   (ITER(tree));
+
+        ccgbt_insert_left (ITER(tree), '2');
+        ccgbt_insert_right(ITER(tree), '3');
+
+        ccgbt_push_right  (ITER(tree), '*');
+        ccgbt_insert_left (ITER(tree), '1');
+
+        ccgbt_push_left   (ITER(tree), '+');
+        ccgbt_insert_right(ITER(tree), '4');
+
+        ccgbt_iter_parent (ITER(tree));
+        ccgbt_iter_right  (ITER(tree));
+
+        ccgbt_insert_left (ITER(tree), '5');
+        ccgbt_insert_right(ITER(tree), '6');
+
+        ccgbt_push_left   (ITER(tree), '-');
+        ccgbt_insert_right(ITER(tree), '7');
+
+        ccgbt_iter_parent (ITER(tree));
+
+        ccgbt_push_left   (ITER(tree), '/');
+        ccgbt_iter_left   (ITER(tree));
+
+        ccgbt_infix_auto  (pchar, ITER(tree), { printf("%c ", *pchar); } );
+
+        puts("== -36.2");
 
         ccgbt_free(tree);
     }
