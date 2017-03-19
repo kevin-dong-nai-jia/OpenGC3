@@ -257,7 +257,7 @@ STATEMENT_                                                                     \
         (_iter)->curr.node->LFT->PRN = (_iter)->ccgbt->pnode;                  \
                                                                                \
     (_iter)->curr.node->LFT = (_iter)->ccgbt->pnode;                           \
-    (_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
+    (_iter)->curr.node      = (_iter)->ccgbt->pnode->PRN;                      \
                                                                                \
     (_iter)->ccgbt->size++;                                                    \
 )
@@ -279,7 +279,7 @@ STATEMENT_                                                                     \
         (_iter)->curr.node->RGH->PRN = (_iter)->ccgbt->pnode;                  \
                                                                                \
     (_iter)->curr.node->RGH = (_iter)->ccgbt->pnode;                           \
-    (_iter)->curr.node      = (_iter)->ccgbt->pnode;                           \
+    (_iter)->curr.node      = (_iter)->ccgbt->pnode->PRN;                      \
                                                                                \
     (_iter)->ccgbt->size++;                                                    \
 )
@@ -289,7 +289,14 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if(ccgbt_iter_at_root(_iter)) break;
+    if(!((_iter)->curr.node.PRN)) break;                                       \
+    /* alloc a group of new aux iters */                                       \
+    _it_alloc((_iter)->ccgbt, 2, (_iter), _base_l);\
+                                                                               \
+    (_base_l)->curr.node = (_iter)->curr.node;\
+    (_base_r)->curr.node = (_iter)->curr.node;\
+                                                                               \
+    _it_clear((_iter)->ccgbt, 2)\
 )
 
 
@@ -297,7 +304,20 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (ccgbt_iter_at_root(_iter)) break;
+    if(!((_iter)->curr.node.PRN)) break;                                       \
+                                                                               \
+    if((_iter)->curr.node.RGH)                                                 \
+    {\
+	
+	}\
+    if((_iter)->curr.node.LFT)                                                 \
+	{\
+
+	}\
+    _it_alloc((_iter)->ccgbt, 1, (_iter), _base_l);\
+    (_base_l)->curr.node = (_iter)->curr.node;
+                                                                               \
+    _it_clear((_iter)->ccgbt, 2)\
 )
 
 
