@@ -232,7 +232,7 @@ STATEMENT_                                                                     \
 /* ccgbt capacity */
 
 
-#define ccgbt_size(_ccgbt)   ((_ccgbt)->size)
+#define ccgbt_size (_ccgbt)   ((_ccgbt)->size)
 
 #define ccgbt_empty(_ccgbt)  ((ccgbt_size((_ccgbt))) == 0)
 
@@ -321,10 +321,10 @@ STATEMENT_                                                                     \
     (_iter)->ccgbt->pnode->PRN = (_iter)->curr.node;                           \
                                                                                \
     if ((_iter)->curr.node->_pn_0_)                                            \
+    {                                                                          \
         (_iter)->curr.node->_pn_0_->PRN = (_iter)->ccgbt->pnode;               \
-                                                                               \
-    if ((_iter)->curr.node->_pn_1_)                                            \
-        (_iter)->curr.node->_pn_1_->PRN = (_iter)->ccgbt->pnode;               \
+        (_iter)->curr.node->_pn_1_ = NULL;                                     \
+    }                                                                          \
                                                                                \
     (_iter)->curr.node->_pn_0_ = (_iter)->ccgbt->pnode;                        \
                                                                                \
@@ -348,15 +348,23 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if(ccgbt_iter_at_root(_iter)) break;                                       \
+    if (_unlikely(ccgbt_iter_at_root(_iter))) break;                           \
     /* alloc a group of new aux iters.       */                                \
     /* In this case, we alloc two aux iters. */                                \
     _it_alloc((_iter)->ccgbt, 2, _base_, ccgbt);                               \
     /* set aux iter[0] to target child */                                      \
     (_it_((_iter)->ccgbt, _base_, 0))->curr.node = (_iter)->curr.node->_pos_0_;\
-    /* set parent node._pos_0_ to the sibling. */                              \
-    (_iter)->curr.node->PRN->_pos_0_ =                                         \
-        (_it_((_iter)->ccgbt, _base_, 0))->curr.node;                          \
+    /* connect parent node._pos_1_ to the sibling. */                          \
+    if ((_iter)->curr.node == ((_iter)->curr.node->PRN->_pos_1_))              \
+    {                                                                          \
+        (_iter)->curr.node->PRN->_pos_1_ =                                     \
+            (_it_((_iter)->ccgbt, _base_, 0))->curr.node;                      \
+    }                                                                          \
+    else                                                                       \
+    {                                                                          \
+        (_iter)->curr.node->PRN->_pos_0_ =                                     \
+            (_it_((_iter)->ccgbt, _base_, 0))->curr.node;                      \
+    }                                                                          \
                                                                                \
     (_it_((_iter)->ccgbt, _base_, 0))->curr.node->PRN =                        \
         (_iter)->curr.node->PRN;                                               \
@@ -365,21 +373,23 @@ STATEMENT_                                                                     \
     (_it_((_iter)->ccgbt, _base_, 1))->curr.node = (_iter)->curr.node->_pos_1_;\
                                                                                \
     /* iter to the end of sibling */                                           \
-    while((_it_((_iter)->ccgbt, _base_, 0))->curr.node->_pos_1_)               \
+    while ((_it_((_iter)->ccgbt, _base_, 0))->curr.node->_pos_1_)              \
     {                                                                          \
         (_it_((_iter)->ccgbt, _base_, 0))->curr.node =                         \
             (_it_((_iter)->ccgbt, _base_, 0))->curr.node->_pos_1_;             \
     }                                                                          \
-                                                                               \
+    /* paste the other child to the end of sibling */                          \
     _it_((_iter)->ccgbt, _base_, 0)->curr.node->_pos_1_ =                      \
          _it_((_iter)->ccgbt, _base_, 1)->curr.node;                           \
                                                                                \
-    _it_((_iter)->ccgbt, _base_, 0)->curr.node->_pos_1_->PRN =                 \
-         _it_((_iter)->ccgbt, _base_, 0)->curr.node;                           \
+    if (_it_((_iter)->ccgbt, _base_, 0)->curr.node->_pos_1_)                   \
+        _it_((_iter)->ccgbt, _base_, 0)->curr.node->_pos_1_->PRN =             \
+             _it_((_iter)->ccgbt, _base_, 0)->curr.node;                       \
                                                                                \
     _it_((_iter)->ccgbt, _base_, 0)->curr.node = (_iter)->curr.node->PRN;      \
+    /* clear current node */                                                   \
     _node_clear((_iter)->curr.node, (_iter)->ccgbt);                           \
-                                                                               \
+    /* move _iter to parent */                                                 \
     (_iter)->curr.node = _it_((_iter)->ccgbt, _base_, 0)->curr.node;           \
                                                                                \
     _it_clear((_iter)->ccgbt, 2);                                              \
@@ -389,14 +399,14 @@ STATEMENT_                                                                     \
 
 
         /* swap two chile tree... */
-#define ccgbt_rotate(_iter)                                                    \
+#define ccgbt_swap_subtree(_iter)                                              \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     void *_tmp = (_iter)->curr.node->LFT;                                      \
                                                                                \
-    (_iter)->curr.node->RGH = (_iter)->curr.node->LFT;                         \
-    (_iter)->curr.node->LFT = _tmp;                                            \
+    (_iter)->curr.node->LFT = (_iter)->curr.node->RGH;                         \
+    (_iter)->curr.node->RGH = _tmp;                                            \
 )
 
         /* swap two container... */
