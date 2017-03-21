@@ -482,18 +482,33 @@ VOID_EXPR_                                                                     \
 
 #define ccgbt_iter_no_left(_iter)                                              \
 (                                                                              \
-    ((_iter)->curr.node->LFT == NULL)                                           \
+    ((_iter)->curr.node->LFT == NULL)                                          \
 )
 
 
 #define ccgbt_iter_no_right(_iter)                                             \
 (                                                                              \
-    ((_iter)->curr.node->RGH == NULL)                                           \
+    ((_iter)->curr.node->RGH == NULL)                                          \
 )
 
 
 
 /* ccgbt traversor */
+
+
+#ifndef CCC_STRICT
+
+#define ccgbt_infix_auto(_pval, _iter, _expr_)                                 \
+                                                                               \
+     ccgbt_iter_root(_iter);                                                   \
+                                                                               \
+     for (__typeof__((_ccdll)->pnode->val) *_pval;                             \
+                                              )                                \
+ 
+
+#endif // !CCC_STRICT
+
+
 
 
 

@@ -96,7 +96,7 @@ int main(void)
     printf("Test 2: \n\n");
 
     {
-        ccgbt(int) tree;
+        ccgbt(char) tree;
         ccgbt_init(tree);
 
         ccgbt_iter_root   (ITER(tree));
@@ -128,7 +128,7 @@ int main(void)
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
 
-        ccgbt_infix_auto  (pchar, ITER(tree), { printf("%c ", *pchar); } );
+        //ccgbt_infix_auto  (pchar, ITER(tree), { printf("%c ", *pchar); } );
 
         puts("== -36.2");
 
