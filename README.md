@@ -1,5 +1,8 @@
 # OpenGenCC
 
+OpenGenCC (libogcc) is a collection consisting of considerable essential containers (and their adaptors) for programming in C. Every function is implemented as a C preprocessor function-like macro strictly conforming to the C99+ standards, and therefore it performs better under most of the circumstances, since it is expaned at compile time and aggressively optimized by compilers.
+
+
 ## Containers
 
 |  Type                             |  Description                          |
@@ -26,11 +29,6 @@ ccxll_free(list);                     //  destroy the list after use
 ```
 
 See [test cases](test) for more fascinating examples!
-
-## Description
-
-OpenGenCC (libogcc) is a set of macros and it runs faster than most of the C++ STL implementations since all macros are expanded at compile time. This project puts much emphasis on very low memory usage and high performance, and therefore the ccxll container is implemented by XOR doubly linked list with its own memory pool to avoid frequent memory allocation. Besides, each macro is strictly conformed to the C standard and fully tested under Valgrind for memory leak detection and other static code analysis tools for an out of bound check.
-
 
 ## Contributor
 
