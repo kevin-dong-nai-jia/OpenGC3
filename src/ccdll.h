@@ -54,7 +54,7 @@
     {                                                                          \
         int size,  used,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
-        /* node struct */                                                      \
+                                                                               \
         struct CCDLL_NODE                                                      \
         {   struct CCDLL_NODE *lnk[2];                                         \
             elem_t val;                           /* val with prv and nxt */   \
