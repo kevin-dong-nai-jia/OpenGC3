@@ -64,8 +64,8 @@
         /* vcnt is new "fresh" node in latest blck              */             \
         int size,  used,  vcnt;                                                \
                                                                                \
-        /* block increment info for linked list                */              \
-        /* int start, ratio, thrsh;                            */              \
+        /* block increment info for linked list                 */             \
+        /* int start, ratio, thrsh;                             */             \
         int start, ratio, thrsh;                                               \
                                                                                \
         /* root is sentinel/root node */                                       \
@@ -92,12 +92,12 @@
         struct CCGBT_ITER                                                      \
         {   struct CCGBT_CURR                                                  \
             {   struct CCGBT_NODE *node;                                       \
-            }   curr;                             /* points to curr   node */  \
-            struct CCGBT_CONT *ccgbt;             /* points to ccg  body */    \
-        }   (*itarr)[_n_iter], *_iter, **_it;     /* **it_: Auxiliary iters*/  \
+            }   curr;                         /* points to curr   node */      \
+            struct CCGBT_CONT *ccgbt;         /* points to ccg  body   */      \
+        }   (*itarr)[_n_iter], *_iter, **_it; /* **it_: Auxiliary iters*/      \
                                                                                \
-        /* Auxiliary container for special function */                         \
-        struct CCGBT_CONT **_co;                  /* internal use _it _co */   \
+        /* Auxiliary container for special function                    */      \
+        struct CCGBT_CONT **_co;              /* internal use _it _co  */      \
                                                                                \
         unsigned char _it_base, _it_limit;                                     \
         unsigned char _co_base, _co_limit;                                     \
@@ -458,7 +458,7 @@ VOID_EXPR_                                                                     \
      ccgbt_iter_root(_iter);                                                   \
                                                                                \
      for (__typeof__((_ccdll)->pnode->val) *_pval;                             \
-                                              )                                \
+                                               )                               \
  
 
 #endif // !CCC_STRICT
