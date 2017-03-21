@@ -42,8 +42,6 @@ int main(void)
         ccgbt_iter_right  (ITER(tree));
         printf("%s",  GREF(ITER(tree)));
 
-        puts("");
-
         ccgbt_free(tree);
     }
 
@@ -51,7 +49,7 @@ int main(void)
     // Test 1
     // Insert / Push / Erase / Swap ...
 
-    printf("Test 1: \n\n");
+    printf("\n\nTest 1: ");
 
     {
         ccgbt(char) tree;
@@ -93,7 +91,7 @@ int main(void)
     // Test 2
     // Traversal
 
-    printf("Test 2: \n\n");
+    printf("\n\nTest 2: \n\n");
 
     {
         ccgbt(int) tree;
