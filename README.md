@@ -1,6 +1,6 @@
 # OpenGenCC
 
-OpenGenCC (libogcc) is a collection consisting of considerable essential containers (and their adaptors) for programming in C. Every function is implemented as a C preprocessor function-like macro strictly conforming to the C99+ standards, and therefore it performs better under most of the circumstances, since it is expaned at compile time and aggressively optimized by compilers.
+OpenGenCC is a collection consisting of a few essential containers (and their adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99+ standards, and therefore they perform better under many circumstances, since they're expanded at compile time and aggressively optimized by compilers.
 
 
 ## Containers
