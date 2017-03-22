@@ -42,8 +42,6 @@ int main(void)
         ccgbt_iter_right  (ITER(tree));
         printf("%s",  GREF(ITER(tree)));
 
-        puts("");
-
         ccgbt_free(tree);
     }
 
@@ -51,7 +49,7 @@ int main(void)
     // Test 1
     // Insert / Push / Erase / Swap ...
 
-    printf("Test 1: \n\n");
+    printf("\n\nTest 1: ");
 
     {
         ccgbt(char) tree;
@@ -93,7 +91,7 @@ int main(void)
     // Test 2
     // Traversal
 
-    printf("Test 2: \n\n");
+    printf("\n\nTest 2: \n\n");
 
     {
         ccgbt(char) tree;
@@ -128,7 +126,12 @@ int main(void)
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
 
-        ccgbt_infix_auto  (pchar, ITER(tree), { printf("%c ", *pchar); } );
+        CCGBT_FOREACH(infix, ITER(tree), 10)
+        {
+            ccgbt_iter_infix(ITER(tree), infix);
+
+            printf("%c ", GREF(ITER(tree)));
+        }
 
         puts("== -36.2");
 
