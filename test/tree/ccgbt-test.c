@@ -126,7 +126,12 @@ int main(void)
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
 
-        ccgbt_infix_auto  (pchar, ITER(tree), { printf("%c ", *pchar); } );
+        CCGBT_FOREACH(infix, ITER(tree), 10)
+        {
+            ccgbt_iter_infix(ITER(tree), infix);
+
+            printf("%c ", GREF(ITER(tree)));
+        }
 
         puts("== -36.2");
 
