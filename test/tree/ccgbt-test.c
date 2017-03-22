@@ -94,7 +94,7 @@ int main(void)
     printf("\n\nTest 2: \n\n");
 
     {
-        ccgbt(int) tree;
+        ccgbt(char) tree;
         ccgbt_init(tree);
 
         ccgbt_iter_root   (ITER(tree));
