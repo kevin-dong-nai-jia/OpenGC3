@@ -23,7 +23,7 @@ int main(void)
 
         ccgbt_iter_left   (ITER(tree));
         ccgbt_insert_right(ITER(tree), "the ");
-        ccgbt_insert_left (ITER(tree), "\"C Container Collection\" ");
+        ccgbt_insert_left (ITER(tree), "\"OpenGenCC\" ");
 
         ccgbt_iter_left   (ITER(tree));
         ccgbt_insert_right(ITER(tree), "Project!\n");

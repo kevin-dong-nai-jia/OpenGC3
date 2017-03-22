@@ -34,7 +34,7 @@ int main(void)
         prefix(_init)(list);
 
         prefix(_push_back)(list, "Welcome to ");
-        prefix(_push_back)(list, "the \"C Container Collection\" Project!\n");
+        prefix(_push_back)(list, "the \"OpenGenCC\" Project!\n");
 
         PREFIX(_INCR)(ITER(list))
             printf("%s", LREF(ITER(list)));
