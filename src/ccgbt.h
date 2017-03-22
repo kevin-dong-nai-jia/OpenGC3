@@ -455,15 +455,11 @@ VOID_EXPR_                                                                     \
 
 #define ccgbt_infix_auto(_pval, _iter, _expr_)                                 \
                                                                                \
-     ccgbt_iter_root(_iter);                                                   \
-                                                                               \
      for (__typeof__((_ccdll)->pnode->val) *_pval;                             \
-                                               )                               \
+                                                )                             \
  
 
 #endif // !CCC_STRICT
-
-
 
 
 
