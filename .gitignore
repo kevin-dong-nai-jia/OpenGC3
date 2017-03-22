@@ -19,6 +19,7 @@
 
 !tool/
 !tool/*.c
+!tool/*.dot
 !tool/*.pdf
 
 !LICENSE
