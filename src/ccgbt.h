@@ -453,13 +453,52 @@ VOID_EXPR_                                                                     \
 
 #ifndef CCC_STRICT
 
-#define ccgbt_infix_auto(_pval, _iter, _expr_)                                 \
+#define CCGBT_FOREACH(_rec, _iter, _depth)                                     \
                                                                                \
-     for (__typeof__((_ccdll)->pnode->val) *_pval;                             \
-                                                )                             \
+        for (struct {\
+                    } _rec; !_rec.done;)
  
 
 #endif // !CCC_STRICT
+
+
+/* flag operation */
+/* flag is in the least significant bit of PRN pointer    */
+/* ptr = 0xXXXXXXXXXXX00, last two bit is always zero,    */
+/* so we can storage something in it.                     */
+#define ccgbt_flag_get(_iter)                                                  \
+                                                                               \
+(                                                                              \
+    (intptr_t)(_iter)->curr.node->PRN & (intptr_t)~(-1 ^ 1)                    \
+)
+
+
+#define ccgbt_flag_check(_iter, _val)                                          \
+                                                                               \
+(                                                                              \
+    ccgbt_flag_get(_iter) & (intptr_t)(_val)                                   \
+)
+
+
+#define ccgbt_flag_set(_iter, _val)                                            \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node->PRN ^= (void *)(intptr_t)(_val)                        \
+)
+
+
+#define ccgbt_flag_toggle(_iter)                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    ccgbt_flag_set(_iter, !ccgbt_flag_get(_iter))                              \
+)
+
+
+#define ccgbt_flag_unset(_iter)                                                \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    ccgbt_flag_set(_iter, 0);                                                  \
+)
 
 
 
