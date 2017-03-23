@@ -554,7 +554,7 @@ STATEMENT_                                                                     \
 
 
 
-/* default comparators */
+/* ccdll comparator */
 
 
 #define CCDLL_LEQ_COMPAR(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))

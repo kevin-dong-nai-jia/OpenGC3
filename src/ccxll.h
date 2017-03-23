@@ -635,10 +635,11 @@ STATEMENT_                                                                     \
 
 
 
-/* default comparators */
+/* ccxll comparator */
 
 
 #define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
+
 
 
 /* ccxll iterators */
