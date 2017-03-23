@@ -80,7 +80,7 @@ STATEMENT_                                                                     \
         ((_cont)->_it_co_##_base + (_cont)->_it_co_##_limit)
 
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define _it_alloc(_cont, _items, _iter, _name_)                                \
                                                                                \
@@ -97,7 +97,7 @@ STATEMENT_                                                                     \
                                                                                \
         _it_co_alloc((_cont), (_items), &(_base), _##_name_##_iter_init, _it)
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 #define _co_alloc(_cont, _items, _base, _name_)                                \
@@ -118,7 +118,7 @@ STATEMENT_                                                                     \
 )
 
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define _it_clear(_cont, _items)
 
@@ -128,7 +128,7 @@ STATEMENT_                                                                     \
                                                                                \
         _it_co_clear(_cont, _items, _it)
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 #define _co_clear(_cont, _items)                                               \

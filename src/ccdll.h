@@ -648,7 +648,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (ccdll_iter_head((_iter)); ccdll_iter_incr((_iter)); )
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define CCDLL_INCR_AUTO(_pval, _ccdll)                                         \
                                                                                \
@@ -658,7 +658,7 @@ STATEMENT_                                                                     \
          (ccdll_iter_incr((_ccdll)->_iter)) &&                                 \
          ((_pval) = &DREF((_ccdll)->_iter), 1); )
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 

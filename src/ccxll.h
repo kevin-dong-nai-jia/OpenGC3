@@ -776,7 +776,7 @@ STATEMENT_                                                                     \
                                                                                \
     for (ccxll_iter_head((_iter)); ccxll_iter_incr((_iter)); )
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define CCXLL_INCR_AUTO(_pval, _ccxll)                                         \
                                                                                \
@@ -786,14 +786,14 @@ STATEMENT_                                                                     \
          (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
          ((_pval) = &XREF((_ccxll)->_iter), 1); )
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 #define CCXLL_DECR(_iter)                                                      \
                                                                                \
     for (ccxll_iter_tail((_iter)); ccxll_iter_decr((_iter)); )
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define CCXLL_DECR_AUTO(_pval, _ccxll)                                         \
                                                                                \
@@ -804,7 +804,7 @@ STATEMENT_                                                                     \
          (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
          ((_pval) = &XREF((_ccxll)->_iter), 1); )
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 

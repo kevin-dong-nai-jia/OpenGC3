@@ -4,19 +4,19 @@
 
 /* Internal Use */
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 #define _it_(_cont, _iter, _offset)  (&(_iter)[(_offset)])
 #define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #else
 #define _it_(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
 #define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
-#endif
+#endif // CC_STRICT
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 #define _unlikely(_expr)  (__builtin_expect(!!(_expr), 0))
 #else
 #define _unlikely(_expr)  (_expr)
-#endif
+#endif // CC_STRICT
 
 
 /* Abbreviation */
