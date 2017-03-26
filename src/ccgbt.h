@@ -457,7 +457,7 @@ VOID_EXPR_                                                                     \
                                                                                \
         for (struct {\
                     } _rec; !_rec.done;)
- 
+
 
 #endif // !CCC_STRICT
 
@@ -469,35 +469,35 @@ VOID_EXPR_                                                                     \
 #define ccgbt_flag_get(_iter)                                                  \
                                                                                \
 (                                                                              \
-    (intptr_t)(_iter)->curr.node->PRN & (intptr_t)~(-1 ^ 1)                    \
+    (intptr_t)(ptr) & (intptr_t)~(-1 ^ 1)                                      \
 )
 
 
 #define ccgbt_flag_check(_iter, _val)                                          \
                                                                                \
 (                                                                              \
-    ccgbt_flag_get(_iter) & (intptr_t)(_val)                                   \
+    (ccgbt_flag_get(ptr) & (intptr_t)(_val)) == (_val)                         \
 )
 
 
-#define ccgbt_flag_set(_iter, _val)                                            \
-VOID_EXPR_                                                                     \
+#define ccgbt_flag_set(_iter)                                                  \
+                                                                               \
 (                                                                              \
-    (_iter)->curr.node->PRN ^= (void *)(intptr_t)(_val)                        \
+    (__typeof__(ptr))((intptr_t)(ptr) | (intptr_t)0x1)                         \
 )
 
 
 #define ccgbt_flag_toggle(_iter)                                               \
-VOID_EXPR_                                                                     \
+                                                                               \
 (                                                                              \
-    ccgbt_flag_set(_iter, !ccgbt_flag_get(_iter))                              \
+    (__typeof__(ptr))((intptr_t)(ptr) ^ (intptr_t)0x1)                         \
 )
 
 
 #define ccgbt_flag_unset(_iter)                                                \
-VOID_EXPR_                                                                     \
+                                                                               \
 (                                                                              \
-    ccgbt_flag_set(_iter, 0);                                                  \
+    ccgbt_flag_toggle(ccgbt_flag_set(ptr))                                     \
 )
 
 
