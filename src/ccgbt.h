@@ -410,6 +410,14 @@ VOID_EXPR_                                                                     \
 )
 
 
+#define  ccgbt_iter_infix(_iter, _rec)                                         \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_iter)->curr.node = (((_iter)->curr.node) == (_rec).root)?\
+	:\
+)
+
 #define  ccgbt_iter_left(_iter)    _ccgbt_iter_move(_iter, LFT)
 
 #define  ccgbt_iter_right(_iter)   _ccgbt_iter_move(_iter, RGH)
@@ -455,8 +463,15 @@ VOID_EXPR_                                                                     \
 
 #define CCGBT_FOREACH(_rec, _iter, _depth)                                     \
                                                                                \
-        for (struct {\
-                    } _rec; !_rec.done;)
+        for (struct _prog                                                      \
+            {                                                                  \
+                void* root = (_iter)->curr.node;                               \
+                int   stack[_depth] = {0};                                     \
+                int   currDept = 0;                                            \
+                int   direction = 0;                                           \
+                int   done = 0;                                                \
+            } (_rec),                                                          \
+            ); !(_rec).done;)
 
 
 #endif // !CCC_STRICT
@@ -469,36 +484,44 @@ VOID_EXPR_                                                                     \
 #define ccgbt_flag_get(_iter)                                                  \
                                                                                \
 (                                                                              \
-    (intptr_t)(ptr) & (intptr_t)~(-1 ^ 1)                                      \
+    (intptr_t)((_iter)->curr.node->PRN) & (intptr_t)~(-1 ^ 1)                  \
 )
 
 
 #define ccgbt_flag_check(_iter, _val)                                          \
                                                                                \
 (                                                                              \
-    (ccgbt_flag_get(ptr) & (intptr_t)(_val)) == (_val)                         \
+    (ccgbt_flag_get((_iter)->curr.node->PRN) & (intptr_t)(_val)) == (_val)     \
 )
+
+
+#ifndef CCC_STRICT
 
 
 #define ccgbt_flag_set(_iter)                                                  \
                                                                                \
 (                                                                              \
-    (__typeof__(ptr))((intptr_t)(ptr) | (intptr_t)0x1)                         \
+    (__typeof__(ptr))((intptr_t)((_iter)->curr.node->PRN) | (intptr_t)0x1)     \
 )
 
 
 #define ccgbt_flag_toggle(_iter)                                               \
                                                                                \
 (                                                                              \
-    (__typeof__(ptr))((intptr_t)(ptr) ^ (intptr_t)0x1)                         \
+    (__typeof__((_iter)->curr.node->PRN))                                      \
+        ((intptr_t)((_iter)->curr.node->PRN) ^ (intptr_t)0x1)                  \
 )
 
 
 #define ccgbt_flag_unset(_iter)                                                \
                                                                                \
 (                                                                              \
-    ccgbt_flag_toggle(ccgbt_flag_set(ptr))                                     \
+    ccgbt_flag_toggle(ccgbt_flag_set((_iter)->curr.node->PRN))                 \
 )
+
+
+
+#endif // !CCC_STRICT
 
 
 
