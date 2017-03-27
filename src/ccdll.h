@@ -652,11 +652,10 @@ STATEMENT_                                                                     \
 
 #define CCDLL_INCR_AUTO(_pval, _ccdll)                                         \
                                                                                \
-    ccdll_iter_head((_ccdll)->_iter);                                          \
-                                                                               \
-    for (__typeof__((_ccdll)->pnode->val) *_pval;                              \
+    for (__typeof__((_ccdll)->pnode->val) *_pval,                              \
+         *_init = (ccdll_iter_head((_ccdll)->_iter), NULL);                    \
          (ccdll_iter_incr((_ccdll)->_iter)) &&                                 \
-         ((_pval) = &DREF((_ccdll)->_iter), 1); )
+         ((_pval) = &DREF((_ccdll)->_iter), 1); (void)_init)
 
 #endif // CC_STRICT
 

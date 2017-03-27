@@ -781,11 +781,10 @@ STATEMENT_                                                                     \
 
 #define CCXLL_INCR_AUTO(_pval, _ccxll)                                         \
                                                                                \
-    ccxll_iter_head((_ccxll)->_iter);                                          \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
+         *_init = (ccxll_iter_head((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
 
 #endif // CC_STRICT
 
@@ -798,12 +797,10 @@ STATEMENT_                                                                     \
 
 #define CCXLL_DECR_AUTO(_pval, _ccxll)                                         \
                                                                                \
-                                                                               \
-    ccxll_iter_tail((_ccxll)->_iter);                                          \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
+         *_init = (ccxll_iter_tail((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
 
 #endif // CC_STRICT
 
