@@ -660,5 +660,21 @@ STATEMENT_                                                                     \
 #endif // CC_STRICT
 
 
+#define CCDLL_DECR(_iter)                                                      \
+                                                                               \
+    for (ccdll_iter_tail((_iter)); ccdll_iter_decr((_iter)); )
+
+#ifndef CC_STRICT
+
+#define CCDLL_DECR_AUTO(_pval, _ccdll)                                         \
+                                                                               \
+    for (__typeof__((_ccdll)->pnode->val) *_pval,                              \
+         *_init = (ccdll_iter_tail((_ccdll)->_iter), NULL);                    \
+         (ccdll_iter_decr((_ccdll)->_iter)) &&                                 \
+         ((_pval) = &DREF((_ccdll)->_iter), 1); (void)_init)
+
+#endif // CC_STRICT
+
+
 
 #endif
