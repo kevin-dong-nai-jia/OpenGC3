@@ -1,4 +1,4 @@
-// #define CCC_STRICT
+// #define CC_STRICT
 
 #include "../../src/ccgbt.h"
 

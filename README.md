@@ -1,6 +1,6 @@
-# OpenGenCC
+# OpenGC<sup>3</sup>
 
-OpenGenCC is a collection consisting of a few essential containers (and their adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99+ standards, and therefore they perform better under many circumstances, since they're expanded at compile time and aggressively optimized by compilers.
+**OpenGC<sup>3</sup>** is a collection consisting of a few fundamental containers (and adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99+ standards, and therefore they outperform many C/C++ libraries, since they're expanded at compile time and aggressively optimized by compilers.
 
 
 ## Containers
@@ -32,7 +32,7 @@ See [test cases](test) for more fascinating examples!
 
 ## Contributor
 
-Kevin Dong Nai Jia <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
+Kevin Dong <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
 
 ## License
 

@@ -1,15 +1,13 @@
-// #define CCC_STRICT
-
 #ifdef  DEBUG_CCXLL
 #include "../../src/ccxll.h"
-#define PREFIX(FUNC)  CCXLL##FUNC
 #define prefix(func)  ccxll##func
+#define PREFIX(FUNC)  CCXLL##FUNC
 #endif // DEBUG_CCXLL
 
 #ifdef  DEBUG_CCDLL
 #include "../../src/ccdll.h"
-#define PREFIX(FUNC)  CCDLL##FUNC
 #define prefix(func)  ccdll##func
+#define PREFIX(FUNC)  CCDLL##FUNC
 #endif // DEBUG_CCDLL
 
 #if !defined(DEBUG_CCXLL) && !defined(DEBUG_CCDLL)
@@ -737,7 +735,8 @@ int main(void)
 
     // Test 21
     // Demonstration
-    #ifndef CCC_STRICT
+
+    #ifndef CC_STRICT
 
     printf("\n\nTest 21: \n\n");
 
@@ -755,7 +754,7 @@ int main(void)
 
         ccxll_free(list);                       //  destroy the list after use
     }
-    #endif // CCC_STRICT
+    #endif // CC_STRICT
 
     #endif // DEBUG_CCXLL
 
