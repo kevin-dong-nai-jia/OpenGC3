@@ -635,10 +635,11 @@ STATEMENT_                                                                     \
 
 
 
-/* default comparators */
+/* ccxll comparator */
 
 
 #define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
+
 
 
 /* ccxll iterators */
@@ -776,35 +777,32 @@ STATEMENT_                                                                     \
                                                                                \
     for (ccxll_iter_head((_iter)); ccxll_iter_incr((_iter)); )
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define CCXLL_INCR_AUTO(_pval, _ccxll)                                         \
                                                                                \
-    ccxll_iter_head((_ccxll)->_iter);                                          \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
+         *_init = (ccxll_iter_head((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 #define CCXLL_DECR(_iter)                                                      \
                                                                                \
     for (ccxll_iter_tail((_iter)); ccxll_iter_decr((_iter)); )
 
-#ifndef CCC_STRICT
+#ifndef CC_STRICT
 
 #define CCXLL_DECR_AUTO(_pval, _ccxll)                                         \
                                                                                \
-                                                                               \
-    ccxll_iter_tail((_ccxll)->_iter);                                          \
-                                                                               \
-    for (__typeof__((_ccxll)->pnode->val) *_pval;                              \
+    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
+         *_init = (ccxll_iter_tail((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); )
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
 
-#endif // CCC_STRICT
+#endif // CC_STRICT
 
 
 
