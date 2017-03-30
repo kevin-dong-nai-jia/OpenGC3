@@ -134,7 +134,7 @@ int main(void)
             printf("%c ", GREF(ITER(tree)));
         }
         */
-
+        void * test[32] = {NULL};
         puts("== -36.2");
 
         ccgbt_free(tree);
