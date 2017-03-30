@@ -39,6 +39,10 @@
                                                                                \
         typedef ccdll_struct_extd(elem_t, _n_iter, _ALIGN_) *CCDLL;  CCDLL
 
+#define ccdll_type(elem_t)                                                     \
+                                                                               \
+        typedef ccdll_struct_extd(elem_t, 1, NORMAL) *
+
 
 #define ccdll_struct(elem_t)                                                   \
                                                                                \

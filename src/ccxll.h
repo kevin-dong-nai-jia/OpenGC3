@@ -39,6 +39,10 @@
                                                                                \
         typedef ccxll_struct_extd(elem_t, _n_iter, _ALIGN_) *CCXLL;  CCXLL
 
+#define ccxll_type(elem_t)                                                     \
+                                                                               \
+        typedef ccxll_struct_extd(elem_t, 1, NORMAL) *
+
 
 typedef void* link_t;
 
