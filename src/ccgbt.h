@@ -488,48 +488,49 @@ STATEMENT_                                                                     \
 (                                                                              \
                                                                                \
     if((_rec).status == LFT_SEEK)                                              \
-    {                                                                          \
         _ccgbt_infix_iter_leftmost(_iter,_rec);                                \
-    }                                                                          \
                                                                                \
     else if((_rec).status == PRN_SEEK)                                         \
+        _ccgbt_infix_iter_parent(_iter, _rec);                                 \
+                                                                               \
+    else /* (_rec).status == RGH_SEEK */                                       \
+        _ccgbt_infix_iter_right(_iter, _rec);                                  \
+)
+
+
+/*   for infix traversal only */
+#define _ccgbt_infix_iter_parent(_iter, _rec)                                  \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccgbt_flag_unset((_iter), TRAV);                                           \
+    /* if no right node, keep iter to parent. */                               \
+    while(1)                                                                   \
     {                                                                          \
-        /* if no right, keep iter to parent. */                                \
-        ccgbt_flag_unset((_iter), TRAV);                                       \
-        while(1)                                                               \
+        ccgbt_iter_parent(_iter);                                              \
+        (_rec).currDept--;                                                     \
+                                                                               \
+        if(ccgbt_iter_at_node(_iter, (_rec).root))                             \
         {                                                                      \
-            ccgbt_iter_parent(_iter);                                          \
-            (_rec).currDept--;                                                 \
-            if(ccgbt_iter_at_node(_iter, (_rec).root))                         \
+             if(!ccgbt_flag_get(_iter, TRAV))                                  \
+             {                                                                 \
+                 (_rec).done = true;                                           \
+                 break;                                                        \
+             }                                                                 \
+        }                                                                      \
+                                                                               \
+        if(ccgbt_flag_get(_iter, TRAV))                                        \
+        {                                                                      \
+            if(ccgbt_iter_no_right(_iter))                                     \
             {                                                                  \
-                 if(!ccgbt_flag_get(_iter, TRAV))                              \
-                 {                                                             \
-                     (_rec).done = true;                                       \
-                     break;                                                    \
-                 }                                                             \
+                (_rec).status = PRN_SEEK;                                      \
+                break;                                                         \
             }                                                                  \
-            if(ccgbt_flag_get(_iter, TRAV))                                    \
+            else                                                               \
             {                                                                  \
-                if((ccgbt_cmp_node((_iter)->curr.node->PRN,                    \
-                                   (_rec).root)) &&                            \
-                   (!((_iter)->curr.node->PRN->flag)))                         \
-                    (_rec).done = true;                                        \
-                if(ccgbt_iter_no_right(_iter))                                 \
-                {                                                              \
-                    (_rec).status = PRN_SEEK;                                  \
-                    break;                                                     \
-                }                                                              \
-                else                                                           \
-                {                                                              \
-                    (_rec).status = RGH_SEEK;                                  \
-                    break;                                                     \
-                }                                                              \
+                (_rec).status = RGH_SEEK;                                      \
+                break;                                                         \
             }                                                                  \
         }                                                                      \
-    }                                                                          \
-    else /* (_rec).status == RGH_SEEK */                                       \
-    {                                                                          \
-        _ccgbt_infix_iter_right(_iter, _rec);                                  \
     }                                                                          \
 )
 
@@ -539,6 +540,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     ccgbt_flag_unset((_iter), TRAV);                                           \
+    /* set flag for first node at right branch for later use. */               \
     ccgbt_iter_right(_iter);                                                   \
     ccgbt_flag_set(_iter, TRAV);                                               \
     (_rec).currDept++;                                                         \
@@ -546,18 +548,12 @@ STATEMENT_                                                                     \
     if(ccgbt_iter_no_left(_iter))                                              \
     {                                                                          \
         if(ccgbt_iter_no_right(_iter))                                         \
-        {                                                                      \
             (_rec).status = PRN_SEEK;                                          \
-        }                                                                      \
         else                                                                   \
-        {                                                                      \
             (_rec).status = RGH_SEEK;                                          \
-        }                                                                      \
     }                                                                          \
     else                                                                       \
-    {                                                                          \
         _ccgbt_infix_iter_leftmost(_iter, _rec);                               \
-    }                                                                          \
 )
 
 
@@ -573,13 +569,9 @@ STATEMENT_                                                                     \
         if(ccgbt_iter_no_left(_iter))                                          \
         {                                                                      \
             if(ccgbt_iter_no_right(_iter))                                     \
-            {                                                                  \
                 (_rec).status = PRN_SEEK;                                      \
-            }                                                                  \
             else                                                               \
-            {                                                                  \
 				(_rec).status = RGH_SEEK;                                      \
-            }                                                                  \
 			break;                                                  	       \
         }                                                                      \
                                                                                \
@@ -631,9 +623,6 @@ STATEMENT_                                                                     \
 
 
 /* flag operation */
-/* flag is in the least significant bit of PRN pointer    */
-/* ptr = 0xXXXXXXXXXXX00, last two bit is always zero,    */
-/* so we can storage something in it.                     */
 #define ccgbt_flag_get(_iter, _dev)                                            \
                                                                                \
 (                                                                              \
