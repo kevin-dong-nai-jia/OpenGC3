@@ -32,7 +32,7 @@ int main(void)
         prefix(_init)(list);
 
         prefix(_push_back)(list, "Welcome to ");
-        prefix(_push_back)(list, "the \"OpenGenCC\" Project!\n");
+        prefix(_push_back)(list, "the \"OpenGC3\" Project!\n");
 
         PREFIX(_INCR)(ITER(list))
             printf("%s", LREF(ITER(list)));
