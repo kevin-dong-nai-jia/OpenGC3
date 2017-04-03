@@ -243,7 +243,8 @@ STATEMENT_                                                                     \
 
 #define ccxll_size(_ccxll)   ((_ccxll)->size)
 
-#define ccxll_empty(_ccxll)  ((ccxll_size((_ccxll))) == 0)
+#define ccxll_empty(_ccxll)  ((_ccxll)->head.XOR == &((_ccxll)->tail) &&       \
+                              (_ccxll)->tail.XOR == &((_ccxll)->head))
 
 
 

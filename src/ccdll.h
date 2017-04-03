@@ -216,7 +216,8 @@ STATEMENT_                                                                     \
 
 #define ccdll_size(_ccdll)   ((_ccdll)->size)
 
-#define ccdll_empty(_ccdll)  ((ccdll_size((_ccdll))) == 0)
+#define ccdll_empty(_ccdll)  ((_ccdll)->head.NXT == &((_ccdll)->tail) &&       \
+                              (_ccdll)->tail.PRV == &((_ccdll)->head))
 
 
 
