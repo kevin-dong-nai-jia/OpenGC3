@@ -130,7 +130,7 @@ int main(void)
         {
             CCGBT_FOREACH(ITER(tree))
             {
-                ccgbt_iter_infix(ITER(tree));
+                ccgbt_iter_inorder(ITER(tree));
                 printf("%c ", GREF(ITER(tree)));
             }
             puts("== -36.2");
