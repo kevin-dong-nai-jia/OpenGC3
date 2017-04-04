@@ -566,7 +566,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _buck = log2(ccxll_size((_ccxll))) + 1;                                \
+    int _buck = (int)(log2(ccxll_size((_ccxll)))) + 1;                         \
                                                                                \
     _co_alloc((_ccxll),     1, _base_c, ccxll);                                \
     _co_alloc((_ccxll), _buck, _base_b, ccxll);                                \

@@ -508,7 +508,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _buck = log2(ccdll_size((_ccdll))) + 1;                                \
+    int _buck = (int)(log2(ccdll_size((_ccdll)))) + 1;                         \
                                                                                \
     _co_alloc((_ccdll),     1, _base_c, ccdll);                                \
     _co_alloc((_ccdll), _buck, _base_b, ccdll);                                \
