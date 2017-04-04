@@ -32,7 +32,7 @@ See [test cases](test) for more fascinating examples!
 
 ## Contributor
 
-Kevin Dong <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
+[Kevin Dong (Kʌ̄D)](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
 
 ## License
 
