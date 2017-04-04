@@ -387,8 +387,6 @@ int main(void)
         prefix(_free)(list);
     }
 
-    #ifdef DEBUG_CCXLL
-
 
     // Test 12
     // Sort
@@ -396,24 +394,26 @@ int main(void)
     printf("\n\nTest 12: \n\n");
 
     {
-        ccxll(int) list;
-        ccxll_init(list);
+        prefix()(int) list;
+        prefix(_init)(list);
 
         int length = 1000;
         srand((unsigned)time(NULL));
 
         for (int cnt = 0; cnt < length; cnt++)
-            ccxll_push_back(list, rand());
+            prefix(_push_back)(list, rand());
 
-        ccxll_sort(list);
+        prefix(_sort)(list);
 
-        CCXLL_INCR(ITER(list))
+        PREFIX(_INCR)(ITER(list))
             printf("Max = %10d\r", LREF(ITER(list)));
 
         puts("");
 
-        ccxll_free(list);
+        prefix(_free)(list);
     }
+
+    #ifdef DEBUG_CCXLL
 
 
     // Test 13
