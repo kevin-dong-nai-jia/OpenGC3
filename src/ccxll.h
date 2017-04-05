@@ -643,7 +643,7 @@ STATEMENT_                                                                     \
 /* ccxll comparator */
 
 
-#define CCXLL_LEQ_COMPAR(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
+#define ccxll_comp_leq(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
 
 
 
