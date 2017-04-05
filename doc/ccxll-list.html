@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<!-- Title -->
-		<title>List of Macros | C Container Collection</title>
+		<title>Macros Prototype | OpenGC3</title>
 
 		<!-- CSS -->
 		<style type="text/css">
@@ -55,12 +55,12 @@
 		<tbody>
 			<tr>
 				<th rowspan="2">Container</th>
-				<th colspan="3">Operation</th>
-				<th rowspan="2">Short Description</th>
+				<th colspan="3">Operations</th>
+				<th rowspan="2">Short Descriptions</th>
 			</tr>
 			<tr>
 				<th style="display:none"></th>
-				<th>Category</th><th colspan="2">Function-like Macros Prototype</th>
+				<th>Categories</th><th colspan="2">Function-like Macro Prototypes</th>
 				<th style="display:none"></th>
 			</tr>
 			<tr>
@@ -145,18 +145,18 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="4">Operations</td><td> <u><i>stat</i></u></td><td>ccxll_move_range    (ITER <i>pos</i>, ITER <i>left</i>, ITER <i>right</i>);</td>
+				<td rowspan="4">Operations</td><td> <u><i>stat</i></u></td><td>ccxll_move_range    (ITER <i>pos</i>,  ITER <i>left</i>,  ITER <i>right</i>);</td>
 				<td>Move the elements in the range <font face="Inconsolata">[<i>left</i>, <i>right</i>)</font> to position where <i><font face="Inconsolata">pos</font></i> points.</br>These three iterators should be affiliated to the same ccxll container.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
 				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_merge[_extd]  (CCXLL <i>dst</i>, CCXLL <i>src</i> [, LEQ (*<i>leq</i>)()];</td>
-				<td>Merge two sorted lists from <i><font face="Inconsolata">src</font></i> into <i><font face="Inconsolata">dst</font></i>.</br>Merge with the default comparator <font face="Inconsolata">XLEQ</font> if <font face="Inconsolata">_extd</font> postfix is not specified.</td>
+				<td>Merge two sorted lists from <i><font face="Inconsolata">src</font></i> into <i><font face="Inconsolata">dst</font></i> with the comparator, <i><font face="Inconsolata">leq</font></i>.</br>Merge with the default comparator <font face="Inconsolata">XLEQ</font> if <font face="Inconsolata">_extd</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_sort[_extd]   (CCXLL <i>src</i> [, LEQ (*<i>leq</i>)()]);</td>
-				<td>Sort all elements in the list.</br>Sort with the default comparator <font face="Inconsolata">XLEQ</font> if <font face="Inconsolata">_extd</font> postfix is not specified.</td>
+				<td style="display:none"></td><td> <u><i>stat</i></u></td><td>ccxll_sort[_extd]   (CCXLL <i>src</i>            [, LEQ (*<i>leq</i>)()]);</td>
+				<td>Sort all elements in the list, <i><font face="Inconsolata">src</font></i>, with the comparator, <i><font face="Inconsolata">leq</font></i>.</br>Sort with the default comparator <font face="Inconsolata">XLEQ</font> if <font face="Inconsolata">_extd</font> postfix is not specified.</td>
 			</tr>
 			<tr>
 				<td style="display:none"></td>
@@ -165,7 +165,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td rowspan="1">Comparators</td><td> <b>LEQ</b></td><td>CCXLL_LEQ_COMPAR (ITER <i>a</i>, ITER <i>b</i>);        | (abbrev. XLEQ)</td>
+				<td rowspan="1">Comparators</td><td> <b>LEQ</b></td><td>ccxll_comp_leq (ITER <i>a</i>, ITER <i>b</i>);          | (abbrev. XLEQ)</td>
 				<td>Compare values by passing and dereferencing two iterators for sorting algorithms.</br>Return 1 iff the value pointed by <i><font face="Inconsolata">a</font></i> is not greater than the value pointed by <i><font face="Inconsolata">b</font></i>. Otherwise, return 0.</td>
 			</tr>
 			<tr>
@@ -175,7 +175,7 @@
 			</tr>
 			<tr>
 				<td style="display:none"></td>
-				<td style="display:none"></td><td> <b>TYPE&amp;</b></td><td>DREF (ITER);                              | (synonym LREF)</td>
+				<td style="display:none"></td><td> <b>TYPE&amp;</b></td><td>DREF (ITER);                              | (derived LREF)</td>
 				<td>Return a reference to the element.</br>It's an undefined behavior if the iterator is not (semi-)valid.</td>
 			</tr>
 			<tr>
