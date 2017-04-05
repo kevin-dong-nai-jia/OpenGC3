@@ -1,6 +1,6 @@
 # OpenGC<sup>3</sup>
 
-**OpenGC<sup>3</sup>** is a collection consisting of a few fundamental containers (and adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99+ standards, and therefore they outperform many C/C++ libraries, since they're expanded at compile time and aggressively optimized by compilers.
+**OpenGC<sup>3</sup>** is a collection consisting of a few fundamental containers (and adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99 standards, and therefore they outperform many other libraries, since they're expanded at compile time and aggressively optimized by compilers.
 
 
 ## Containers
