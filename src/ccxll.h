@@ -786,10 +786,14 @@ STATEMENT_                                                                     \
 
 #define CCXLL_INCR_AUTO(_pval, _ccxll)                                         \
                                                                                \
+        CCXLL_INCR_EXTD(_pval, _ccxll, (void)0)
+
+#define CCXLL_INCR_EXTD(_pval, _ccxll, ...)                                    \
+                                                                               \
     for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
          *_init = (ccxll_iter_head((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (__VA_ARGS__), (void)_init)
 
 #endif // CC_STRICT
 
