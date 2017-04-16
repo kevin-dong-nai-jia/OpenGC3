@@ -11,6 +11,12 @@
 #define PRAGMA_PACKED_END  _Pragma("pack(pop)"    )
 
 
+/* syntax wrapper */
+
+#define STATEMENT_(...)   do {__VA_ARGS__} while (0)
+#define VOID_EXPR_(...)   ((__VA_ARGS__), ((void)0))
+
+
 /* line ID append */
 
 #define ADDID APPENDLINE
@@ -19,15 +25,13 @@
 #define APPENDLINE(NAME)  EXPANDLINE(NAME, __LINE__)
 
 
-/* syntax wrapper */
-
-#define STATEMENT_(...)  do {__VA_ARGS__} while (0)
-#define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
-
-
 /* miscellaneous  */
 
-#define ELEMOF(ARRAY)  ((sizeof(ARRAY) / sizeof(ARRAY[0])))
+#define MIN_2(A, B)  ((A) < (B) ? (A) : (B))
+
+#define BITSOF(VAR)  (sizeof(VAR) * CHAR_BIT)
+#define ELEMOF(ARR)  (sizeof(ARR) / sizeof(ARR[0]))
+#define UMAXOF(VAR)  (~UINT64_C(0) >> (64 - BITSOF(VAR)))
 
 
 #endif
