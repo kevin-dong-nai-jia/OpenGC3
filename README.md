@@ -7,9 +7,10 @@
 
 |  Type                             |  Description                          |
 |-----------------------------------|:-------------------------------------:|
-| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
+|  `ccarr(T)`                       |  Array of Bits                        |
 |  `ccdll(T)`                       |  Doubly Linked List                   |
 |  `ccgbt(T)`                       |  General Binary Tree                  |
+| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 
 ## Example
 
