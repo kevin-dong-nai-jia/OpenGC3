@@ -124,7 +124,7 @@ digraph
     subgraph cluster_K { style="rounded, filled" label="Comparator" fontname="noto" fontsize="24" fillcolor="grey95"
                          ccxll_comp_leq }
 
-    { ccxll_pckd -> ccxll_struct [style="invis"] }
+    { ccxll_pckd -> ccxll_struct -> ccxll_struct_pckd [style="invis"] }
     { ccxll_iter_init -> ccxll_free [style="invis"] }
     { ccxll_reverse_range -> ccxll_move [style="invis"] }
     { _ccxll_init_seed    -> ccxll_swap [style="invis"] }
