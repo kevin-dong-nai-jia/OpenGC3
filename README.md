@@ -13,7 +13,7 @@
 
 ```c
 #include "ccxll.h"
-
+...
 ccxll(int) list;
 ccxll_init(list);
 
@@ -26,6 +26,7 @@ CCXLL_INCR_AUTO(pnum, list)
     printf("num = %d\n", *pnum);
 
 ccxll_free(list);
+...
 ```
 
 See [test cases](test) for more fascinating examples!
