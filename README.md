@@ -1,6 +1,6 @@
-# OpenGC<sup>3</sup>
+## OpenGC<sup>3</sup>
 
-## Containers
+### Containers
 
 |  Type                             |  Description                          |
 |-----------------------------------|:-------------------------------------:|
@@ -9,7 +9,7 @@
 |  `ccgbt(T)`                       |  General Binary Tree                  |
 | [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 
-## Example
+### Example
 
 ```c
 ccxll(int) list;                      //  declare a list of type int
@@ -28,11 +28,12 @@ ccxll_free(list);                     //  destroy the list after use
 
 See [test cases](test) for more fascinating examples!
 
-## Contributor
+### Contributor
 
 [Kevin Dong (Kʌ̄D)](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
 
-## License
+### License
 
 This project is distributed under [the MIT License](LICENSE).
+
 
