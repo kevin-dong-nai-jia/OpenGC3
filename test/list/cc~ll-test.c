@@ -1,17 +1,17 @@
-#ifdef  DEBUG_CCXLL
-#include "../../src/ccxll.h"
-#define prefix(func)  ccxll##func
-#define PREFIX(FUNC)  CCXLL##FUNC
-#endif // DEBUG_CCXLL
-
 #ifdef  DEBUG_CCDLL
 #include "../../src/ccdll.h"
 #define prefix(func)  ccdll##func
 #define PREFIX(FUNC)  CCDLL##FUNC
 #endif // DEBUG_CCDLL
 
-#if !defined(DEBUG_CCXLL) && !defined(DEBUG_CCDLL)
-#error "should be included from : cc[bx]ll-test.c"
+#ifdef  DEBUG_CCXLL
+#include "../../src/ccxll.h"
+#define prefix(func)  ccxll##func
+#define PREFIX(FUNC)  CCXLL##FUNC
+#endif // DEBUG_CCXLL
+
+#if !defined(DEBUG_CCDLL) && !defined(DEBUG_CCXLL)
+#error "should be included from : cc[dx]ll-test.c"
 #endif
 
 
