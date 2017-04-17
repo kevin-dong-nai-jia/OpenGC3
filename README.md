@@ -32,7 +32,7 @@ See [test cases](test) for more fascinating examples!
 
 [Kevin Dong (Kʌ̄D)](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
 
-## License
+## Distribution
 
 This project is distributed under [the MIT License](LICENSE).
 
