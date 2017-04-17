@@ -12,18 +12,18 @@
 ## How to Use
 
 ```c
-ccxll(int) list;                      //  declare a list of type int
-ccxll_init(list);                     //  initialize the list record
+ccxll(int) list;
+ccxll_init(list);
 
-for (int cnt = 8; cnt --> 0; )        //
-    ccxll_push_back(list, rand());    //  insert "rand()" to the end
+for (int cnt = 8; cnt --> 0; )
+    ccxll_push_back(list, rand());
 
-ccxll_sort(list);                     //  sort with comparator: XLEQ
+ccxll_sort(list);
 
-CCXLL_INCR_AUTO(pnum, list)           //  traverse the list forward:
-    printf("num = %d\n", *pnum);      //  access elems through iters
+CCXLL_INCR_AUTO(pnum, list)
+    printf("num = %d\n", *pnum);
 
-ccxll_free(list);                     //  destroy the list after use
+ccxll_free(list);
 ```
 
 See [test cases](test) for more fascinating examples!
