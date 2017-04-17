@@ -74,7 +74,7 @@ typedef void* link_t;
         struct CCXLL_BLCK                                                      \
         {   struct CCXLL_BLCK *next;              /* points to next block */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
-            struct CCXLL_NODE nodes[1];           /* node structure array */   \
+            struct CCXLL_NODE nodes[];            /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
@@ -806,10 +806,14 @@ STATEMENT_                                                                     \
 
 #define CCXLL_DECR_AUTO(_pval, _ccxll)                                         \
                                                                                \
+        CCXLL_DECR_EXTD(_pval, _ccxll, (void)0)
+
+#define CCXLL_DECR_EXTD(_pval, _ccxll, ...)                                    \
+                                                                               \
     for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
          *_init = (ccxll_iter_tail((_ccxll)->_iter), NULL);                    \
          (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); (void)_init)
+         ((_pval) = &XREF((_ccxll)->_iter), 1); (__VA_ARGS__), (void)_init)
 
 #endif // CC_STRICT
 

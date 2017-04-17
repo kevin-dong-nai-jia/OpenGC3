@@ -245,8 +245,8 @@ STATEMENT_                                                                     \
                                 ((_cont)->used  = (_cont)->thrsh);             \
                                                                                \
             _safe_alloc((_cont)->pool, (sizeof(*(_cont)->pblock)) +            \
-                                       (sizeof( (_cont)->pblock->nodes)) *     \
-                                       (size_t)((_cont)->used - 1));           \
+                                       (sizeof(*(_cont)->pblock->nodes)) *     \
+                                       (size_t)((_cont)->vcnt));               \
                                                                                \
             (_cont)->pool->next = (_cont)->pblock;                             \
         }                                                                      \

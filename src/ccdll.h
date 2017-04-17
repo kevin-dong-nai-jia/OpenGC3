@@ -67,7 +67,7 @@
         struct CCDLL_BLCK                                                      \
         {   struct CCDLL_BLCK *next;              /* points to next block */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
-            struct CCDLL_NODE nodes[1];           /* node structure array */   \
+            struct CCDLL_NODE nodes[];            /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
