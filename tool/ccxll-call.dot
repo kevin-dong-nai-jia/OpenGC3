@@ -4,25 +4,25 @@ digraph
     ranksep="1.2"
     concentrate="true"
     
-    labelloc="t";
-    label=<The Call Graph of <FONT FACE="inconsolata">ccxll</FONT> Container<br/> >
+    labelloc="t"
+    label=<The Call Graph of<br/>the <FONT FACE="inconsolata">ccxll</FONT> Container<br/>>
     fontname="CMU Serif"
     fontsize="100"
 
     node [ shape="rect" style="rounded,filled" fillcolor="white" fontname="noto" fontsize="16" ]
 
-    subgraph cluster_A { style="rounded, filled" label="Comparator" fontname="noto" fontsize="24" fillcolor="lightgrey"
-                         CCXLL_LEQ_COMPAR }
+    subgraph cluster_A {  }
 
-    subgraph cluster_B { style="rounded, filled" label="Data Structure" fontname="noto" fontsize="24" fillcolor="lightgrey"
-                         ccxll
-                         ccxll_extd
+    subgraph cluster_B { style="rounded, filled" label="Create" fontname="noto" fontsize="24" fillcolor="grey95"
                          ccxll_pckd
-                         ccxll_struct
+                         ccxll_type
+                         ccxll_extd
+                         ccxll_struct_pckd
                          ccxll_struct_extd
-                         ccxll_struct_pckd }
+                         ccxll_struct
+                         ccxll }
 
-    subgraph cluster_C { style="rounded, filled" label="Init / Free" fontname="noto" fontsize="24" fillcolor="lightgrey"
+    subgraph cluster_C { style="rounded, filled" label="Initialize/ Destroy" fontname="noto" fontsize="24" fillcolor="grey95"
                          ccxll_init
                         _ccxll_init
                          ccxll_init_extd
@@ -34,7 +34,7 @@ digraph
                         _ccxll_iter_init
                          ccxll_free }
 
-    subgraph cluster_D { style="rounded, filled" label="Iterator" fontname="noto" fontsize="24" fillcolor="lightgrey"
+    subgraph cluster_D { style="rounded, filled" label="Iterator" fontname="noto" fontsize="24" fillcolor="grey95"
                          ccxll_iter_copy
                          ccxll_iter_head
                          ccxll_iter_tail
@@ -49,13 +49,15 @@ digraph
                          ccxll_iter_at_begin
                          ccxll_iter_at_end }
 
-    subgraph cluster_E { style="rounded, filled" label="Traversor" fontname="noto" fontsize="24" fillcolor="lightgrey"
+    subgraph cluster_E { style="rounded, filled" label="Traversor" fontname="noto" fontsize="24" fillcolor="grey95"
                          CCXLL_INCR
                          CCXLL_INCR_AUTO
+                         CCXLL_INCR_EXTD
                          CCXLL_DECR
-                         CCXLL_DECR_AUTO }
+                         CCXLL_DECR_AUTO
+                         CCXLL_DECR_EXTD }
 
-    subgraph cluster_F { style="rounded, filled" label="Capacity" fontname="noto" fontsize="24" fillcolor="lightgrey"
+    subgraph cluster_F { style="rounded, filled" label="Capacity" fontname="noto" fontsize="24" fillcolor="grey95"
                        { rank="same"
                          ccxll_empty
                          ccxll_size } }
@@ -110,25 +112,28 @@ digraph
                                               ccxll_reverse_range }
                        }
 
-    subgraph cluster_I { style="rounded, filled" label="Elem Access" fontname="noto" fontsize="24" fillcolor="lightgrey" rank="2"
+    subgraph cluster_I { style="rounded, filled" label="Access" fontname="noto" fontsize="24" fillcolor="grey95" rank="2"
                          ccxll_front
                          ccxll_back
                        }
 
-    subgraph cluster_J { style="rounded, filled" label="Bitwise\nXOR\nOperation" fontname="noto" fontsize="24" fillcolor="lightgrey"
+    subgraph cluster_J { style="rounded, filled" label="Bitwise\nXOR\nOperation" fontname="noto" fontsize="24" fillcolor="grey95"
                          XOR2
                          XOR3 }
 
+    subgraph cluster_K { style="rounded, filled" label="Comparator" fontname="noto" fontsize="24" fillcolor="grey95"
+                         ccxll_comp_leq }
+
     { ccxll_pckd -> ccxll_struct [style="invis"] }
-    { _ccxll_init_seed -> ccxll_swap [style="invis"] }
-    { {inv [style="invis"]} -> ccxll [style="invis"] }
-    { ccxll_struct_extd -> ccxll_back [style="invis"] }
+    { ccxll_iter_init -> ccxll_free [style="invis"] }
     { ccxll_reverse_range -> ccxll_move [style="invis"] }
-    { CCXLL_LEQ_COMPAR -> ccxll_iter_at_end [style="invis"] }
+    { _ccxll_init_seed    -> ccxll_swap [style="invis"] }
+    { ccxll_struct_extd   -> ccxll_comp_leq -> ccxll_front -> ccxll_iter_at_end -> ccxll_empty -> XOR3 -> ccxll_merge [style="invis"] }
 
     { ccxll } -> { ccxll_extd }
     { ccxll_pckd } -> { ccxll_extd }
     { ccxll_extd } -> { ccxll_struct_extd }
+    { ccxll_type } -> { ccxll_struct_extd }
     { ccxll_struct } -> { ccxll_struct_extd }
     { ccxll_struct_pckd } -> { ccxll_struct_extd }
     { ccxll_struct_extd } -> { }
@@ -147,7 +152,7 @@ digraph
     { ccxll_front } -> { }
     { ccxll_back } -> { }
     { ccxll_size } -> { }
-    { ccxll_empty } -> { ccxll_size }
+    { ccxll_empty } -> { }
     { ccxll_push_front } -> { _ccxll_push }
     { ccxll_push_back } -> { _ccxll_push }
     { _ccxll_push [ color=gray50 fontcolor=gray50 ] } -> { XOR2 XOR3 }
@@ -172,7 +177,7 @@ digraph
     { ccxll_sort_extd } -> { ccxll_size _ccxll_sort_extd }
     { _ccxll_sort_extd [ color=gray50 fontcolor=gray50 ] } -> { ccxll_size ccxll_iter_init ccxll_iter_init ccxll_iter_begin ccxll_iter_begin ccxll_move ccxll_empty ccxll_merge_extd ccxll_swap ccxll_swap ccxll_empty ccxll_merge_extd }
     { ccxll_reverse_range } -> { XOR3 XOR3 XOR3 XOR3 XOR2 XOR2 }
-    { CCXLL_LEQ_COMPAR } -> { }
+    { ccxll_comp_leq } -> { }
     { ccxll_iter_copy } -> { }
     { ccxll_iter_head } -> { }
     { ccxll_iter_tail } -> { }
@@ -187,9 +192,10 @@ digraph
     { ccxll_iter_advance } -> { ccxll_iter_incr ccxll_iter_decr }
     { ccxll_iter_distance } -> { ccxll_iter_copy ccxll_iter_incr ccxll_iter_copy ccxll_iter_decr ccxll_iter_copy }
     { CCXLL_INCR } -> { ccxll_iter_head ccxll_iter_incr }
-    { CCXLL_INCR_AUTO } -> { ccxll_iter_head ccxll_iter_incr }
+    { CCXLL_INCR_AUTO } -> { CCXLL_INCR_EXTD }
+    { CCXLL_INCR_EXTD } -> { ccxll_iter_head ccxll_iter_incr }
     { CCXLL_DECR } -> { ccxll_iter_tail ccxll_iter_decr }
-    { CCXLL_DECR_AUTO } -> { ccxll_iter_tail ccxll_iter_decr }
-    { ccxll_append } -> { CCXLL_INCR ccxll_push_back }
+    { CCXLL_DECR_AUTO } -> { CCXLL_DECR_EXTD }
+    { CCXLL_DECR_EXTD } -> { ccxll_iter_tail ccxll_iter_decr }
 }
 
