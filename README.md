@@ -1,4 +1,4 @@
-# OpenGC<sup><sup>3</sup></sup><sub><sup> /open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collections</sup></sub></sup></i>
+# OpenGC<sup>3</sup><sub><sup>/open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collections</sup></sub></sup></i>
 
 ## Containers
 
@@ -13,20 +13,26 @@
 
 ```c
 #include "ccxll.h"
-...
-ccxll(int) list;
-ccxll_init(list);
 
-for (int cnt = 8; cnt --> 0; )
-    ccxll_push_back(list, rand());
+    // Create
+    ccxll(int) list;
 
-ccxll_sort(list);
+    // Initialize
+    ccxll_init(list);
 
-CCXLL_INCR_AUTO(pnum, list)
-    printf("num = %d\n", *pnum);
+    // Modify
+    for (int cnt = 8; cnt --> 0; )
+        ccxll_push_back(list, rand());
 
-ccxll_free(list);
-...
+    // Operate
+    ccxll_sort(list);
+
+    // Traverse
+    CCXLL_INCR_AUTO(pnum, list)
+        printf("num = %d\n", *pnum);
+
+    // Destroy
+    ccxll_free(list);
 ```
 
 See [test cases](test) for more fascinating examples!
