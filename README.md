@@ -1,4 +1,4 @@
-## OpenGC<sup>3</sup></br><sub><sup>Open General C Container Collections</sup></sub>
+# OpenGC<sup><sup>3</sup></sup><sub><sup> /open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collections</sup></sub></sup></i>
 
 ## Containers
 
