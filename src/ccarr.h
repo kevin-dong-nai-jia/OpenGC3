@@ -1,5 +1,5 @@
-#ifndef CC_ARR_H
-#define CC_ARR_H
+#ifndef OPENGC3_CCARR_H
+#define OPENGC3_CCARR_H
 
 #include "misc.h"
 #include "snym.h"

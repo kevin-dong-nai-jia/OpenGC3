@@ -1,5 +1,5 @@
-#ifndef CC_DLL_H
-#define CC_DLL_H
+#ifndef OPENGC3_CCDLL_H
+#define OPENGC3_CCDLL_H
 
 #include "pool.h"
 #include "misc.h"

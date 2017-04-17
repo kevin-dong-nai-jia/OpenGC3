@@ -1,5 +1,5 @@
-#ifndef CC_MESG_H
-#define CC_MESG_H
+#ifndef OPENGC3_MESG_H
+#define OPENGC3_MESG_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@ static const char CC_ERROR_MSG_DOUBLE_FREE[] = "Potential Double Free.";
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    fprintf(stderr, "> CCC::ERROR: %s\n", CC_ERROR_MSG);                       \
+    fprintf(stderr, "OpenGC^3::" "ERROR: %s\n", CC_ERROR_MSG);                 \
 )
 
 
@@ -28,7 +28,7 @@ static const int  CC_FATAL_MSG_MALLOC_FAIL_EXITCODE = -1;
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    fprintf(stderr, "> CCC::FATAL: %s\n", CC_FATAL_MSG);                       \
+    fprintf(stderr, "OpenGC^3::" "FATAL: %s\n", CC_FATAL_MSG);                 \
     exit(CC_FATAL_MSG##_EXITCODE);                                             \
 )
 

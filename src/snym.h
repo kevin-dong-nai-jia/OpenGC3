@@ -1,5 +1,5 @@
-#ifndef CC_SNYM_H
-#define CC_SNYM_H
+#ifndef OPENGC3_SNYM_H
+#define OPENGC3_SNYM_H
 
 
 /* Dereference */
