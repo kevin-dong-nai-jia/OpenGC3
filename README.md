@@ -5,13 +5,15 @@
 |  Type                             |  Description                          |
 |-----------------------------------|:-------------------------------------:|
 |  `ccarr(T)`                       |  Array of Bits                        |
+| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 |  `ccdll(T)`                       |  Doubly Linked List                   |
 |  `ccgbt(T)`                       |  General Binary Tree                  |
-| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 
 ## How to Use
 
 ```c
+#include "ccxll.h"
+
 ccxll(int) list;
 ccxll_init(list);
 
