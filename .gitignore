@@ -18,9 +18,8 @@
 !tex/*.pdf
 
 !tool/
-!tool/*.c
-!tool/*.dot
-!tool/*.pdf
+!tool/*.sh
+!tool/*.tem.*
 
 !LICENSE
 !README.md
