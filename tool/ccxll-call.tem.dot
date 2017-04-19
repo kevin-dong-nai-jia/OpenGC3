@@ -33,7 +33,7 @@ digraph
 
     subgraph cluster_6 { STYLE_A label="Bitwise\nXOR\nOperations" { XOR2 XOR3 } }
 
-    subgraph cluster_7 { STYLE_A label="Capacity" { rank="same" ccxll_size ccxll_empty } }
+    subgraph cluster_7 { STYLE_A label="Capacity" { ccxll_size ccxll_empty } }
 
     subgraph cluster_8 { STYLE_A label="Modifiers"
                          subgraph cluster_a { STYLE_B label="Single"   ccxll_insert ccxll_erase  }
@@ -55,8 +55,9 @@ digraph
                          subgraph cluster_i { STYLE_B label="Reverse"  ccxll_reverse_range } }
 
     // IN-GRAPH CONSTRAINTS
-    {  ccxll_iter_init -> ccxll_free        [color="invis"]  }
+    {  ccxll           -> ccxll_pckd        [color="invis"]  }
     {  ccxll_struct    -> ccxll_struct_pckd [color="invis"]  }
+    {  ccxll_iter_init -> ccxll_free        [color="invis"]  }
 
     // INTER-GRAPH CONSTRAINTS
     { _ccxll_init_seed -> ccxll_swap        [color="invis"]  }
