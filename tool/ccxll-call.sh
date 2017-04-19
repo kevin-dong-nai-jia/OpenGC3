@@ -2,11 +2,13 @@
 
 cd "$(dirname "$0")"
 
-PREPROC="$(gcc -fpreprocessed -w -dD -E    \
-           '../src/ccxll.h' |              \
+CURTIME="$(LANG=en_US date '+%b %Y')"
+
+PREPROC="$(gcc -fpreprocessed              \
+            -w -dD -E '../src/ccxll.h' |   \
            sed ':a;N;$!ba;s/\\\n//g' |     \
            grep ^#define |                 \
-           awk '{$1=""; print "#" $0}' |   \
+           awk '{$1="" ; print "#" $0}' |  \
            sed 's/[^#a-zA-Z0-9_]/ /g' |    \
            tr -s ' ')"
 
@@ -32,25 +34,17 @@ MATCHED="$(echo -n 'ccxll ' &&             \
 
 BLACKLS="ccxll_append"
 
-DOTFRMT='{printf "    { " $1 " } -> "; '`
-       `'$1="{"; print $0 " }" }'
+DOTFRMT='{printf "    { " $1 " } -> " ; $1="{" ; print $0 " }" }'
 
-DIGRAPH="$(echo "$MATCHED" |               \
-           grep -v -w "$BLACKLS" |         \
-           awk  "$DOTFRMT")"
+DIGRAPH="$(echo "$MATCHED" | grep -v -w "$BLACKLS" | awk  "$DOTFRMT")"
 
-DOTFILE="$(cat 'ccxll-call.tem.dot' &&     \
-           echo -e "$DIGRAPH" '\n}')"
+DOTFILE="$(m4 'ccxll-call.tem.dot' && echo -e "$DIGRAPH" '\n }')"
 
-SVGFILE="$(dot -T svg <<< "$DOTFILE")"
+SVGFILE="$(dot -Tsvg <<< "$DOTFILE" | head -n -1 && \
+           cat 'ccxll-call.tem.svg' | sed "s/\[CURTIME\]/$CURTIME/g")"
 
-SVGCOMB="$(head -n -1 <<< "$SVGFILE" &&    \
-           cat 'ccxll-call.tem.svg')"
+SVG2PDF="$(rsvg-convert -f 'pdf' <<< "$SVGFILE"  > 'ccxll-call')"
 
-SVG2PDF="$(rsvg-convert -f pdf             \
-           <<< "$SVGCOMB" > 'ccxll-call')"
-
-PDFCROP="$(pdfcrop --margins '32 32 32 32' \
-           'ccxll-call' 'ccxll-call.pdf')"
+PDFCROP="$(pdfcrop --margins '64' 'ccxll-call' 'ccxll-call.pdf')"
 
 rm 'ccxll-call'
