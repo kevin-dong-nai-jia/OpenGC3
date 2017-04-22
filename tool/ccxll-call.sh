@@ -2,49 +2,53 @@
 
 cd "$(dirname "$0")"
 
+
+# USER-DEFINED ARGUMENT
+
 HDRFILE='../src/ccxll.h'
 PDFFILE='ccxll-call.pdf'
 
 TEM_DOT='ccxll-call.tem.dot'
 TEM_SVG='ccxll-call.tem.svg'
 
+RM_WORD='OPENGC3_CCXLL_H\|XOR\|ccxll\|CCXLL\|'`
+       `'CCXLL_CONT\|CCXLL_NODE\|CCXLL_BLCK\|'`
+       `'CCXLL_ITER\|CCXLL_HDTL\|CCXLL_ADJC\|'`
+       `'ccxll_empty\|ccxll_size\|ccxll_append\|'`
+       `'ccxll_front\|ccxll_back\|ccxll_comp_leq'
+
+
+# CALL-GRAPH GENERATION
+
 CURTIME="$(LANG=en_US date '+%b %Y')"
 
-PREPROC="$(gcc -fpreprocessed              \
-            -w -dD -E "$HDRFILE" |         \
-           sed ':a;N;$!ba;s/\\\n//g' |     \
-           grep ^#define |                 \
-           awk '{$1="" ; print "#" $0}' |  \
-           sed 's/[^#a-zA-Z0-9_]/ /g' |    \
-           sed 's/##/ /g' | tr -s ' ')"
+RM_LINE="$(echo "$RM_WORD" |                \
+           sed 's/\\|/\n/g' |               \
+           sed 's/^/# /' | paste -sd '|' |  \
+           sed 's/|/\\|/g')"
 
-PATTERN="$(echo "$PREPROC" |               \
-           awk '{print $2}' |              \
-           paste -sd "\n" && echo '#')"
+PREPROC="$(gcc -fpreprocessed               \
+            -w -dD -E "$HDRFILE" |          \
+           sed ':a;N;$!ba;s/\\\n//g' |      \
+           grep ^#define |                  \
+           awk '{$1="" ; print "#" $0}' |   \
+           sed 's/[^#a-zA-Z0-9_]\|##/ /g' | \
+           grep -v -w "$RM_LINE")"
 
-echo "$PATTERN" > 'PATTERN'
+KEYWORD="$(echo "$PREPROC" |                \
+           awk '{print $2}' && echo '#')"
 
-# SET ='@' if ignored
+echo "$KEYWORD" > 'KEYWORD'
 
-WORD_RM='OPENGC3_CCXLL_H\|XOR\|ccxll\|CCXLL\|'`
-       `'CCXLL_CONT\|CCXLL_NODE\|CCXLL_BLCK\|CCXLL_ITER\|'`
-       `'CCXLL_HDTL\|CCXLL_ADJC\|ccxll_size\|ccxll_empty'
-
-LINE_RM='ccxll_append\|ccxll_size\|ccxll_empty\|'`
-       `'ccxll_comp_leq\|ccxll_front\|ccxll_back'
-
-MATCHED="$(echo "$PREPROC" |               \
-           tr ' ' '\n' |                   \
-           LC_ALL=C grep -w -f 'PATTERN' | \
-           grep -v -w "$WORD_RM" |         \
-           tr '\n' ' ' |                   \
-           sed 's/# /\n/g' |               \
-           grep -v -w "$LINE_RM" |         \
+MATCHED="$(echo "$PREPROC" |                \
+           tr -s ' ' | tr ' ' '\n' |        \
+           LC_ALL=C grep -w -f 'KEYWORD' |  \
+           tr '\n' ' ' | sed 's/# /\n/g' |  \
            sed '/^$/d' && echo '')"
 
 DOTFRMT='{printf $1" -> ";$1="{";print $0" }"}'
 
-PREPEND='ccxll'
+PREPEND=$'ccxll ccxll_extd\n'
 
 DIGRAPH="$(echo "$PREPEND" "$MATCHED" | awk "$DOTFRMT")"
 
@@ -57,4 +61,4 @@ SVG2PDF="$(rsvg-convert -f 'pdf' <<< "$SVGFILE" >'PDF_RAW')"
 
 PDFCROP="$(pdfcrop --margins '64' 'PDF_RAW' "$PDFFILE")"
 
-rm 'PATTERN' 'PDF_RAW'
+rm 'KEYWORD' 'PDF_RAW'
