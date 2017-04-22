@@ -25,23 +25,28 @@ PATTERN="$(echo "$PREPROC" |               \
 echo "$PATTERN" > 'PATTERN'
 
 # SET ='@' if ignored
-BLACKLS='OPENGC3_CCXLL_H\|XOR\|ccxll\|CCXLL\|'`
+
+WORD_RM='OPENGC3_CCXLL_H\|XOR\|ccxll\|CCXLL\|'`
        `'CCXLL_CONT\|CCXLL_NODE\|CCXLL_BLCK\|CCXLL_ITER\|'`
-       `'CCXLL_HDTL\|CCXLL_ADJC\|ccxll_append'
+       `'CCXLL_HDTL\|CCXLL_ADJC\|ccxll_size\|ccxll_empty'
+
+LINE_RM='ccxll_append\|ccxll_size\|ccxll_empty\|'`
+       `'ccxll_comp_leq\|ccxll_front\|ccxll_back'
 
 MATCHED="$(echo "$PREPROC" |               \
            tr ' ' '\n' |                   \
            LC_ALL=C grep -w -f 'PATTERN' | \
-           grep -v -w "$BLACKLS" |         \
+           grep -v -w "$WORD_RM" |         \
            tr '\n' ' ' |                   \
            sed 's/# /\n/g' |               \
+           grep -v -w "$LINE_RM" |         \
            sed '/^$/d' && echo '')"
 
 DOTFRMT='{printf $1" -> ";$1="{";print $0" }"}'
 
-WHITELS='ccxll '
+PREPEND='ccxll'
 
-DIGRAPH="$(echo "$WHITELS" "$MATCHED" | awk "$DOTFRMT")"
+DIGRAPH="$(echo "$PREPEND" "$MATCHED" | awk "$DOTFRMT")"
 
 DOTFILE="$(m4 "$TEM_DOT" && echo -e "$DIGRAPH" '\n } ')"
 

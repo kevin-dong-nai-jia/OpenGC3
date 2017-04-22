@@ -1,19 +1,19 @@
 <g id="title">
-<text text-anchor="left" x="320" y="180"  font-family="CMU Serif"   font-size="100">The Call Graph of the</text>
-<text text-anchor="left" x="320" y="300"  font-family="CMU Serif"   font-size="110">Container:</text>
-<text text-anchor="left" x="850" y="300"  font-family="Inconsolata" font-size="110">ccxll(T)</text>
+<text text-anchor="left" x="200" y="1750"  font-family="CMU Serif"   font-size="80">The Call Graph of the</text>
+<text text-anchor="left" x="200" y="1900"  font-family="CMU Serif"   font-size="90">Container:</text>
+<text text-anchor="left" x="635" y="1900"  font-family="Inconsolata" font-size="90">ccxll(T)</text>
 </g>
 
 <g id="reference">
-<text text-anchor="left" x="320" y="2000" font-family="CMU Serif"   font-size="30" >REFERENCE:</text>
-<text text-anchor="left" x="320" y="2050" font-family="CMU Serif"   font-size="30" >The OpenGC3 Project</text>
-<text text-anchor="left" x="320" y="2090" font-family="CMU Serif"   font-size="30" >Distributed under the MIT License</text>
+<text text-anchor="left" x= "50" y="2150" font-family="CMU Serif"   font-size="30" >REFERENCE:</text>
+<text text-anchor="left" x= "50" y="2200" font-family="CMU Serif"   font-size="30" >The OpenGC3 Project</text>
+<text text-anchor="left" x= "50" y="2240" font-family="CMU Serif"   font-size="30" >Distributed under the MIT License</text>
 </g>
 
 <g id="disclaimer">
-<text text-anchor="left" x="850" y="2000" font-family="CMU Serif"   font-size="30" >DISCLAIMER:</text>
-<text text-anchor="left" x="850" y="2050" font-family="CMU Serif"   font-size="30" >The call graph is rendered on [CURTIME]. In case of any discrepancy, </text>
-<text text-anchor="left" x="850" y="2090" font-family="CMU Serif"   font-size="30" >the source codes in this git repository should be considered as final.</text>
+<text text-anchor="left" x="600" y="2150" font-family="CMU Serif"   font-size="30" >DISCLAIMER:</text>
+<text text-anchor="left" x="600" y="2200" font-family="CMU Serif"   font-size="30" >The call graph is rendered on [CURTIME]. In case of any discrepancy, </text>
+<text text-anchor="left" x="600" y="2240" font-family="CMU Serif"   font-size="30" >the source codes in this git repository should be considered as final.</text>
 </g>
 
 </svg>
