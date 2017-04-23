@@ -84,8 +84,8 @@ STATEMENT_                                                                     \
 (                                                                              \
     for (size_t _nth = 0; _nth < ELEMOF((_ccarr_a).arr); _nth++)               \
         for (uint64_t _xor = (_ccarr_a).arr[_nth] ^                            \
-                             (_ccarr_b).arr[_nth]; _xor; )                     \
-            *(_out_ham) += !!(_xor % 2), _xor >>= 1;                           \
+                             (_ccarr_b).arr[_nth]; _xor; _xor >>= 1)           \
+            *(_out_ham) += !!(_xor % 2);                                       \
 )
 
 
