@@ -8,6 +8,8 @@
 !src/*.h
 
 !test/
+!test/array
+!test/array/*.c
 !test/list
 !test/list/*.c
 !test/tree
