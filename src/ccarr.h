@@ -61,4 +61,33 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccarr_incr_val(_ccarr, _val)                /* TODO : OPTIMIZE */      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    for (uint64_t _cnt = 0; _cnt < (_val); _cnt++)  ccarr_incr((_ccarr));      \
+)
+
+
+#define ccarr_xor_arr(_ccarr_a, _ccarr_b, _out_ccarr)                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    for (size_t _nth = 0; _nth < ELEMOF((_ccarr_a).arr); _nth++)               \
+        (_out_ccarr)->arr[_nth] = (_ccarr_a).arr[_nth] ^ (_ccarr_b).arr[_nth]; \
+)
+
+
+#define ccarr_ham_arr(_ccarr_a, _ccarr_b, _out_ham)                            \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    for (size_t _nth = 0; _nth < ELEMOF((_ccarr_a).arr); _nth++)               \
+        for (uint64_t _xor = (_ccarr_a).arr[_nth] ^                            \
+                             (_ccarr_b).arr[_nth]; _xor; )                     \
+            *(_out_ham) += !!(_xor % 2), _xor >>= 1;                           \
+)
+
+
+
 #endif
