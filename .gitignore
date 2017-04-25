@@ -15,10 +15,6 @@
 !test/tree
 !test/tree/*.c
 
-!tex/
-!tex/*.tex
-!tex/*.pdf
-
 !tool/
 !tool/*.sh
 !tool/*.tem.*
