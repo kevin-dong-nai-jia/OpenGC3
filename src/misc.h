@@ -16,14 +16,6 @@
 #define STATEMENT_(...)   do {__VA_ARGS__} while (0)
 #define VOID_EXPR_(...)   ((__VA_ARGS__), ((void)0))
 
-#ifndef CC_EXTEND
-#define RETURN_EXPR(EXT,  REG)  (REG)
-#define STAT_EXPR_(STAT, EXPR)  STATEMENT_ ( STAT;   (EXPR);)
-#else
-#define RETURN_EXPR(EXT,  REG)  (EXT)
-#define STAT_EXPR_(STAT, EXPR)  (VOID_EXPR_({STAT}), (EXPR) )
-#endif // CC_EXTEND
-
 
 /* line ID append */
 
