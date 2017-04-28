@@ -2,12 +2,12 @@
 
 ## Containers
 
-|  Type                             |  Description                          |
-|-----------------------------------|:-------------------------------------:|
-|  `ccarr(T)`                       |  Array of Bits                        |
-| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
-|  `ccdll(T)`                       |  Doubly Linked List                   |
-|  `ccgbt(T)`                       |  General Binary Tree                  |
+|  Type                            |  Description                          |
+|----------------------------------|:-------------------------------------:|
+|  `ccarr(T)`                      |  Array of Bits                        |
+| [`ccxll(T)`](doc/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
+|  `ccdll(T)`                      |  Doubly Linked List                   |
+|  `ccgbt(T)`                      |  General Binary Tree                  |
 
 ## How to Use
 
