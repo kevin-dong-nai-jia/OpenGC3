@@ -1,25 +1,18 @@
 *
 
-!doc
-!doc/*.html
+!doc/
 !doc/*.pdf
+!doc/*.html
 
 !src/
 !src/*.h
 
 !test/
-!test/array
-!test/array/*.c
-!test/list
-!test/list/*.c
-!test/tree
-!test/tree/*.c
-
-!tool/
-!tool/*.sh
-!tool/*.tem.*
+!test/*
+!test/*/*.c
 
 !LICENSE
 !README.md
+
 !.gitignore
 !.gitattributes
