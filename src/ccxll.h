@@ -566,6 +566,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if (_unlikely(ccxll_size((_ccxll)) <= 1))  break;                          \
+                                                                               \
     int _buck = (int)(log2(ccxll_size((_ccxll)))) + 1;                         \
                                                                                \
     _co_alloc((_ccxll),     1, _base_c, ccxll);                                \
@@ -586,8 +588,6 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely(ccxll_size((_ccxll)) <= 1))  break;                          \
-                                                                               \
     int _fill = 0, _curr;                                                      \
                                                                                \
     do                                                                         \
