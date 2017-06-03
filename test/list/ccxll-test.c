@@ -4,6 +4,6 @@
 #pragma GCC push_options
 #pragma GCC optimize ("O1")
 
-#include "cc~ll-test.c"
+#include "base-test.c"
 
 #pragma GCC pop_options

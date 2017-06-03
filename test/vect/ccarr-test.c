@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#include "../../src/array/ccarr.h"
+#include "../../src/vect/ccarr.h"
 
 int main(void)
 {
