@@ -1,5 +1,5 @@
-#ifndef OPENGC3_POOL_H
-#define OPENGC3_POOL_H
+#ifndef OPENGC3_BASE_POOL_H
+#define OPENGC3_BASE_POOL_H
 
 #include "mesg.h"
 #include "misc.h"

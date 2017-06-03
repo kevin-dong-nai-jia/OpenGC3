@@ -1,6 +1,7 @@
-#ifndef OPENGC3_CCDLL_H
-#define OPENGC3_CCDLL_H
+#ifndef OPENGC3_LIST_CCDLL_H
+#define OPENGC3_LIST_CCDLL_H
 
+#include "base.h"
 #include "../base/pool.h"
 #include "../base/misc.h"
 #include "../base/snym.h"

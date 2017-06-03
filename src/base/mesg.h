@@ -1,5 +1,5 @@
-#ifndef OPENGC3_MESG_H
-#define OPENGC3_MESG_H
+#ifndef OPENGC3_BASE_MESG_H
+#define OPENGC3_BASE_MESG_H
 
 #include <stdio.h>
 #include <stdlib.h>

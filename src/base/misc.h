@@ -1,5 +1,5 @@
-#ifndef OPENGC3_MISC_H
-#define OPENGC3_MISC_H
+#ifndef OPENGC3_BASE_MISC_H
+#define OPENGC3_BASE_MISC_H
 
 
 /* compiler pragma */

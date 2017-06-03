@@ -1,5 +1,5 @@
-#ifndef OPENGC3_CCARR_H
-#define OPENGC3_CCARR_H
+#ifndef OPENGC3_VECT_CCARR_H
+#define OPENGC3_VECT_CCARR_H
 
 #include "../base/misc.h"
 #include "../base/snym.h"

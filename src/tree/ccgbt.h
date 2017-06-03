@@ -1,5 +1,5 @@
-#ifndef OPENGC3_CCGBT_H
-#define OPENGC3_CCGBT_H
+#ifndef OPENGC3_TREE_CCGBT_H
+#define OPENGC3_TREE_CCGBT_H
 
 #include "pool.h"
 #include "misc.h"
