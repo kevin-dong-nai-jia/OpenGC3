@@ -1,9 +1,9 @@
 #ifndef OPENGC3_CCXLL_H
 #define OPENGC3_CCXLL_H
 
-#include "pool.h"
-#include "misc.h"
-#include "snym.h"
+#include "../base/pool.h"
+#include "../base/misc.h"
+#include "../base/snym.h"
 
 #include <math.h>
 #include <stddef.h>

@@ -1,8 +1,8 @@
 #ifndef OPENGC3_CCARR_H
 #define OPENGC3_CCARR_H
 
-#include "misc.h"
-#include "snym.h"
+#include "../base/misc.h"
+#include "../base/snym.h"
 
 #include <limits.h>
 #include <string.h>

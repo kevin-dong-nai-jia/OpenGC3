@@ -1,11 +1,11 @@
 #ifdef  DEBUG_CCDLL
-#include "../../src/ccdll.h"
+#include "../../src/list/ccdll.h"
 #define prefix(func)  ccdll##func
 #define PREFIX(FUNC)  CCDLL##FUNC
 #endif // DEBUG_CCDLL
 
 #ifdef  DEBUG_CCXLL
-#include "../../src/ccxll.h"
+#include "../../src/list/ccxll.h"
 #define prefix(func)  ccxll##func
 #define PREFIX(FUNC)  CCXLL##FUNC
 #endif // DEBUG_CCXLL

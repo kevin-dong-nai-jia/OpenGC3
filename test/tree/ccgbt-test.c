@@ -1,6 +1,6 @@
 // #define CC_STRICT
 
-#include "../../src/ccgbt.h"
+#include "../../src/tree/ccgbt.h"
 
 #include <stdio.h>
 #include <stdlib.h>

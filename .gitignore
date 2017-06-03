@@ -5,7 +5,8 @@
 !doc/*.html
 
 !src/
-!src/*.h
+!src/*
+!src/*/*.h
 
 !test/
 !test/*
