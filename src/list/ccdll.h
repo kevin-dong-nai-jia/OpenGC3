@@ -97,15 +97,7 @@
 
 #define ccdll_init_extd(_ccdll, _start, _ratio, _thrsh)                        \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    (_ccdll) = NULL;                                                           \
-                                                                               \
-    _ccdll_init_extd((_ccdll), (_start), (_ratio), (_thrsh), 1);               \
-                                                                               \
-    _itarr_alloc((_ccdll), ccdll);                                             \
-    _ccdll_iter_init((_ccdll)->_iter, (_ccdll), 1);                            \
-)
+        cc_ll_init_extd(_ccdll, _start, _ratio, _thrsh, ccdll)
 
 
 #define _ccdll_init(_ccdll_dst, _ccdll_src, _alloc)                            \
@@ -114,32 +106,12 @@ STATEMENT_                                                                     \
 
 #define _ccdll_init_extd(_ccdll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_alloc))                                                              \
-        _cont_alloc((_ccdll));                                                 \
-                                                                               \
-    _ccdll_init_core((_ccdll));                                                \
-    _ccdll_init_info((_ccdll), (_start), (_ratio), (_thrsh));                  \
-)
+        _cc_ll_init_extd(_ccdll, _start, _ratio, _thrsh, _alloc, ccdll)
 
 
 #define _ccdll_init_core(_ccdll)                                               \
                                                                                \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    _ccdll_init_seed((_ccdll)),                                                \
-                                                                               \
-    (_ccdll)->avsp = (_ccdll)->pnode  = NULL,                                  \
-    (_ccdll)->pool = (_ccdll)->pblock = NULL,                                  \
-                                                                               \
-    (_ccdll)->itarr = NULL,                                                    \
-    (_ccdll)->_iter = NULL,                                                    \
-    (_ccdll)->_it   = NULL,                                                    \
-    (_ccdll)->_co   = NULL,                                                    \
-    (_ccdll)->_it_base = (_ccdll)->_it_limit = 0,                              \
-    (_ccdll)->_co_base = (_ccdll)->_co_limit = 0                               \
-)
+        _cc_ll_init_core(_ccdll, ccdll)
 
 
 #define _ccdll_init_seed(_ccdll)                                               \
@@ -158,12 +130,7 @@ VOID_EXPR_                                                                     \
 
 #define _ccdll_init_info(_ccdll, _start, _ratio, _thrsh)                       \
                                                                                \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_ccdll)->start = ((_start) > 0) ? (_start) : 1,                           \
-    (_ccdll)->ratio = ((_ratio) > 0) ? (_ratio) : 1,                           \
-    (_ccdll)->thrsh = ((_thrsh) > (_ccdll)->start) ? (_thrsh) : (_ccdll)->start\
-)
+        _cc_ll_init_info(_ccdll, _start, _ratio, _thrsh)
 
 
 #define ccdll_iter_init(_iter, _ccdll)                                         \
@@ -177,31 +144,14 @@ VOID_EXPR_                                                                     \
 
 #define _ccdll_iter_init(_iter, _ccdll, _alloc)                                \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_alloc))                                                              \
-        _iter_alloc((_iter));                                                  \
-                                                                               \
-    ccdll_iter_init((_iter), (_ccdll));                                        \
-)
+        _cc_ll_iter_init(_iter, _ccdll, _alloc, ccdll)
 
 
 
 /* ccdll destroy */
 
 
-#define ccdll_free(_ccdll)                                                     \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_free((_ccdll));                                                        \
-    _co_free((_ccdll));                                                        \
-                                                                               \
-    _iter_free ((_ccdll)->_iter);                                              \
-    _itarr_free((_ccdll));                                                     \
-    _block_free((_ccdll));                                                     \
-    _cont_free ((_ccdll));                                                     \
-)
+#define ccdll_free(_ccdll)  cc_ll_free(_ccdll)
 
 
 

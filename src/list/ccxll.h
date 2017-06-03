@@ -106,15 +106,7 @@
 
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    (_ccxll) = NULL;                                                           \
-                                                                               \
-    _ccxll_init_extd((_ccxll), (_start), (_ratio), (_thrsh), 1);               \
-                                                                               \
-    _itarr_alloc((_ccxll), ccxll);                                             \
-    _ccxll_iter_init((_ccxll)->_iter, (_ccxll), 1);                            \
-)
+        cc_ll_init_extd(_ccxll, _start, _ratio, _thrsh, ccxll)
 
 
 #define _ccxll_init(_ccxll_dst, _ccxll_src, _alloc)                            \
@@ -123,32 +115,12 @@ STATEMENT_                                                                     \
 
 #define _ccxll_init_extd(_ccxll, _start, _ratio, _thrsh, _alloc)               \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_alloc))                                                              \
-        _cont_alloc((_ccxll));                                                 \
-                                                                               \
-    _ccxll_init_core((_ccxll));                                                \
-    _ccxll_init_info((_ccxll), (_start), (_ratio), (_thrsh));                  \
-)
+        _cc_ll_init_extd(_ccxll, _start, _ratio, _thrsh, _alloc, ccxll)
 
 
 #define _ccxll_init_core(_ccxll)                                               \
                                                                                \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    _ccxll_init_seed((_ccxll)),                                                \
-                                                                               \
-    (_ccxll)->avsp = (_ccxll)->pnode  = NULL,                                  \
-    (_ccxll)->pool = (_ccxll)->pblock = NULL,                                  \
-                                                                               \
-    (_ccxll)->itarr = NULL,                                                    \
-    (_ccxll)->_iter = NULL,                                                    \
-    (_ccxll)->_it   = NULL,                                                    \
-    (_ccxll)->_co   = NULL,                                                    \
-    (_ccxll)->_it_base = (_ccxll)->_it_limit = 0,                              \
-    (_ccxll)->_co_base = (_ccxll)->_co_limit = 0                               \
-)
+        _cc_ll_init_core(_ccxll, ccxll)
 
 
 #define _ccxll_init_seed(_ccxll)                                               \
@@ -165,12 +137,7 @@ VOID_EXPR_                                                                     \
 
 #define _ccxll_init_info(_ccxll, _start, _ratio, _thrsh)                       \
                                                                                \
-VOID_EXPR_                                                                     \
-(                                                                              \
-    (_ccxll)->start = ((_start) > 0) ? (_start) : 1,                           \
-    (_ccxll)->ratio = ((_ratio) > 0) ? (_ratio) : 1,                           \
-    (_ccxll)->thrsh = ((_thrsh) > (_ccxll)->start) ? (_thrsh) : (_ccxll)->start\
-)
+        _cc_ll_init_info(_ccxll, _start, _ratio, _thrsh)
 
 
 #define ccxll_iter_init(_iter, _ccxll)                                         \
@@ -186,31 +153,14 @@ VOID_EXPR_                                                                     \
 
 #define _ccxll_iter_init(_iter, _ccxll, _alloc)                                \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_alloc))                                                              \
-        _iter_alloc((_iter));                                                  \
-                                                                               \
-    ccxll_iter_init((_iter), (_ccxll));                                        \
-)
+        _cc_ll_iter_init(_iter, _ccxll, _alloc, ccxll)
 
 
 
 /* ccxll destroy */
 
 
-#define ccxll_free(_ccxll)                                                     \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_free((_ccxll));                                                        \
-    _co_free((_ccxll));                                                        \
-                                                                               \
-    _iter_free ((_ccxll)->_iter);                                              \
-    _itarr_free((_ccxll));                                                     \
-    _block_free((_ccxll));                                                     \
-    _cont_free ((_ccxll));                                                     \
-)
+#define ccxll_free(_ccxll)  cc_ll_free(_ccxll)
 
 
 
