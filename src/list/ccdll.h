@@ -93,7 +93,7 @@
 
 #define ccdll_init(_ccdll)                                                     \
                                                                                \
-        ccdll_init_extd(_ccdll, 1 << 4, 1 << 1, 1 << 16)
+        ccdll_init_extd(_ccdll,     16,      2,  65536)
 
 #define ccdll_init_extd(_ccdll, _start, _ratio, _thrsh)                        \
                                                                                \
@@ -358,156 +358,43 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccdll_merge(_ccdll_d, _ccdll_s)                                        \
+#define  ccdll_merge(_ccdll_d, _ccdll_s)                                       \
                                                                                \
-        ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ)
+         ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ)
 
-#define ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                             \
+#define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                            \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-     if (_unlikely(ccdll_empty((_ccdll_s))))  break;                           \
-                                                                               \
-    _it_alloc((_ccdll_d), 1, _base_m1, ccdll);                                 \
-    _it_alloc((_ccdll_s), 2, _base_m2, ccdll);                                 \
-                                                                               \
-    _ccdll_merge_extd((_ccdll_d), _it_((_ccdll_d), _base_m1, 0),               \
-                                  _it_((_ccdll_s), _base_m2, 0),               \
-                                  _it_((_ccdll_s), _base_m2, 1), _leq);        \
-                                                                               \
-    _it_clear((_ccdll_d), 1);                                                  \
-    _it_clear((_ccdll_s), 2);                                                  \
-)
+         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll)
 
 #define _ccdll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq)           \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccdll_iter_tail ((_iter_l));                                               \
-    ccdll_iter_begin((_iter_m));                                               \
-    ccdll_iter_tail ((_iter_r));                                               \
-                                                                               \
-    ccdll_move_range_extd ((_iter_l), (_iter_m), (_iter_r),                    \
-                           ccdll_size((_iter_m)->ccdll));                      \
-                                                                               \
-    ccdll_iter_begin((_iter_l));                                               \
-    ccdll_iter_init ((_iter_r), (_ccdll_d));                                   \
-    ccdll_iter_tail ((_iter_r));                                               \
-                                                                               \
-    ccdll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);             \
-)
+        _cc_ll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq, ccdll)
 
 
-#define ccdll_merge_range(_iter_l, _iter_m, _iter_r)                           \
+#define  ccdll_merge_range(_iter_l, _iter_m, _iter_r)                          \
                                                                                \
-        ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, DLEQ)
+         ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, DLEQ)
 
-#define ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)                \
+#define  ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_alloc((_iter_l)->ccdll, 1, _base_m3, ccdll);                           \
-                                                                               \
-    _ccdll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            _it_((_iter_l)->ccdll, _base_m3, 0), _leq);        \
-                                                                               \
-    _it_clear((_iter_l)->ccdll, 1);                                            \
-)
+         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccdll)
 
 #define _ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (_unlikely((_iter_l)->ccdll != (_iter_m)->ccdll ||                      \
-                  (_iter_m)->ccdll != (_iter_r)->ccdll))  break;               \
-                                                                               \
-    ccdll_iter_copy((_iter_x), (_iter_m));                                     \
-                                                                               \
-    while (1)                                                                  \
-    {                                                                          \
-        while ((_iter_l)->curr.node != (_iter_m)->curr.node &&                 \
-                _leq((_iter_l), (_iter_m)))                                    \
-            (void)ccdll_iter_incr((_iter_l));                                  \
-                                                                               \
-        if (_unlikely((_iter_l)->curr.node == (_iter_m)->curr.node))           \
-        {                                                                      \
-            ccdll_iter_copy((_iter_l), (_iter_r));                             \
-            ccdll_iter_copy((_iter_m), (_iter_r));  break;                     \
-        }                                                                      \
-                                                                               \
-        (void)ccdll_iter_incr((_iter_x));                                      \
-                                                                               \
-        while ((_iter_x)->curr.node != (_iter_r)->curr.node &&                 \
-               !_leq((_iter_l), (_iter_x)))                                    \
-            (void)ccdll_iter_incr((_iter_x));                                  \
-                                                                               \
-        ccdll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
-        ccdll_iter_copy ((_iter_m), (_iter_x));                                \
-                                                                               \
-        if (_unlikely((_iter_x)->curr.node == (_iter_r)->curr.node))           \
-        {                                                                      \
-            ccdll_iter_copy((_iter_l), (_iter_x));                             \
-            ccdll_iter_copy((_iter_r), (_iter_x));  break;                     \
-        }                                                                      \
-    }                                                                          \
-)
+        _cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq, ccdll)
 
 
-#define ccdll_sort(_ccdll)                                                     \
+#define  ccdll_sort(_ccdll)                                                    \
                                                                                \
-        ccdll_sort_extd(_ccdll, DLEQ)
+         ccdll_sort_extd(_ccdll, DLEQ)
 
-#define ccdll_sort_extd(_ccdll, _leq)                                          \
+#define  ccdll_sort_extd(_ccdll, _leq)                                         \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (_unlikely(ccdll_size((_ccdll)) <= 1))  break;                          \
-                                                                               \
-    int _buck = (int)(log2(ccdll_size((_ccdll)))) + 1;                         \
-                                                                               \
-    _co_alloc((_ccdll), 1 + _buck, _base_s1, ccdll);                           \
-    _it_alloc((_ccdll), 2,         _base_s2, ccdll);                           \
-                                                                               \
-    _ccdll_sort_extd( (_ccdll),                                                \
-                       _co_((_ccdll), _base_s1, 0),                            \
-                     &(_co_((_ccdll), _base_s1, 1)),                           \
-                       _it_((_ccdll), _base_s2, 0),                            \
-                       _it_((_ccdll), _base_s2, 1), _leq);                     \
-                                                                               \
-    _co_clear((_ccdll), _buck + 1);                                            \
-    _it_clear((_ccdll),  2);                                                   \
-)
+         cc_ll_sort_extd(_ccdll, _leq, ccdll)
 
-#define _ccdll_sort_extd(_ccdll, _carry, _p64bucket, _iter_a, _iter_b, _leq)   \
+#define _ccdll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    int _fill = 0, _curr;                                                      \
-                                                                               \
-    do                                                                         \
-    {                                                                          \
-        ccdll_iter_init ((_iter_a), (_carry));                                 \
-        ccdll_iter_init ((_iter_b), (_ccdll));                                 \
-        ccdll_iter_begin((_iter_a));                                           \
-        ccdll_iter_begin((_iter_b));                                           \
-                                                                               \
-        ccdll_move((_iter_a), (_iter_b));                                      \
-                                                                               \
-        for (_curr = 0; _curr != _fill &&                                      \
-                       !(ccdll_empty(*((_p64bucket) + _curr))); _curr++)       \
-        {                                                                      \
-            ccdll_merge_extd(*((_p64bucket) + _curr), (_carry), _leq);         \
-            ccdll_swap      (*((_p64bucket) + _curr), (_carry));               \
-        }                                                                      \
-        ccdll_swap(*((_p64bucket) + _curr), (_carry));                         \
-                                                                               \
-        if (_unlikely(_curr == _fill))  _fill++;                               \
-    }                                                                          \
-    while (!(ccdll_empty((_ccdll))));                                          \
-                                                                               \
-    for (_curr = 0; _curr < _fill; _curr++)                                    \
-        ccdll_merge_extd((_ccdll), *((_p64bucket) + _curr), _leq);             \
-)
+        _cc_ll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccdll)
 
 
 
@@ -594,7 +481,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _len = (_diff);                                                        \
                                                                                \
-    if (_len > 0)       {  while (ccdll_iter_incr((_iter)) && --_len);  }      \
+         if (_len > 0)  {  while (ccdll_iter_incr((_iter)) && --_len);  }      \
     else if (_len < 0)  {  while (ccdll_iter_decr((_iter)) && ++_len);  }      \
 )
 
@@ -603,34 +490,32 @@ STATEMENT_                                                                     \
 /* ccdll traversor */
 
 
-#define CCDLL_INCR(_iter)                                                      \
-                                                                               \
-    for (ccdll_iter_head((_iter)); ccdll_iter_incr((_iter)); )
+#define CCDLL_INCR(_iter)  CC_LL_INCR(_iter, ccdll)
 
 #ifndef CC_STRICT
 
 #define CCDLL_INCR_AUTO(_pval, _ccdll)                                         \
                                                                                \
-    for (__typeof__((_ccdll)->pnode->val) *_pval,                              \
-         *_init = (ccdll_iter_head((_ccdll)->_iter), NULL);                    \
-         (ccdll_iter_incr((_ccdll)->_iter)) &&                                 \
-         ((_pval) = &DREF((_ccdll)->_iter), 1); (void)_init)
+        CCDLL_INCR_EXTD(_pval, _ccdll, (void)0)
+
+#define CCDLL_INCR_EXTD(_pval, _ccdll, ...)                                    \
+                                                                               \
+        CC_LL_INCR_EXTD(_pval, _ccdll, ccdll, __VA_ARGS__)
 
 #endif // CC_STRICT
 
 
-#define CCDLL_DECR(_iter)                                                      \
-                                                                               \
-    for (ccdll_iter_tail((_iter)); ccdll_iter_decr((_iter)); )
+#define CCDLL_DECR(_iter)  CC_LL_DECR(_iter, ccdll)
 
 #ifndef CC_STRICT
 
 #define CCDLL_DECR_AUTO(_pval, _ccdll)                                         \
                                                                                \
-    for (__typeof__((_ccdll)->pnode->val) *_pval,                              \
-         *_init = (ccdll_iter_tail((_ccdll)->_iter), NULL);                    \
-         (ccdll_iter_decr((_ccdll)->_iter)) &&                                 \
-         ((_pval) = &DREF((_ccdll)->_iter), 1); (void)_init)
+        CCDLL_DECR_EXTD(_pval, _ccdll, (void)0)
+
+#define CCDLL_DECR_EXTD(_pval, _ccdll, ...)                                    \
+                                                                               \
+        CC_LL_DECR_EXTD(_pval, _ccdll, ccdll, __VA_ARGS__)
 
 #endif // CC_STRICT
 

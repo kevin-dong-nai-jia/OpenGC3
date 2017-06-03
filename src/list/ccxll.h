@@ -102,7 +102,7 @@
 
 #define ccxll_init(_ccxll)                                                     \
                                                                                \
-        ccxll_init_extd(_ccxll, 1 << 4, 1 << 1, 1 << 16)
+        ccxll_init_extd(_ccxll,     16,      2,  65536)
 
 #define ccxll_init_extd(_ccxll, _start, _ratio, _thrsh)                        \
                                                                                \
@@ -429,156 +429,43 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_merge(_ccxll_d, _ccxll_s)                                        \
+#define  ccxll_merge(_ccxll_d, _ccxll_s)                                       \
                                                                                \
-        ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ)
+         ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ)
 
-#define ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq)                             \
+#define  ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq)                            \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-     if (_unlikely(ccxll_empty((_ccxll_s))))  break;                           \
-                                                                               \
-    _it_alloc((_ccxll_d), 1, _base_m1, ccxll);                                 \
-    _it_alloc((_ccxll_s), 2, _base_m2, ccxll);                                 \
-                                                                               \
-    _ccxll_merge_extd((_ccxll_d), _it_((_ccxll_d), _base_m1, 0),               \
-                                  _it_((_ccxll_s), _base_m2, 0),               \
-                                  _it_((_ccxll_s), _base_m2, 1), _leq);        \
-                                                                               \
-    _it_clear((_ccxll_d), 1);                                                  \
-    _it_clear((_ccxll_s), 2);                                                  \
-)
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll)
 
 #define _ccxll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq)           \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccxll_iter_tail ((_iter_l));                                               \
-    ccxll_iter_begin((_iter_m));                                               \
-    ccxll_iter_tail ((_iter_r));                                               \
-                                                                               \
-    ccxll_move_range_extd ((_iter_l), (_iter_m), (_iter_r),                    \
-                           ccxll_size((_iter_m)->ccxll));                      \
-                                                                               \
-    ccxll_iter_begin((_iter_l));                                               \
-    ccxll_iter_init ((_iter_r), (_ccxll_d));                                   \
-    ccxll_iter_tail ((_iter_r));                                               \
-                                                                               \
-    ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);             \
-)
+        _cc_ll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq, ccxll)
 
 
-#define ccxll_merge_range(_iter_l, _iter_m, _iter_r)                           \
+#define  ccxll_merge_range(_iter_l, _iter_m, _iter_r)                          \
                                                                                \
-        ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, XLEQ)
+         ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, XLEQ)
 
-#define ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)                \
+#define  ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_alloc((_iter_l)->ccxll, 1, _base_m3, ccxll);                           \
-                                                                               \
-    _ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            _it_((_iter_l)->ccxll, _base_m3, 0), _leq);        \
-                                                                               \
-    _it_clear((_iter_l)->ccxll, 1);                                            \
-)
+         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll)
 
 #define _ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (_unlikely((_iter_l)->ccxll != (_iter_m)->ccxll ||                      \
-                  (_iter_m)->ccxll != (_iter_r)->ccxll))  break;               \
-                                                                               \
-    ccxll_iter_copy((_iter_x), (_iter_m));                                     \
-                                                                               \
-    while (1)                                                                  \
-    {                                                                          \
-        while ((_iter_l)->curr.XOR != (_iter_m)->curr.XOR &&                   \
-                _leq((_iter_l), (_iter_m)))                                    \
-            ccxll_iter_incr((_iter_l));                                        \
-                                                                               \
-        if (_unlikely((_iter_l)->curr.XOR == (_iter_m)->curr.XOR))             \
-        {                                                                      \
-            ccxll_iter_copy((_iter_l), (_iter_r));                             \
-            ccxll_iter_copy((_iter_m), (_iter_r));  break;                     \
-        }                                                                      \
-                                                                               \
-        ccxll_iter_incr((_iter_x));                                            \
-                                                                               \
-        while ((_iter_x)->curr.XOR != (_iter_r)->curr.XOR &&                   \
-               !_leq((_iter_l), (_iter_x)))                                    \
-            ccxll_iter_incr((_iter_x));                                        \
-                                                                               \
-        ccxll_move_range((_iter_l), (_iter_m), (_iter_x));                     \
-        ccxll_iter_copy ((_iter_m), (_iter_x));                                \
-                                                                               \
-        if (_unlikely((_iter_x)->curr.XOR == (_iter_r)->curr.XOR))             \
-        {                                                                      \
-            ccxll_iter_copy((_iter_l), (_iter_x));                             \
-            ccxll_iter_copy((_iter_r), (_iter_x));  break;                     \
-        }                                                                      \
-    }                                                                          \
-)
+        _cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq, ccxll)
 
 
-#define ccxll_sort(_ccxll)                                                     \
+#define  ccxll_sort(_ccxll)                                                    \
                                                                                \
-        ccxll_sort_extd(_ccxll, XLEQ)
+         ccxll_sort_extd(_ccxll, XLEQ)
 
-#define ccxll_sort_extd(_ccxll, _leq)                                          \
+#define  ccxll_sort_extd(_ccxll, _leq)                                         \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (_unlikely(ccxll_size((_ccxll)) <= 1))  break;                          \
-                                                                               \
-    int _buck = (int)(log2(ccxll_size((_ccxll)))) + 1;                         \
-                                                                               \
-    _co_alloc((_ccxll), 1 + _buck, _base_s1, ccxll);                           \
-    _it_alloc((_ccxll), 2        , _base_s2, ccxll);                           \
-                                                                               \
-    _ccxll_sort_extd( (_ccxll),                                                \
-                       _co_((_ccxll), _base_s1, 0),                            \
-                     &(_co_((_ccxll), _base_s1, 1)),                           \
-                       _it_((_ccxll), _base_s2, 0),                            \
-                       _it_((_ccxll), _base_s2, 1), _leq);                     \
-                                                                               \
-    _co_clear((_ccxll), _buck + 1);                                            \
-    _it_clear((_ccxll),  2);                                                   \
-)
+         cc_ll_sort_extd(_ccxll, _leq, ccxll)
 
-#define _ccxll_sort_extd(_ccxll, _carry, _p64bucket, _iter_a, _iter_b, _leq)   \
+#define _ccxll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    int _fill = 0, _curr;                                                      \
-                                                                               \
-    do                                                                         \
-    {                                                                          \
-        ccxll_iter_init ((_iter_a), (_carry));                                 \
-        ccxll_iter_init ((_iter_b), (_ccxll));                                 \
-        ccxll_iter_begin((_iter_a));                                           \
-        ccxll_iter_begin((_iter_b));                                           \
-                                                                               \
-        ccxll_move((_iter_a), (_iter_b));                                      \
-                                                                               \
-        for (_curr = 0; _curr != _fill &&                                      \
-                       !(ccxll_empty((_p64bucket)[_curr])); _curr++)           \
-        {                                                                      \
-            ccxll_merge_extd((_p64bucket)[_curr], (_carry), _leq);             \
-            ccxll_swap      ((_p64bucket)[_curr], (_carry));                   \
-        }                                                                      \
-        ccxll_swap((_p64bucket)[_curr], (_carry));                             \
-                                                                               \
-        if (_unlikely(_curr == _fill))  _fill++;                               \
-    }                                                                          \
-    while (!(ccxll_empty((_ccxll))));                                          \
-                                                                               \
-    for (_curr = 0; _curr < _fill; _curr++)                                    \
-        ccxll_merge_extd((_ccxll), (_p64bucket)[_curr], _leq);                 \
-)
+        _cc_ll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccxll)
 
 
 #define ccxll_reverse_range(_iter_l, _iter_r)                                  \
@@ -702,7 +589,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _len = (_diff);                                                        \
                                                                                \
-    if (_len > 0)       {  while (ccxll_iter_incr((_iter)) && --_len);  }      \
+         if (_len > 0)  {  while (ccxll_iter_incr((_iter)) && --_len);  }      \
     else if (_len < 0)  {  while (ccxll_iter_decr((_iter)) && ++_len);  }      \
 )
 
@@ -745,9 +632,7 @@ STATEMENT_                                                                     \
 /* ccxll traversor */
 
 
-#define CCXLL_INCR(_iter)                                                      \
-                                                                               \
-    for (ccxll_iter_head((_iter)); ccxll_iter_incr((_iter)); )
+#define CCXLL_INCR(_iter)  CC_LL_INCR(_iter, ccxll)
 
 #ifndef CC_STRICT
 
@@ -757,17 +642,12 @@ STATEMENT_                                                                     \
 
 #define CCXLL_INCR_EXTD(_pval, _ccxll, ...)                                    \
                                                                                \
-    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
-         *_init = (ccxll_iter_head((_ccxll)->_iter), NULL);                    \
-         (ccxll_iter_incr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); (__VA_ARGS__), (void)_init)
+        CC_LL_INCR_EXTD(_pval, _ccxll, ccxll, __VA_ARGS__)
 
 #endif // CC_STRICT
 
 
-#define CCXLL_DECR(_iter)                                                      \
-                                                                               \
-    for (ccxll_iter_tail((_iter)); ccxll_iter_decr((_iter)); )
+#define CCXLL_DECR(_iter)  CC_LL_DECR(_iter, ccxll)
 
 #ifndef CC_STRICT
 
@@ -777,10 +657,7 @@ STATEMENT_                                                                     \
 
 #define CCXLL_DECR_EXTD(_pval, _ccxll, ...)                                    \
                                                                                \
-    for (__typeof__((_ccxll)->pnode->val) *_pval,                              \
-         *_init = (ccxll_iter_tail((_ccxll)->_iter), NULL);                    \
-         (ccxll_iter_decr((_ccxll)->_iter)) &&                                 \
-         ((_pval) = &XREF((_ccxll)->_iter), 1); (__VA_ARGS__), (void)_init)
+        CC_LL_DECR_EXTD(_pval, _ccxll, ccxll, __VA_ARGS__)
 
 #endif // CC_STRICT
 
