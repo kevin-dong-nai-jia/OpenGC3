@@ -17,24 +17,35 @@
 /* ccarr create */
 
 
-#define ccarr(width, size)                                                     \
+#define ccarr(width, _size)                                                    \
                                                                                \
-    typedef ccarr_struct(width, size) CCARR;  CCARR
+    typedef ccarr_struct(width, _size) CCARR;  CCARR
 
-#define ccarr_struct(width, size)                                              \
+#define ccarr_type(width, _size)                                               \
                                                                                \
-    struct CCARR_CONT  {  uint##width##_t arr[(size)];  }
+    typedef ccarr_struct(width, _size)
 
-#define CCARR_INIT  {{0}}
+#define ccarr_struct(width, _size)                                             \
+                                                                               \
+    struct CCARR_CONT  {  size_t ecnt; uint##width##_t arr[_size];  }
+
+#define CCARR_INIT(_ccarr)                                                     \
+                                                                               \
+    {  ELEMOF((_ccarr).arr), {0}  }
 
 
 /* ccarr initialize */
 
 #define ccarr_init(_ccarr)                                                     \
                                                                                \
+        ccarr_init_extd(_ccarr, ELEMOF((_ccarr).arr))
+
+#define ccarr_init_extd(_ccarr, _ecnt)                                         \
+                                                                               \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    memset((_ccarr).arr, 0, sizeof((_ccarr).arr))                              \
+    (_ccarr).ecnt = (_ecnt),                                                   \
+    memset((_ccarr).arr, 0, sizeof((_ccarr).arr[0]) * (_ecnt))                 \
 )
 
 
@@ -56,7 +67,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    for (size_t _nth = 0, _dne = 0; _nth < ELEMOF((_ccarr).arr) && !_dne; )    \
+    for (size_t _nth = 0, _dne = 0; _nth < (_ccarr).ecnt && !_dne; )           \
         _dne = !(ELEM_NTH((_ccarr), _nth++)++ == UMAXOF(ELEM((_ccarr))));      \
 )
 
@@ -73,7 +84,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    for (size_t _nth = 0; _nth < ELEMOF((_ccarr_a).arr); _nth++)               \
+    for (size_t _nth = 0; _nth < (_ccarr_a).ecnt; _nth++)                      \
         (_out_ccarr)->arr[_nth] = (_ccarr_a).arr[_nth] ^ (_ccarr_b).arr[_nth]; \
 )
 
@@ -82,12 +93,27 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    for (size_t _nth = 0; _nth < ELEMOF((_ccarr_a).arr); _nth++)               \
+    for (size_t _nth = 0; _nth < (_ccarr_a).ecnt; _nth++)                      \
         for (uint64_t _xor = (_ccarr_a).arr[_nth] ^                            \
                              (_ccarr_b).arr[_nth]; _xor; _xor >>= 1)           \
             *(_out_ham) += !!(_xor % 2);                                       \
 )
 
+
+#define ccarr_set_bit(_ccarr, _nth_bit)                                        \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_ccarr).arr[(_nth_bit) / BITSOF((_ccarr).arr[0])] |=                      \
+          (1 << ((_nth_bit) % BITSOF((_ccarr).arr[0])))                        \
+)
+
+
+#define ccarr_check_bit(_ccarr, _nth_bit) !!                                   \
+(                                                                              \
+    (_ccarr).arr[(_nth_bit) / BITSOF((_ccarr).arr[0])]                         \
+        & (1 << ((_nth_bit) % BITSOF((_ccarr).arr[0])))                        \
+)
 
 
 #endif
