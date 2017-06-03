@@ -26,9 +26,13 @@
 
 /* Abbreviation */
 
-// ccdll & ccxll
+// ccdll
 #define DLEQ  ccdll_comp_leq
+#define DGEQ  ccdll_comp_geq
+
+// ccxll
 #define XLEQ  ccxll_comp_leq
+#define XGEQ  ccxll_comp_geq
 
 // ccdll & ccxll
 #define ITER(_cont)               (ITER_NTH(_cont, 0))
