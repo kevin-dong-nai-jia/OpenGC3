@@ -281,11 +281,22 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccdll_resize(_ccdll, _items, _val)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    int _size = ccdll_size((_ccdll)) - (_items);                               \
+                                                                               \
+         if (_size > 0)  while(_size--)  ccdll_pop_back ((_ccdll));            \
+    else if (_size < 0)  while(_size++)  ccdll_push_back((_ccdll), (_val));    \
+)
+
+
 #define ccdll_clear(_ccdll)                                                    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(ccdll_empty((_ccdll))))  ccdll_pop_back((_ccdll));                \
+    while (!(ccdll_empty((_ccdll))))     ccdll_pop_back((_ccdll));             \
 )
 
 
@@ -332,7 +343,8 @@ STATEMENT_                                                                     \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
-        if (_dist_m < 0)  {  /* NOT IMPLEMENTED */  }                          \
+        if (_dist_m < 0)                                                       \
+            ccdll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
                                                                                \
         (_iter_p)->ccdll->size += _dist_m;                                     \
         (_iter_l)->ccdll->size -= _dist_m;                                     \
@@ -450,9 +462,9 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccdll_iter_at_head(_iter)   ((_iter)->curr.node->PRV == NULL)
+#define ccdll_iter_at_head(_iter)   ( (_iter)->curr.node->PRV == NULL)
 
-#define ccdll_iter_at_tail(_iter)   ((_iter)->curr.node->NXT == NULL)
+#define ccdll_iter_at_tail(_iter)   ( (_iter)->curr.node->NXT == NULL)
 
 #define ccdll_iter_at_begin(_iter)  ( (_iter)->curr.node->PRV ==               \
                                     &((_iter)->ccdll->head))
@@ -481,9 +493,14 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _len = (_diff);                                                        \
                                                                                \
-         if (_len > 0)  {  while (ccdll_iter_incr((_iter)) && --_len);  }      \
-    else if (_len < 0)  {  while (ccdll_iter_decr((_iter)) && ++_len);  }      \
+         if (_len > 0)  while (ccdll_iter_incr((_iter)) && --_len);            \
+    else if (_len < 0)  while (ccdll_iter_decr((_iter)) && ++_len);            \
 )
+
+
+#define ccdll_iter_distance(_iter_a, _iter_b, _pdist)                          \
+                                                                               \
+        cc_ll_iter_distance(_iter_a, _iter_b, _pdist, ccdll)
 
 
 

@@ -232,6 +232,44 @@ STATEMENT_                                                                     \
 
 
 
+/* cc_ll iterators */
+
+
+#define cc_ll_iter_distance(_iter_a, _iter_b, _pdist, _dx_)                    \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _it_alloc((_iter_a)->_dx_, 1, _base_d1, _dx_);                             \
+                                                                               \
+    _dx_##_iter_copy(_it_((_iter_a)->_dx_, _base_d1, 0), (_iter_a));           \
+                                                                               \
+    STATEMENT_                                                                 \
+    (                                                                          \
+        (*(_pdist)) = 0;                                                       \
+        if ((_iter_a)->_dx_ != (_iter_b)->_dx_)  break;                        \
+                                                                               \
+        while ((_iter_a)->curr.node != (_iter_b)->curr.node && ++(*(_pdist)))  \
+               if (!(_dx_##_iter_incr((_iter_a))))  break;                     \
+                                                                               \
+        if ((_iter_a)->curr.node == (_iter_b)->curr.node)  break;              \
+        else  (*(_pdist)) = 0;                                                 \
+                                                                               \
+        _dx_##_iter_copy((_iter_a), _it_((_iter_a)->_dx_, _base_d1, 0));       \
+                                                                               \
+        while ((_iter_a)->curr.node != (_iter_b)->curr.node && --(*(_pdist)))  \
+               if (!(_dx_##_iter_decr((_iter_a))))  break;                     \
+                                                                               \
+        if ((_iter_a)->curr.node == (_iter_b)->curr.node)  break;              \
+        else  (*(_pdist)) = 0;                                                 \
+    );                                                                         \
+                                                                               \
+    _dx_##_iter_copy((_iter_a), _it_((_iter_a)->_dx_, _base_d1, 0));           \
+                                                                               \
+    _it_clear((_iter_a)->_dx_, 1);                                             \
+)
+
+
+
 /* cc_ll traversor */
 
 

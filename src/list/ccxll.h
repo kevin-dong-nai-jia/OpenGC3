@@ -329,7 +329,7 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _size = ccxll_size((_ccxll)) - (_items);                               \
                                                                                \
-    if (_size > 0)       while(_size--)  ccxll_pop_back ((_ccxll));            \
+         if (_size > 0)  while(_size--)  ccxll_pop_back ((_ccxll));            \
     else if (_size < 0)  while(_size++)  ccxll_push_back((_ccxll), (_val));    \
 )
 
@@ -338,7 +338,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    while (!(ccxll_empty((_ccxll))))  {  ccxll_pop_back ((_ccxll));  }         \
+    while (!(ccxll_empty((_ccxll))))     ccxll_pop_back ((_ccxll));            \
 )
 
 
@@ -350,7 +350,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_i)->curr.XOR == (_iter_p)->prev.XOR))  break;         \
+    if (_unlikely((_iter_i)->curr.node == (_iter_p)->prev.node))  break;       \
                                                                                \
     if (_unlikely(ccxll_iter_at_head((_iter_p)) ||                             \
                   ccxll_iter_at_head((_iter_i)) ||                             \
@@ -589,43 +589,14 @@ STATEMENT_                                                                     \
 (                                                                              \
     int _len = (_diff);                                                        \
                                                                                \
-         if (_len > 0)  {  while (ccxll_iter_incr((_iter)) && --_len);  }      \
-    else if (_len < 0)  {  while (ccxll_iter_decr((_iter)) && ++_len);  }      \
+         if (_len > 0)  while (ccxll_iter_incr((_iter)) && --_len);            \
+    else if (_len < 0)  while (ccxll_iter_decr((_iter)) && ++_len);            \
 )
 
 
 #define ccxll_iter_distance(_iter_a, _iter_b, _pdist)                          \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_alloc((_iter_a)->ccxll, 1, _base_d1, ccxll);                           \
-                                                                               \
-    ccxll_iter_copy(_it_((_iter_a)->ccxll, _base_d1, 0), (_iter_a));           \
-                                                                               \
-    STATEMENT_                                                                 \
-    (                                                                          \
-        (*(_pdist)) = 0;                                                       \
-        if ((_iter_a)->ccxll != (_iter_b)->ccxll)  break;                      \
-                                                                               \
-        while ((_iter_a)->curr.XOR != (_iter_b)->curr.XOR && ++(*(_pdist)))    \
-               if (!(ccxll_iter_incr((_iter_a))))  break;                      \
-                                                                               \
-        if ((_iter_a)->curr.XOR == (_iter_b)->curr.XOR)  break;                \
-        else  (*(_pdist)) = 0;                                                 \
-                                                                               \
-        ccxll_iter_copy((_iter_a), _it_((_iter_a)->ccxll, _base_d1, 0));       \
-                                                                               \
-        while ((_iter_a)->curr.XOR != (_iter_b)->curr.XOR && --(*(_pdist)))    \
-               if (!(ccxll_iter_decr((_iter_a))))  break;                      \
-                                                                               \
-        if ((_iter_a)->curr.XOR == (_iter_b)->curr.XOR)  break;                \
-        else  (*(_pdist)) = 0;                                                 \
-    );                                                                         \
-                                                                               \
-    ccxll_iter_copy((_iter_a), _it_((_iter_a)->ccxll, _base_d1, 0));           \
-                                                                               \
-    _it_clear((_iter_a)->ccxll, 1);                                            \
-)
+        cc_ll_iter_distance(_iter_a, _iter_b, _pdist, ccxll)
 
 
 
@@ -660,23 +631,6 @@ STATEMENT_                                                                     \
         CC_LL_DECR_EXTD(_pval, _ccxll, ccxll, __VA_ARGS__)
 
 #endif // CC_STRICT
-
-
-
-/* ccxll extensions */
-
-
-#define ccxll_append(_ccxll_dst, _ccxll_src)                                   \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_alloc((_ccxll_src), 1, _base_a1, ccxll);                               \
-                                                                               \
-    CCXLL_INCR(_it_((_ccxll_src), _base_a1, 0))                                \
-        ccxll_push_back((_ccxll_dst), XREF(_it_((_ccxll_src), _base_a1, 0)));  \
-                                                                               \
-    _it_clear((_ccxll_src), 1);                                                \
-)
 
 
 
