@@ -235,20 +235,30 @@ STATEMENT_                                                                     \
         if ((_cont)->vcnt == 0)                                                \
         {                                                                      \
             (_cont)->pblock = (_cont)->pool;                                   \
-            (_cont)->pool   = NULL;                                            \
                                                                                \
-            if ((_cont)->used == 0)                                            \
-                (_cont)->vcnt = ((_cont)->used  = (_cont)->start);             \
+            if ((_cont)->pool != NULL && (_cont)->last != 0)                   \
+                (_cont)->pool = (_cont)->pool->bnxt;                           \
+                                                                               \
+            if ((_cont)->last == 0)                                            \
+                (_cont)->vcnt = ((_cont)->last  = (_cont)->start);             \
             else                                                               \
-                (_cont)->vcnt = ((_cont)->used  < (_cont)->thrsh) ?            \
-                                ((_cont)->used *= (_cont)->ratio) :            \
-                                ((_cont)->used  = (_cont)->thrsh);             \
+                (_cont)->vcnt = ((_cont)->last  < (_cont)->thrsh) ?            \
+                                ((_cont)->last *= (_cont)->ratio) :            \
+                                ((_cont)->last  = (_cont)->thrsh);             \
                                                                                \
-            _safe_alloc((_cont)->pool, (sizeof(*(_cont)->pblock)) +            \
-                                       (sizeof(*(_cont)->pblock->nodes)) *     \
-                                       (size_t)((_cont)->vcnt));               \
+            if ((_cont)->pool == NULL)                                         \
+            {                                                                  \
+                _safe_alloc((_cont)->pool, (sizeof(*(_cont)->pblock)) +        \
+                                           (sizeof(*(_cont)->pblock->nodes)) * \
+                                           (size_t)((_cont)->vcnt));           \
                                                                                \
-            (_cont)->pool->next = (_cont)->pblock;                             \
+                (_cont)->pool->bprv = (_cont)->pblock;                         \
+                (_cont)->pool->ncnt = (_cont)->vcnt;                           \
+                                                                               \
+                (_cont)->pool->bnxt = NULL;                                    \
+                if ((_cont)->pool->bprv != NULL)                               \
+                    (_cont)->pool->bprv->bnxt = (_cont)->pool;                 \
+            }                                                                  \
         }                                                                      \
                                                                                \
         (_pnode) = &((_cont)->pool->nodes[--(_cont)->vcnt]);                   \
@@ -277,7 +287,7 @@ STATEMENT_                                                                     \
     while ((_cont)->pool != NULL)                                              \
     {                                                                          \
         (_cont)->pblock = (_cont)->pool;                                       \
-        (_cont)->pool   = (_cont)->pool->next;                                 \
+        (_cont)->pool   = (_cont)->pool->bprv;                                 \
         _safe_free((_cont)->pblock);                                           \
     }                                                                          \
 )
