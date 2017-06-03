@@ -13,7 +13,7 @@ int main(void)
     printf("Test 0: ");
 
     {
-        ccarr(8, 5) arr = CCARR_INIT;
+        ccarr(8, 5) arr = CCARR_INIT(arr);
 
         ccarr_or_val  (arr, 0x0023456789);
         ccarr_incr_val(arr, 0x0100000000);
@@ -31,7 +31,8 @@ int main(void)
 
     {
         size_t dist = 0;
-        ccarr(16, 2) arr_a = CCARR_INIT, arr_b = CCARR_INIT, arr_c;
+        ccarr(16, 2) arr_a = CCARR_INIT(arr_a),
+                     arr_b = CCARR_INIT(arr_b), arr_c;
 
         ccarr_or_val(arr_a, 0x3377BBFF);
         ccarr_or_val(arr_b, 0xFFBB7733);
@@ -44,6 +45,19 @@ int main(void)
         ccarr_ham_arr(arr_a, arr_b,  &dist);
 
         printf("0xCCCC (%zu = 16)\n", dist);
+    }
+
+    // Test 2
+    // set_bit / check_bit
+
+    printf("\n\nTest 2: ");
+
+    {
+        ccarr(32, 4) arr = CCARR_INIT(arr);
+
+        ccarr_set_bit(arr, 64);
+
+        printf("%s\n", (ccarr_check_bit(arr, 64) == 1) ? "SUCCESS" : "FAILURE");
     }
 
 
