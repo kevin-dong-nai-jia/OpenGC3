@@ -56,16 +56,17 @@
                                                                                \
     struct CCDLL_CONT                                                          \
     {                                                                          \
-        int size,  used,  vcnt;                   /* size and node record */   \
+        int size,  last,  vcnt;                   /* size and node record */   \
         int start, ratio, thrsh;                  /* block increment info */   \
                                                                                \
         struct CCDLL_NODE                                                      \
         {   struct CCDLL_NODE *lnk[2];                                         \
             elem_t val;                           /* val with prv and nxt */   \
-        }   *avsp, *pnode, head, tail;            /* available space list */   \
+        }   *avsp, *pnode, head, tail, swap;      /* available space list */   \
                                                                                \
         struct CCDLL_BLCK                                                      \
-        {   struct CCDLL_BLCK *next;              /* points to next block */   \
+        {   struct CCDLL_BLCK *bprv, *bnxt;       /* points to prev block */   \
+            unsigned int ncnt;                    /* the item of the node */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
             struct CCDLL_NODE nodes[];            /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
@@ -128,7 +129,6 @@ VOID_EXPR_                                                                     \
 (                                                                              \
     _ccdll_init_seed((_ccdll)),                                                \
                                                                                \
-    (_ccdll)->used = (_ccdll)->vcnt   = 0,                                     \
     (_ccdll)->avsp = (_ccdll)->pnode  = NULL,                                  \
     (_ccdll)->pool = (_ccdll)->pblock = NULL,                                  \
                                                                                \
@@ -146,6 +146,8 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_ccdll)->size = 0,                                                        \
+    (_ccdll)->last = (_ccdll)->vcnt = 0,                                       \
+                                                                               \
     (_ccdll)->head.PRV = NULL,                                                 \
     (_ccdll)->head.NXT = &((_ccdll)->tail),                                    \
     (_ccdll)->tail.PRV = &((_ccdll)->head),                                    \
@@ -415,12 +417,12 @@ STATEMENT_                                                                     \
 (                                                                              \
      if (_unlikely(ccdll_empty((_ccdll_s))))  break;                           \
                                                                                \
-    _it_alloc((_ccdll_d), 1, _base_p, ccdll);                                  \
-    _it_alloc((_ccdll_s), 2, _base_q, ccdll);                                  \
+    _it_alloc((_ccdll_d), 1, _base_m1, ccdll);                                 \
+    _it_alloc((_ccdll_s), 2, _base_m2, ccdll);                                 \
                                                                                \
-    _ccdll_merge_extd((_ccdll_d), _it_((_ccdll_d), _base_p, 0),                \
-                                  _it_((_ccdll_s), _base_q, 0),                \
-                                  _it_((_ccdll_s), _base_q, 1), _leq);         \
+    _ccdll_merge_extd((_ccdll_d), _it_((_ccdll_d), _base_m1, 0),               \
+                                  _it_((_ccdll_s), _base_m2, 0),               \
+                                  _it_((_ccdll_s), _base_m2, 1), _leq);        \
                                                                                \
     _it_clear((_ccdll_d), 1);                                                  \
     _it_clear((_ccdll_s), 2);                                                  \
@@ -453,10 +455,10 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_alloc((_iter_l)->ccdll, 1, _base_m, ccdll);                            \
+    _it_alloc((_iter_l)->ccdll, 1, _base_m3, ccdll);                           \
                                                                                \
     _ccdll_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                   \
-                            _it_((_iter_l)->ccdll, _base_m, 0), _leq);         \
+                            _it_((_iter_l)->ccdll, _base_m3, 0), _leq);        \
                                                                                \
     _it_clear((_iter_l)->ccdll, 1);                                            \
 )
@@ -512,15 +514,14 @@ STATEMENT_                                                                     \
                                                                                \
     int _buck = (int)(log2(ccdll_size((_ccdll)))) + 1;                         \
                                                                                \
-    _co_alloc((_ccdll),     1, _base_c, ccdll);                                \
-    _co_alloc((_ccdll), _buck, _base_b, ccdll);                                \
-    _it_alloc((_ccdll),     2, _base_i, ccdll);                                \
+    _co_alloc((_ccdll), 1 + _buck, _base_s1, ccdll);                           \
+    _it_alloc((_ccdll), 2,         _base_s2, ccdll);                           \
                                                                                \
     _ccdll_sort_extd( (_ccdll),                                                \
-                       _co_((_ccdll), _base_c, 0),                             \
-                     &(_co_((_ccdll), _base_b, 0)),                            \
-                       _it_((_ccdll), _base_i, 0),                             \
-                       _it_((_ccdll), _base_i, 1), _leq);                      \
+                       _co_((_ccdll), _base_s1, 0),                            \
+                     &(_co_((_ccdll), _base_s1, 1)),                           \
+                       _it_((_ccdll), _base_s2, 0),                            \
+                       _it_((_ccdll), _base_s2, 1), _leq);                     \
                                                                                \
     _co_clear((_ccdll), _buck + 1);                                            \
     _it_clear((_ccdll),  2);                                                   \
@@ -563,6 +564,8 @@ STATEMENT_                                                                     \
 
 
 #define ccdll_comp_leq(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
+
+#define ccdll_comp_geq(_iter_a, _iter_b)  (DREF((_iter_a)) >= DREF((_iter_b)))
 
 
 
