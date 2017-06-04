@@ -13,7 +13,7 @@ STATEMENT_                                                                     \
                                                                                \
     _##_dx_##_init_extd((_cc_ll), (_start), (_ratio), (_thrsh), 1);            \
                                                                                \
-    _itarr_alloc((_cc_ll), _dx_);                                              \
+    _itarr_init((_cc_ll), _dx_);                                               \
     _##_dx_##_iter_init((_cc_ll)->_iter, (_cc_ll), 1);                         \
 )
 
@@ -95,8 +95,8 @@ STATEMENT_                                                                     \
 (                                                                              \
      if (_unlikely(_dx_##_empty((_cc_ll_s))))  break;                          \
                                                                                \
-    _it_alloc((_cc_ll_d), 1, _base_m1, _dx_);                                  \
-    _it_alloc((_cc_ll_s), 2, _base_m2, _dx_);                                  \
+    _it_init((_cc_ll_d), 1, _base_m1, _dx_);                                   \
+    _it_init((_cc_ll_s), 2, _base_m2, _dx_);                                   \
                                                                                \
     _##_dx_##_merge_extd((_cc_ll_d), _it_((_cc_ll_d), _base_m1, 0),            \
                                      _it_((_cc_ll_s), _base_m2, 0),            \
@@ -130,7 +130,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_alloc((_iter_l)->_dx_, 1, _base_m3, _dx_);                             \
+    _it_init((_iter_l)->_dx_, 1, _base_m3, _dx_);                              \
                                                                                \
     _##_dx_##_merge_range_extd((_iter_l), (_iter_m), (_iter_r),                \
                                _it_((_iter_l)->_dx_, _base_m3, 0), _leq);      \
@@ -186,8 +186,8 @@ STATEMENT_                                                                     \
                                                                                \
     int _buck = (int)(log2(_dx_##_size((_cc_ll)))) + 1;                        \
                                                                                \
-    _co_alloc((_cc_ll), 1 + _buck, _base_s1, _dx_);                            \
-    _it_alloc((_cc_ll), 2        , _base_s2, _dx_);                            \
+    _co_init((_cc_ll), 1 + _buck, _base_s1, _dx_);                             \
+    _it_init((_cc_ll), 2        , _base_s2, _dx_);                             \
                                                                                \
     _##_dx_##_sort_extd(       (_cc_ll),                                       \
                           _co_((_cc_ll), _base_s1, 0),                         \
@@ -239,7 +239,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_alloc((_iter_a)->_dx_, 1, _base_d1, _dx_);                             \
+    _it_init((_iter_a)->_dx_, 1, _base_d1, _dx_);                              \
                                                                                \
     _dx_##_iter_copy(_it_((_iter_a)->_dx_, _base_d1, 0), (_iter_a));           \
                                                                                \
