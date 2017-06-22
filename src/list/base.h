@@ -2,6 +2,35 @@
 #define OPENGC3_LIST_BASE_H
 
 
+/* exclusive or */
+
+
+#define XOR2(_addr_a, _addr_b)                                                 \
+(                                                                              \
+    (void*)((uintptr_t)(void*)(_addr_a) ^                                      \
+            (uintptr_t)(void*)(_addr_b))                                       \
+)
+
+
+#define XOR3(_addr_a, _addr_b, _addr_c)                                        \
+(                                                                              \
+    (void*)((uintptr_t)(void*)(_addr_a) ^                                      \
+            (uintptr_t)(void*)(_addr_b) ^                                      \
+            (uintptr_t)(void*)(_addr_c))                                       \
+)
+
+
+#define XOR2_SWAP(_addr_a, _addr_b)                                            \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (_addr_a) = XOR2((_addr_a), (_addr_b)),                                    \
+    (_addr_b) = XOR2((_addr_a), (_addr_b)),                                    \
+    (_addr_a) = XOR2((_addr_a), (_addr_b))                                     \
+)
+
+
+
 /* cc_ll initialize */
 
 

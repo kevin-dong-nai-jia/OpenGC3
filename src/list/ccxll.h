@@ -164,25 +164,6 @@ VOID_EXPR_                                                                     \
 
 
 
-/* exclusive or */
-
-
-#define XOR2(_addr_a, _addr_b)                                                 \
-(                                                                              \
-    (void*)((uintptr_t)(void*)(_addr_a) ^                                      \
-            (uintptr_t)(void*)(_addr_b))                                       \
-)
-
-
-#define XOR3(_addr_a, _addr_b, _addr_c)                                        \
-(                                                                              \
-    (void*)((uintptr_t)(void*)(_addr_a) ^                                      \
-            (uintptr_t)(void*)(_addr_b) ^                                      \
-            (uintptr_t)(void*)(_addr_c))                                       \
-)
-
-
-
 /* ccxll access */
 
 
@@ -316,10 +297,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    void *_bup = (_ccxll_a);                                                   \
-                                                                               \
-    (_ccxll_a) = (_ccxll_b);                                                   \
-    (_ccxll_b) = _bup;                                                         \
+    XOR2_SWAP((_ccxll_a), (_ccxll_b));                                         \
 )
 
 

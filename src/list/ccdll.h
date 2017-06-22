@@ -274,10 +274,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    void *_bup = (_ccdll_a);                                                   \
-                                                                               \
-    (_ccdll_a) = (_ccdll_b);                                                   \
-    (_ccdll_b) = _bup;                                                         \
+    XOR2_SWAP((_ccdll_a), (_ccdll_b));                                         \
 )
 
 
@@ -407,6 +404,15 @@ STATEMENT_                                                                     \
 #define _ccdll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
         _cc_ll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccdll)
+
+
+#define ccdll_reverse_range(_iter_l, _iter_r)                                  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    /* STATUS: NOT IMPLEMENTED                                             *\  \
+    \* REASON: Due to O(n) complexity, please consider using ccxll instead */  \
+)
 
 
 
