@@ -634,9 +634,9 @@ int main(void)
             printf("%2d ", LREF(ITER_NTH(list_b, 1)));
         printf("   size = %d (B)\n", prefix(_size)(list_b));
 
-        prefix(_iter_head)    (ITER(list_a));
-        prefix(_iter_tail)    (ITER(list_b));
-        prefix(_iter_advance) (ITER(list_b), -1);
+        prefix(_iter_begin)   (ITER(list_a));  // detached
+        prefix(_iter_end)     (ITER(list_b));
+        prefix(_iter_decr)    (ITER(list_b));
         prefix(_reverse_range)(ITER(list_a), ITER(list_b));
 
         PREFIX(_INCR)(ITER_NTH(list_a, 1))

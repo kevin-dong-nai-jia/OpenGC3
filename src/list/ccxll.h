@@ -446,26 +446,37 @@ STATEMENT_                                                                     \
         _cc_ll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccxll)
 
 
-#define ccxll_reverse_range(_iter_l, _iter_r)                                  \
+#define  ccxll_reverse_range(_iter_l, _iter_r)                                 \
+                                                                               \
+        _ccxll_reverse_range(_iter_l, _iter_r,  0)                             \
+
+#define _ccxll_reverse_range(_iter_l, _iter_r, _flag_swap_iters)               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_iter_l)->ccxll != (_iter_r)->ccxll)  break;                          \
+    if (_unlikely((_iter_l)->ccxll != (_iter_r)->ccxll))  break;               \
                                                                                \
-    link_t _l_c = (_iter_l)->curr.XOR;                                         \
-    link_t _r_c = (_iter_r)->curr.XOR;                                         \
-    link_t _l_p = (_iter_l)->prev.XOR;                                         \
-    link_t _r_p = (_iter_r)->prev.XOR;                                         \
-    link_t _l_n = (_iter_l)->next.XOR;                                         \
+    link_t _x_in = XOR2((_iter_l)->curr.XOR, (_iter_r)->curr.XOR);             \
+    link_t _x_ex = XOR2((_iter_l)->prev.XOR, (_iter_r)->next.XOR);             \
                                                                                \
-    (_iter_l)->next.node->XOR = XOR3((_iter_l)->next.node->XOR, _l_c, _r_c);   \
-    (_iter_r)->prev.node->XOR = XOR3((_iter_r)->prev.node->XOR, _r_c, _l_c);   \
+    (_iter_l)->prev.node->XOR = XOR2((_iter_l)->prev.node->XOR, _x_in);        \
+    (_iter_r)->next.node->XOR = XOR2((_iter_r)->next.node->XOR, _x_in);        \
                                                                                \
-    (_iter_l)->curr.node->XOR = XOR3((_iter_l)->curr.node->XOR, _l_n, _r_p);   \
-    (_iter_r)->curr.node->XOR = XOR3((_iter_r)->curr.node->XOR, _l_n, _r_p);   \
+    (_iter_l)->curr.node->XOR = XOR2((_iter_l)->curr.node->XOR, _x_ex);        \
+    (_iter_r)->curr.node->XOR = XOR2((_iter_r)->curr.node->XOR, _x_ex);        \
                                                                                \
-    (_iter_l)->next.XOR = XOR2(_l_p, _l_c);                                    \
-    (_iter_r)->next.XOR = XOR2(_r_p, _r_c);                                    \
+    switch ((_flag_swap_iters))                                                \
+    {                                                                          \
+        case 0:                                                                \
+        XOR2_SWAP((_iter_l)->prev.XOR, (_iter_l)->next.XOR);                   \
+        XOR2_SWAP((_iter_r)->prev.XOR, (_iter_l)->next.XOR);                   \
+        (_iter_l)->next.XOR = XOR2((_iter_l)->next.XOR, _x_ex);                \
+        (_iter_r)->prev.XOR = XOR2((_iter_r)->prev.XOR, _x_ex);                \
+        break;                                                                 \
+        case 1:  default:                                                      \
+        XOR2_SWAP((_iter_l)->curr.XOR, (_iter_r)->curr.XOR);                   \
+        XOR2_SWAP((_iter_l)->next.XOR, (_iter_r)->prev.XOR);                   \
+    }                                                                          \
 )
 
 
