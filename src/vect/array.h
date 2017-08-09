@@ -1,13 +1,21 @@
 #ifndef OPENGC3_VECT_ARRAY_H
 #define OPENGC3_VECT_ARRAY_H
 
+#include "../base/pool.h"
+#include "../base/misc.h"
+
+
+/* array operations */
+
 
 #define array_sort(_array, _pswap, _lo, _hi, _cmp)                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    int _top = -1;                                                             \
-    int _stk[(_hi) - (_lo) + 1];                                               \
+    int  _top =   -1;                                                          \
+    int *_stk = NULL;                                                          \
+                                                                               \
+    _safe_alloc(_stk, sizeof(int) * ((_hi) - (_lo) + 1));                      \
                                                                                \
     _stk[++_top] = (_lo);                                                      \
     _stk[++_top] = (_hi);                                                      \
@@ -26,6 +34,8 @@ STATEMENT_                                                                     \
         if (_pv + 1 < (_hi))                                                   \
             _stk[++_top] = _pv + 1, _stk[++_top] = (_hi);                      \
     }                                                                          \
+                                                                               \
+    _safe_free(_stk);                                                          \
 )
 
 
@@ -45,6 +55,10 @@ STATEMENT_                                                                     \
                                                                                \
     *(_ppv) = _rg;                                                             \
 )
+
+
+
+/* array comparator */
 
 
 #define ACMP array_comp_tri
