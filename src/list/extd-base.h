@@ -1,5 +1,5 @@
-#ifndef OPENGC3_LIST_BASE_EXTD_H
-#define OPENGC3_LIST_BASE_EXTD_H
+#ifndef OPENGC3_LIST_EXTD_BASE_H
+#define OPENGC3_LIST_EXTD_BASE_H
 
 
 /* cc_ll integrity */

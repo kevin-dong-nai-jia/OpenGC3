@@ -1,5 +1,5 @@
-#ifndef OPENGC3_LIST_CCXLL_EXTD_H
-#define OPENGC3_LIST_CCXLL_EXTD_H
+#ifndef OPENGC3_LIST_EXTD_CCXLL_H
+#define OPENGC3_LIST_EXTD_CCXLL_H
 
 #include "extd-base.h"
 #include "../vect/array.h"
