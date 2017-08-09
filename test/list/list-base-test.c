@@ -1,17 +1,13 @@
-#ifdef  DEBUG_CCDLL
-#include "../../src/list/ccdll.h"
-#define prefix(func)  ccdll##func
-#define PREFIX(FUNC)  CCDLL##FUNC
-#endif // DEBUG_CCDLL
-
-#ifdef  DEBUG_CCXLL
-#include "../../src/list/ccxll.h"
-#define prefix(func)  ccxll##func
-#define PREFIX(FUNC)  CCXLL##FUNC
-#endif // DEBUG_CCXLL
-
-#if !defined(DEBUG_CCDLL) && !defined(DEBUG_CCXLL)
-#error "should be included from : cc[dx]ll-test.c"
+#if defined(PREFIX_CCDLL)
+    #include "../../src/list/ccdll.h"
+    #define prefix(func)  ccdll##func
+    #define PREFIX(FUNC)  CCDLL##FUNC
+#elif defined(PREFIX_CCXLL)
+    #include "../../src/list/ccxll.h"
+    #define prefix(func)  ccxll##func
+    #define PREFIX(FUNC)  CCXLL##FUNC
+#else
+    #error "UNDEFINE PREFIX_CC[DX]LL"
 #endif
 
 
@@ -149,11 +145,11 @@ int main(void)
         (void)prefix(_front)(list);
         (void)prefix(_back )(list);
 
-        prefix(_push_front)(list, "Failed ");
-        prefix(_push_front)(list, "to access.\n");
+        prefix(_push_front)(list, "Failed to ");
+        prefix(_push_front)(list, "access. \n");
 
-        prefix(_front)(list) = "Element ";
-        prefix(_back )(list) = "access succeeds.\n";
+        prefix(_front)(list) = "Succeeded in element ";
+        prefix(_back )(list) = "access! \n";
 
         PREFIX(_INCR)(ITER(list))
             printf("%s", LREF(ITER(list)));
@@ -308,8 +304,8 @@ int main(void)
         prefix(_extd)(int, 5, NORMAL) list;
         prefix(_init)(list);
 
-        int pos[8][3] = { {2, 4, 6} , {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
-                          {-4, 0, 3}, {0, 2, 0} , {1, 0, -1} , {1, -1, 1} };
+        int pos[8][3] = { { 2, 4, 6}, {-1, 2, 0}, {0, -1, -2}, {1, -1, 2},
+                          {-4, 0, 3}, { 0, 2, 0}, {1,  0, -1}, {1, -1, 1} };
 
         for (int cnt = 0; cnt < 7; cnt++)
             prefix(_push_back)(list, cnt + 'A');
@@ -427,11 +423,11 @@ int main(void)
     printf("\n\nTest 14: \n\n");
 
     {
-        #ifdef DEBUG_CCDLL
+        #ifdef PREFIX_CCDLL
         puts("NOT IMPLEMENTED");
-        #endif // DEBUG_CCDLL
+        #endif // PREFIX_CCDLL
 
-        #ifdef DEBUG_CCXLL
+        #ifdef PREFIX_CCXLL
         prefix(_extd)(int, 2, NORMAL) list;
         prefix(_init)(list);
 
@@ -448,10 +444,10 @@ int main(void)
         PREFIX(_INCR)(ITER(list))
             printf("%d ", LREF(ITER(list)));
 
-        puts("= 0 1 2 6 5 4 3 7 8 9");
+        puts("= 0 1 7 6 5 4 3 2 8 9");
 
         prefix(_free)(list);
-        #endif // DEBUG_CCXLL
+        #endif // PREFIX_CCXLL
     }
 
 
@@ -637,7 +633,9 @@ int main(void)
         prefix(_iter_begin)   (ITER(list_a));  // detached
         prefix(_iter_end)     (ITER(list_b));
         prefix(_iter_decr)    (ITER(list_b));
+        #ifdef PREFIX_CCXLL
         prefix(_reverse_range)(ITER(list_a), ITER(list_b));
+        #endif // PREFIX_CCXLL
 
         PREFIX(_INCR)(ITER_NTH(list_a, 1))
             printf("%2d ", LREF(ITER_NTH(list_a, 1)));

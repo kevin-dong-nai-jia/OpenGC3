@@ -12,19 +12,6 @@
 #include <string.h>
 
 
-/* synonym */
-
-#define PRV lnk[0]
-#define NXT lnk[1]
-
-#define CCDLL       ADDID(CCDLL)
-#define CCDLL_CONT  ADDID(CCDLL_CONT)
-#define CCDLL_NODE  ADDID(CCDLL_NODE)
-#define CCDLL_BLCK  ADDID(CCDLL_BLCK)
-#define CCDLL_ITER  ADDID(CCDLL_ITER)
-#define CCDLL_CURR  ADDID(CCDLL_CURR)
-
-
 /* ccdll create */
 
 
@@ -67,23 +54,23 @@
                                                                                \
         struct CCDLL_BLCK                                                      \
         {   struct CCDLL_BLCK *bprv, *bnxt;       /* points to prev block */   \
-            unsigned int ncnt;                    /* the item of the node */   \
+            int ncnt;                             /* the item of the node */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
             struct CCDLL_NODE nodes[];            /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
         struct CCDLL_ITER                                                      \
-        {   struct CCDLL_CURR                                                  \
+        {   struct CCDLL_PTRS                                                  \
             {   struct CCDLL_NODE *node;                                       \
-            }   curr;                             /* points to curr  node */   \
+            }   curr;                             /* points to curr. node */   \
             struct CCDLL_CONT *ccdll;             /* points to ccdll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
         struct CCDLL_CONT **_co;                  /* internal use _it _co */   \
                                                                                \
-        unsigned char _it_base, _it_limit;                                     \
-        unsigned char _co_base, _co_limit;                                     \
+        int _it_base, _it_limit;                                               \
+        int _co_base, _co_limit;                                               \
     }
 
 
@@ -185,7 +172,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _ccdll_push_alloc(_ccdll, _hdtl_, _pn_1_, _pn_2_);                         \
+    _ccdll_push_alloc((_ccdll), _hdtl_, _pn_1_, _pn_2_);                       \
                                                                                \
     (_ccdll)->_hdtl_._pn_1_->val = (_val);                                     \
 )
@@ -215,13 +202,13 @@ STATEMENT_                                                                     \
 
 #define  ccdll_pop_back(_ccdll)   _ccdll_pop(_ccdll, tail, PRV)
 
-#define _ccdll_pop(_ccdll, _hdtl_, _np_)                                       \
+#define _ccdll_pop(_ccdll, _hdtl_, _pn_)                                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     if (ccdll_empty((_ccdll)))  break;                                         \
                                                                                \
-    (_ccdll)->pnode = (_ccdll)->_hdtl_._np_;                                   \
+    (_ccdll)->pnode = (_ccdll)->_hdtl_._pn_;                                   \
                                                                                \
     (_ccdll)->pnode->PRV->NXT = (_ccdll)->pnode->NXT;                          \
     (_ccdll)->pnode->NXT->PRV = (_ccdll)->pnode->PRV;                          \
@@ -262,9 +249,9 @@ STATEMENT_                                                                     \
     (_iter)->curr.node->PRV->NXT = (_iter)->curr.node->NXT;                    \
     (_iter)->curr.node->NXT->PRV = (_iter)->curr.node->PRV;                    \
                                                                                \
+    (_iter)->curr.node->PRV = (_iter)->curr.node->NXT;                         \
     _node_clear((_iter)->curr.node, (_iter)->ccdll);                           \
-                                                                               \
-    (_iter)->curr.node = (_iter)->curr.node->NXT;                              \
+    (_iter)->curr.node      = (_iter)->curr.node->PRV;                         \
                                                                                \
     (_iter)->ccdll->size--;                                                    \
 )
@@ -350,7 +337,7 @@ STATEMENT_                                                                     \
                                                                                \
     if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
-    void *_bup = (_iter_r)->curr.node;                                         \
+    void *_pbup = (_iter_r)->curr.node;                                        \
                                                                                \
     (_iter_r)->curr.node = (_iter_r)->curr.node->PRV;                          \
                                                                                \
@@ -363,7 +350,7 @@ STATEMENT_                                                                     \
     (_iter_r)->curr.node->NXT      = (_iter_p)->curr.node;                     \
     (_iter_p)->curr.node->PRV      = (_iter_r)->curr.node;                     \
                                                                                \
-    (_iter_r)->curr.node = _bup;                                               \
+    (_iter_r)->curr.node = _pbup;                                              \
 )
 
 
@@ -373,11 +360,11 @@ STATEMENT_                                                                     \
 
 #define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll)
+         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, )
 
 #define _ccdll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq)           \
                                                                                \
-        _cc_ll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq, ccdll)
+        _cc_ll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq, ccdll, )
 
 
 #define  ccdll_merge_range(_iter_l, _iter_m, _iter_r)                          \
@@ -386,7 +373,7 @@ STATEMENT_                                                                     \
 
 #define  ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
                                                                                \
-         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccdll)
+         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccdll, )
 
 #define _ccdll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
                                                                                \
@@ -399,20 +386,20 @@ STATEMENT_                                                                     \
 
 #define  ccdll_sort_extd(_ccdll, _leq)                                         \
                                                                                \
-         cc_ll_sort_extd(_ccdll, _leq, ccdll)
+         cc_ll_sort_extd(_ccdll, _leq, ccdll, )
 
 #define _ccdll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
-        _cc_ll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccdll)
+        _cc_ll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccdll,)
 
 
-#define ccdll_reverse_range(_iter_l, _iter_r)                                  \
+#define ccdll_is_sorted(_ccdll, _ptrue)                                        \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    /* STATUS: NOT IMPLEMENTED                                             *\  \
-    \* REASON: Due to O(n) complexity, please consider using ccxll instead */  \
-)
+        ccdll_is_sorted_extd(_ccdll, DLEQ, _ptrue)
+
+#define ccdll_is_sorted_extd(_ccdll, _leq, _ptrue)                             \
+                                                                               \
+        cc_ll_is_sorted_extd(_ccdll, DLEQ, _ptrue, ccdll)
 
 
 
@@ -468,15 +455,15 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccdll_iter_at_head(_iter)   ( (_iter)->curr.node->PRV == NULL)
+#define ccdll_iter_at_head(_iter)   ( (_iter)->curr.node->PRV == NULL )
 
-#define ccdll_iter_at_tail(_iter)   ( (_iter)->curr.node->NXT == NULL)
+#define ccdll_iter_at_tail(_iter)   ( (_iter)->curr.node->NXT == NULL )
 
 #define ccdll_iter_at_begin(_iter)  ( (_iter)->curr.node->PRV ==               \
-                                    &((_iter)->ccdll->head))
+                                    &((_iter)->ccdll->head) )
 
 #define ccdll_iter_at_end(_iter)    ( (_iter)->curr.node->NXT ==               \
-                                    &((_iter)->ccdll->tail))
+                                    &((_iter)->ccdll->tail) )
 
 
 #define ccdll_iter_incr(_iter)                                                 \

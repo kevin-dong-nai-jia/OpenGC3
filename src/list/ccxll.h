@@ -6,23 +6,11 @@
 #include "../base/misc.h"
 #include "../base/snym.h"
 
+
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
-
-/* synonym */
-
-#define XOR lnk[0]
-
-#define CCXLL       ADDID(CCXLL)
-#define CCXLL_CONT  ADDID(CCXLL_CONT)
-#define CCXLL_NODE  ADDID(CCXLL_NODE)
-#define CCXLL_BLCK  ADDID(CCXLL_BLCK)
-#define CCXLL_ITER  ADDID(CCXLL_ITER)
-#define CCXLL_HDTL  ADDID(CCXLL_HDTL)
-#define CCXLL_ADJC  ADDID(CCXLL_ADJC)
 
 
 /* ccxll create */
@@ -73,26 +61,25 @@
         }   head, tail;                           /* two pseudo sentinels */   \
                                                                                \
         struct CCXLL_BLCK                                                      \
-        {   unsigned size;                                                     \
-            struct CCXLL_BLCK *bprv, *bnxt;       /* next and prev blocks */   \
+        {   struct CCXLL_BLCK *bprv, *bnxt;       /* next and prev blocks */   \
             PRAGMA_##_ALIGN_##_BGN                /* packed pragma starts */   \
-            unsigned int ncnt;                    /* the item of the node */   \
+            int ncnt;                             /* the item of the node */   \
             struct CCXLL_NODE nodes[];            /* node structure array */   \
             PRAGMA_##_ALIGN_##_END                /* the pragma ends here */   \
         }   *pool, *pblock;                       /* points to 1-st block */   \
                                                                                \
         struct CCXLL_ITER                                                      \
-        {   union CCXLL_ADJC                                                   \
+        {   union CCXLL_PTRS                                                   \
             {   link_t lnk[1];                                                 \
                 struct CCXLL_NODE *node;                                       \
-            }   prev, curr, next;                 /* adjacent ptr to node */   \
+            }   prev, curr, next;                 /* points to p/v/n node */   \
             struct CCXLL_CONT *ccxll;             /* points to ccxll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
         struct CCXLL_CONT **_co;                  /* internal use _it _co */   \
                                                                                \
-        unsigned char _it_base, _it_limit;                                     \
-        unsigned char _co_base, _co_limit;                                     \
+        int _it_base, _it_limit;                                               \
+        int _co_base, _co_limit;                                               \
     }
 
 
@@ -413,11 +400,11 @@ STATEMENT_                                                                     \
 
 #define  ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll)
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, )
 
 #define _ccxll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq)           \
                                                                                \
-        _cc_ll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq, ccxll)
+        _cc_ll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq, ccxll, )
 
 
 #define  ccxll_merge_range(_iter_l, _iter_m, _iter_r)                          \
@@ -426,7 +413,7 @@ STATEMENT_                                                                     \
 
 #define  ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
                                                                                \
-         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll)
+         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll, )
 
 #define _ccxll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
                                                                                \
@@ -439,22 +426,24 @@ STATEMENT_                                                                     \
 
 #define  ccxll_sort_extd(_ccxll, _leq)                                         \
                                                                                \
-         cc_ll_sort_extd(_ccxll, _leq, ccxll)
+         cc_ll_sort_extd(_ccxll, _leq, ccxll, )
 
 #define _ccxll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
-        _cc_ll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccxll)
+        _cc_ll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccxll,)
 
 
-#define  ccxll_reverse_range(_iter_l, _iter_r)                                 \
+#define ccxll_reverse_range(_iter_l, _iter_r)                                  \
                                                                                \
-        _ccxll_reverse_range(_iter_l, _iter_r,  0)                             \
+        ccxll_reverse_range_extd(_iter_l, _iter_r,  0)                         \
 
-#define _ccxll_reverse_range(_iter_l, _iter_r, _flag_swap_iters)               \
+#define ccxll_reverse_range_extd(_iter_l, _iter_r, _flag_swap_iters)           \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     if (_unlikely((_iter_l)->ccxll != (_iter_r)->ccxll))  break;               \
+                                                                               \
+    if (_unlikely((_iter_l)->curr.XOR == (_iter_r)->curr.XOR))  break;         \
                                                                                \
     link_t _x_in = XOR2((_iter_l)->curr.XOR, (_iter_r)->curr.XOR);             \
     link_t _x_ex = XOR2((_iter_l)->prev.XOR, (_iter_r)->next.XOR);             \
@@ -469,10 +458,11 @@ STATEMENT_                                                                     \
     {                                                                          \
         case 0:                                                                \
         XOR2_SWAP((_iter_l)->prev.XOR, (_iter_l)->next.XOR);                   \
-        XOR2_SWAP((_iter_r)->prev.XOR, (_iter_l)->next.XOR);                   \
+        XOR2_SWAP((_iter_r)->prev.XOR, (_iter_r)->next.XOR);                   \
         (_iter_l)->next.XOR = XOR2((_iter_l)->next.XOR, _x_ex);                \
         (_iter_r)->prev.XOR = XOR2((_iter_r)->prev.XOR, _x_ex);                \
         break;                                                                 \
+                                                                               \
         case 1:  default:                                                      \
         XOR2_SWAP((_iter_l)->curr.XOR, (_iter_r)->curr.XOR);                   \
         XOR2_SWAP((_iter_l)->next.XOR, (_iter_r)->prev.XOR);                   \
@@ -484,9 +474,23 @@ STATEMENT_                                                                     \
 /* ccxll comparator */
 
 
-#define ccxll_comp_leq(_iter_a, _iter_b)  (XREF((_iter_a)) <= XREF((_iter_b)))
+#define ccxll_comp_leq(_iter_a, _iter_b)       (XREF((_iter_a)) <=             \
+                                                XREF((_iter_b)))
 
-#define ccxll_comp_geq(_iter_a, _iter_b)  (XREF((_iter_a)) >= XREF((_iter_b)))
+#define ccxll_comp_leq_prev(_iter_a, _iter_b)  (XREF_PREV((_iter_a)) <=        \
+                                                XREF_PREV((_iter_b)))
+
+#define ccxll_comp_leq_next(_iter_a, _iter_b)  (XREF_NEXT((_iter_a)) <=        \
+                                                XREF_NEXT((_iter_b)))
+
+#define ccxll_comp_geq(_iter_a, _iter_b)       (XREF((_iter_a)) >=             \
+                                                XREF((_iter_b)))
+
+#define ccxll_comp_geq_prev(_iter_a, _iter_b)  (XREF_PREV((_iter_a)) >=        \
+                                                XREF_PREV((_iter_b)))
+
+#define ccxll_comp_geq_next(_iter_a, _iter_b)  (XREF_NEXT((_iter_a)) >=        \
+                                                XREF_NEXT((_iter_b)))
 
 
 
@@ -539,24 +543,28 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define ccxll_iter_at_head(_iter)   ((_iter)->prev.XOR == NULL)
+#define ccxll_iter_at_head(_iter)   ( (_iter)->curr.XOR ==                     \
+                                    &((_iter)->ccxll->head.XOR))
 
-#define ccxll_iter_at_tail(_iter)   ((_iter)->next.XOR == NULL)
+#define ccxll_iter_at_tail(_iter)   ( (_iter)->curr.XOR ==                     \
+                                    &((_iter)->ccxll->tail.XOR))
 
-#define ccxll_iter_at_begin(_iter)  ((_iter)->curr.XOR ==                      \
-                                     (_iter)->ccxll->head.XOR)
+#define ccxll_iter_at_begin(_iter)  ( (_iter)->curr.XOR ==                     \
+                                      (_iter)->ccxll->head.XOR )
 
-#define ccxll_iter_at_end(_iter)    ((_iter)->curr.XOR ==                      \
-                                     (_iter)->ccxll->tail.XOR)
+#define ccxll_iter_at_end(_iter)    ( (_iter)->curr.XOR ==                     \
+                                      (_iter)->ccxll->tail.XOR )
 
 
 #define ccxll_iter_incr(_iter)                                                 \
 (                                                                              \
     (ccxll_iter_at_tail(_iter)) ? (NULL) :                                     \
     (                                                                          \
-        (_iter)->prev.XOR =      (_iter)->curr.XOR,                            \
-        (_iter)->curr.XOR =      (_iter)->next.XOR,                            \
-        (_iter)->next.XOR = XOR2((_iter)->prev.XOR, (_iter)->curr.node->XOR)   \
+        (_iter)->prev.XOR = (_iter)->curr.XOR,                                 \
+        (_iter)->curr.XOR = (_iter)->next.XOR,                                 \
+                                                                               \
+        _prefetch((_iter)->next.XOR = XOR2( (_iter)->prev.XOR,                 \
+                  (_iter)->curr.node->XOR)),(_iter)->next.XOR                  \
     )                                                                          \
 )
 
@@ -565,9 +573,11 @@ VOID_EXPR_                                                                     \
 (                                                                              \
     (ccxll_iter_at_head(_iter)) ? (NULL) :                                     \
     (                                                                          \
-        (_iter)->next.XOR =      (_iter)->curr.XOR,                            \
-        (_iter)->curr.XOR =      (_iter)->prev.XOR,                            \
-        (_iter)->prev.XOR = XOR2((_iter)->next.XOR, (_iter)->curr.node->XOR)   \
+        (_iter)->next.XOR = (_iter)->curr.XOR,                                 \
+        (_iter)->curr.XOR = (_iter)->prev.XOR,                                 \
+                                                                               \
+        _prefetch((_iter)->prev.XOR = XOR2( (_iter)->next.XOR,                 \
+                  (_iter)->curr.node->XOR)),(_iter)->prev.XOR                  \
     )                                                                          \
 )
 
@@ -586,6 +596,29 @@ STATEMENT_                                                                     \
 #define ccxll_iter_distance(_iter_a, _iter_b, _pdist)                          \
                                                                                \
         cc_ll_iter_distance(_iter_a, _iter_b, _pdist, ccxll)
+
+
+#ifndef CC_STRICT
+
+#define ccxll_iter_swap(_iter_a, _iter_b)                                      \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    XOR2_SWAP((_iter_a)->prev.node, (_iter_b)->prev.node),                     \
+    XOR2_SWAP((_iter_a)->curr.node, (_iter_b)->curr.node),                     \
+    XOR2_SWAP((_iter_a)->next.node, (_iter_b)->next.node)                      \
+)
+
+#else
+
+#define ccxll_iter_swap(_iter_a, _iter_b)                                      \
+                                                                               \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    XOR2_SWAP((_iter_a), (_iter_b))                                            \
+)
+
+#endif // CC_STRICT
 
 
 

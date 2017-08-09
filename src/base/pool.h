@@ -52,14 +52,14 @@ STATEMENT_                                                                     \
 /* itarr */
 
 
-#define _itarr_init(_cont, _type_)                                             \
+#define _itarr_init(_cont, _ll_)                                               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     _safe_alloc((_cont)->itarr, sizeof(*(_cont)->itarr));                      \
                                                                                \
     for (int _idx = 0; _idx < (int)(ELEMOF(*(_cont)->itarr)); _idx++)          \
-        _type_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont));               \
+        _ll_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont));                 \
 )
 
 
@@ -82,29 +82,29 @@ STATEMENT_                                                                     \
 
 #ifndef CC_STRICT
 
-#define _it_init(_cont, _items, _iter, _type_)                                 \
+#define _it_init(_cont, _items, _iter, _ll_)                                   \
                                                                                \
         __typeof__(**(_cont)->_it) _iter[(_items)];                            \
                                                                                \
         for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            _type_##_iter_init(_it_((_cont), _iter, _cnt), (_cont))
+            _ll_##_iter_init(_it_((_cont), _iter, _cnt), (_cont))
 
 #else
 
-#define _it_init(_cont, _items, _base, _type_)                                 \
+#define _it_init(_cont, _items, _base, _ll_)                                   \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _itco_init((_cont), (_items), &(_base), _##_type_##_iter_init, _it)
+        _itco_init((_cont), (_items), &(_base), _##_ll_##_iter_init, _it)
 
 #endif // CC_STRICT
 
 
-#define _co_init(_cont, _items, _base, _type_)                                 \
+#define _co_init(_cont, _items, _base, _ll_)                                   \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _itco_init((_cont), (_items), &(_base), _##_type_##_init, _co)
+        _itco_init((_cont), (_items), &(_base), _##_ll_##_init, _co)
 
 
 #define _itco_init(_cont, _items, _pbase, _pinit, _itco_)                      \
@@ -143,7 +143,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _it_total = _itco_total((_cont), _it);                       \
+    int _it_total = _itco_total((_cont), _it);                                 \
                                                                                \
     for (int _idx_it = 0; _idx_it < _it_total; _idx_it++)                      \
         _iter_free((_cont)->_it[_idx_it]);                                     \
@@ -156,7 +156,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    unsigned char _co_total = _itco_total((_cont), _co);                       \
+    int _co_total = _itco_total((_cont), _co);                                 \
                                                                                \
     for (int _idx_co = 0; _idx_co < _co_total; _idx_co++)                      \
     {                                                                          \
@@ -180,7 +180,7 @@ STATEMENT_                                                                     \
     if ((_items) > (_cont)->_itco_##_limit && (_items) != 0)                   \
     {                                                                          \
         size_t _size = sizeof(*(_cont)->_itco_);                               \
-        unsigned char _ttl = _itco_total((_cont), _itco_);                     \
+        int _ttl = _itco_total((_cont), _itco_);                               \
                                                                                \
         void **_tmp = (void*)&((_cont)->_itco_);                               \
         *_tmp = realloc(*_tmp, (_size *                                        \
@@ -189,7 +189,7 @@ STATEMENT_                                                                     \
         memset((_cont)->_itco_ + _ttl, 0,                                      \
                (_size * (unsigned)((_cont)->_itco_##_base + (_items) - _ttl)));\
                                                                                \
-        (_cont)->_itco_##_limit = (unsigned char)(_items);                     \
+        (_cont)->_itco_##_limit = (_items);                                    \
     }                                                                          \
                                                                                \
     *(_pbase) = (_cont)->_itco_##_base;                                        \

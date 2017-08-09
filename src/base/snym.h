@@ -2,15 +2,17 @@
 #define OPENGC3_BASE_SNYM_H
 
 
-/* Dereference */
-
-// ccdll & ccxll
-#define LREF(_iter)         ((_iter)->curr.node->val)
+/* dereference */
 
 // ccdll
 #define DREF(_iter)         ((_iter)->curr.node->val)
 #define DREF_PREV(_iter)    ((_iter)->curr.node->PRV->val)
 #define DREF_NEXT(_iter)    ((_iter)->curr.node->NXT->val)
+
+// ccsll
+#define SREF(_iter)         ((_iter)->curr.node->val)
+#define SREF_PREV(_iter)    ((_iter)->prev.node->val)
+#define SREF_NEXT(_iter)    ((_iter)->curr.node->NXT->val)
 
 // ccxll
 #define XREF(_iter)         ((_iter)->curr.node->val)
@@ -23,41 +25,35 @@
 #define GREF_LEFT(_iter)    ((_iter)->curr.node->LFT->val)
 #define GREF_RIGHT(_iter)   ((_iter)->curr.node->RGH->val)
 
+// cc[dsx]ll
+#define LREF(_iter)         ((_iter)->curr.node->val)
 
-/* Abbreviation */
+
+/* abbreviation */
 
 // ccdll
-#define DLEQ  ccdll_comp_leq
-#define DGEQ  ccdll_comp_geq
+#define DLEQ       ccdll_comp_leq
+#define DGEQ       ccdll_comp_geq
+
+// ccsll
+#define SLEQ       ccsll_comp_leq
+#define SGEQ       ccsll_comp_geq
 
 // ccxll
-#define XLEQ  ccxll_comp_leq
-#define XGEQ  ccxll_comp_geq
+#define XLEQ       ccxll_comp_leq
+#define XLEQ_PREV  ccxll_comp_leq_prev
+#define XLEQ_NEXT  ccxll_comp_leq_next
+#define XGEQ       ccxll_comp_geq
+#define XGEQ_PREV  ccxll_comp_geq_prev
+#define XGEQ_NEXT  ccxll_comp_geq_next
 
-// ccdll & ccxll
+// cc[dsx]ll
 #define ITER(_cont)               (ITER_NTH(_cont, 0))
 #define ITER_NTH(_cont, _nth_it)  (&(*(_cont)->itarr)[(_nth_it)])
 
 // ccarr
 #define ELEM(_cont)               (ELEM_NTH(_cont, 0))
 #define ELEM_NTH(_cont, _nth_el)  ((_cont).arr[(_nth_el)])
-
-
-/* Abbreviation (Internal) */
-
-#ifndef CC_STRICT
-#define _it_(_cont, _iter, _offset)  (&(_iter)[(_offset)])
-#define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
-#else
-#define _it_(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
-#define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
-#endif // CC_STRICT
-
-#ifndef CC_STRICT
-#define _unlikely(_expr)  (__builtin_expect(!!(_expr), 0))
-#else
-#define _unlikely(_expr)  (_expr)
-#endif // CC_STRICT
 
 
 #endif
