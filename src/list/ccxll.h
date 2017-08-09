@@ -2,6 +2,7 @@
 #define OPENGC3_LIST_CCXLL_H
 
 #include "base.h"
+#include "extd-ccxll.h"
 #include "../base/pool.h"
 #include "../base/misc.h"
 #include "../base/snym.h"

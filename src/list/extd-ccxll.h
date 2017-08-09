@@ -1,9 +1,8 @@
 #ifndef OPENGC3_LIST_CCXLL_EXTD_H
 #define OPENGC3_LIST_CCXLL_EXTD_H
 
-#include "base-extd.h"
-#include "ccxll.h"
-#include "../../src/vect/array.h"
+#include "extd-base.h"
+#include "../vect/array.h"
 
 
 /* ccxll integrity */
