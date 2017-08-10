@@ -38,9 +38,11 @@ ccxll_free(list);
 
 See [test cases](test) for more fascinating examples!
 
-## Contributor
+## Contributors
 
-[Kevin Dong (Kʌ̄D)](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
+[Kevin Dong](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
+
+[Andylinpersonal](mailto:andylinpersonal@gmail.com) - 2017
 
 ## Distribution
 
