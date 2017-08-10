@@ -1,5 +1,3 @@
-// #define CC_STRICT
-
 #include "../../src/tree/ccgbt.h"
 
 #include <stdio.h>
@@ -91,6 +89,9 @@ int main(void)
     // Test 2
     // Traversal
 
+    // WRONG OUTPUT:
+    // THE LAST ELEMENT PRINTS TWICE
+
     printf("\n\nTest 2: \n\n");
 
     {
@@ -126,15 +127,14 @@ int main(void)
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
 
-        while (int i = 0; i < 2; i++)
+        CCGBT_FOREACH(infix, ITER(tree), 10)
         {
-            CCGBT_FOREACH(ITER(tree))
-            {
-                ccgbt_iter_inorder(ITER(tree));
-                printf("%c ", GREF(ITER(tree)));
-            }
-            puts("== -36.2");
+            ccgbt_iter_infix(ITER(tree), infix);
+
+            printf("%c ", GREF(ITER(tree)));
         }
+
+        puts("== -36.2");
 
         ccgbt_free(tree);
     }
