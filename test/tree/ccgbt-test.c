@@ -1,6 +1,4 @@
-// #define CC_STRICT
-
-#include "../../src/ccgbt.h"
+#include "../../src/tree/ccgbt.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +21,7 @@ int main(void)
 
         ccgbt_iter_left   (ITER(tree));
         ccgbt_insert_right(ITER(tree), "the ");
-        ccgbt_insert_left (ITER(tree), "\"OpenGenCC\" ");
+        ccgbt_insert_left (ITER(tree), "\"OpenGC3\" ");
 
         ccgbt_iter_left   (ITER(tree));
         ccgbt_insert_right(ITER(tree), "Project!\n");
@@ -90,6 +88,7 @@ int main(void)
 
     // Test 2
     // Traversal
+    // TODO: WRONG OUTPUT
 
     printf("\n\nTest 2: \n\n");
 
@@ -125,7 +124,6 @@ int main(void)
 
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
-
 
         CCGBT_FOREACH(infix, ITER(tree), 10)
         {

@@ -1,4 +1,4 @@
-#define DEBUG_CCDLL
+#define PREFIX_CCDLL
 // #define CC_STRICT
 
-#include "cc~ll-test.c"
+#include "doubly-test.c"

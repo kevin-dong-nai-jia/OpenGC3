@@ -1,14 +1,11 @@
-#ifndef CC_GBT_H
-#define CC_GBT_H
+#ifndef OPENGC3_TREE_CCGBT_H
+#define OPENGC3_TREE_CCGBT_H
 
-#include "pool.h"
-#include "misc.h"
-#include "snym.h"
+#include "../../src/base/pool.h"
+#include "../../src/base/misc.h"
+#include "../../src/base/snym.h"
 
-#include <math.h>
-#include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 
@@ -60,13 +57,7 @@
                                                                                \
     struct CCGBT_CONT                                                          \
     {                                                                          \
-        /* size and node record */                                             \
-        /* size is used node, used is used nodes in latest blck */             \
-        /* vcnt is new "fresh" node in latest blck              */             \
-        int size,  used,  vcnt;                                                \
-                                                                               \
-        /* block increment info for linked list                 */             \
-        /* int start, ratio, thrsh;                             */             \
+        int size,  last,  vcnt;                                                \
         int start, ratio, thrsh;                                               \
                                                                                \
         /* root is sentinel/root node */                                       \
@@ -84,11 +75,11 @@
         /* example: start = 2, ratio = 2, thrsh = 17                      */   \
         /* -> 2, 4, 8, 16, 32, 17, 17,... nodes per blcks next time.      */   \
         struct CCGBT_BLCK                                                      \
-        {   struct CCGBT_BLCK *next;          /* points to next block */       \
+        {   struct CCGBT_BLCK *bprv, *bnxt;   /* points to next block */       \
             PRAGMA_##_ALIGN_##_BGN            /* packed pragma starts */       \
-            struct CCGBT_NODE nodes[1];       /* node structure array */       \
+            int ncnt;                         /* the item of the node */       \
+            struct CCGBT_NODE nodes[];        /* node structure array */       \
             PRAGMA_##_ALIGN_##_END            /* the pragma ends here */       \
-            /* *pblock is aux blck */                                          \
         }   *pool, *pblock;                   /* points to 1-st block */       \
                                                                                \
         struct CCGBT_ITER                                                      \
@@ -122,7 +113,7 @@ STATEMENT_                                                                     \
                                                                                \
     _ccgbt_init_extd((_ccgbt), (_start), (_ratio), (_thrsh), 1);               \
                                                                                \
-    _itarr_alloc((_ccgbt), ccgbt);                                             \
+    _itarr_init((_ccgbt), ccgbt);                                              \
     _ccgbt_iter_init((_ccgbt)->_iter, (_ccgbt), 1);                            \
 )
 
@@ -149,7 +140,7 @@ VOID_EXPR_                                                                     \
 (                                                                              \
     _ccgbt_init_seed((_ccgbt)),                                                \
                                                                                \
-    (_ccgbt)->used = (_ccgbt)->vcnt   = 0,                                     \
+    (_ccgbt)->last = (_ccgbt)->vcnt   = 0,                                     \
     (_ccgbt)->avsp = (_ccgbt)->pnode  = NULL,                                  \
     (_ccgbt)->pool = (_ccgbt)->pblock = NULL,                                  \
                                                                                \
@@ -319,7 +310,7 @@ STATEMENT_                                                                     \
                                                                                \
     /* alloc a group of new aux iters.       */                                \
     /* In this case, we alloc two aux iters. */                                \
-    _it_alloc((_iter)->ccgbt, 2, _base_e, ccgbt);                              \
+    _it_init((_iter)->ccgbt, 2, _base_e, ccgbt);                               \
                                                                                \
     _ccgbt_erase_repl((_iter),                                                 \
                       _it_((_iter)->ccgbt, _base_e, 0),                        \
@@ -475,7 +466,7 @@ VOID_EXPR_                                                                     \
 1. Initialize current as root
 2. While current is not NULL
    If current does not have left child
-     a) Print current¡¦s data
+     a) Print current's data
      b) Go to the right, i.e., ccgbt_iter_right()
    Else
      a) Make current as right child of the rightmost

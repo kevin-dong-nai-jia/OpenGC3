@@ -1,0 +1,88 @@
+define(STYLE_I, style="invis")
+define(STYLE_L, color="invis" weight="0")
+define(STYLE_H, color="invis" weight="10000")
+
+define(STYLE_A, style="rounded`,' filled" fontname="CMU Serif"   fontsize=36.0 fillcolor=grey95)
+define(STYLE_B, style="rounded`,' filled" fontname="CMU Serif"   fontsize=31.5 fillcolor=lightgrey)
+define(STYLE_N, style="rounded`,' filled" fontname="Inconsolata" fontsize=27.0 fillcolor=white shape=rect height=0.75)
+
+
+digraph
+{
+    rankdir="LR"  ranksep="1.2"
+    nodesep="0.4" node [ STYLE_N ]
+    concentrate="true"
+
+    subgraph cluster_A { STYLE_I
+    subgraph cluster_0 { STYLE_A label="Create"
+                         { rank="same" ccxll ccxll_pckd }
+                         ccxll_extd ccxll_struct  ccxll_struct_pckd 
+                         { rank="same" ccxll_type  ccxll_struct_extd} }
+
+    subgraph cluster_1 { STYLE_A label="Initialize/Destroy"
+                         ccxll_init       _ccxll_init        ccxll_init_extd  _ccxll_init_extd
+                         ccxll_iter_init  _ccxll_iter_init
+                        _ccxll_init_core  _ccxll_init_info  _ccxll_init_seed   ccxll_free }
+    }
+
+    subgraph cluster_2 { STYLE_A label="Iterators"
+                         ccxll_iter_copy     ccxll_iter_incr     ccxll_iter_decr
+                         ccxll_iter_head     ccxll_iter_tail     ccxll_iter_begin     ccxll_iter_end
+                         ccxll_iter_at_head  ccxll_iter_at_tail  ccxll_iter_at_begin  ccxll_iter_at_end
+                         ccxll_iter_advance  ccxll_iter_distance }
+
+    subgraph cluster_3 { STYLE_A label="Traversors"
+                         CCXLL_INCR  CCXLL_INCR_AUTO  CCXLL_INCR_EXTD
+                         CCXLL_DECR  CCXLL_DECR_AUTO  CCXLL_DECR_EXTD }
+
+    subgraph cluster_4 { STYLE_A label="Comparator" { ccxll_comp_leq } }
+
+    subgraph cluster_5 { STYLE_A label="Access" { ccxll_front ccxll_back } }
+
+    subgraph cluster_6 { STYLE_A label="Bitwise\nXOR\nOperations" { XOR2 XOR3 } }
+
+    subgraph cluster_7 { STYLE_A label="Capacity" { ccxll_size ccxll_empty } }
+
+    subgraph cluster_8 { STYLE_A label="Modifiers"
+                         subgraph cluster_a { STYLE_B label="Single"   ccxll_insert ccxll_erase }
+                         subgraph cluster_b { STYLE_B label="Multiple" ccxll_resize ccxll_append }
+                         subgraph cluster_c { STYLE_B label="Swap"     ccxll_swap }
+                         subgraph cluster_d { STYLE_B label="Clear"    ccxll_clear }
+                         subgraph cluster_e { STYLE_B label="Basic"    ccxll_pop_front  ccxll_pop_back  _ccxll_pop
+                                                                       ccxll_push_front ccxll_push_back _ccxll_push } }
+
+    subgraph cluster_9 { STYLE_A label="Operations"
+                         subgraph cluster_f { STYLE_B label="Sort"     ccxll_sort
+                                                                       ccxll_sort_extd         _ccxll_sort_extd }
+                         subgraph cluster_g { STYLE_B label="Merge"    ccxll_merge        
+                                                                       ccxll_merge_extd        _ccxll_merge_extd
+                                                                       ccxll_merge_range
+                                                                       ccxll_merge_range_extd  _ccxll_merge_range_extd }
+                         subgraph cluster_h { STYLE_B label="Move"     ccxll_move
+                                                                       ccxll_move_range         ccxll_move_range_extd }
+                         subgraph cluster_i { STYLE_B label="Reverse"  ccxll_reverse_range } }
+
+    subgraph cluster_S { STYLE_A label="Pre-\nDefined\nSwitch" CC_STRICT }
+
+    // IN-GRAPH CONSTRAINTS
+    {    ccxll_pckd             ->  ccxll_struct      -> ccxll_struct_pckd -> ccxll_type [STYLE_H]  }
+    {    ccxll_iter_init        -> _ccxll_init_info   -> ccxll_free                      [STYLE_H]  }
+    { { _ccxll_merge_range_extd ccxll_reverse_range } -> ccxll_move                      [STYLE_H]  }
+
+    // BI-GRAPH CONSTRAINTS
+    {  ccxll_type        -> ccxll_append     [STYLE_H]  }
+    {  ccxll_struct_extd -> ccxll_resize     [STYLE_H]  }
+
+    {  ccxll_free        -> ccxll_erase      [STYLE_H]  }
+    { _ccxll_init_seed   -> ccxll_insert     [STYLE_H]  }
+
+    {  CCXLL_INCR_EXTD   -> ccxll_iter_end   [STYLE_H]  }
+    {  CCXLL_DECR_EXTD   -> ccxll_iter_begin [STYLE_H]  }
+
+    // TRI-GRAPH CONSTRAINTS
+    {  ccxll_swap -> ccxll_move -> XOR2 [STYLE_H]  }
+
+    // MULTI-GRAPH CONSTRAINTS
+    {  ccxll_init  -> ccxll_front -> ccxll_sort     [STYLE_L]  }
+    {  CC_STRICT   -> ccxll_back  -> ccxll_empty    [STYLE_H]  }
+    {  ccxll_front -> ccxll_size  -> ccxll_comp_leq [STYLE_H]  }
