@@ -6,6 +6,7 @@
 |----------------------------------|:-------------------------------------:|
 |  `ccarr(T)`                      |  Array of Bits                        |
 | [`ccxll(T)`](doc/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
+|  `ccsll(T)`                      |  Singly Linked List                   |
 |  `ccdll(T)`                      |  Doubly Linked List                   |
 |  `ccgbt(T)`                      |  General Binary Tree                  |
 
@@ -14,25 +15,25 @@
 ```c
 #include "ccxll.h"
 
-  // Create
-  ccxll(int) list;
+// Create
+ccxll(int) list;
 
-  // Initialize
-  ccxll_init(list);
+// Initialize
+ccxll_init(list);
 
-  // Modify
-  for (int cnt = 8; cnt --> 0; )
-      ccxll_push_back(list, rand());
+// Modify
+for (int cnt = 8; cnt --> 0; )
+    ccxll_push_back(list, rand());
 
-  // Operate
-  ccxll_sort(list);
+// Operate
+ccxll_sort(list);
 
-  // Traverse
-  CCXLL_INCR_AUTO(pnum, list)
-      printf("num = %d\n", *pnum);
+// Traverse
+CCXLL_INCR_AUTO(pnum, list)
+    printf("num = %d\n", *pnum);
 
-  // Destroy
-  ccxll_free(list);
+// Destroy
+ccxll_free(list);
 ```
 
 See [test cases](test) for more fascinating examples!
