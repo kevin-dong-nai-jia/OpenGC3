@@ -10,7 +10,7 @@
 |  `ccdll(T)`                      |  Doubly Linked List                   |
 |  `ccgbt(T)`                      |  General Binary Tree                  |
 
-## How to Use
+## Example
 
 ```c
 #include "ccxll.h"
