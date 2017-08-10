@@ -46,6 +46,10 @@
 #define NXT  lnk[0]
 #define PRV  lnk[1]
 
+#define PRN  lnk[0]
+#define LFT  lnk[1]
+#define RGH  lnk[2]
+
 
 /* append line ID */
 
@@ -75,6 +79,14 @@
 #define CCXLL_ITER  ADDID(CCXLL_ITER)
 #define CCXLL_HDTL  ADDID(CCXLL_HDTL)
 #define CCXLL_PTRS  ADDID(CCXLL_PTRS)
+
+#define CCGBT       ADDID(CCGBT)
+#define CCGBT_CONT  ADDID(CCGBT_CONT)
+#define CCGBT_NODE  ADDID(CCGBT_NODE)
+#define CCGBT_BLCK  ADDID(CCGBT_BLCK)
+#define CCGBT_ITER  ADDID(CCGBT_ITER)
+#define CCGBT_PTRS  ADDID(CCGBT_PTRS)
+
 
 
 #endif

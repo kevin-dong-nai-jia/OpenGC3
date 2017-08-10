@@ -88,7 +88,9 @@ int main(void)
 
     // Test 2
     // Traversal
-    // TODO: WRONG OUTPUT
+
+    // WRONG OUTPUT:
+    // THE LAST ELEMENT PRINTS TWICE
 
     printf("\n\nTest 2: \n\n");
 
