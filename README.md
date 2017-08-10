@@ -1,40 +1,49 @@
-# OpenGC<sup>3</sup>
-
-**OpenGC<sup>3</sup>** is a collection consisting of a few fundamental containers (and adaptors) for programming in C language. Most of the functions are implemented as C preprocessor function-like macros strictly conforming to the C99+ standards, and therefore they outperform many C/C++ libraries, since they're expanded at compile time and aggressively optimized by compilers.
-
+# OpenGC<sup>3</sup><sub><sup>/open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collections</sup></sub></sup></i>
 
 ## Containers
 
-|  Type                             |  Description                          |
-|-----------------------------------|:-------------------------------------:|
-| [`ccxll(T)`](tool/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
-|  `ccdll(T)`                       |  Doubly Linked List                   |
-|  `ccgbt(T)`                       |  General Binary Tree                  |
+|  Type                            |  Description                          |
+|----------------------------------|:-------------------------------------:|
+|  `ccarr(T)`                      |  Array of Bits                        |
+| [`ccxll(T)`](doc/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
+|  `ccdll(T)`                      |  Doubly Linked List                   |
+|  `ccgbt(T)`                      |  General Binary Tree                  |
 
-## Example
+## How to Use
 
 ```c
-ccxll(int) list;                      //  declare a list of type int
-ccxll_init(list);                     //  initialize the list record
+#include "ccxll.h"
 
-for (int cnt = 8; cnt-- > 0; )        //
-    ccxll_push_back(list, rand());    //  insert "rand()" to the end
+  // Create
+  ccxll(int) list;
 
-ccxll_sort(list);                     //  sort with comparator: XLEQ
+  // Initialize
+  ccxll_init(list);
 
-CCXLL_INCR_AUTO(pnum, list)           //  traverse the list forward:
-    printf("num = %d\n", *pnum);      //  access elems through iters
+  // Modify
+  for (int cnt = 8; cnt --> 0; )
+      ccxll_push_back(list, rand());
 
-ccxll_free(list);                     //  destroy the list after use
+  // Operate
+  ccxll_sort(list);
+
+  // Traverse
+  CCXLL_INCR_AUTO(pnum, list)
+      printf("num = %d\n", *pnum);
+
+  // Destroy
+  ccxll_free(list);
 ```
 
 See [test cases](test) for more fascinating examples!
 
 ## Contributor
 
-Kevin Dong <<kevin.dong.nai.jia@gmail.com>> - 2015 ~ 2017
+[Kevin Dong (Kʌ̄D)](mailto:kevin.dong.nai.jia@gmail.com) - 2015 ~ 2017
 
-## License
+## Distribution
 
 This project is distributed under [the MIT License](LICENSE).
+
+
 
