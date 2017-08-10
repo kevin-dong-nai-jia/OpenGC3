@@ -195,9 +195,9 @@ STATEMENT_                                                                     \
 
 #define ccgbt_root(_ccgbt)  ((_ccgbt)->root.val)
 
-#define  ccgbt_left(_iter)   ((_iter)->curr.node->LFT->val)
+#define ccgbt_left(_iter)   ((_iter)->curr.node->LFT->val)
 
-#define  ccgbt_right(_iter)  ((_iter)->curr.node->RGH->val)
+#define ccgbt_right(_iter)  ((_iter)->curr.node->RGH->val)
 
 
 
