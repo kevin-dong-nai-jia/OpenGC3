@@ -89,9 +89,6 @@ int main(void)
     // Test 2
     // Traversal
 
-    // WRONG OUTPUT:
-    // THE LAST ELEMENT PRINTS TWICE
-
     printf("\n\nTest 2: \n\n");
 
     {
@@ -127,7 +124,7 @@ int main(void)
         ccgbt_push_left   (ITER(tree), '/');
         ccgbt_iter_left   (ITER(tree));
 
-        CCGBT_FOREACH(infix, ITER(tree), 10)
+        CCGBT_INFIX(ITER(tree), infix)
         {
             ccgbt_iter_infix(ITER(tree), infix);
 

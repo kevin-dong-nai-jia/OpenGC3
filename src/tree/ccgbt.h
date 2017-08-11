@@ -385,41 +385,20 @@ VOID_EXPR_                                                                     \
 )
 
 
-/* check if _iter_a is at the same place as _iter_b */
-
-#define ccgbt_iter_cmp(_iter_a, _iter_b)                                       \
-(                                                                              \
-    (_iter_a)->curr.node == (_iter_b)->curr.node                               \
-)
-
-
-/* check if _iter is at _pnode (ptr to node) */
-
-#define ccgbt_iter_at_node(_iter, _pnode)                                      \
-(                                                                              \
-    ((_iter)->curr.node) == (_pnode)                                           \
-)
-
-
-/* check if _iter is at root */
-
 #define ccgbt_iter_at_root(_iter)                                              \
 (                                                                              \
-    ccgbt_iter_at_node(_iter, &((_iter)->ccgbt->root))                         \
+    ((_iter)->curr.node == &((_iter)->ccgbt->root))                            \
 )
-
 
 #define ccgbt_iter_at_leaf(_iter)                                              \
 (                                                                              \
     (ccgbt_iter_no_left(_iter) && ccgbt_iter_no_right(_iter))                  \
 )
 
-
 #define ccgbt_iter_no_left(_iter)                                              \
 (                                                                              \
     ((_iter)->curr.node->LFT == NULL)                                          \
 )
-
 
 #define ccgbt_iter_no_right(_iter)                                             \
 (                                                                              \
@@ -427,155 +406,134 @@ VOID_EXPR_                                                                     \
 )
 
 
-// 1. Initialize current as root
-// 2. While current is not NULL
-//    If current does not have left child
-//      a) Print the current data
-//      b) Go to the right, i.e., ccgbt_iter_right()
-//    Else
-//      a) Make current as the right child of the rightmost node
-//         in the current left subtree
-//      b) Go to the left child, i.e., current = current->left
 
-#define ccgbt_iter_infix(_iter, _rec)                                          \
+/* ccgbt traversor */
+
+
+#define CCGBT_LFT_SEEK 0
+#define CCGBT_RGH_SEEK 1
+#define CCGBT_PRN_SEEK 2
+
+
+#define CCGBT_INFIX(_iter, _stat)                                              \
+                                                                               \
+    for (struct { void*   root;                                                \
+                  void*   last;                                                \
+                  int     depth;                                               \
+                  uint8_t seek; }  (_stat) = { .root  = (_iter)->curr.node,    \
+                                               .last  = NULL,                  \
+                                               .depth = 0,                     \
+                                               .seek  = CCGBT_LFT_SEEK };      \
+         (_iter)->curr.node != (_stat).last; )
+
+
+#define ccgbt_iter_infix(_iter, _stat)                                         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_rec).status == LFT_SEEK)                                             \
-        _ccgbt_infix_iter_leftmost(_iter,_rec);                                \
+    if ((_stat).last == NULL)                                                  \
+        _ccgbt_find_infix_rightmost((_iter), (_stat));                         \
                                                                                \
-    else if ((_rec).status == PRN_SEEK)                                        \
-        _ccgbt_infix_iter_parent(_iter, _rec);                                 \
                                                                                \
-    else /* if ((_rec).status == RGH_SEEK) */                                  \
-        _ccgbt_infix_iter_right(_iter, _rec);                                  \
+    if ((_stat).seek == CCGBT_LFT_SEEK)                                        \
+        _ccgbt_iter_infix_leftmost ((_iter), (_stat));                         \
+                                                                               \
+    else if ((_stat).seek == CCGBT_PRN_SEEK)                                   \
+        _ccgbt_iter_infix_parent   ((_iter), (_stat));                         \
+                                                                               \
+    else /* if ((_stat).seek == CCGBT_RGH_SEEK) */                             \
+        _ccgbt_iter_infix_right    ((_iter), (_stat));                         \
 )
 
-#define _ccgbt_infix_iter_parent(_iter, _rec)                                  \
+#define _ccgbt_find_infix_rightmost(_iter, _stat)                              \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    ccgbt_flag_unset((_iter), TRAV);                                           \
+    void *rbup = (_iter)->curr.node;                                           \
                                                                                \
-    while (1)  /* if no right node, keep iter to parent. */                    \
-    {                                                                          \
-        ccgbt_iter_parent(_iter);                                              \
-        (_rec).depth_curr--;                                                   \
+    while (!(ccgbt_iter_no_right((_iter))))                                    \
+        ccgbt_iter_right((_iter));                                             \
                                                                                \
-        if (ccgbt_iter_at_node(_iter, (_rec).root))                            \
-        {                                                                      \
-             if (!(ccgbt_flag_get(_iter, TRAV)))                               \
-             {                                                                 \
-                 (_rec).done = true;                                           \
-                 break;                                                        \
-             }                                                                 \
-        }                                                                      \
-                                                                               \
-        if (ccgbt_flag_get(_iter, TRAV))                                       \
-        {                                                                      \
-            if (ccgbt_iter_no_right(_iter))                                    \
-            {                                                                  \
-                (_rec).status = PRN_SEEK;                                      \
-                break;                                                         \
-            }                                                                  \
-            else                                                               \
-            {                                                                  \
-                (_rec).status = RGH_SEEK;                                      \
-                break;                                                         \
-            }                                                                  \
-        }                                                                      \
-    }                                                                          \
+    (_stat).last = (_iter)->curr.node;                                         \
+    (_iter)->curr.node = rbup;                                                 \
 )
 
-#define _ccgbt_infix_iter_right(_iter, _rec)                                   \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccgbt_flag_unset((_iter), TRAV);                                           \
-                                                                               \
-    /* set flag for first node at right branch for later use. */               \
-    ccgbt_iter_right(_iter);                                                   \
-    ccgbt_flag_set(_iter, TRAV);                                               \
-                                                                               \
-    (_rec).depth_curr++;                                                       \
-                                                                               \
-    if (ccgbt_iter_no_left(_iter))                                             \
-    {                                                                          \
-        if (ccgbt_iter_no_right(_iter))                                        \
-            (_rec).status = PRN_SEEK;                                          \
-        else                                                                   \
-            (_rec).status = RGH_SEEK;                                          \
-    }                                                                          \
-    else                                                                       \
-        _ccgbt_infix_iter_leftmost(_iter, _rec);                               \
-)
-
-#define _ccgbt_infix_iter_leftmost(_iter, _rec)                                \
+#define _ccgbt_iter_infix_leftmost(_iter, _stat)                               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     while (true)                                                               \
     {                                                                          \
-        /* no-left node flag is 0, because it'll */                            \
-        /* be the target for following traversal.*/                            \
-        ccgbt_flag_set(_iter, TRAV);                                           \
+        /* The flag of the node without left child is set to 0,                \
+           because it'll be the target for following traversal. */             \
                                                                                \
-        if (ccgbt_iter_no_left(_iter))                                         \
+        ccgbt_flag_set((_iter), CCGBT_FLAG_TRAV_OFFSET);                       \
+                                                                               \
+        if (ccgbt_iter_no_left((_iter)))                                       \
         {                                                                      \
-            if (ccgbt_iter_no_right(_iter))                                    \
-                (_rec).status = PRN_SEEK;                                      \
+            if (ccgbt_iter_no_right((_iter)))                                  \
+                (_stat).seek = CCGBT_PRN_SEEK;                                 \
             else                                                               \
-				(_rec).status = RGH_SEEK;                                      \
-			break;                                                  	       \
+                (_stat).seek = CCGBT_RGH_SEEK;                                 \
+            break;                                                             \
         }                                                                      \
                                                                                \
-        ccgbt_iter_left(_iter);                                                \
-        (_rec).depth_curr++;                                                   \
+        ccgbt_iter_left((_iter));                                              \
+                                                                               \
+        (_stat).depth++;                                                       \
     }                                                                          \
 )
 
-
-
-/* ccgbt traversor */
-
-
-#ifndef CC_STRICT
-
-#define LFT_SEEK 0
-#define RGH_SEEK 1
-#define PRN_SEEK 2
-
-#define ccgbt_at_maxdept(_rec)                                                 \
+#define _ccgbt_iter_infix_parent(_iter, _stat)                                 \
+                                                                               \
+STATEMENT_                                                                     \
 (                                                                              \
-    (_rec).currDept == (_rec).max_depth                                        \
+    ccgbt_flag_unset((_iter), CCGBT_FLAG_TRAV_OFFSET);                         \
+                                                                               \
+    while (1)                                                                  \
+    {                                                                          \
+        (_stat).depth--;                                                       \
+                                                                               \
+        ccgbt_iter_parent((_iter));                                            \
+                                                                               \
+        if (ccgbt_flag_get((_iter), CCGBT_FLAG_TRAV_OFFSET))                   \
+        {                                                                      \
+            (_stat).seek = (ccgbt_iter_no_right((_iter)) ?                     \
+                           CCGBT_PRN_SEEK : CCGBT_RGH_SEEK);                   \
+            break;                                                             \
+        }                                                                      \
+    }                                                                          \
 )
 
-#define CCGBT_FOREACH(_rec, _iter, _depth)                                     \
+#define _ccgbt_iter_infix_right(_iter, _stat)                                  \
                                                                                \
-    for (struct                                                                \
-        {   void*   root;                                                      \
-            uint8_t root_cnt;                                                  \
-            int     depth_curr;                                                \
-            int     depth_max;                                                 \
-            uint8_t status;                                                    \
-            bool    done;                                                      \
-        } (_rec) =                                                             \
-        {  .root       = (_iter)->curr.node,                                   \
-           .root_cnt   = 0,                                                    \
-           .depth_curr = 0,                                                    \
-           .depth_max  = (_depth),                                             \
-           .status     = LFT_SEEK,                                             \
-           .done       = false                                                 \
-        }; !(_rec).done; )
-
-#endif // CC_STRICT
+STATEMENT_                                                                     \
+(                                                                              \
+    (_stat).depth++;                                                           \
+                                                                               \
+    ccgbt_flag_unset((_iter), CCGBT_FLAG_TRAV_OFFSET);                         \
+                                                                               \
+    /* Set flag for the first node at the right branch for later use. */       \
+    ccgbt_iter_right((_iter));                                                 \
+    ccgbt_flag_set  ((_iter), CCGBT_FLAG_TRAV_OFFSET);                         \
+                                                                               \
+    if (ccgbt_iter_no_left((_iter)))                                           \
+    {                                                                          \
+        if (ccgbt_iter_no_right((_iter)))                                      \
+            (_stat).seek = CCGBT_PRN_SEEK;                                     \
+        else                                                                   \
+            (_stat).seek = CCGBT_RGH_SEEK;                                     \
+    }                                                                          \
+    else                                                                       \
+        _ccgbt_iter_infix_leftmost((_iter), (_stat));                          \
+)
 
 
 
 /* ccgbt flag */
 
 
-#define TRAV  (0)
+#define CCGBT_FLAG_TRAV_OFFSET  (0)
 
 
 #define ccgbt_flag_get(_iter, _dev)                                            \
@@ -586,8 +544,8 @@ STATEMENT_                                                                     \
 
 #define ccgbt_flag_check(_iter, _val, _dev)                                    \
 (                                                                              \
-    (ccgbt_flag_get((_iter)->curr.node->flag) & (uint8_t)((_val) << (_dev))) ==\
-	((_val) << (_dev))                                                         \
+    ((_val) << (_dev)) ==                                                      \
+    (ccgbt_flag_get((_iter)->curr.node->flag) & (uint8_t)((_val) << (_dev)))   \
 )
 
 
@@ -611,8 +569,8 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    ccgbt_flag_set   (_iter, _dev),                                            \
-    ccgbt_flag_toggle(_iter, _dev)                                             \
+    ccgbt_flag_set   ((_iter), (_dev)),                                        \
+    ccgbt_flag_toggle((_iter), (_dev))                                         \
 )
 
 
