@@ -285,7 +285,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    /* set aux iter[0] to target child */                                      \
+    /* set aux iter[0] to the target child */                                  \
     (_iter_a)->curr.node = (_iter)->curr.node->_targ_;                         \
                                                                                \
     /* connect parent node._oppo_ to the sibling. */                           \
@@ -505,8 +505,8 @@ STATEMENT_                                                                     \
                                                                                \
         if (ccgbt_flag_get((_iter), CCGBT_FLAG_TRAV_OFFSET))                   \
         {                                                                      \
-            (_stat)->seek = (ccgbt_iter_no_right((_iter)) ?                    \
-                           CCGBT_PRN_SEEK : CCGBT_RGH_SEEK);                   \
+            (_stat)->seek = ((ccgbt_iter_no_right((_iter)) ?                   \
+                             CCGBT_PRN_SEEK : CCGBT_RGH_SEEK));                \
             break;                                                             \
         }                                                                      \
     }                                                                          \
@@ -532,7 +532,9 @@ STATEMENT_                                                                     \
             (_stat)->seek = CCGBT_RGH_SEEK;                                    \
     }                                                                          \
     else                                                                       \
+    {                                                                          \
         _ccgbt_iter_inorder_leftmost((_iter), (_stat));                        \
+    }                                                                          \
 )
 
 
@@ -543,41 +545,34 @@ STATEMENT_                                                                     \
 #define CCGBT_FLAG_TRAV_OFFSET  (0)
 
 
-#define ccgbt_flag_get(_iter, _dev)                                            \
+#define ccgbt_flag_get(_iter, _offs)                                           \
 (                                                                              \
-    (((_iter)->curr.node->flag) & (uint8_t)(1 << (_dev))) >> (_dev)            \
+    (((_iter)->curr.node->flag) & (uint8_t)(1 << (_offs))) >> (_offs)          \
 )
 
 
-#define ccgbt_flag_check(_iter, _val, _dev)                                    \
-(                                                                              \
-    ((_val) << (_dev)) ==                                                      \
-    (ccgbt_flag_get((_iter)->curr.node->flag) & (uint8_t)((_val) << (_dev)))   \
-)
-
-
-#define ccgbt_flag_set(_iter, _dev)                                            \
+#define ccgbt_flag_set(_iter, _offs)                                           \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    ((_iter)->curr.node->flag) |= (uint8_t)0x1 << (_dev)                       \
+    ((_iter)->curr.node->flag) |= (uint8_t)0x1 << (_offs)                      \
 )
 
 
-#define ccgbt_flag_toggle(_iter, _dev)                                         \
+#define ccgbt_flag_toggle(_iter, _offs)                                        \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    ((_iter)->curr.node->flag) ^= (uint8_t)0x1 << (_dev)                       \
+    ((_iter)->curr.node->flag) ^= (uint8_t)0x1 << (_offs)                      \
 )
 
 
-#define ccgbt_flag_unset(_iter, _dev)                                          \
+#define ccgbt_flag_unset(_iter, _offs)                                         \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    ccgbt_flag_set   ((_iter), (_dev)),                                        \
-    ccgbt_flag_toggle((_iter), (_dev))                                         \
+    ccgbt_flag_set   ((_iter), (_offs)),                                       \
+    ccgbt_flag_toggle((_iter), (_offs))                                        \
 )
 
 
