@@ -22,7 +22,7 @@ ccxll(int) list;
 ccxll_init(list);
 
 // Modify
-for (int cnt = 8; cnt --> 0; )
+for (int cnt = 0; cnt < 8; cnt++)
     ccxll_push_back(list, rand());
 
 // Operate
