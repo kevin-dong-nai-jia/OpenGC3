@@ -1,3 +1,4 @@
+#include "ccgbt-test.h"
 #include "../../src/tree/ccgbt.h"
 
 #include <stdio.h>
@@ -87,53 +88,62 @@ int main(void)
 
 
     // Test 2
-    // Traversal
+    // Traversal (Mixture)
 
     printf("\n\nTest 2: \n\n");
 
     {
-        ccgbt(char) tree;
-        ccgbt_init(tree);
+        tree_t tree;
+        tree_init(&tree);
 
-        ccgbt_iter_root   (ITER(tree));
-        ccgbt_insert_left (ITER(tree), '*');
-        ccgbt_insert_right(ITER(tree), '*');
+        iter_t iter;
+        tree_iter_init(&iter, &tree);
+        tree_iter_root(&iter);
 
-        ccgbt_iter_left   (ITER(tree));
+        tree_insert_left (&iter, '*');
+        tree_insert_right(&iter, '*');
 
-        ccgbt_insert_left (ITER(tree), '2');
-        ccgbt_insert_right(ITER(tree), '3');
+        tree_iter_left   (&iter);
 
-        ccgbt_push_right  (ITER(tree), '*');
-        ccgbt_insert_left (ITER(tree), '1');
+        tree_insert_left (&iter, '2');
+        tree_insert_right(&iter, '3');
 
-        ccgbt_push_left   (ITER(tree), '+');
-        ccgbt_insert_right(ITER(tree), '4');
+        tree_push_right  (&iter, '*');
+        tree_insert_left (&iter, '1');
 
-        ccgbt_iter_parent (ITER(tree));
-        ccgbt_iter_right  (ITER(tree));
+        tree_push_left   (&iter, '+');
+        tree_insert_right(&iter, '4');
 
-        ccgbt_insert_left (ITER(tree), '5');
-        ccgbt_insert_right(ITER(tree), '6');
+        tree_iter_parent (&iter);
+        tree_iter_right  (&iter);
 
-        ccgbt_push_left   (ITER(tree), '-');
-        ccgbt_insert_right(ITER(tree), '7');
+        tree_insert_left (&iter, '5');
+        tree_insert_right(&iter, '6');
 
-        ccgbt_iter_parent (ITER(tree));
+        tree_push_left   (&iter, '-');
+        tree_insert_right(&iter, '7');
 
-        ccgbt_push_left   (ITER(tree), '/');
-        ccgbt_iter_left   (ITER(tree));
+        ccgbt_iter_parent(&iter);
 
-        CCGBT_INFIX(ITER(tree), infix)
+        ccgbt_push_left  (&iter, '/');
+        ccgbt_iter_left  (&iter);
+
+        for (int cnt  = 0; cnt < 3; cnt++)
         {
-            ccgbt_iter_infix(ITER(tree), infix);
+            trav_t stat;
 
-            printf("%c ", GREF(ITER(tree)));
+            CCGBT_INORDER(&iter, &stat)
+            {
+                ccgbt_iter_inorder(&iter, &stat);
+                printf("%c ", GREF(&iter));
+            }
+
+            ccgbt_iter_restore(&iter, &stat);
+
+            puts("== -36.2");
         }
 
-        puts("== -36.2");
-
-        ccgbt_free(tree);
+        tree_free(&tree);
     }
 
 
