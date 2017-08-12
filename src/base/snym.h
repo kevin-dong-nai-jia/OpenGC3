@@ -19,14 +19,14 @@
 #define XREF_PREV(_iter)    ((_iter)->prev.node->val)
 #define XREF_NEXT(_iter)    ((_iter)->next.node->val)
 
+// cc[dsx]ll
+#define LREF(_iter)         ((_iter)->curr.node->val)
+
 // ccgbt
 #define GREF(_iter)         ((_iter)->curr.node->val)
 #define GREF_PARENT(_iter)  ((_iter)->curr.node->PRN->val)
 #define GREF_LEFT(_iter)    ((_iter)->curr.node->LFT->val)
 #define GREF_RIGHT(_iter)   ((_iter)->curr.node->RGH->val)
-
-// cc[dsx]ll
-#define LREF(_iter)         ((_iter)->curr.node->val)
 
 
 /* abbreviation */

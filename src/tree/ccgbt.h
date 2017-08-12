@@ -213,7 +213,7 @@ STATEMENT_                                                                     \
 /* ccgbt modifiers */
 
 
-/* insert a new node with value (_val) to [LFT|RGH]  */
+/* insert a new node with the value to the left/right  */
 
 #define  ccgbt_insert_left(_iter, _val)   _ccgbt_insert(_iter, _val, LFT, RGH)
 
@@ -241,8 +241,8 @@ STATEMENT_                                                                     \
 )
 
 
-/* insert a new node with value (_val) to [LFT|RGH]                     */
-/* and move the other chile tree to the corresponding site of new node  */
+/* insert a new node with the value to the left/right                */
+/* and move the other subtree to the corresponding site of new node  */
 
 #define  ccgbt_push_left(_iter, _val)   _ccgbt_push(_iter, _val, LFT, RGH)
 
@@ -415,50 +415,57 @@ VOID_EXPR_                                                                     \
 #define CCGBT_PRN_SEEK 2
 
 
-#define CCGBT_INFIX(_iter, _stat)                                              \
+typedef struct
+{   void*   root;
+    void*   last;
+    int     depth;
+    uint8_t seek;
+}   ccgbt_trav_t;
+
+#define CCGBT_INORDER(_iter, _stat)                                            \
                                                                                \
-    for (struct { void*   root;                                                \
-                  void*   last;                                                \
-                  int     depth;                                               \
-                  uint8_t seek; }  (_stat) = { .root  = (_iter)->curr.node,    \
-                                               .last  = NULL,                  \
-                                               .depth = 0,                     \
-                                               .seek  = CCGBT_LFT_SEEK };      \
-         (_iter)->curr.node != (_stat).last; )
+    for (((_stat)->root  = (_iter)->curr.node,                                 \
+          (_stat)->last  = NULL,                                               \
+          (_stat)->depth = 0,                                                  \
+          (_stat)->seek  = CCGBT_LFT_SEEK);                                    \
+         (_iter)->curr.node != (_stat)->last; )
 
+#define ccgbt_iter_restore(_iter, _stat)                                       \
+(                                                                              \
+    (_iter)->curr.node = (_stat)->root                                         \
+)
 
-#define ccgbt_iter_infix(_iter, _stat)                                         \
+#define ccgbt_iter_inorder(_iter, _stat)                                       \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if ((_stat).last == NULL)                                                  \
-        _ccgbt_find_infix_rightmost((_iter), (_stat));                         \
+    if ((_stat)->last == NULL)                                                 \
+        _ccgbt_find_inorder_rightmost((_iter), (_stat));                       \
                                                                                \
                                                                                \
-    if ((_stat).seek == CCGBT_LFT_SEEK)                                        \
-        _ccgbt_iter_infix_leftmost ((_iter), (_stat));                         \
+    if ((_stat)->seek == CCGBT_LFT_SEEK)                                       \
+        _ccgbt_iter_inorder_leftmost ((_iter), (_stat));                       \
                                                                                \
-    else if ((_stat).seek == CCGBT_PRN_SEEK)                                   \
-        _ccgbt_iter_infix_parent   ((_iter), (_stat));                         \
+    else if ((_stat)->seek == CCGBT_PRN_SEEK)                                  \
+        _ccgbt_iter_inorder_parent   ((_iter), (_stat));                       \
                                                                                \
-    else /* if ((_stat).seek == CCGBT_RGH_SEEK) */                             \
-        _ccgbt_iter_infix_right    ((_iter), (_stat));                         \
+    else /* if ((_stat)->seek == CCGBT_RGH_SEEK) */                            \
+        _ccgbt_iter_inorder_right    ((_iter), (_stat));                       \
 )
 
-#define _ccgbt_find_infix_rightmost(_iter, _stat)                              \
+#define _ccgbt_find_inorder_rightmost(_iter, _stat)                            \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     void *rbup = (_iter)->curr.node;                                           \
                                                                                \
-    while (!(ccgbt_iter_no_right((_iter))))                                    \
-        ccgbt_iter_right((_iter));                                             \
+    while (ccgbt_iter_right((_iter)));                                         \
                                                                                \
-    (_stat).last = (_iter)->curr.node;                                         \
+    (_stat)->last = (_iter)->curr.node;                                        \
     (_iter)->curr.node = rbup;                                                 \
 )
 
-#define _ccgbt_iter_infix_leftmost(_iter, _stat)                               \
+#define _ccgbt_iter_inorder_leftmost(_iter, _stat)                             \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -472,19 +479,19 @@ STATEMENT_                                                                     \
         if (ccgbt_iter_no_left((_iter)))                                       \
         {                                                                      \
             if (ccgbt_iter_no_right((_iter)))                                  \
-                (_stat).seek = CCGBT_PRN_SEEK;                                 \
+                (_stat)->seek = CCGBT_PRN_SEEK;                                \
             else                                                               \
-                (_stat).seek = CCGBT_RGH_SEEK;                                 \
+                (_stat)->seek = CCGBT_RGH_SEEK;                                \
             break;                                                             \
         }                                                                      \
                                                                                \
         ccgbt_iter_left((_iter));                                              \
                                                                                \
-        (_stat).depth++;                                                       \
+        (_stat)->depth++;                                                      \
     }                                                                          \
 )
 
-#define _ccgbt_iter_infix_parent(_iter, _stat)                                 \
+#define _ccgbt_iter_inorder_parent(_iter, _stat)                               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -492,24 +499,24 @@ STATEMENT_                                                                     \
                                                                                \
     while (1)                                                                  \
     {                                                                          \
-        (_stat).depth--;                                                       \
+        (_stat)->depth--;                                                      \
                                                                                \
         ccgbt_iter_parent((_iter));                                            \
                                                                                \
         if (ccgbt_flag_get((_iter), CCGBT_FLAG_TRAV_OFFSET))                   \
         {                                                                      \
-            (_stat).seek = (ccgbt_iter_no_right((_iter)) ?                     \
+            (_stat)->seek = (ccgbt_iter_no_right((_iter)) ?                    \
                            CCGBT_PRN_SEEK : CCGBT_RGH_SEEK);                   \
             break;                                                             \
         }                                                                      \
     }                                                                          \
 )
 
-#define _ccgbt_iter_infix_right(_iter, _stat)                                  \
+#define _ccgbt_iter_inorder_right(_iter, _stat)                                \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    (_stat).depth++;                                                           \
+    (_stat)->depth++;                                                          \
                                                                                \
     ccgbt_flag_unset((_iter), CCGBT_FLAG_TRAV_OFFSET);                         \
                                                                                \
@@ -520,12 +527,12 @@ STATEMENT_                                                                     \
     if (ccgbt_iter_no_left((_iter)))                                           \
     {                                                                          \
         if (ccgbt_iter_no_right((_iter)))                                      \
-            (_stat).seek = CCGBT_PRN_SEEK;                                     \
+            (_stat)->seek = CCGBT_PRN_SEEK;                                    \
         else                                                                   \
-            (_stat).seek = CCGBT_RGH_SEEK;                                     \
+            (_stat)->seek = CCGBT_RGH_SEEK;                                    \
     }                                                                          \
     else                                                                       \
-        _ccgbt_iter_infix_leftmost((_iter), (_stat));                          \
+        _ccgbt_iter_inorder_leftmost((_iter), (_stat));                        \
 )
 
 
