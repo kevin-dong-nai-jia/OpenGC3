@@ -2,7 +2,6 @@
 
 !doc/
 !doc/*.pdf
-!doc/*.html
 
 !src/
 !src/*
