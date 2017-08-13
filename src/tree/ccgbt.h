@@ -262,26 +262,26 @@ STATEMENT_                                                                     \
 )
 
 
-#define  ccgbt_erase_left(_iter)   _ccgbt_erase(_iter, LFT, RGH)
+#define  ccgbt_erase_left(_iter)   _ccgbt_erase_dir(_iter, LFT, RGH)
 
-#define  ccgbt_erase_right(_iter)  _ccgbt_erase(_iter, RGH, LFT)
+#define  ccgbt_erase_right(_iter)  _ccgbt_erase_dir(_iter, RGH, LFT)
 
-#define _ccgbt_erase(_iter, _targ_, _oppo_)                                    \
-                  /* _targ_: target side, _oppo_: opposite side */             \
+#define _ccgbt_erase_dir(_iter, _targ_, _oppo_)                                \
+                      /* _targ_: target side, _oppo_: opposite side */         \
 STATEMENT_                                                                     \
 (                                                                              \
     if (_unlikely(ccgbt_iter_at_root((_iter))))  break;                        \
                                                                                \
     _it_init((_iter)->ccgbt, 2, _base_e, ccgbt);                               \
                                                                                \
-    _ccgbt_erase_repl(     (_iter),                                            \
-                      _it_((_iter)->ccgbt, _base_e, 0),                        \
-                      _it_((_iter)->ccgbt, _base_e, 1), _targ_, _oppo_);       \
+    _ccgbt_erase(     (_iter),                                                 \
+                 _it_((_iter)->ccgbt, _base_e, 0),                             \
+                 _it_((_iter)->ccgbt, _base_e, 1), _targ_, _oppo_);            \
                                                                                \
     _it_clear((_iter)->ccgbt, 2);                                              \
 )
 
-#define _ccgbt_erase_repl(_iter, _iter_a, _iter_b, _targ_, _oppo_)             \
+#define _ccgbt_erase(_iter, _iter_a, _iter_b, _targ_, _oppo_)                  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -300,7 +300,7 @@ STATEMENT_                                                                     \
     (_iter_b)->curr.node = (_iter)->curr.node->_oppo_;                         \
                                                                                \
     /* iterate to the end of sibling */                                        \
-    while (_ccgbt_iter_move((_iter_a), _oppo_));                               \
+    while (_ccgbt_iter_dir((_iter_a), _oppo_));                                \
                                                                                \
     /* paste the other child to the end of sibling */                          \
     (_iter_a)->curr.node->_oppo_ = (_iter_b)->curr.node;                       \
@@ -372,13 +372,13 @@ VOID_EXPR_                                                                     \
 )
 
 
-#define  ccgbt_iter_left(_iter)    _ccgbt_iter_move(_iter, LFT)
+#define  ccgbt_iter_left(_iter)    _ccgbt_iter_dir(_iter, LFT)
 
-#define  ccgbt_iter_right(_iter)   _ccgbt_iter_move(_iter, RGH)
+#define  ccgbt_iter_right(_iter)   _ccgbt_iter_dir(_iter, RGH)
 
-#define  ccgbt_iter_parent(_iter)  _ccgbt_iter_move(_iter, PRN)
+#define  ccgbt_iter_parent(_iter)  _ccgbt_iter_dir(_iter, PRN)
 
-#define _ccgbt_iter_move(_iter, _dir_)                                         \
+#define _ccgbt_iter_dir(_iter, _dir_)                                          \
 (                                                                              \
     ((_iter)->curr.node->_dir_) ?                                              \
     ((_iter)->curr.node = (_iter)->curr.node->_dir_)->_dir_ : (NULL)           \
