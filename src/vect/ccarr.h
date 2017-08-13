@@ -8,30 +8,22 @@
 #include <string.h>
 
 
-/* synonym */
-
-#define CCARR       ADDID(CCARR)
-#define CCARR_CONT  ADDID(CCARR_CONT)
-
-
 /* ccarr create */
 
 
 #define ccarr(width, _size)                                                    \
                                                                                \
-    typedef ccarr_struct(width, _size) CCARR;  CCARR
+        typedef ccarr_struct(width, _size) CCARR;  CCARR
 
 #define ccarr_type(width, _size)                                               \
                                                                                \
-    typedef ccarr_struct(width, _size)
+        typedef ccarr_struct(width, _size)
 
 #define ccarr_struct(width, _size)                                             \
                                                                                \
-    struct CCARR_CONT  {  size_t ecnt; uint##width##_t arr[_size];  }
+        struct CCARR_CONT  { size_t ecnt; uint##width##_t arr[_size]; }
 
-#define CCARR_INIT(_ccarr)                                                     \
-                                                                               \
-    {  ELEMOF((_ccarr).arr), {0}  }
+#define CCARR_INIT(_ccarr) { ELEMOF((_ccarr).arr), {0} }
 
 
 /* ccarr initialize */

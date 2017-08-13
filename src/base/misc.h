@@ -87,6 +87,9 @@
 #define CCGBT_ITER  ADDID(CCGBT_ITER)
 #define CCGBT_PTRS  ADDID(CCGBT_PTRS)
 
+#define CCARR       ADDID(CCARR)
+#define CCARR_CONT  ADDID(CCARR_CONT)
+
 
 
 #endif
