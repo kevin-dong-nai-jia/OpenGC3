@@ -31,4 +31,26 @@ int main(void)
 
         prefix(_free)(list);
     }
+
+
+    // Test 1
+    // Sort
+
+
+    // printf("Test 1: \n\n");
+
+    /* {
+        prefix()(int) list;
+        prefix(_init)(list);
+
+        for (int i = 0; i < 1000; i++)
+            prefix(_push_front)(list, rand());
+
+        prefix(_sort)(list);
+
+        PREFIX(_INCR)(ITER(list))
+            printf("%d\n", SREF(ITER(list)));
+
+        prefix(_free)(list);
+    } */
 }
