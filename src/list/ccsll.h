@@ -63,7 +63,7 @@
         struct CCSLL_ITER                                                      \
         {   struct CCSLL_PTRS                                                  \
             {   struct CCSLL_NODE *node;                                       \
-            }   prev, curr;                       /* points to p./c. node */   \
+            }   curr;                             /* points to curr  node */   \
             struct CCSLL_CONT *ccsll;             /* points to ccsll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
@@ -122,7 +122,6 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->prev.node = NULL,                                                 \
     (_iter)->curr.node = NULL,                                                 \
     (_iter)->ccsll = (_ccsll)                                                  \
 )
@@ -257,15 +256,14 @@ STATEMENT_                                                                     \
 /* ccsll operations */
 
 
-#define ccsll_move(_iter_p, _iter_i)                                           \
+#define ccsll_move(_iter_p, _iter_i)  /* both iters must be at the begin */    \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_i)->curr.node == (_iter_p)->curr.node->PRV))  break;  \
+    if (_unlikely((_iter_p)->ccsll == (_iter_i)->ccsll))  break;               \
                                                                                \
-    if (_unlikely(ccsll_iter_at_head((_iter_p)) ||                             \
-                  ccsll_iter_at_head((_iter_i)) ||                             \
-                  ccsll_iter_at_tail((_iter_i))))  break;                      \
+    if (_unlikely((!(ccsll_iter_at_begin((_iter_p)))) ||                       \
+                  (!(ccsll_iter_at_begin((_iter_i)))))  break;                 \
                                                                                \
     /* TODO */                                                                 \
                                                                                \
@@ -275,66 +273,23 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccsll_move_range(_iter_p, _iter_l, _iter_r)                            \
-                                                                               \
-        ccsll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
-
-#define ccsll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)                \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    if (_unlikely((_iter_l)->ccsll != (_iter_r)->ccsll))  break;               \
-                                                                               \
-    if (_unlikely((_iter_p)->ccsll != (_iter_l)->ccsll))                       \
-    {                                                                          \
-        int _dist_m = (_dist);                                                 \
-                                                                               \
-        if (_dist_m < 0)                                                       \
-            ccsll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
-                                                                               \
-        (_iter_p)->ccsll->size += _dist_m;                                     \
-        (_iter_l)->ccsll->size -= _dist_m;                                     \
-        (_iter_l)->ccsll = (_iter_p)->ccsll;                                   \
-    }                                                                          \
-                                                                               \
-    if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
-                                                                               \
-    (_iter_l)->prev.node->NXT = (_iter_r)->curr.node->NXT;                     \
-    (_iter_r)->prev.node->NXT = (_iter_p)->curr.node->NXT;                     \
-    (_iter_p)->prev.node->NXT = (_iter_l)->curr.node->NXT;                     \
-                                                                               \
-    void *_pbup = (_iter_l)->prev.node;                                        \
-                                                                               \
-    (_iter_l)->prev.node = (_iter_p)->prev.node;                               \
-    (_iter_r)->prev.node =  _pbup;                                             \
-    (_iter_p)->prev.node = (_iter_r)->prev.node;                               \
-)
-
-
 #define  ccsll_merge(_ccsll_d, _ccsll_s)                                       \
                                                                                \
          ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ)
 
 #define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, )
+STATEMENT_                                                                     \
+(                                                                              \
+    /* TODO */                                                                 \
+)
 
-#define _ccsll_merge_extd(_ccsll_d, _iter_l, _iter_m, _iter_r, _leq)           \
+#define _ccsll_merge_extd(_ccsll_d, _ccsll_s, _iter_d, _iter_s, _leq)          \
                                                                                \
-        _cc_ll_merge_extd(_ccsll_d, _iter_l, _iter_m, _iter_r, _leq, ccsll, )
-
-
-#define  ccsll_merge_range(_iter_l, _iter_m, _iter_r)                          \
-                                                                               \
-         ccsll_merge_range_extd(_iter_l, _iter_m, _iter_r, SLEQ)
-
-#define  ccsll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq)               \
-                                                                               \
-         cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _leq, ccsll, )
-
-#define _ccsll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq)      \
-                                                                               \
-        _cc_ll_merge_range_extd(_iter_l, _iter_m, _iter_r, _iter_x, _leq, ccsll)
+STATEMENT_                                                                     \
+(                                                                              \
+    /* TODO */                                                                 \
+)
 
 
 #define  ccsll_sort(_ccsll)                                                    \
@@ -384,7 +339,6 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->prev.node = NULL,                                                 \
     (_iter)->curr.node = &((_iter)->ccsll->head)                               \
 )
 
@@ -393,7 +347,6 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->prev.node = NULL, puts("INCORRECT"),                              \
     (_iter)->curr.node = &((_iter)->ccsll->tail)                               \
 )
 
@@ -402,7 +355,6 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->prev.node = &((_iter)->ccsll->head),                              \
     (_iter)->curr.node =  ((_iter)->ccsll->head.NXT)                           \
 )
 
@@ -423,8 +375,7 @@ VOID_EXPR_                                                                     \
 #define ccsll_iter_incr(_iter)                                                 \
 (                                                                              \
     (ccsll_iter_at_tail(_iter)) ? (NULL) :                                     \
-    ((_iter)->prev.node = (_iter)->curr.node,                                  \
-     (_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
+    ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
 )
 
 
