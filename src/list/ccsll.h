@@ -260,16 +260,42 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_p)->ccsll == (_iter_i)->ccsll))  break;               \
-                                                                               \
-    if (_unlikely((!(ccsll_iter_at_begin((_iter_p)))) ||                       \
-                  (!(ccsll_iter_at_begin((_iter_i)))))  break;                 \
-                                                                               \
     /* TODO */                                                                 \
+)
+
+
+#define ccsll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
-    (_iter_i)->ccsll->size--;                                                  \
-    (_iter_i)->ccsll = (_iter_p)->ccsll;                                       \
-    (_iter_i)->ccsll->size++;                                                  \
+        ccsll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
+
+#define ccsll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)  /* (l, r] */  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (_unlikely(ccsll_iter_at_tail ((_iter_p)) ||                            \
+                  ccsll_iter_at_end  ((_iter_r))))  break;                     \
+                                                                               \
+    if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
+                                                                               \
+    if (_unlikely((_iter_l)->ccsll != (_iter_r)->ccsll))  break;               \
+                                                                               \
+    if (_unlikely((_iter_p)->ccsll != (_iter_l)->ccsll))                       \
+    {                                                                          \
+        int _dist_m = (_dist);                                                 \
+                                                                               \
+        if (_dist_m < 0)                                                       \
+            ccsll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
+                                                                               \
+        (_iter_p)->ccsll->size += _dist_m;                                     \
+        (_iter_l)->ccsll->size -= _dist_m;                                     \
+        (_iter_l)->ccsll = (_iter_p)->ccsll;                                   \
+    }                                                                          \
+                                                                               \
+    void *_pbup = (_iter_p)->curr.node->NXT;                                   \
+                                                                               \
+    (_iter_p)->curr.node->NXT = (_iter_l)->curr.node->NXT;                     \
+    (_iter_l)->curr.node->NXT = (_iter_r)->curr.node->NXT;                     \
+    (_iter_r)->curr.node->NXT =  _pbup;                                        \
 )
 
 
@@ -281,14 +307,28 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    /* TODO */                                                                 \
+     if (_unlikely(ccsll_empty((_ccsll_s))))  break;                           \
+                                                                               \
+    _it_init((_ccsll_d), 2, _base_m1, _ll_);                                   \
+    _it_init((_ccsll_s), 2, _base_m2, _ll_);                                   \
+                                                                               \
+    _ccsll_merge_extd((_ccsll_d), _it_((_ccsll_d), _base_m1, 0),               \
+                                  _it_((_ccsll_d), _base_m1, 1),               \
+                                  _it_((_ccsll_s), _base_m2, 0),               \
+                                  _it_((_ccsll_s), _base_m2, 1), _leq);        \
+                                                                               \
+    _it_clear((_cc_ll_d), 2);                                                  \
+    _it_clear((_cc_ll_s), 2);                                                  \
 )
 
-#define _ccsll_merge_extd(_ccsll_d, _ccsll_s, _iter_d, _iter_s, _leq)          \
+#define _ccsll_merge_extd(_ccsll_d, _ccsll_s, _iter_c, _iter_d,                \
+                                              _iter_s, _iter_r,  _leq)         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    /* TODO */                                                                 \
+    ccsll_iter_head((_iter_d));                                                \
+    ccsll_iter_head((_iter_s));                                                \
+                                                                               \
 )
 
 
