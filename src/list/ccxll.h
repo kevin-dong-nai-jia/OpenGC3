@@ -346,6 +346,17 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccxll_move_begin(_iter_a, _iter_b)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccxll_iter_begin((_iter_a));                                               \
+    ccxll_iter_begin((_iter_b));                                               \
+                                                                               \
+    ccxll_move((_iter_a), (_iter_b));                                          \
+)
+
+
 #define ccxll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
         ccxll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
@@ -403,9 +414,9 @@ STATEMENT_                                                                     \
                                                                                \
          cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, )
 
-#define _ccxll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq)           \
+#define _ccxll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
                                                                                \
-        _cc_ll_merge_extd(_ccxll_d, _iter_l, _iter_m, _iter_r, _leq, ccxll, )
+        _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll, )
 
 
 #define  ccxll_merge_range(_iter_l, _iter_m, _iter_r)                          \

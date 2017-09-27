@@ -313,6 +313,17 @@ STATEMENT_                                                                     \
 )
 
 
+#define ccdll_move_begin(_iter_a, _iter_b)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccdll_iter_begin((_iter_a));                                               \
+    ccdll_iter_begin((_iter_b));                                               \
+                                                                               \
+    ccdll_move((_iter_a), (_iter_b));                                          \
+)
+
+
 #define ccdll_move_range(_iter_p, _iter_l, _iter_r)                            \
                                                                                \
         ccdll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
@@ -362,9 +373,9 @@ STATEMENT_                                                                     \
                                                                                \
          cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, )
 
-#define _ccdll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq)           \
+#define _ccdll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
                                                                                \
-        _cc_ll_merge_extd(_ccdll_d, _iter_l, _iter_m, _iter_r, _leq, ccdll, )
+        _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, ccdll, )
 
 
 #define  ccdll_merge_range(_iter_l, _iter_m, _iter_r)                          \
@@ -393,13 +404,13 @@ STATEMENT_                                                                     \
         _cc_ll_sort_extd(_ccdll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccdll,)
 
 
-#define ccdll_is_sorted(_ccdll, _ptrue)                                        \
+#define  ccdll_is_sorted(_ccdll, _ptrue)                                       \
                                                                                \
-        ccdll_is_sorted_extd(_ccdll, DLEQ, _ptrue)
+         ccdll_is_sorted_extd(_ccdll, DLEQ, _ptrue)
 
-#define ccdll_is_sorted_extd(_ccdll, _leq, _ptrue)                             \
+#define  ccdll_is_sorted_extd(_ccdll, _leq, _ptrue)                            \
                                                                                \
-        cc_ll_is_sorted_extd(_ccdll, DLEQ, _ptrue, ccdll)
+         cc_ll_is_sorted_extd(_ccdll, DLEQ, _ptrue, ccdll)
 
 
 

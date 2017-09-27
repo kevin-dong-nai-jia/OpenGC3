@@ -256,7 +256,7 @@ STATEMENT_                                                                     \
 /* ccsll operations */
 
 
-#define ccsll_move(_iter_p, _iter_i)  /* both iters must be at the begin */    \
+#define ccsll_move_begin(_iter_a, _iter_b)                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -305,6 +305,8 @@ STATEMENT_                                                                     \
 
 #define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)  /* TODO */
 
+#define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)  /* TODO */
+
 
 #define  ccsll_sort(_ccsll)                                                    \
                                                                                \
@@ -319,13 +321,13 @@ STATEMENT_                                                                     \
         _cc_ll_sort_extd(_ccsll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccsll,)
 
 
-#define ccsll_is_sorted(_ccsll, _ptrue)                                        \
+#define  ccsll_is_sorted(_ccsll, _ptrue)                                       \
                                                                                \
-        ccsll_is_sorted_extd(_ccsll, SLEQ, _ptrue)
+         ccsll_is_sorted_extd(_ccsll, SLEQ, _ptrue)
 
-#define ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                             \
+#define  ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                            \
                                                                                \
-        cc_ll_is_sorted_extd(_ccsll, SLEQ, _ptrue, ccsll)
+         cc_ll_is_sorted_extd(_ccsll, SLEQ, _ptrue, ccsll)
 
 
 

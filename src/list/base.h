@@ -127,16 +127,15 @@ STATEMENT_                                                                     \
     _it_init((_cc_ll_d), 1, _base_m1, _ll_);                                   \
     _it_init((_cc_ll_s), 2, _base_m2, _ll_);                                   \
                                                                                \
-    _##_ll_##_merge##_st_##_extd((_cc_ll_d),                                   \
-                                  _it_((_cc_ll_d), _base_m1, 0),               \
-                                  _it_((_cc_ll_s), _base_m2, 0),               \
-                                  _it_((_cc_ll_s), _base_m2, 1), _leq);        \
+    _##_ll_##_merge##_st_##_extd(_it_((_cc_ll_d), _base_m1, 0),                \
+                                 _it_((_cc_ll_s), _base_m2, 0),                \
+                                 _it_((_cc_ll_s), _base_m2, 1), _leq);         \
     _it_clear((_cc_ll_d), 1);                                                  \
     _it_clear((_cc_ll_s), 2);                                                  \
 )
 
 
-#define _cc_ll_merge_extd(_cc_ll_d, _iter_l, _iter_m, _iter_r, _leq, _ll_,_st_)\
+#define _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, _ll_,_st_)          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -148,7 +147,7 @@ STATEMENT_                                                                     \
                            _ll_##_size((_iter_m)->_ll_));                      \
                                                                                \
     _ll_##_iter_begin((_iter_l));                                              \
-    _ll_##_iter_init ((_iter_r), (_cc_ll_d));                                  \
+    _ll_##_iter_init ((_iter_r), (_iter_l)->_ll_);                             \
     _ll_##_iter_tail ((_iter_r));                                              \
                                                                                \
     _ll_##_merge_range##_st_##_extd((_iter_l), (_iter_m), (_iter_r), _leq);    \
@@ -238,10 +237,7 @@ STATEMENT_                                                                     \
     do                                                                         \
     {   _ll_##_iter_init ((_iter_a), (_carry));                                \
         _ll_##_iter_init ((_iter_b), (_cc_ll));                                \
-        _ll_##_iter_begin((_iter_a));                                          \
-        _ll_##_iter_begin((_iter_b));                                          \
-                                                                               \
-        _ll_##_move((_iter_a), (_iter_b));                                     \
+        _ll_##_move_begin((_iter_a), (_iter_b));                               \
                                                                                \
         for (_curr = 0; _curr != _fill &&                                      \
                        !(_ll_##_empty((_pcont)[_curr])); _curr++)              \
