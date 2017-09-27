@@ -303,33 +303,7 @@ STATEMENT_                                                                     \
                                                                                \
          ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ)
 
-#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)                            \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-     if (_unlikely(ccsll_empty((_ccsll_s))))  break;                           \
-                                                                               \
-    _it_init((_ccsll_d), 2, _base_m1, _ll_);                                   \
-    _it_init((_ccsll_s), 2, _base_m2, _ll_);                                   \
-                                                                               \
-    _ccsll_merge_extd((_ccsll_d), _it_((_ccsll_d), _base_m1, 0),               \
-                                  _it_((_ccsll_d), _base_m1, 1),               \
-                                  _it_((_ccsll_s), _base_m2, 0),               \
-                                  _it_((_ccsll_s), _base_m2, 1), _leq);        \
-                                                                               \
-    _it_clear((_cc_ll_d), 2);                                                  \
-    _it_clear((_cc_ll_s), 2);                                                  \
-)
-
-#define _ccsll_merge_extd(_ccsll_d, _ccsll_s, _iter_c, _iter_d,                \
-                                              _iter_s, _iter_r,  _leq)         \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccsll_iter_head((_iter_d));                                                \
-    ccsll_iter_head((_iter_s));                                                \
-                                                                               \
-)
+#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)  /* TODO */
 
 
 #define  ccsll_sort(_ccsll)                                                    \
