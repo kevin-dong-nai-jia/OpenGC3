@@ -34,6 +34,48 @@ int main(void)
 
 
     // Test 1
+    // Move Range
+
+    printf("\n\nTest 1: \n\n");
+
+    {
+        prefix(_extd)(int, 5, NORMAL) list;
+        prefix(_init)(list);
+
+        int pos[8][3] = { {1, 3, 5}, {2, 3, 5}, {4, 1, 3}, {5, 1, 3},
+                          {1, 3, 4}, {2, 3, 4}, {4, 2, 3}, {5, 2, 3} };
+
+        for (int cnt = 6; cnt >= 0; cnt--)
+            prefix(_push_front)(list, cnt + 'A');
+
+        for (int idx = 0; idx < 3; idx++)
+            prefix(_iter_head)(ITER_NTH(list, idx));
+
+        PREFIX(_INCR)(ITER_NTH(list, 4))
+            printf("%c ", SREF(ITER_NTH(list, 4)));
+
+        for (int cnt = 0; cnt < 8; cnt++)
+        {
+            for (int idx = 0; idx < 3; idx++)
+            {
+                prefix(_iter_head)   (ITER_NTH(list, idx));
+                prefix(_iter_advance)(ITER_NTH(list, idx), pos[cnt][idx]);
+            }
+
+            prefix(_move_range)(ITER(list),ITER_NTH(list, 1),ITER_NTH(list, 2));
+
+            printf("/ ");
+            PREFIX(_INCR)(ITER_NTH(list, 4))
+                printf("%c ", SREF(ITER_NTH(list, 4)));
+        }
+
+        puts("= A C E D B F G /");
+
+        prefix(_free)(list);
+    }
+
+
+    // Test
     // Sort
 
 
