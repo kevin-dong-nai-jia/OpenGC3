@@ -176,13 +176,13 @@ STATEMENT_                                                                     \
                                                                                \
     _ll_##_iter_copy((_iter_x), (_iter_m));                                    \
                                                                                \
-    while (1)                                                                  \
+    for (register int neq; ; )                                                 \
     {                                                                          \
-        while ((_iter_l)->curr.node != (_iter_m)->curr.node &&                 \
-                _leq((_iter_l), (_iter_m)))                                    \
+        while ((neq = ((_iter_l)->curr.node                                    \
+                   !=  (_iter_m)->curr.node)) &&  _leq((_iter_l), (_iter_m)))  \
             (void)_ll_##_iter_incr((_iter_l));                                 \
                                                                                \
-        if (((_iter_l)->curr.node == (_iter_m)->curr.node))                    \
+        if (!(neq))                                                            \
         {                                                                      \
             _ll_##_iter_copy((_iter_l), (_iter_r));                            \
             _ll_##_iter_copy((_iter_m), (_iter_r));  break;                    \
@@ -190,14 +190,14 @@ STATEMENT_                                                                     \
                                                                                \
         (void)_ll_##_iter_incr((_iter_x));                                     \
                                                                                \
-        while ((_iter_x)->curr.node != (_iter_r)->curr.node &&                 \
-               !_leq((_iter_l), (_iter_x)))                                    \
+        while ((neq = ((_iter_x)->curr.node                                    \
+                   !=  (_iter_r)->curr.node)) && !_leq((_iter_l), (_iter_x)))  \
             (void)_ll_##_iter_incr((_iter_x));                                 \
                                                                                \
         _ll_##_move_range((_iter_l), (_iter_m), (_iter_x));                    \
         _ll_##_iter_copy ((_iter_m), (_iter_x));                               \
                                                                                \
-        if (((_iter_x)->curr.node == (_iter_r)->curr.node))                    \
+        if (!(neq))                                                            \
         {                                                                      \
             _ll_##_iter_copy((_iter_l), (_iter_x));                            \
             _ll_##_iter_copy((_iter_r), (_iter_x));  break;                    \
