@@ -273,7 +273,7 @@ STATEMENT_                                                                     \
 STATEMENT_                                                                     \
 (                                                                              \
     if (_unlikely(ccsll_iter_at_tail ((_iter_p)) ||                            \
-                  ccsll_iter_at_end  ((_iter_r))))  break;                     \
+                  ccsll_iter_at_tail ((_iter_r))))  break;                     \
                                                                                \
     if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
@@ -283,8 +283,10 @@ STATEMENT_                                                                     \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
-        if (_dist_m < 0)                                                       \
+        if (_dist_m <  0)                                                      \
             ccsll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
+                                                                               \
+        if (_dist_m <= 0)  break;                                              \
                                                                                \
         (_iter_p)->ccsll->size += _dist_m;                                     \
         (_iter_l)->ccsll->size -= _dist_m;                                     \

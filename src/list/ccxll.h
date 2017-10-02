@@ -361,25 +361,30 @@ STATEMENT_                                                                     \
                                                                                \
         ccxll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
 
-#define ccxll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)                \
+#define ccxll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)  /* [l, r) */  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if (_unlikely(ccxll_iter_at_head ((_iter_p)) ||                            \
+                  ccxll_iter_at_head ((_iter_l))))  break;                     \
+                                                                               \
+    if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
+                                                                               \
     if (_unlikely((_iter_l)->ccxll != (_iter_r)->ccxll))  break;               \
                                                                                \
     if (_unlikely((_iter_p)->ccxll != (_iter_l)->ccxll))                       \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
-        if (_dist_m < 0)                                                       \
+        if (_dist_m <  0)                                                      \
             ccxll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
+                                                                               \
+        if (_dist_m <= 0)  break;                                              \
                                                                                \
         (_iter_p)->ccxll->size += _dist_m;                                     \
         (_iter_l)->ccxll->size -= _dist_m;                                     \
         (_iter_l)->ccxll = (_iter_p)->ccxll;                                   \
     }                                                                          \
-                                                                               \
-    if (_unlikely((_iter_l)->curr.XOR == (_iter_r)->curr.XOR))  break;         \
                                                                                \
     link_t _p_c = (_iter_p)->curr.XOR;                                         \
     link_t _l_c = (_iter_l)->curr.XOR;                                         \

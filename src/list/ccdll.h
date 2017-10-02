@@ -328,25 +328,30 @@ STATEMENT_                                                                     \
                                                                                \
         ccdll_move_range_extd(_iter_p, _iter_l, _iter_r,    -1)
 
-#define ccdll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)                \
+#define ccdll_move_range_extd(_iter_p, _iter_l, _iter_r, _dist)  /* [l, r) */  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
+    if (_unlikely(ccdll_iter_at_head ((_iter_p)) ||                            \
+                  ccdll_iter_at_head ((_iter_l))))  break;                     \
+                                                                               \
+    if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
+                                                                               \
     if (_unlikely((_iter_l)->ccdll != (_iter_r)->ccdll))  break;               \
                                                                                \
     if (_unlikely((_iter_p)->ccdll != (_iter_l)->ccdll))                       \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
-        if (_dist_m < 0)                                                       \
+        if (_dist_m <  0)                                                      \
             ccdll_iter_distance((_iter_l), (_iter_r), &_dist_m);               \
+                                                                               \
+        if (_dist_m <= 0)  break;                                              \
                                                                                \
         (_iter_p)->ccdll->size += _dist_m;                                     \
         (_iter_l)->ccdll->size -= _dist_m;                                     \
         (_iter_l)->ccdll = (_iter_p)->ccdll;                                   \
     }                                                                          \
-                                                                               \
-    if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
     void *_pbup = (_iter_r)->curr.node;                                        \
                                                                                \
