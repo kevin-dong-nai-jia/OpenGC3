@@ -336,9 +336,17 @@ STATEMENT_                                                                     \
 /* ccsll comparator */
 
 
-#define ccsll_comp_leq(_iter_a, _iter_b)  (SREF((_iter_a)) <= SREF((_iter_b)))
+#define ccsll_comp_leq(_iter_a, _iter_b)       (SREF((_iter_a)) <=             \
+                                                SREF((_iter_b)))
 
-#define ccsll_comp_geq(_iter_a, _iter_b)  (SREF((_iter_a)) >= SREF((_iter_b)))
+#define ccsll_comp_leq_next(_iter_a, _iter_b)  (SREF_NEXT((_iter_a)) <=        \
+                                                SREF_NEXT((_iter_b)))
+
+#define ccsll_comp_geq(_iter_a, _iter_b)       (SREF((_iter_a)) >=             \
+                                                SREF((_iter_b)))
+
+#define ccsll_comp_geq_next(_iter_a, _iter_b)  (SREF_NEXT((_iter_a)) >=        \
+                                                SREF_NEXT((_iter_b)))
 
 
 

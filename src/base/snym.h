@@ -11,7 +11,6 @@
 
 // ccsll
 #define SREF(_iter)         ((_iter)->curr.node->val)
-#define SREF_PREV(_iter)    ((_iter)->prev.node->val)
 #define SREF_NEXT(_iter)    ((_iter)->curr.node->NXT->val)
 
 // ccxll
@@ -33,11 +32,17 @@
 
 // ccdll
 #define DLEQ       ccdll_comp_leq
+#define DLEQ_PREV  ccdll_comp_leq_prev
+#define DLEQ_NEXT  ccdll_comp_leq_next
 #define DGEQ       ccdll_comp_geq
+#define DGEQ_PREV  ccdll_comp_geq_prev
+#define DGEQ_NEXT  ccdll_comp_geq_next
 
 // ccsll
 #define SLEQ       ccsll_comp_leq
+#define SLEQ_NEXT  ccsll_comp_leq_next
 #define SGEQ       ccsll_comp_geq
+#define SGEQ_NEXT  ccsll_comp_geq_next
 
 // ccxll
 #define XLEQ       ccxll_comp_leq

@@ -422,9 +422,23 @@ STATEMENT_                                                                     \
 /* ccdll comparator */
 
 
-#define ccdll_comp_leq(_iter_a, _iter_b)  (DREF((_iter_a)) <= DREF((_iter_b)))
+#define ccdll_comp_leq(_iter_a, _iter_b)       (DREF((_iter_a)) <=             \
+                                                DREF((_iter_b)))
 
-#define ccdll_comp_geq(_iter_a, _iter_b)  (DREF((_iter_a)) >= DREF((_iter_b)))
+#define ccdll_comp_leq_prev(_iter_a, _iter_b)  (DREF_PREV((_iter_a)) <=        \
+                                                DREF_PREV((_iter_b)))
+
+#define ccdll_comp_leq_next(_iter_a, _iter_b)  (DREF_NEXT((_iter_a)) <=        \
+                                                DREF_NEXT((_iter_b)))
+
+#define ccdll_comp_geq(_iter_a, _iter_b)       (DREF((_iter_a)) >=             \
+                                                DREF((_iter_b)))
+
+#define ccdll_comp_geq_prev(_iter_a, _iter_b)  (DREF_PREV((_iter_a)) >=        \
+                                                DREF_PREV((_iter_b)))
+
+#define ccdll_comp_geq_next(_iter_a, _iter_b)  (DREF_NEXT((_iter_a)) >=        \
+                                                DREF_NEXT((_iter_b)))
 
 
 
