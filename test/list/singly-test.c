@@ -75,6 +75,34 @@ int main(void)
     }
 
 
+    // Test 2
+    // Move Begin
+
+    printf("\n\nTest 2: \n\n");
+
+    {
+        prefix()(int) list_a, list_b;
+        prefix(_init)(list_a);
+        prefix(_init)(list_b);
+
+        for (int cnt = 0; cnt < 10; cnt++)
+            prefix(_push_front)(list_a, cnt);
+
+        PREFIX(_INCR)(ITER(list_a))
+            printf("%d ", SREF(ITER(list_a)));
+
+        printf("-> ");
+
+        for (int cnt = 0; cnt < 10; cnt++)
+            ccsll_move_begin(ITER(list_b), ITER(list_a));
+
+        PREFIX(_INCR)(ITER(list_b))
+            printf("%d ", SREF(ITER(list_b)));
+
+        puts("");
+    }
+
+
     // Test
     // Sort
 
