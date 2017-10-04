@@ -257,11 +257,24 @@ STATEMENT_                                                                     \
 /* ccsll operations */
 
 
-#define ccsll_move_begin(_iter_a, _iter_b)                                     \
+#define ccsll_move(_iter_p, _iter_i)                                           \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    /* TODO */                                                                 \
+    if (_unlikely((_iter_i)->curr.node == (_iter_p)->prev.node))  break;       \
+                                                                               \
+    if (_unlikely(ccsll_iter_at_tail((_iter_p)) ||                             \
+                  ccsll_iter_at_end ((_iter_i)) ||                             \
+                  ccsll_iter_at_tail((_iter_i))))  break;                      \
+                                                                               \
+    void *_pbup = (_iter_i)->curr.node->NXT->NXT;                              \
+                                                                               \
+    (_iter_i)->curr.node->NXT->NXT = (_iter_p)->curr.node->NXT;                \
+    (_iter_p)->curr.node->NXT      = (_iter_i)->curr.node->NXT;                \
+    (_iter_i)->curr.node->NXT      =  _pbup;                                   \
+                                                                               \
+    (_iter_p)->ccsll->size++;                                                  \
+    (_iter_i)->ccsll->size--;                                                  \
 )
 
 
