@@ -100,27 +100,46 @@ int main(void)
             printf("%d ", SREF(ITER(list_b)));
 
         puts("");
+
+        prefix(_free)(list_a);
+        prefix(_free)(list_b);
     }
 
 
-    // Test
-    // Sort
+    // Test 3
+    // Merge
 
+    printf("\n\nTest 3: \n\n");
 
-    // printf("Test 1: \n\n");
+    {
+        prefix()(int) list_a, list_b;
+        prefix(_init)(list_a);
+        prefix(_init)(list_b);
 
-    /* {
-        prefix()(int) list;
-        prefix(_init)(list);
+        srand((unsigned)time(NULL));
 
-        for (int i = 0; i < 1000; i++)
-            prefix(_push_front)(list, rand());
+        for (int cnt = 8; cnt >= 0; cnt--)
+            prefix(_push_front)(list_a, rand() % 8 + (8 * cnt) + 17);
+        for (int cnt = 8; cnt >= 0; cnt--)
+            prefix(_push_front)(list_b, rand() % 8 + (8 * cnt) + 21);
 
-        prefix(_sort)(list);
+        PREFIX(_INCR)(ITER(list_a))
+            printf("%d ", SREF(ITER(list_a)));
+        printf("<- ");
+        PREFIX(_INCR)(ITER(list_b))
+            printf("%d ", SREF(ITER(list_b)));
+        puts("");
 
-        PREFIX(_INCR)(ITER(list))
-            printf("%d\n", SREF(ITER(list)));
+        printf("=> ");
+        ccsll_merge(list_a, list_b);
+        PREFIX(_INCR)(ITER(list_a))
+            printf("%d ", SREF(ITER(list_a)));
+        puts("");
+        PREFIX(_INCR)(ITER(list_b))
+            printf("%d ", SREF(ITER(list_b)));
+        puts("");
 
-        prefix(_free)(list);
-    } */
+        prefix(_free)(list_a);
+        prefix(_free)(list_b);
+    }
 }

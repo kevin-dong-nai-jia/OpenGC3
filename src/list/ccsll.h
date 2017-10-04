@@ -304,7 +304,7 @@ STATEMENT_                                                                     \
                                                                                \
     if (_unlikely((_iter_l)->ccsll != (_iter_r)->ccsll))  break;               \
                                                                                \
-    if (_unlikely((_iter_p)->ccsll != (_iter_l)->ccsll))                       \
+    if (_unlikely((_iter_p)->ccsll != (_iter_r)->ccsll))                       \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
@@ -314,8 +314,8 @@ STATEMENT_                                                                     \
         if (_dist_m <= 0)  break;                                              \
                                                                                \
         (_iter_p)->ccsll->size += _dist_m;                                     \
-        (_iter_l)->ccsll->size -= _dist_m;                                     \
-        (_iter_l)->ccsll = (_iter_p)->ccsll;                                   \
+        (_iter_r)->ccsll->size -= _dist_m;                                     \
+        (_iter_r)->ccsll = (_iter_p)->ccsll;                                   \
     }                                                                          \
                                                                                \
     void *_pbup = (_iter_p)->curr.node->NXT;                                   \
@@ -330,9 +330,40 @@ STATEMENT_                                                                     \
                                                                                \
          ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT)
 
-#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)  /* TODO */
+#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)                            \
+                                                                               \
+         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, )
 
-#define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)  /* TODO */
+#define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (_unlikely((_iter_l)->ccsll == (_iter_m)->ccsll ||                      \
+                  (_iter_l)->ccsll == (_iter_r)->ccsll ||                      \
+                  (_iter_m)->ccsll != (_iter_r)->ccsll))  break;               \
+                                                                               \
+    ccsll_iter_head((_iter_l));                                                \
+    ccsll_iter_head((_iter_m));                                                \
+    ccsll_iter_head((_iter_r));                                                \
+                                                                               \
+    for (register int _len = 0; ; _len = 0)                                    \
+    {                                                                          \
+        while (!(ccsll_iter_at_end((_iter_l))) && _leq((_iter_l), (_iter_m)))  \
+            (void)(ccsll_iter_incr((_iter_l)));                                \
+                                                                               \
+        while (!(ccsll_iter_at_end((_iter_r))) &&                              \
+                (ccsll_iter_at_end((_iter_l)) || !_leq((_iter_l), (_iter_r)))) \
+            (void)(ccsll_iter_incr((_iter_r)), ++_len);                        \
+                                                                               \
+        ccsll_move_range_extd((_iter_l), (_iter_m), (_iter_r), _len);          \
+                                                                               \
+        if (ccsll_iter_at_end((_iter_m)))  break;                              \
+                                                                               \
+        ccsll_iter_copy((_iter_l), (_iter_r));                                 \
+        ccsll_iter_init((_iter_r), (_iter_m)->ccsll);                          \
+        ccsll_iter_head((_iter_r));                                            \
+    }                                                                          \
+)
 
 
 #define  ccsll_sort(_ccsll)                                                    \
