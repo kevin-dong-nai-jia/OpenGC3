@@ -2,11 +2,10 @@
 #define OPENGC3_LIST_CCXLL_H
 
 #include "base.h"
-#include "extd-ccxll.h"
+#include "extd-base.h"
 #include "../base/pool.h"
 #include "../base/misc.h"
 #include "../base/snym.h"
-
 
 #include <math.h>
 #include <stddef.h>
@@ -448,6 +447,20 @@ STATEMENT_                                                                     \
 #define _ccxll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
         _cc_ll_sort_extd(_ccxll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccxll,)
+
+
+#define  ccxll_is_sorted(_ccxll, _ptrue)                                       \
+                                                                               \
+         ccxll_is_sorted_extd(_ccxll, XLEQ, _ptrue)
+
+#define  ccxll_is_sorted_extd(_ccxll, _leq, _ptrue)                            \
+                                                                               \
+         cc_ll_is_sorted_extd(_ccxll, _leq, _ptrue, ccxll)
+
+
+#define ccxll_is_robust(_ccxll, _ptrue)                                        \
+                                                                               \
+        cc_ll_is_robust(_ccxll, _ptrue, ccxll, CCXLL)
 
 
 #define ccxll_reverse_range(_iter_l, _iter_r)                                  \

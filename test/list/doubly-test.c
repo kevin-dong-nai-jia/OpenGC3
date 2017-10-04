@@ -749,7 +749,13 @@ int main(void)
         for (int cnt = 8; cnt-- > 0; )          //
             prefix(_push_back)(list, rand());   //  insert "rand()" to the end
 
-        prefix(_sort)(list);                    //  sort with comparator: XLEQ
+        prefix(_sort)(list);                    //  sort with comparator: _LEQ
+
+        int ret;
+        prefix(_is_sorted)(list, &ret);
+        printf("Monotonicity Stat:  %s\n",   ret ? "Sorted" : "Unsorted");
+        prefix(_is_robust)(list, &ret);
+        printf("General Integrity:  %s\n\n", ret ? "Robust" : "Damaged!");
 
         PREFIX(_INCR_AUTO)(pnum, list)          //  traverse the list forward:
             printf("num = %d\n", *pnum);        //  access elems through iters

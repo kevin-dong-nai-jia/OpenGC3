@@ -2,6 +2,7 @@
 #define OPENGC3_LIST_CCSLL_H
 
 #include "base.h"
+#include "extd-base.h"
 #include "../base/pool.h"
 #include "../base/misc.h"
 #include "../base/snym.h"
@@ -303,7 +304,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_merge(_ccsll_d, _ccsll_s)                                       \
                                                                                \
-         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ)
+         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT)
 
 #define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)  /* TODO */
 
@@ -312,7 +313,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_sort(_ccsll)                                                    \
                                                                                \
-         ccsll_sort_extd(_ccsll, SLEQ)
+         ccsll_sort_extd(_ccsll, SLEQ_NEXT)
 
 #define  ccsll_sort_extd(_ccsll, _leq)                                         \
                                                                                \
@@ -329,7 +330,12 @@ STATEMENT_                                                                     \
 
 #define  ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                            \
                                                                                \
-         cc_ll_is_sorted_extd(_ccsll, SLEQ, _ptrue, ccsll)
+         cc_ll_is_sorted_extd(_ccsll, _leq, _ptrue, ccsll)
+
+
+#define ccsll_is_robust(_ccsll, _ptrue)                                        \
+                                                                               \
+        cc_ll_is_robust(_ccsll, _ptrue, ccsll, CCSLL)
 
 
 
