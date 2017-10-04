@@ -261,7 +261,7 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_i)->curr.node == (_iter_p)->prev.node))  break;       \
+    if (_unlikely((_iter_i)->curr.node == (_iter_p)->curr.node))  break;       \
                                                                                \
     if (_unlikely(ccsll_iter_at_tail((_iter_p)) ||                             \
                   ccsll_iter_at_end ((_iter_i)) ||                             \
@@ -275,6 +275,17 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter_p)->ccsll->size++;                                                  \
     (_iter_i)->ccsll->size--;                                                  \
+)
+
+
+#define ccsll_move_begin(_iter_a, _iter_b)                                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccsll_iter_head((_iter_a));                                                \
+    ccsll_iter_head((_iter_b));                                                \
+                                                                               \
+    ccsll_move((_iter_a), (_iter_b));                                          \
 )
 
 
