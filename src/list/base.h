@@ -135,7 +135,7 @@ STATEMENT_                                                                     \
 )
 
 
-#define _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, _ll_,_st_)          \
+#define _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, _ll_, _st_)         \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -179,7 +179,7 @@ STATEMENT_                                                                     \
     for (register int neq; ; )                                                 \
     {                                                                          \
         while ((neq = ((_iter_l)->curr.node                                    \
-                   !=  (_iter_m)->curr.node)) &&  _leq((_iter_l), (_iter_m)))  \
+                    != (_iter_m)->curr.node)) &&  _leq((_iter_l), (_iter_m)))  \
             (void)_ll_##_iter_incr((_iter_l));                                 \
                                                                                \
         if (!(neq))                                                            \
@@ -191,7 +191,7 @@ STATEMENT_                                                                     \
         (void)_ll_##_iter_incr((_iter_x));                                     \
                                                                                \
         while ((neq = ((_iter_x)->curr.node                                    \
-                   !=  (_iter_r)->curr.node)) && !_leq((_iter_l), (_iter_x)))  \
+                    != (_iter_r)->curr.node)) && !_leq((_iter_l), (_iter_x)))  \
             (void)_ll_##_iter_incr((_iter_x));                                 \
                                                                                \
         _ll_##_move_range((_iter_l), (_iter_m), (_iter_x));                    \
