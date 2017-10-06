@@ -267,14 +267,21 @@ STATEMENT_                                                                     \
                   ccsll_iter_at_end ((_iter_i)) ||                             \
                   ccsll_iter_at_tail((_iter_i))))  break;                      \
                                                                                \
+    _ccsll_move((_iter_p), (_iter_i));                                         \
+                                                                               \
+    (_iter_p)->cont->size++;                                                   \
+    (_iter_i)->cont->size--;                                                   \
+)
+
+#define _ccsll_move(_iter_p, _iter_i)                                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
     void *_pbup = (_iter_i)->curr.node->NXT->NXT;                              \
                                                                                \
     (_iter_i)->curr.node->NXT->NXT = (_iter_p)->curr.node->NXT;                \
     (_iter_p)->curr.node->NXT      = (_iter_i)->curr.node->NXT;                \
     (_iter_i)->curr.node->NXT      =  _pbup;                                   \
-                                                                               \
-    (_iter_p)->cont->size++;                                                   \
-    (_iter_i)->cont->size--;                                                   \
 )
 
 
@@ -364,6 +371,38 @@ STATEMENT_                                                                     \
         ccsll_iter_head((_iter_r));                                            \
     }                                                                          \
 )
+
+/*  NOTICE: _ccsll_move is slower
+
+#define _ccsll_merge_extd(_iter_p, _iter_l, _unused, _leq)                     \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (_unlikely((_iter_p)->cont == (_iter_l)->cont))  break;                 \
+                                                                               \
+    ccsll_iter_head((_iter_p));                                                \
+    ccsll_iter_head((_iter_l));                                                \
+                                                                               \
+    while (!(ccsll_iter_at_end((_iter_p)) ||                                   \
+             ccsll_iter_at_end((_iter_l))))                                    \
+    {                                                                          \
+        if (_leq((_iter_p), (_iter_l)))                                        \
+            (void)(ccsll_iter_incr((_iter_p)));                                \
+        else                                                                   \
+            _ccsll_move((_iter_p), (_iter_l));                                 \
+    }                                                                          \
+                                                                               \
+    while (!(ccsll_iter_at_end((_iter_l))))                                    \
+    {                                                                          \
+        _ccsll_move((_iter_p), (_iter_l));                                     \
+        (void)(ccsll_iter_incr((_iter_p)));                                    \
+    }                                                                          \
+                                                                               \
+    (_iter_p)->cont->size += (_iter_l)->cont->size;                            \
+    (_iter_l)->cont->size  = 0;                                                \
+)
+
+*/
 
 
 #define  ccsll_sort(_ccsll)                                                    \
