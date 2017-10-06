@@ -144,10 +144,10 @@ STATEMENT_                                                                     \
     _ll_##_iter_tail ((_iter_r));                                              \
                                                                                \
     _ll_##_move_range_extd( (_iter_l), (_iter_m), (_iter_r),                   \
-                           _ll_##_size((_iter_m)->_ll_));                      \
+                           _ll_##_size((_iter_m)->cont));                      \
                                                                                \
     _ll_##_iter_begin((_iter_l));                                              \
-    _ll_##_iter_init ((_iter_r), (_iter_l)->_ll_);                             \
+    _ll_##_iter_init ((_iter_r), (_iter_l)->cont);                             \
     _ll_##_iter_tail ((_iter_r));                                              \
                                                                                \
     _ll_##_merge_range##_st_##_extd((_iter_l), (_iter_m), (_iter_r), _leq);    \
@@ -158,12 +158,12 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_init((_iter_l)->_ll_, 1, _base_m3, _ll_);                              \
+    _it_init((_iter_l)->cont, 1, _base_m3, _ll_);                              \
                                                                                \
     _##_ll_##_merge_range##_st_##_extd((_iter_l), (_iter_m), (_iter_r),        \
-                                  _it_((_iter_l)->_ll_, _base_m3, 0), _leq);   \
+                                  _it_((_iter_l)->cont, _base_m3, 0), _leq);   \
                                                                                \
-    _it_clear((_iter_l)->_ll_, 1);                                             \
+    _it_clear((_iter_l)->cont, 1);                                             \
 )
 
 
@@ -171,8 +171,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_l)->_ll_ != (_iter_m)->_ll_ ||                        \
-                  (_iter_m)->_ll_ != (_iter_r)->_ll_))  break;                 \
+    if (_unlikely((_iter_l)->cont != (_iter_m)->cont ||                        \
+                  (_iter_m)->cont != (_iter_r)->cont))  break;                 \
                                                                                \
     _ll_##_iter_copy((_iter_x), (_iter_m));                                    \
                                                                                \
@@ -264,14 +264,14 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_init((_iter_a)->_ll_, 1, _base_d1, _ll_);                              \
+    _it_init((_iter_a)->cont, 1, _base_d1, _ll_);                              \
                                                                                \
-    _ll_##_iter_copy(_it_((_iter_a)->_ll_, _base_d1, 0), (_iter_a));           \
+    _ll_##_iter_copy(_it_((_iter_a)->cont, _base_d1, 0), (_iter_a));           \
                                                                                \
     STATEMENT_                                                                 \
     (                                                                          \
         (*(_pdist)) = 0;                                                       \
-        if ((_iter_a)->_ll_ != (_iter_b)->_ll_)  break;                        \
+        if ((_iter_a)->cont != (_iter_b)->cont)  break;                        \
                                                                                \
         while ((_iter_a)->curr.node != (_iter_b)->curr.node && ++(*(_pdist)))  \
                if (!(_ll_##_iter_incr((_iter_a))))  break;                     \
@@ -279,7 +279,7 @@ STATEMENT_                                                                     \
         if ((_iter_a)->curr.node == (_iter_b)->curr.node)  break;              \
         else  (*(_pdist)) = 0;                                                 \
                                                                                \
-        _ll_##_iter_copy((_iter_a), _it_((_iter_a)->_ll_, _base_d1, 0));       \
+        _ll_##_iter_copy((_iter_a), _it_((_iter_a)->cont, _base_d1, 0));       \
                                                                                \
         while ((_iter_a)->curr.node != (_iter_b)->curr.node && --(*(_pdist)))  \
                if (!(_ll_##_iter_decr((_iter_a))))  break;                     \
@@ -288,9 +288,9 @@ STATEMENT_                                                                     \
         else  (*(_pdist)) = 0;                                                 \
     );                                                                         \
                                                                                \
-    _ll_##_iter_copy((_iter_a), _it_((_iter_a)->_ll_, _base_d1, 0));           \
+    _ll_##_iter_copy((_iter_a), _it_((_iter_a)->cont, _base_d1, 0));           \
                                                                                \
-    _it_clear((_iter_a)->_ll_, 1);                                             \
+    _it_clear((_iter_a)->cont, 1);                                             \
 )
 
 
@@ -298,14 +298,14 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_init((_iter_a)->_ll_, 1, _base_d1, _ll_);                              \
+    _it_init((_iter_a)->cont, 1, _base_d1, _ll_);                              \
                                                                                \
-    _ll_##_iter_copy(_it_((_iter_a)->_ll_, _base_d1, 0), (_iter_a));           \
+    _ll_##_iter_copy(_it_((_iter_a)->cont, _base_d1, 0), (_iter_a));           \
                                                                                \
     STATEMENT_                                                                 \
     (                                                                          \
         (*(_pdist)) = 0;                                                       \
-        if ((_iter_a)->_ll_ != (_iter_b)->_ll_)  break;                        \
+        if ((_iter_a)->cont != (_iter_b)->cont)  break;                        \
                                                                                \
         while ((_iter_a)->curr.node != (_iter_b)->curr.node && ++(*(_pdist)))  \
                if (!(_ll_##_iter_incr((_iter_a))))  break;                     \
@@ -314,9 +314,9 @@ STATEMENT_                                                                     \
         else  (*(_pdist)) = 0;                                                 \
     );                                                                         \
                                                                                \
-    _ll_##_iter_copy((_iter_a), _it_((_iter_a)->_ll_, _base_d1, 0));           \
+    _ll_##_iter_copy((_iter_a), _it_((_iter_a)->cont, _base_d1, 0));           \
                                                                                \
-    _it_clear((_iter_a)->_ll_, 1);                                             \
+    _it_clear((_iter_a)->cont, 1);                                             \
 )
 
 

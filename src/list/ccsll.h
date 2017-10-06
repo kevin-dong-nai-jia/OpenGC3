@@ -65,7 +65,7 @@
         {   struct CCSLL_PTRS                                                  \
             {   struct CCSLL_NODE *node;                                       \
             }   curr;                             /* points to curr  node */   \
-            struct CCSLL_CONT *ccsll;             /* points to ccsll body */   \
+            struct CCSLL_CONT *cont;              /* points to ccsll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
         struct CCSLL_CONT **_co;                  /* internal use _it _co */   \
@@ -124,7 +124,7 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter)->curr.node = NULL,                                                 \
-    (_iter)->ccsll = (_ccsll)                                                  \
+    (_iter)->cont = (_ccsll)                                                   \
 )
 
 
@@ -204,11 +204,11 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (ccsll_iter_at_head((_iter)))  break;                                   \
                                                                                \
-    _node_alloc((_iter)->ccsll->pnode, (_iter)->ccsll);                        \
+    _node_alloc((_iter)->cont->pnode, (_iter)->cont);                          \
                                                                                \
     /* TODO */                                                                 \
                                                                                \
-    (_iter)->ccsll->size++;                                                    \
+    (_iter)->cont->size++;                                                     \
 )
 
 
@@ -220,9 +220,9 @@ STATEMENT_                                                                     \
                                                                                \
     /* TODO */                                                                 \
                                                                                \
-    _node_clear((_iter)->curr.node, (_iter)->ccsll);                           \
+    _node_clear((_iter)->curr.node, (_iter)->cont);                            \
                                                                                \
-    (_iter)->ccsll->size--;                                                    \
+    (_iter)->cont->size--;                                                     \
 )
 
 
@@ -273,8 +273,8 @@ STATEMENT_                                                                     \
     (_iter_p)->curr.node->NXT      = (_iter_i)->curr.node->NXT;                \
     (_iter_i)->curr.node->NXT      =  _pbup;                                   \
                                                                                \
-    (_iter_p)->ccsll->size++;                                                  \
-    (_iter_i)->ccsll->size--;                                                  \
+    (_iter_p)->cont->size++;                                                   \
+    (_iter_i)->cont->size--;                                                   \
 )
 
 
@@ -302,9 +302,9 @@ STATEMENT_                                                                     \
                                                                                \
     if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
-    if (_unlikely((_iter_l)->ccsll != (_iter_r)->ccsll))  break;               \
+    if (_unlikely((_iter_l)->cont != (_iter_r)->cont))  break;                 \
                                                                                \
-    if (_unlikely((_iter_p)->ccsll != (_iter_r)->ccsll))                       \
+    if (_unlikely((_iter_p)->cont != (_iter_r)->cont))                         \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
@@ -313,9 +313,9 @@ STATEMENT_                                                                     \
                                                                                \
         if (_dist_m <= 0)  break;                                              \
                                                                                \
-        (_iter_p)->ccsll->size += _dist_m;                                     \
-        (_iter_r)->ccsll->size -= _dist_m;                                     \
-        (_iter_r)->ccsll = (_iter_p)->ccsll;                                   \
+        (_iter_p)->cont->size += _dist_m;                                      \
+        (_iter_r)->cont->size -= _dist_m;                                      \
+        (_iter_r)->cont = (_iter_p)->cont;                                     \
     }                                                                          \
                                                                                \
     void *_pbup = (_iter_p)->curr.node->NXT;                                   \
@@ -338,9 +338,9 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely((_iter_l)->ccsll == (_iter_m)->ccsll ||                      \
-                  (_iter_l)->ccsll == (_iter_r)->ccsll ||                      \
-                  (_iter_m)->ccsll != (_iter_r)->ccsll))  break;               \
+    if (_unlikely((_iter_l)->cont == (_iter_m)->cont ||                        \
+                  (_iter_l)->cont == (_iter_r)->cont ||                        \
+                  (_iter_m)->cont != (_iter_r)->cont))  break;                 \
                                                                                \
     ccsll_iter_head((_iter_l));                                                \
     ccsll_iter_head((_iter_m));                                                \
@@ -360,7 +360,7 @@ STATEMENT_                                                                     \
         if (ccsll_iter_at_end((_iter_m)))  break;                              \
                                                                                \
         ccsll_iter_copy((_iter_l), (_iter_r));                                 \
-        ccsll_iter_init((_iter_r), (_iter_m)->ccsll);                          \
+        ccsll_iter_init((_iter_r), (_iter_m)->cont) ;                          \
         ccsll_iter_head((_iter_r));                                            \
     }                                                                          \
 )
@@ -426,7 +426,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = &((_iter)->ccsll->head)                               \
+    (_iter)->curr.node = &((_iter)->cont->head)                                \
 )
 
 
@@ -434,7 +434,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = &((_iter)->ccsll->tail)                               \
+    (_iter)->curr.node = &((_iter)->cont->tail)                                \
 )
 
 
@@ -442,21 +442,21 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node =  ((_iter)->ccsll->head.NXT)                           \
+    (_iter)->curr.node =  ((_iter)->cont->head.NXT)                            \
 )
 
 
 #define ccsll_iter_at_head(_iter)   ( (_iter)->curr.node ==                    \
-                                    &((_iter)->ccsll->head) )
+                                    &((_iter)->cont->head) )
 
 #define ccsll_iter_at_tail(_iter)   ( (_iter)->curr.node ==                    \
-                                    &((_iter)->ccsll->tail) )
+                                    &((_iter)->cont->tail) )
 
 #define ccsll_iter_at_begin(_iter)  ( (_iter)->curr.node ==                    \
-                                      (_iter)->ccsll->head.NXT )
+                                      (_iter)->cont->head.NXT )
 
 #define ccsll_iter_at_end(_iter)    ( (_iter)->curr.node->NXT ==               \
-                                    &((_iter)->ccsll->tail))
+                                    &((_iter)->cont->tail))
 
 
 #define ccsll_iter_incr(_iter)                                                 \

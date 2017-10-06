@@ -65,7 +65,7 @@
         {   struct CCDLL_PTRS                                                  \
             {   struct CCDLL_NODE *node;                                       \
             }   curr;                             /* points to curr. node */   \
-            struct CCDLL_CONT *ccdll;             /* points to ccdll body */   \
+            struct CCDLL_CONT *cont;              /* points to ccdll body */   \
         }   (*itarr)[_n_iter], *_iter, **_it;                                  \
                                                                                \
         struct CCDLL_CONT **_co;                  /* internal use _it _co */   \
@@ -126,7 +126,7 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter)->curr.node = NULL,                                                 \
-    (_iter)->ccdll = (_ccdll)                                                  \
+    (_iter)->cont = (_ccdll)                                                   \
 )
 
 
@@ -226,18 +226,18 @@ STATEMENT_                                                                     \
 (                                                                              \
     if (ccdll_iter_at_head((_iter)))  break;                                   \
                                                                                \
-    _node_alloc((_iter)->ccdll->pnode, (_iter)->ccdll);                        \
+    _node_alloc((_iter)->cont->pnode, (_iter)->cont);                          \
                                                                                \
-    (_iter)->ccdll->pnode->val = (_val);                                       \
+    (_iter)->cont->pnode->val = (_val);                                        \
                                                                                \
-    (_iter)->ccdll->pnode->PRV = (_iter)->curr.node->PRV;                      \
-    (_iter)->ccdll->pnode->NXT = (_iter)->curr.node;                           \
+    (_iter)->cont->pnode->PRV = (_iter)->curr.node->PRV;                       \
+    (_iter)->cont->pnode->NXT = (_iter)->curr.node;                            \
                                                                                \
-    (_iter)->curr.node->PRV->NXT = (_iter)->ccdll->pnode;                      \
-    (_iter)->curr.node->PRV      = (_iter)->ccdll->pnode;                      \
-    (_iter)->curr.node           = (_iter)->ccdll->pnode;                      \
+    (_iter)->curr.node->PRV->NXT = (_iter)->cont->pnode;                       \
+    (_iter)->curr.node->PRV      = (_iter)->cont->pnode;                       \
+    (_iter)->curr.node           = (_iter)->cont->pnode;                       \
                                                                                \
-    (_iter)->ccdll->size++;                                                    \
+    (_iter)->cont->size++;                                                     \
 )
 
 
@@ -251,10 +251,10 @@ STATEMENT_                                                                     \
     (_iter)->curr.node->NXT->PRV = (_iter)->curr.node->PRV;                    \
                                                                                \
     (_iter)->curr.node->PRV = (_iter)->curr.node->NXT;                         \
-    _node_clear((_iter)->curr.node, (_iter)->ccdll);                           \
+    _node_clear((_iter)->curr.node, (_iter)->cont);                            \
     (_iter)->curr.node      = (_iter)->curr.node->PRV;                         \
                                                                                \
-    (_iter)->ccdll->size--;                                                    \
+    (_iter)->cont->size--;                                                     \
 )
 
 
@@ -308,9 +308,9 @@ STATEMENT_                                                                     \
     (_iter_p)->curr.node->PRV      = (_iter_i)->curr.node;                     \
     (_iter_i)->curr.node->PRV->NXT = (_iter_i)->curr.node;                     \
                                                                                \
-    (_iter_i)->ccdll->size--;                                                  \
-    (_iter_i)->ccdll = (_iter_p)->ccdll;                                       \
-    (_iter_i)->ccdll->size++;                                                  \
+    (_iter_i)->cont->size--;                                                   \
+    (_iter_i)->cont = (_iter_p)->cont;                                         \
+    (_iter_i)->cont->size++;                                                   \
 )
 
 
@@ -338,9 +338,9 @@ STATEMENT_                                                                     \
                                                                                \
     if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
-    if (_unlikely((_iter_l)->ccdll != (_iter_r)->ccdll))  break;               \
+    if (_unlikely((_iter_l)->cont != (_iter_r)->cont))  break;                 \
                                                                                \
-    if (_unlikely((_iter_p)->ccdll != (_iter_l)->ccdll))                       \
+    if (_unlikely((_iter_p)->cont != (_iter_l)->cont))                         \
     {                                                                          \
         int _dist_m = (_dist);                                                 \
                                                                                \
@@ -349,9 +349,9 @@ STATEMENT_                                                                     \
                                                                                \
         if (_dist_m <= 0)  break;                                              \
                                                                                \
-        (_iter_p)->ccdll->size += _dist_m;                                     \
-        (_iter_l)->ccdll->size -= _dist_m;                                     \
-        (_iter_l)->ccdll = (_iter_p)->ccdll;                                   \
+        (_iter_p)->cont->size += _dist_m;                                      \
+        (_iter_l)->cont->size -= _dist_m;                                      \
+        (_iter_l)->cont = (_iter_p)->cont;                                     \
     }                                                                          \
                                                                                \
     void *_pbup = (_iter_r)->curr.node;                                        \
@@ -463,7 +463,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = &((_iter)->ccdll->head)                               \
+    (_iter)->curr.node = &((_iter)->cont->head)                                \
 )
 
 
@@ -471,7 +471,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = &((_iter)->ccdll->tail)                               \
+    (_iter)->curr.node = &((_iter)->cont->tail)                                \
 )
 
 
@@ -479,7 +479,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = ((_iter)->ccdll->head.NXT)                            \
+    (_iter)->curr.node = ((_iter)->cont->head.NXT)                             \
 )
 
 
@@ -487,7 +487,7 @@ VOID_EXPR_                                                                     \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = ((_iter)->ccdll->tail.PRV)                            \
+    (_iter)->curr.node = ((_iter)->cont->tail.PRV)                             \
 )
 
 
@@ -496,10 +496,10 @@ VOID_EXPR_                                                                     \
 #define ccdll_iter_at_tail(_iter)   ( (_iter)->curr.node->NXT == NULL )
 
 #define ccdll_iter_at_begin(_iter)  ( (_iter)->curr.node->PRV ==               \
-                                    &((_iter)->ccdll->head) )
+                                    &((_iter)->cont->head) )
 
 #define ccdll_iter_at_end(_iter)    ( (_iter)->curr.node->NXT ==               \
-                                    &((_iter)->ccdll->tail) )
+                                    &((_iter)->cont->tail) )
 
 
 #define ccdll_iter_incr(_iter)                                                 \
