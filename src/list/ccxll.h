@@ -321,6 +321,17 @@ STATEMENT_                                                                     \
                   ccxll_iter_at_head((_iter_i)) ||                             \
                   ccxll_iter_at_tail((_iter_i))))  break;                      \
                                                                                \
+    _ccxll_move((_iter_p), (_iter_i));                                         \
+                                                                               \
+    (_iter_i)->cont->size--;                                                   \
+    (_iter_i)->cont = (_iter_p)->cont;                                         \
+    (_iter_i)->cont->size++;                                                   \
+)
+
+#define _ccxll_move(_iter_p, _iter_i)                                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
     (_iter_i)->prev.node->XOR = XOR3((_iter_i)->prev.node->XOR,                \
                                      (_iter_i)->next.XOR, (_iter_i)->curr.XOR);\
     (_iter_i)->next.node->XOR = XOR3((_iter_i)->next.node->XOR,                \
@@ -338,10 +349,6 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter_p)->prev.XOR =      (_iter_i)->curr.XOR;                            \
     (_iter_p)->next.XOR = XOR2((_iter_p)->prev.XOR, (_iter_p)->curr.node->XOR);\
-                                                                               \
-    (_iter_i)->cont->size--;                                                   \
-    (_iter_i)->cont = (_iter_p)->cont;                                         \
-    (_iter_i)->cont->size++;                                                   \
 )
 
 

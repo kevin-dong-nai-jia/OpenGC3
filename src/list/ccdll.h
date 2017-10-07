@@ -299,6 +299,17 @@ STATEMENT_                                                                     \
                   ccdll_iter_at_head((_iter_i)) ||                             \
                   ccdll_iter_at_tail((_iter_i))))  break;                      \
                                                                                \
+    _ccdll_move((_iter_p), (_iter_i));                                         \
+                                                                               \
+    (_iter_i)->cont->size--;                                                   \
+    (_iter_i)->cont = (_iter_p)->cont;                                         \
+    (_iter_i)->cont->size++;                                                   \
+)
+
+#define _ccdll_move(_iter_p, _iter_i)                                          \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
     (_iter_i)->curr.node->PRV->NXT = (_iter_i)->curr.node->NXT;                \
     (_iter_i)->curr.node->NXT->PRV = (_iter_i)->curr.node->PRV;                \
                                                                                \
@@ -307,10 +318,6 @@ STATEMENT_                                                                     \
                                                                                \
     (_iter_p)->curr.node->PRV      = (_iter_i)->curr.node;                     \
     (_iter_i)->curr.node->PRV->NXT = (_iter_i)->curr.node;                     \
-                                                                               \
-    (_iter_i)->cont->size--;                                                   \
-    (_iter_i)->cont = (_iter_p)->cont;                                         \
-    (_iter_i)->cont->size++;                                                   \
 )
 
 
