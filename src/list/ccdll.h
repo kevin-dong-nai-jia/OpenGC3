@@ -511,14 +511,14 @@ VOID_EXPR_                                                                     \
 
 #define ccdll_iter_incr(_iter)                                                 \
 (                                                                              \
-    (ccdll_iter_at_tail(_iter)) ? (NULL) :                                     \
+    ccdll_iter_at_tail((_iter)) ? (NULL) :                                     \
     ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
 )
 
 
 #define ccdll_iter_decr(_iter)                                                 \
 (                                                                              \
-    (ccdll_iter_at_head(_iter)) ? (NULL) :                                     \
+    ccdll_iter_at_head((_iter)) ? (NULL) :                                     \
     ((_iter)->curr.node = (_iter)->curr.node->PRV)->PRV                        \
 )
 

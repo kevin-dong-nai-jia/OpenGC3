@@ -304,8 +304,8 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    if (_unlikely(ccsll_iter_at_tail ((_iter_p)) ||                            \
-                  ccsll_iter_at_tail ((_iter_r))))  break;                     \
+    if (_unlikely(ccsll_iter_at_tail((_iter_p)) ||                             \
+                  ccsll_iter_at_tail((_iter_r))))  break;                      \
                                                                                \
     if (_unlikely((_iter_l)->curr.node == (_iter_r)->curr.node))  break;       \
                                                                                \
@@ -500,7 +500,7 @@ VOID_EXPR_                                                                     \
 
 #define ccsll_iter_incr(_iter)                                                 \
 (                                                                              \
-    (ccsll_iter_at_tail(_iter)) ? (NULL) :                                     \
+    ccsll_iter_at_tail((_iter)) ? (NULL) :                                     \
     ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
 )
 

@@ -595,7 +595,7 @@ VOID_EXPR_                                                                     \
 
 #define ccxll_iter_incr(_iter)                                                 \
 (                                                                              \
-    (ccxll_iter_at_tail(_iter)) ? (NULL) :                                     \
+    ccxll_iter_at_tail((_iter)) ? (NULL) :                                     \
     (                                                                          \
         (_iter)->prev.XOR = (_iter)->curr.XOR,                                 \
         (_iter)->curr.XOR = (_iter)->next.XOR,                                 \
@@ -608,7 +608,7 @@ VOID_EXPR_                                                                     \
 
 #define ccxll_iter_decr(_iter)                                                 \
 (                                                                              \
-    (ccxll_iter_at_head(_iter)) ? (NULL) :                                     \
+    ccxll_iter_at_head((_iter)) ? (NULL) :                                     \
     (                                                                          \
         (_iter)->next.XOR = (_iter)->curr.XOR,                                 \
         (_iter)->curr.XOR = (_iter)->prev.XOR,                                 \
