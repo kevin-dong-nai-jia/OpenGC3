@@ -1,11 +1,12 @@
 #ifndef OPENGC3_LIST_EXTD_CCXLL_H
 #define OPENGC3_LIST_EXTD_CCXLL_H
 
-#include "../base/misc.h"
+#include "ccxll.h"
+#include "extd-base.h"
 #include "../vect/array.h"
 
 
-/* ccxll sort extended */
+/* ccxll operations extended */
 
 
 #define ccxll_sort_destruct(_ccxll)                                            \
@@ -92,6 +93,23 @@ STATEMENT_                                                                     \
         (_iter)->next.XOR = XOR2((_iter)->curr.node->XOR, (_iter)->prev.XOR);  \
     }                                                                          \
 )
+
+
+/* ccsll integrity */
+
+
+#define  ccxll_is_sorted(_ccxll, _ptrue)                                       \
+                                                                               \
+         ccxll_is_sorted_extd(_ccxll, XLEQ, _ptrue)
+
+#define  ccxll_is_sorted_extd(_ccxll, _leq, _ptrue)                            \
+                                                                               \
+         cc_ll_is_sorted_extd(_ccxll, _leq, _ptrue, ccxll)
+
+
+#define ccxll_is_robust(_ccxll, _ptrue)                                        \
+                                                                               \
+        cc_ll_is_robust(_ccxll, _ptrue, ccxll, CCXLL)
 
 
 

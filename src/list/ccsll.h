@@ -2,7 +2,6 @@
 #define OPENGC3_LIST_CCSLL_H
 
 #include "base.h"
-#include "extd-base.h"
 #include "../base/pool.h"
 #include "../base/misc.h"
 #include "../base/snym.h"
@@ -384,20 +383,6 @@ STATEMENT_                                                                     \
 #define _ccsll_sort_extd(_ccsll, _carry, _pbuck, _iter_a, _iter_b, _leq)       \
                                                                                \
         _cc_ll_sort_extd(_ccsll, _carry, _pbuck, _iter_a, _iter_b, _leq, ccsll,)
-
-
-#define  ccsll_is_sorted(_ccsll, _ptrue)                                       \
-                                                                               \
-         ccsll_is_sorted_extd(_ccsll, SLEQ, _ptrue)
-
-#define  ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                            \
-                                                                               \
-         cc_ll_is_sorted_extd(_ccsll, _leq, _ptrue, ccsll)
-
-
-#define ccsll_is_robust(_ccsll, _ptrue)                                        \
-                                                                               \
-        cc_ll_is_robust(_ccsll, _ptrue, ccsll, CCSLL)
 
 
 

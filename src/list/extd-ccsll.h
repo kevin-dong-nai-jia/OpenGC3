@@ -1,10 +1,11 @@
 #ifndef OPENGC3_LIST_EXTD_CCSLL_H
 #define OPENGC3_LIST_EXTD_CCSLL_H
 
-#include "../base/misc.h"
+#include "ccsll.h"
+#include "extd-base.h"
 
 
-/* ccsll sort extended */
+/* ccsll operations extended */
 
 
 #define  ccsll_merge_prefetch(_ccsll_d, _ccsll_s)                              \
@@ -80,6 +81,23 @@ STATEMENT_                                                                     \
     ccsll_iter_at_tail((_iter)) ? (NULL) :                                     \
     ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
 )
+
+
+/* ccsll integrity */
+
+
+#define  ccsll_is_sorted(_ccsll, _ptrue)                                       \
+                                                                               \
+         ccsll_is_sorted_extd(_ccsll, SLEQ, _ptrue)
+
+#define  ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                            \
+                                                                               \
+         cc_ll_is_sorted_extd(_ccsll, _leq, _ptrue, ccsll)
+
+
+#define ccsll_is_robust(_ccsll, _ptrue)                                        \
+                                                                               \
+        cc_ll_is_robust(_ccsll, _ptrue, ccsll, CCSLL)
 
 
 

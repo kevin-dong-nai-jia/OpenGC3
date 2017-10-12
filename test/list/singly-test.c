@@ -1,7 +1,7 @@
 #if defined(PREFIX_CCSLL)
-    #include "../../src/list/ccsll.h"
     #define prefix(func)  ccsll##func
     #define PREFIX(FUNC)  CCSLL##FUNC
+    #include "../../src/list/extd-ccsll.h"
 #else
     #error "UNDEFINE PREFIX_CC[S]LL"
 #endif

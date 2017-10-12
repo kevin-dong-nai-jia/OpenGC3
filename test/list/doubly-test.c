@@ -1,11 +1,11 @@
 #if defined(PREFIX_CCDLL)
-    #include "../../src/list/ccdll.h"
     #define prefix(func)  ccdll##func
     #define PREFIX(FUNC)  CCDLL##FUNC
+    #include "../../src/list/extd-ccdll.h"
 #elif defined(PREFIX_CCXLL)
-    #include "../../src/list/ccxll.h"
     #define prefix(func)  ccxll##func
     #define PREFIX(FUNC)  CCXLL##FUNC
+    #include "../../src/list/extd-ccxll.h"
 #else
     #error "UNDEFINE PREFIX_CC[DX]LL"
 #endif

@@ -1,8 +1,6 @@
 #ifndef OPENGC3_LIST_EXTD_BASE_H
 #define OPENGC3_LIST_EXTD_BASE_H
 
-#include "../base/misc.h"
-
 
 /* cc_ll integrity */
 
