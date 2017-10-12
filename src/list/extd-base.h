@@ -35,7 +35,7 @@ STATEMENT_                                                                     \
 )
 
 
-#define cc_ll_is_robust(_cc_ll, _ptrue, _ll_, _LL_)                            \
+#define cc_ll_is_robust(_cc_ll, _ptrue, _ll_, _LL_)          /* INCOMPLETE */  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \

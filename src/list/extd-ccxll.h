@@ -9,11 +9,11 @@
 /* ccxll operations extended */
 
 
-#define ccxll_sort_destruct(_ccxll)                                            \
+#define  ccxll_sort_destruct(_ccxll)                       /* NOTICE: SLOW */  \
                                                                                \
-        ccxll_sort_destruct_extd(_ccxll, XLEQ, ACMP)
+         ccxll_sort_destruct_extd(_ccxll, XLEQ, ACMP)
 
-#define ccxll_sort_destruct_extd(_ccxll, _leq, _cmp)                           \
+#define  ccxll_sort_destruct_extd(_ccxll, _leq, _cmp)                          \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -41,7 +41,7 @@ STATEMENT_                                                                     \
 )
 
 
-#define ccxll_block_merge_extd(_ccxll, _leq)                                   \
+#define  ccxll_block_merge_extd(_ccxll, _leq)                                  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -95,16 +95,17 @@ STATEMENT_                                                                     \
 )
 
 
-/* ccsll integrity */
+
+/* ccxll integrity */
 
 
-#define  ccxll_is_sorted(_ccxll, _ptrue)                                       \
+#define ccxll_is_sorted(_ccxll, _ptrue)                                        \
                                                                                \
-         ccxll_is_sorted_extd(_ccxll, XLEQ, _ptrue)
+        ccxll_is_sorted_extd(_ccxll, XLEQ, _ptrue)
 
-#define  ccxll_is_sorted_extd(_ccxll, _leq, _ptrue)                            \
+#define ccxll_is_sorted_extd(_ccxll, _leq, _ptrue)                             \
                                                                                \
-         cc_ll_is_sorted_extd(_ccxll, _leq, _ptrue, ccxll)
+        cc_ll_is_sorted_extd(_ccxll, _leq, _ptrue, ccxll)
 
 
 #define ccxll_is_robust(_ccxll, _ptrue)                                        \
