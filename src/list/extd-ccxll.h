@@ -9,7 +9,7 @@
 /* ccxll operations extended */
 
 
-#define  ccxll_sort_destruct(_ccxll)                       /* NOTICE: SLOW */  \
+#define  ccxll_sort_destruct(_ccxll) /* SIZE OF MEMORY POOL BLOCKS MATTERS */  \
                                                                                \
          ccxll_sort_destruct_extd(_ccxll, XLEQ, ACMP)
 
