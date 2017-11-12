@@ -38,11 +38,11 @@ STATEMENT_                                                                     \
     for (register int _len = 0; ; _len = 0)                                    \
     {                                                                          \
         while (!(ccsll_iter_at_end((_iter_l))) && _leq((_iter_l), (_iter_m)))  \
-            (void)(ccdll_iter_incr_prefetch((_iter_l), _queue, &_ofs));        \
+            ((void)ccdll_iter_incr_prefetch((_iter_l), _queue, &_ofs));        \
                                                                                \
         while (!(ccsll_iter_at_end((_iter_r))) &&                              \
                 (ccsll_iter_at_end((_iter_l)) || !_leq((_iter_l), (_iter_r)))) \
-            (void)(ccdll_iter_incr_prefetch((_iter_r), _queue, &_ofs), ++_len);\
+            ((void)ccdll_iter_incr_prefetch((_iter_r), _queue, &_ofs), ++_len);\
                                                                                \
         ccsll_move_range_extd((_iter_l), (_iter_m), (_iter_r), _len);          \
                                                                                \

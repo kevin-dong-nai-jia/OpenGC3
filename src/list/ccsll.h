@@ -355,11 +355,11 @@ STATEMENT_                                                                     \
     for (register int _len = 0; ; _len = 0)                                    \
     {                                                                          \
         while (!(ccsll_iter_at_end((_iter_l))) && _leq((_iter_l), (_iter_m)))  \
-            (void)(ccsll_iter_incr((_iter_l)));                                \
+            ((void)ccsll_iter_incr((_iter_l)));                                \
                                                                                \
         while (!(ccsll_iter_at_end((_iter_r))) &&                              \
                 (ccsll_iter_at_end((_iter_l)) || !_leq((_iter_l), (_iter_r)))) \
-            (void)(ccsll_iter_incr((_iter_r)), ++_len);                        \
+            ((void)ccsll_iter_incr((_iter_r)), ++_len);                        \
                                                                                \
         ccsll_move_range_extd((_iter_l), (_iter_m), (_iter_r), _len);          \
                                                                                \
