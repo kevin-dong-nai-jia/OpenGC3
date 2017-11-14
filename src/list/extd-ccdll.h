@@ -31,7 +31,7 @@
 (                                                                              \
     *((_parr)[*(_pofs)]) =  ((_iter)->curr.node),                              \
       (_parr)[*(_pofs)]  = &((_iter)->curr.node->PRV),                         \
-     *(_pofs) = (*(_pofs) + 1) % 64,                                           \
+     *(_pofs) = (*(_pofs) + 1) % 16,                                           \
     __builtin_prefetch((_iter)->curr.node->PRV),                               \
     ccsll_iter_at_tail((_iter)) ? (NULL) :                                     \
     ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \

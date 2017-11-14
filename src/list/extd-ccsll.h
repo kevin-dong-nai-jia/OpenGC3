@@ -26,9 +26,9 @@ STATEMENT_                                                                     \
                   (_iter_m)->cont != (_iter_r)->cont))  break;                 \
                                                                                \
     int _ofs = 0;                                                              \
-    __typeof__((_iter_l)->cont->pnode) _write, *_queue[64];                    \
+    __typeof__((_iter_l)->cont->pnode) _write, *_queue[16];                    \
                                                                                \
-    for (int _idx = 0; _idx < 64; _idx++)                                      \
+    for (int _idx = 0; _idx < 16; _idx++)                                      \
         (_queue)[_idx] = &_write;                                              \
                                                                                \
     ccsll_iter_head((_iter_l));                                                \
