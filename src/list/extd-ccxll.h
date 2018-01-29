@@ -6,10 +6,10 @@
 #include "../vect/array.h"
 
 
-/* ccxll operations extended */
+/* ccxll sort (destructive) */
 
 
-#define  ccxll_sort_destruct(_ccxll) /* SIZE OF MEMORY POOL BLOCKS MATTERS */  \
+#define  ccxll_sort_destruct(_ccxll)                                           \
                                                                                \
          ccxll_sort_destruct_extd(_ccxll, XLEQ, ACMP)
 
@@ -92,6 +92,70 @@ STATEMENT_                                                                     \
         (_iter)->prev.XOR = &(_pblock)->bnxt->nodes[(_pblock)->bnxt->ncnt - 1];\
         (_iter)->next.XOR = XOR2((_iter)->curr.node->XOR, (_iter)->prev.XOR);  \
     }                                                                          \
+)
+
+
+
+/* ccxll sort (reverse-based) */
+
+
+#define  ccxll_sort_unstable(_ccxll)                                           \
+                                                                               \
+         ccxll_sort_unstable_extd(_ccxll, XLEQ)
+
+#define  ccxll_sort_unstable_extd(_ccxll, _leq)                                \
+                                                                               \
+         cc_ll_sort_extd(_ccxll, _leq, ccxll, _unstable)
+
+#define _ccxll_sort_unstable_extd(_ccxll,  _carry,  _pbuck,                    \
+                                  _iter_a, _iter_b, _leq)                      \
+        _cc_ll_sort_extd(_ccxll,  _carry,  _pbuck,                             \
+                         _iter_a, _iter_b, _leq, ccxll, _unstable)
+
+
+#define  ccxll_merge_unstable(_ccxll_d, _ccxll_s)                              \
+                                                                               \
+         ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, XLEQ)
+
+#define  ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, _leq)                   \
+                                                                               \
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, _unstable)
+
+#define _ccxll_merge_unstable_extd(_iter_l, _iter_m, _iter_r, _leq)            \
+                                                                               \
+        _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll, _unstable)
+
+
+#define  ccxll_merge_range_unstable(_iter_l, _iter_m, _iter_r)                 \
+                                                                               \
+         ccxll_merge_range_unstable_extd(_iter_l, _iter_m, _iter_r, XLEQ)
+
+#define  ccxll_merge_range_unstable_extd(_iter_l, _iter_m, _iter_r, _leq)      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_iter_l)->curr.node == (_iter_m)->curr.node)  break;                  \
+                                                                               \
+    if (!(_leq##_prev((_iter_r), (_iter_m))))                                  \
+    {                                                                          \
+        ccxll_move_range((_iter_l), (_iter_m), (_iter_r));                     \
+        ccxll_iter_swap ((_iter_l), (_iter_m));                                \
+    }                                                                          \
+                                                                               \
+    (void)ccxll_iter_decr((_iter_r));                                          \
+    ccxll_reverse_range_extd((_iter_m), (_iter_r), 1);                         \
+                                                                               \
+    while ((_iter_l)->curr.node != (_iter_r)->curr.node)                       \
+    {                                                                          \
+        if (!(_leq((_iter_l), (_iter_r))))                                     \
+            ccxll_reverse_range_extd((_iter_l), (_iter_r), 1);                 \
+                                                                               \
+        (void)ccxll_iter_incr((_iter_l));                                      \
+    }                                                                          \
+                                                                               \
+    (void)ccxll_iter_incr((_iter_r));                                          \
+    ccxll_iter_copy((_iter_m), (_iter_r));                                     \
+    ccxll_iter_copy((_iter_l), (_iter_r));                                     \
 )
 
 

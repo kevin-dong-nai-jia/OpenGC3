@@ -143,8 +143,8 @@ STATEMENT_                                                                     \
     _ll_##_iter_begin((_iter_m));                                              \
     _ll_##_iter_tail ((_iter_r));                                              \
                                                                                \
-    _ll_##_move_range_extd( (_iter_l), (_iter_m), (_iter_r),                   \
-                           _ll_##_size((_iter_m)->cont));                      \
+    _ll_##_move_range_extd((_iter_l), (_iter_m), (_iter_r),                    \
+                            _ll_##_size((_iter_m)->cont));                     \
                                                                                \
     _ll_##_iter_begin((_iter_l));                                              \
     _ll_##_iter_init ((_iter_r), (_iter_l)->cont);                             \
@@ -161,7 +161,7 @@ STATEMENT_                                                                     \
     _it_init((_iter_l)->cont, 1, _base_m3, _ll_);                              \
                                                                                \
     _##_ll_##_merge_range##_opt_##_extd((_iter_l), (_iter_m), (_iter_r),       \
-                                  _it_((_iter_l)->cont, _base_m3, 0), _leq);   \
+                                   _it_((_iter_l)->cont, _base_m3, 0), _leq);  \
                                                                                \
     _it_clear((_iter_l)->cont, 1);                                             \
 )
