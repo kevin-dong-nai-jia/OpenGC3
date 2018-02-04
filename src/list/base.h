@@ -251,8 +251,11 @@ STATEMENT_                                                                     \
     }                                                                          \
     while (!(_ll_##_empty((_cc_ll))));                                         \
                                                                                \
-    for (_curr = 0; _curr < _fill; _curr++)                                    \
-        _ll_##_merge##_opt_##_extd((_cc_ll), (_pcont)[_curr], _leq);           \
+    for (_curr = 1; _curr < _fill; _curr++)                                    \
+        _ll_##_merge##_opt_##_extd((_pcont)[_curr], (_pcont)[_curr - 1], _leq);\
+                                                                               \
+    /* WARNING: CONSIDER USING _ll_##_append INSTEAD */                        \
+    _ll_##_merge##_opt_##_extd((_cc_ll), (_pcont)[_fill - 1], _leq);           \
 )
 
 
