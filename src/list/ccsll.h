@@ -332,6 +332,23 @@ STATEMENT_                                                                     \
 )
 
 
+#define  ccsll_move_into(_ccsll_d, _ccsll_s)                                   \
+                                                                               \
+         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll)
+
+#define _ccsll_move_into(_iter_l, _iter_m, _iter_r)                            \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccsll_iter_end ((_iter_l));                                                \
+    ccsll_iter_head((_iter_m));                                                \
+    ccsll_iter_end ((_iter_r));                                                \
+                                                                               \
+    ccsll_move_range_extd((_iter_l), (_iter_m),                                \
+                          (_iter_r),  ccsll_size((_iter_m)->cont));            \
+)
+
+
 #define  ccsll_merge(_ccsll_d, _ccsll_s)                                       \
                                                                                \
          ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT)
@@ -435,6 +452,16 @@ VOID_EXPR_                                                                     \
 VOID_EXPR_                                                                     \
 (                                                                              \
     (_iter)->curr.node =  ((_iter)->cont->head.NXT)                            \
+)
+
+#define ccsll_iter_end(_iter)                     /* TIME COMPLEXITY: O(n) */  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccsll_iter_head((_iter));                                                  \
+                                                                               \
+    while (!(ccsll_iter_at_end(_iter)))                                        \
+        ccsll_iter_incr((_iter));                                              \
 )
 
 

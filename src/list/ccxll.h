@@ -416,6 +416,15 @@ STATEMENT_                                                                     \
 )
 
 
+#define  ccxll_move_into(_ccxll_d, _ccxll_s)                                   \
+                                                                               \
+         cc_ll_move_into(_ccxll_d, _ccxll_s, ccxll)
+
+#define _ccxll_move_into(_iter_l, _iter_m, _iter_r)                            \
+                                                                               \
+        _cc_ll_move_into(_iter_l, _iter_m, _iter_r, ccxll)
+
+
 #define  ccxll_merge(_ccxll_d, _ccxll_s)                                       \
                                                                                \
          ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ)

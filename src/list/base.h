@@ -118,18 +118,49 @@ STATEMENT_                                                                     \
 /* cc_ll operations */
 
 
-#define cc_ll_merge_extd(_cc_ll_d, _cc_ll_s, _leq, _ll_, _opt_)                \
+#define cc_ll_move_into(_cc_ll_d, _cc_ll_s, _ll_)                              \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-     if (_unlikely(_ll_##_empty((_cc_ll_s))))  break;                          \
+    if (_unlikely(_ll_##_empty((_cc_ll_s))))  break;                           \
                                                                                \
     _it_init((_cc_ll_d), 1, _base_m1, _ll_);                                   \
     _it_init((_cc_ll_s), 2, _base_m2, _ll_);                                   \
                                                                                \
-    _##_ll_##_merge##_opt_##_extd(_it_((_cc_ll_d), _base_m1, 0),               \
-                                  _it_((_cc_ll_s), _base_m2, 0),               \
-                                  _it_((_cc_ll_s), _base_m2, 1), _leq);        \
+    _##_ll_##_move_into(_it_((_cc_ll_d), _base_m1, 0),                         \
+                        _it_((_cc_ll_s), _base_m2, 0),                         \
+                        _it_((_cc_ll_s), _base_m2, 1));                        \
+                                                                               \
+    _it_clear((_cc_ll_d), 1);                                                  \
+    _it_clear((_cc_ll_s), 2);                                                  \
+)
+
+
+#define _cc_ll_move_into(_iter_l, _iter_m, _iter_r, _ll_)                      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _ll_##_iter_tail ((_iter_l));                                              \
+    _ll_##_iter_begin((_iter_m));                                              \
+    _ll_##_iter_tail ((_iter_r));                                              \
+                                                                               \
+    _ll_##_move_range_extd((_iter_l), (_iter_m),                               \
+                           (_iter_r), _ll_##_size((_iter_m)->cont));           \
+)
+
+
+#define cc_ll_merge_extd(_cc_ll_d, _cc_ll_s, _leq, _ll_, _opt_)                \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if (_unlikely(_ll_##_empty((_cc_ll_s))))  break;                           \
+                                                                               \
+    _it_init((_cc_ll_d), 1, _base_m3, _ll_);                                   \
+    _it_init((_cc_ll_s), 2, _base_m4, _ll_);                                   \
+                                                                               \
+    _##_ll_##_merge##_opt_##_extd(_it_((_cc_ll_d), _base_m3, 0),               \
+                                  _it_((_cc_ll_s), _base_m4, 0),               \
+                                  _it_((_cc_ll_s), _base_m4, 1), _leq);        \
     _it_clear((_cc_ll_d), 1);                                                  \
     _it_clear((_cc_ll_s), 2);                                                  \
 )
@@ -143,8 +174,8 @@ STATEMENT_                                                                     \
     _ll_##_iter_begin((_iter_m));                                              \
     _ll_##_iter_tail ((_iter_r));                                              \
                                                                                \
-    _ll_##_move_range_extd((_iter_l), (_iter_m), (_iter_r),                    \
-                            _ll_##_size((_iter_m)->cont));                     \
+    _ll_##_move_range_extd((_iter_l), (_iter_m),                               \
+                           (_iter_r), _ll_##_size((_iter_m)->cont));           \
                                                                                \
     _ll_##_iter_begin((_iter_l));                                              \
     _ll_##_iter_init ((_iter_r), (_iter_l)->cont);                             \
@@ -158,10 +189,10 @@ STATEMENT_                                                                     \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
-    _it_init((_iter_l)->cont, 1, _base_m3, _ll_);                              \
+    _it_init((_iter_l)->cont, 1, _base_m5, _ll_);                              \
                                                                                \
     _##_ll_##_merge_range##_opt_##_extd((_iter_l), (_iter_m), (_iter_r),       \
-                                   _it_((_iter_l)->cont, _base_m3, 0), _leq);  \
+                                   _it_((_iter_l)->cont, _base_m5, 0), _leq);  \
                                                                                \
     _it_clear((_iter_l)->cont, 1);                                             \
 )
@@ -254,8 +285,7 @@ STATEMENT_                                                                     \
     for (_curr = 1; _curr < _fill; _curr++)                                    \
         _ll_##_merge##_opt_##_extd((_pcont)[_curr], (_pcont)[_curr - 1], _leq);\
                                                                                \
-    /* WARNING: CONSIDER USING _ll_##_append INSTEAD */                        \
-    _ll_##_merge##_opt_##_extd((_cc_ll), (_pcont)[_fill - 1], _leq);           \
+    _ll_##_move_into((_cc_ll), (_pcont)[_fill - 1]);                           \
 )
 
 

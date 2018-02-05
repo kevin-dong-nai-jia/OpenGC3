@@ -377,6 +377,15 @@ STATEMENT_                                                                     \
 )
 
 
+#define  ccdll_move_into(_ccdll_d, _ccdll_s)                                   \
+                                                                               \
+         cc_ll_move_into(_ccdll_d, _ccdll_s, ccdll)
+
+#define _ccdll_move_into(_iter_l, _iter_m, _iter_r)                            \
+                                                                               \
+        _cc_ll_move_into(_iter_l, _iter_m, _iter_r, ccdll)
+
+
 #define  ccdll_merge(_ccdll_d, _ccdll_s)                                       \
                                                                                \
          ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ)
