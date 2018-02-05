@@ -40,7 +40,9 @@ See [test cases](test) for more fascinating examples!
 
 ## Contributors
 
-[Kevin Dong](mailto:kevin.dong.nai.jia@gmail.com) - 2015 2016 2017 &nbsp;&nbsp; | &nbsp;&nbsp; [Andylinpersonal](mailto:andylinpersonal@gmail.com) - 2017
+[Kevin Dong](mailto:kevin.dong.nai.jia@gmail.com) - 2015 2016 2017 2018
+
+[Andylinpersonal](mailto:andylinpersonal@gmail.com) - 2017
 
 ## Distribution
 
