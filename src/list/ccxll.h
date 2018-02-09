@@ -104,9 +104,9 @@
         _cc_ll_init_extd(_ccxll, _start, _ratio, _thrsh, _alloc, ccxll)
 
 
-#define _ccxll_init_core(_ccxll)                                               \
+#define _ccxll_init_core(_ccxll, _alloc)                                       \
                                                                                \
-        _cc_ll_init_core(_ccxll, ccxll)
+        _cc_ll_init_core(_ccxll, _alloc, ccxll)
 
 
 #define _ccxll_init_seed(_ccxll)                                               \
@@ -126,13 +126,13 @@ VOID_EXPR_                                                                     \
         _cc_ll_init_info(_ccxll, _start, _ratio, _thrsh)
 
 
-#define ccxll_iter_init(_iter, _ccxll)                                         \
+#define ccxll_iter_init(_iter, _ccxll, _alloc)                                 \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->prev.XOR = NULL,                                                  \
-    (_iter)->curr.XOR = NULL,                                                  \
-    (_iter)->next.XOR = NULL,                                                  \
+    (_iter)->prev.node = ((_alloc) ? NULL : (_iter)->prev.node),               \
+    (_iter)->curr.node = ((_alloc) ? NULL : (_iter)->curr.node),               \
+    (_iter)->next.node = ((_alloc) ? NULL : (_iter)->next.node),               \
     (_iter)->cont = (_ccxll)                                                   \
 )
 
@@ -418,7 +418,7 @@ STATEMENT_                                                                     \
 
 #define  ccxll_move_into(_ccxll_d, _ccxll_s)                                   \
                                                                                \
-         cc_ll_move_into(_ccxll_d, _ccxll_s, ccxll)
+         cc_ll_move_into(_ccxll_d, _ccxll_s, ccxll, )
 
 #define _ccxll_move_into(_iter_l, _iter_m, _iter_r)                            \
                                                                                \
@@ -431,7 +431,7 @@ STATEMENT_                                                                     \
 
 #define  ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, )
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, , )
 
 #define _ccxll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
                                                                                \

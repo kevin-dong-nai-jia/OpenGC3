@@ -96,9 +96,9 @@
         _cc_ll_init_extd(_ccdll, _start, _ratio, _thrsh, _alloc, ccdll)
 
 
-#define _ccdll_init_core(_ccdll)                                               \
+#define _ccdll_init_core(_ccdll, _alloc)                                       \
                                                                                \
-        _cc_ll_init_core(_ccdll, ccdll)
+        _cc_ll_init_core(_ccdll, _alloc, ccdll)
 
 
 #define _ccdll_init_seed(_ccdll)                                               \
@@ -120,11 +120,11 @@ VOID_EXPR_                                                                     \
         _cc_ll_init_info(_ccdll, _start, _ratio, _thrsh)
 
 
-#define ccdll_iter_init(_iter, _ccdll)                                         \
+#define ccdll_iter_init(_iter, _ccdll, _alloc)                                 \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = NULL,                                                 \
+    (_iter)->curr.node = ((_alloc) ? NULL : (_iter)->curr.node),               \
     (_iter)->cont = (_ccdll)                                                   \
 )
 
@@ -379,7 +379,7 @@ STATEMENT_                                                                     \
 
 #define  ccdll_move_into(_ccdll_d, _ccdll_s)                                   \
                                                                                \
-         cc_ll_move_into(_ccdll_d, _ccdll_s, ccdll)
+         cc_ll_move_into(_ccdll_d, _ccdll_s, ccdll, )
 
 #define _ccdll_move_into(_iter_l, _iter_m, _iter_r)                            \
                                                                                \
@@ -392,7 +392,7 @@ STATEMENT_                                                                     \
 
 #define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, )
+         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, , )
 
 #define _ccdll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
                                                                                \

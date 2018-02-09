@@ -96,9 +96,9 @@
         _cc_ll_init_extd(_ccsll, _start, _ratio, _thrsh, _alloc, ccsll)
 
 
-#define _ccsll_init_core(_ccsll)                                               \
+#define _ccsll_init_core(_ccsll, _alloc)                                       \
                                                                                \
-        _cc_ll_init_core(_ccsll, ccsll)
+        _cc_ll_init_core(_ccsll, _alloc, ccsll)
 
 
 #define _ccsll_init_seed(_ccsll)                                               \
@@ -118,11 +118,11 @@ VOID_EXPR_                                                                     \
         _cc_ll_init_info(_ccsll, _start, _ratio, _thrsh)
 
 
-#define ccsll_iter_init(_iter, _ccsll)                                         \
+#define ccsll_iter_init(_iter, _ccsll, _alloc)                                 \
                                                                                \
 VOID_EXPR_                                                                     \
 (                                                                              \
-    (_iter)->curr.node = NULL,                                                 \
+    (_iter)->curr.node = ((_alloc) ? NULL : (_iter)->curr.node),               \
     (_iter)->cont = (_ccsll)                                                   \
 )
 
@@ -334,7 +334,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_move_into(_ccsll_d, _ccsll_s)                                   \
                                                                                \
-         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll)
+         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll, _auxr)
 
 #define _ccsll_move_into(_iter_l, _iter_m, _iter_r)                            \
                                                                                \
@@ -342,7 +342,9 @@ STATEMENT_                                                                     \
 (                                                                              \
     ccsll_iter_end ((_iter_l));                                                \
     ccsll_iter_head((_iter_m));                                                \
-    ccsll_iter_end ((_iter_r));                                                \
+                                                                               \
+    while (!(ccsll_iter_at_end((_iter_r))))                                    \
+        (void)(ccsll_iter_incr((_iter_r)));                                    \
                                                                                \
     ccsll_move_range_extd((_iter_l), (_iter_m),                                \
                           (_iter_r),  ccsll_size((_iter_m)->cont));            \
@@ -355,7 +357,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)                            \
                                                                                \
-         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, )
+         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, , _auxr)
 
 #define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
                                                                                \
@@ -380,10 +382,14 @@ STATEMENT_                                                                     \
                                                                                \
         ccsll_move_range_extd((_iter_l), (_iter_m), (_iter_r), _len);          \
                                                                                \
-        if (ccsll_iter_at_end((_iter_m)))  break;                              \
+        if (ccsll_iter_at_end((_iter_m)))                                      \
+        {                                                                      \
+            ccsll_iter_copy((_iter_l), (_iter_r));                             \
+            break;                                                             \
+        }                                                                      \
                                                                                \
         ccsll_iter_copy((_iter_l), (_iter_r));                                 \
-        ccsll_iter_init((_iter_r), (_iter_m)->cont) ;                          \
+        ccsll_iter_init((_iter_r), (_iter_m)->cont, 0);                        \
         ccsll_iter_head((_iter_r));                                            \
     }                                                                          \
 )
@@ -454,14 +460,15 @@ VOID_EXPR_                                                                     \
     (_iter)->curr.node =  ((_iter)->cont->head.NXT)                            \
 )
 
-#define ccsll_iter_end(_iter)                     /* TIME COMPLEXITY: O(n) */  \
+
+#define ccsll_iter_end(_iter)                                                  \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     ccsll_iter_head((_iter));                                                  \
                                                                                \
-    while (!(ccsll_iter_at_end(_iter)))                                        \
-        ccsll_iter_incr((_iter));                                              \
+    while (!(ccsll_iter_at_end((_iter))))                                      \
+        (void)(ccsll_iter_incr((_iter)));                                      \
 )
 
 
