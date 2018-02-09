@@ -121,7 +121,7 @@ int main(void)
     {
         prefix(_extd)(int, 9, NORMAL) list;
         prefix(_init)(list);
-        prefix(_iter_init)(ITER_NTH(list, 8), list);
+        prefix(_iter_init)(ITER_NTH(list, 8), list, 0);
 
         PREFIX(_INCR)(ITER_NTH(list, 8))
             printf("%d", LREF(ITER_NTH(list, 8)));
@@ -555,7 +555,7 @@ int main(void)
         prefix(_iter_advance)(ITER(list_b), 3);
 
         prefix(_move_range)(ITER(list_b), ITER(list_a), ITER_NTH(list_a, 1));
-        prefix(_iter_init)(ITER(list_a), list_a);
+        prefix(_iter_init)(ITER(list_a), list_a, 0);
 
         puts("");
         PREFIX(_INCR)(ITER(list_a))
@@ -619,7 +619,7 @@ int main(void)
         printf("\t  size = %d (B)\n", prefix(_size)(list_b));
 
         prefix(_iter_advance)(ITER(list_a), -2);
-        prefix(_iter_init)   (ITER(list_b), list_b);
+        prefix(_iter_init)   (ITER(list_b), list_b, 0);
         prefix(_iter_tail)   (ITER(list_b));
         prefix(_move)        (ITER(list_b), ITER(list_a));
 
@@ -720,7 +720,7 @@ int main(void)
         prefix(_iter_distance)(ITER(list_a), ITER(list_b), &dist);
         printf("distance = %d / ", dist);
 
-        prefix(_iter_init)(ITER(list_b), list_a);
+        prefix(_iter_init)(ITER(list_b), list_a, 0);
         prefix(_iter_head)(ITER(list_b));
         prefix(_iter_advance)(ITER(list_b), 8);
 
