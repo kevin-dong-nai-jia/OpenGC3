@@ -30,14 +30,17 @@
 #ifndef CC_STRICT
     #define _unlikely(_expr)  (__builtin_expect(!!(_expr), 0))
     #define _prefetch(_addr)  (__builtin_prefetch((_addr)))
-    #define _it_(_cont, _iter, _offset)  (&(_iter)[(_offset)])
-    #define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
+    #define _it(_cont, _iter, _offset)  (&(_iter)[(_offset)])
+    #define _co(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #else
     #define _unlikely(_expr)  (_expr)
     #define _prefetch(_addr)  (_addr)
-    #define _it_(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
-    #define _co_(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
+    #define _it(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
+    #define _co(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #endif // CC_STRICT
+
+#define _it_auxr(_cont, _base, _offset) ((_cont)->_it[(_base) + (_offset)])
+#define _co_auxr(_cont, _base, _offset) ((_cont)->_co[(_base) + (_offset)])
 
 
 /* pointer layout */

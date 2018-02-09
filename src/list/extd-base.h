@@ -15,20 +15,20 @@ STATEMENT_                                                                     \
                                                                                \
     _it_init((_cc_ll), 2, _base_s3, _ll_);                                     \
                                                                                \
-    _ll_##_iter_head (_it_((_cc_ll), _base_s3, 0));                            \
-    _ll_##_iter_begin(_it_((_cc_ll), _base_s3, 1));                            \
+    _ll_##_iter_head (_it((_cc_ll), _base_s3, 0));                             \
+    _ll_##_iter_begin(_it((_cc_ll), _base_s3, 1));                             \
                                                                                \
     while (1)                                                                  \
     {                                                                          \
-        (void)_ll_##_iter_incr(_it_((_cc_ll), _base_s3, 0));                   \
-        (void)_ll_##_iter_incr(_it_((_cc_ll), _base_s3, 1));                   \
+        (void)_ll_##_iter_incr(_it((_cc_ll), _base_s3, 0));                    \
+        (void)_ll_##_iter_incr(_it((_cc_ll), _base_s3, 1));                    \
                                                                                \
-        if (!(_leq(_it_((_cc_ll), _base_s3, 0), _it_((_cc_ll), _base_s3, 1)))) \
+        if (!(_leq(_it((_cc_ll), _base_s3, 0), _it((_cc_ll), _base_s3, 1))))   \
         {                                                                      \
             (*(_ptrue)) = 0;  break;                                           \
         }                                                                      \
                                                                                \
-        if (_ll_##_iter_at_end(_it_((_cc_ll), _base_s3, 1)))  break;           \
+        if (_ll_##_iter_at_end(_it((_cc_ll), _base_s3, 1)))  break;            \
     }                                                                          \
                                                                                \
     _it_clear((_cc_ll), 2);                                                    \

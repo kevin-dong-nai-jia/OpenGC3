@@ -59,7 +59,7 @@ STATEMENT_                                                                     \
     _safe_alloc((_cont)->itarr, sizeof(*(_cont)->itarr));                      \
                                                                                \
     for (int _idx = 0; _idx < (int)(ELEMOF(*(_cont)->itarr)); _idx++)          \
-        _ll_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont));                 \
+        _ll_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont), 1);              \
 )
 
 
@@ -86,21 +86,30 @@ STATEMENT_                                                                     \
                                                                                \
         __typeof__(**(_cont)->_it) _iter[(_items)];                            \
                                                                                \
-        for (int _cnt = 0; _cnt < (_items); _cnt++)                            \
-            _ll_##_iter_init(_it_((_cont), _iter, _cnt), (_cont))
+        for (int _idx_item = 0; _idx_item < (_items); _idx_item++)             \
+            _ll_##_iter_init(_it((_cont), _iter, _idx_item), (_cont), 1)
 
 #else
 
 #define _it_init(_cont, _items, _base, _ll_)                                   \
                                                                                \
-        int _base;                                                             \
-                                                                               \
-        _itco_init((_cont), (_items), &(_base), _##_ll_##_iter_init, _it)
+        _it_init_auxr(_cont, _items, _base, _ll_)
 
 #endif // CC_STRICT
 
 
+#define _it_init_auxr(_cont, _items, _base, _ll_)                              \
+                                                                               \
+        int _base;                                                             \
+                                                                               \
+        _itco_init((_cont), (_items), &(_base), _##_ll_##_iter_init, _it)
+
+
 #define _co_init(_cont, _items, _base, _ll_)                                   \
+                                                                               \
+        _co_init_auxr(_cont, _items, _base, _ll_)
+
+#define _co_init_auxr(_cont, _items, _base, _ll_)                              \
                                                                                \
         int _base;                                                             \
                                                                                \
@@ -124,15 +133,16 @@ STATEMENT_                                                                     \
 
 #else
 
-#define _it_clear(_cont, _items)  _itco_clear(_cont, _items, _it)
+#define _it_clear(_cont, _items)  _it_clear_auxr(_cont, _items)
 
 #endif // CC_STRICT
 
 
-#define _co_clear(_cont, _items)                                               \
-                                                                               \
-        _itco_clear(_cont, _items, _co)
+#define _co_clear(_cont, _items)         _co_clear_auxr(_cont, _items)
 
+#define _it_clear_auxr(_cont, _items)  _itco_clear(_cont, _items, _it)
+
+#define _co_clear_auxr(_cont, _items)  _itco_clear(_cont, _items, _co)
 
 #define _itco_clear(_cont, _items, _itco_)                                     \
                                                                                \
@@ -182,9 +192,9 @@ STATEMENT_                                                                     \
         size_t _size = sizeof(*(_cont)->_itco_);                               \
         int _ttl = _itco_total((_cont), _itco_);                               \
                                                                                \
-        void **_tmp = (void*)&((_cont)->_itco_);                               \
-        *_tmp = realloc(*_tmp, (_size *                                        \
-                               (unsigned)((_cont)->_itco_##_base + (_items))));\
+        (_cont)->_itco_ = realloc((_cont)->_itco_,                             \
+                                  (_size * (unsigned)                          \
+                                  ((_cont)->_itco_##_base + (_items))));       \
                                                                                \
         memset((_cont)->_itco_ + _ttl, 0,                                      \
                (_size * (unsigned)((_cont)->_itco_##_base + (_items) - _ttl)));\

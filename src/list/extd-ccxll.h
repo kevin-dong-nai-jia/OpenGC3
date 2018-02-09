@@ -47,9 +47,9 @@ STATEMENT_                                                                     \
 (                                                                              \
     _it_init((_ccxll), 3, _base_s1, ccxll);                                    \
                                                                                \
-    _ccxll_block_merge_extd((_ccxll), _it_((_ccxll), _base_s1, 0),             \
-                                      _it_((_ccxll), _base_s1, 1),             \
-                                      _it_((_ccxll), _base_s1, 2), _leq);      \
+    _ccxll_block_merge_extd((_ccxll), _it((_ccxll), _base_s1, 0),              \
+                                      _it((_ccxll), _base_s1, 1),              \
+                                      _it((_ccxll), _base_s1, 2), _leq);       \
                                                                                \
     _it_clear((_ccxll), 3);                                                    \
 )
@@ -119,7 +119,7 @@ STATEMENT_                                                                     \
 
 #define  ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, _leq)                   \
                                                                                \
-         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, _unstable)
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, _unstable, )
 
 #define _ccxll_merge_unstable_extd(_iter_l, _iter_m, _iter_r, _leq)            \
                                                                                \
