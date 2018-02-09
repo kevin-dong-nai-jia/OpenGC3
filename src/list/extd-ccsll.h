@@ -15,7 +15,8 @@
 
 #define  ccsll_merge_prefetch_extd(_ccsll_d, _ccsll_s, _leq)                   \
                                                                                \
-         cc_ll_merge_extd         (_ccsll_d, _ccsll_s, _leq, ccsll, _prefetch)
+         cc_ll_merge_extd         (_ccsll_d, _ccsll_s, _leq,                   \
+                                    ccsll, _prefetch, _auxr)
 
 #define _ccsll_merge_prefetch_extd(_iter_l, _iter_m, _iter_r, _leq)            \
                                                                                \
@@ -46,10 +47,14 @@ STATEMENT_                                                                     \
                                                                                \
         ccsll_move_range_extd((_iter_l), (_iter_m), (_iter_r), _len);          \
                                                                                \
-        if (ccsll_iter_at_end((_iter_m)))  break;                              \
+        if (ccsll_iter_at_end((_iter_m)))                                      \
+        {                                                                      \
+            ccsll_iter_copy((_iter_l), (_iter_r));                             \
+            break;                                                             \
+        }                                                                      \
                                                                                \
         ccsll_iter_copy((_iter_l), (_iter_r));                                 \
-        ccsll_iter_init((_iter_r), (_iter_m)->cont) ;                          \
+        ccsll_iter_init((_iter_r), (_iter_m)->cont, 0);                        \
         ccsll_iter_head((_iter_r));                                            \
     }                                                                          \
 )
@@ -61,7 +66,7 @@ STATEMENT_                                                                     \
 
 #define ccsll_is_sorted(_ccsll, _ptrue)                                        \
                                                                                \
-        ccsll_is_sorted_extd(_ccsll, SLEQ, _ptrue)
+        ccsll_is_sorted_extd(_ccsll, SGEQ, _ptrue)
 
 #define ccsll_is_sorted_extd(_ccsll, _leq, _ptrue)                             \
                                                                                \
