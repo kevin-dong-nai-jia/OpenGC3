@@ -4,8 +4,8 @@
 
 /* syntax wrapper */
 
-#define STATEMENT_(...)   do {__VA_ARGS__} while (0)
-#define VOID_EXPR_(...)   ((__VA_ARGS__), ((void)0))
+#define STATEMENT_(...)  do {__VA_ARGS__} while (0)
+#define VOID_EXPR_(...)  ((__VA_ARGS__), ((void)0))
 
 
 /* general macros */
@@ -30,17 +30,26 @@
 #ifndef CC_STRICT
     #define _unlikely(_expr)  (__builtin_expect(!!(_expr), 0))
     #define _prefetch(_addr)  (__builtin_prefetch((_addr)))
-    #define _it(_cont, _iter, _offset)  (&(_iter)[(_offset)])
-    #define _co(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
 #else
     #define _unlikely(_expr)  (_expr)
-    #define _prefetch(_addr)  (_addr)
-    #define _it(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
-    #define _co(_cont, _base, _offset)  ((_cont)->_co[(_base) + (_offset)])
+    #define _prefetch(_addr)  ((void)(_addr))
 #endif // CC_STRICT
 
-#define _it_auxr(_cont, _base, _offset) ((_cont)->_it[(_base) + (_offset)])
-#define _co_auxr(_cont, _base, _offset) ((_cont)->_co[(_base) + (_offset)])
+
+/* access to auxr */
+
+#ifndef CC_STRICT
+    #define _it(_cont, _base, _offset)       (&(_base)[(_offset)])
+    #define _it_auxr(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
+    #define _it_fast(_cont, _base, _offset)  (&(_base##_fast)[(_offset)])
+#else
+    #define _it(_cont, _base, _offset)       ((_cont)->_it[(_base) + (_offset)])
+    #define _it_auxr(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
+    #define _it_fast(_cont, _base, _offset)  ((_cont)->_it[(_base) + (_offset)])
+#endif // CC_STRICT
+
+#define _co(_cont, _base, _offset)           ((_cont)->_co[(_base) + (_offset)])
+#define _co_auxr(_cont, _base, _offset)      ((_cont)->_co[(_base) + (_offset)])
 
 
 /* pointer layout */
