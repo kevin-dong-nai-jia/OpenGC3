@@ -1,4 +1,4 @@
-# OpenGC<sup>3</sup><sub><sup>/open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collections</sup></sub></sup></i>
+# OpenGC<sup>3</sup><sub><sup>/open-'gik/</sup></sub></br><i><sup><sub><sup>Open General C Container Collection</sup></sub></sup></i>
 
 ## Containers
 
@@ -8,32 +8,34 @@
 | [`ccxll(T)`](doc/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 |  `ccsll(T)`                      |  Singly Linked List                   |
 |  `ccdll(T)`                      |  Doubly Linked List                   |
-|  `ccgbt(T)`                      |  General Binary Tree                  |
 
 ## Example
 
 ```c
-#include "ccxll.h"
+#include "src/list/extd-ccdll.h"
 
-// Create
-ccxll(int) list;
+int main(void)
+{
+    // Create
+    ccdll(int) list;
 
-// Initialize
-ccxll_init(list);
+    // Initialize
+    ccdll_init(list);
 
-// Modify
-for (int cnt = 0; cnt < 8; cnt++)
-    ccxll_push_back(list, rand());
+    // Modify
+    for (int cnt = 0; cnt < 8; cnt++)
+        ccdll_push_back(list, rand());
 
-// Operate
-ccxll_sort(list);
+    // Operate
+    ccdll_sort_prefetch(list);
 
-// Traverse
-CCXLL_INCR_AUTO(pnum, list)
-    printf("num = %d\n", *pnum);
+    // Traverse
+    CCDLL_INCR_AUTO(pnum, list)
+        printf("num = %d\n", *pnum);
 
-// Destroy
-ccxll_free(list);
+    // Destroy
+    ccdll_free(list);
+}
 ```
 
 See [test cases](test) for more fascinating examples!
