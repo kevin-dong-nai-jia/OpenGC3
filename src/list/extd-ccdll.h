@@ -23,35 +23,30 @@
                                   _iter_a, _iter_b, _leq,  ccsll, _prefetch)
 
 
-#define ccdll_restore_links(_ccdll)                                            \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccdll_iter_head((_ccdll)->_iter);                                          \
-                                                                               \
-    do                                                                         \
-    {   __builtin_prefetch((_ccdll)->_iter->curr.node->PRV);                   \
-        (_ccdll)->_iter->curr.node->NXT->PRV = (_ccdll)->_iter->curr.node;     \
-    }                                                                          \
-    while (!(ccdll_iter_at_end((_ccdll)->_iter)) &&                            \
-            (ccdll_iter_incr (((_ccdll)->_iter)), 1));                         \
-)
-
-
 
 /* ccdll iterators extended */
 
 
-#define ccdll_iter_incr_prefetch(_iter, _parr, _pofs)                          \
+#define ccdll_iter_incr_prefetch(_iter, _pqueue)                               \
 (                                                                              \
-    *((_parr)[*(_pofs)]) =  ((_iter)->curr.node),                              \
-      (_parr)[*(_pofs)]  = &((_iter)->curr.node->PRV),                         \
-     *(_pofs) = (*(_pofs) + 1) % 16,                                           \
+    *((_pqueue)->_arr[((_pqueue)->_ofs)]) =  ((_iter)->curr.node),             \
+      (_pqueue)->_arr[((_pqueue)->_ofs)]  = &((_iter)->curr.node->PRV),        \
+     ((_pqueue)->_ofs) = (((_pqueue)->_ofs) + 1) % ELEMOF((_pqueue)->_arr),    \
+    (_prefetch((_iter)->curr.node->PRV)),                                      \
                                                                                \
-    __builtin_prefetch((_iter)->curr.node->PRV),                               \
+    ccdll_iter_incr((_iter))                                                   \
+)
+
+
+#define ccdll_iter_incr_backlink(_iter, _pwrite)                               \
                                                                                \
-    ccsll_iter_at_tail((_iter)) ? (NULL) :                                     \
-    ((_iter)->curr.node = (_iter)->curr.node->NXT)->NXT                        \
+VOID_EXPR_                                                                     \
+(                                                                              \
+    (void)(ccdll_iter_incr((_iter))),                                          \
+                                                                               \
+    (_prefetch((_iter)->curr.node->PRV)),                                      \
+    (_iter)->curr.node->PRV = *(_pwrite),                                      \
+    *(_pwrite) = ((_iter)->curr.node)                                          \
 )
 
 
