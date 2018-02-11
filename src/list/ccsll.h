@@ -334,7 +334,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_move_into(_ccsll_d, _ccsll_s)                                   \
                                                                                \
-         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll, _auxr)
+         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll, , _fast)
 
 #define _ccsll_move_into(_iter_l, _iter_m, _iter_r)                            \
                                                                                \
@@ -343,9 +343,6 @@ STATEMENT_                                                                     \
     ccsll_iter_end ((_iter_l));                                                \
     ccsll_iter_head((_iter_m));                                                \
                                                                                \
-    while (!(ccsll_iter_at_end((_iter_r))))                                    \
-        (void)(ccsll_iter_incr((_iter_r)));                                    \
-                                                                               \
     ccsll_move_range_extd((_iter_l), (_iter_m),                                \
                           (_iter_r),  ccsll_size((_iter_m)->cont));            \
 )
@@ -353,13 +350,13 @@ STATEMENT_                                                                     \
 
 #define  ccsll_merge(_ccsll_d, _ccsll_s)                                       \
                                                                                \
-         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT)
+         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT, _last)
 
-#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq)                            \
+#define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq, _last)                     \
                                                                                \
-         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, , _auxr)
+         cc_ll_merge_extd(_ccsll_d, _ccsll_s, _leq, ccsll, , _fast, _last)
 
-#define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
+#define _ccsll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, _last)              \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
@@ -385,6 +382,9 @@ STATEMENT_                                                                     \
         if (ccsll_iter_at_end((_iter_m)))                                      \
         {                                                                      \
             ccsll_iter_copy((_iter_l), (_iter_r));                             \
+                                                                               \
+            while (!(ccsll_iter_at_end((_iter_l))))                            \
+                (void)(ccdll_iter_incr((_iter_l)));                            \
             break;                                                             \
         }                                                                      \
                                                                                \
@@ -504,7 +504,28 @@ STATEMENT_                                                                     \
 
 #define ccsll_iter_distance(_iter_a, _iter_b, _pdist)                          \
                                                                                \
-        cc_ll_iter_distance_positive(_iter_a, _iter_b, _pdist, ccsll)
+STATEMENT_                                                                     \
+(                                                                              \
+    _it_init((_iter_a)->cont, 1, _base_d1, ccsll);                             \
+                                                                               \
+    ccsll_iter_copy(_it((_iter_a)->cont, _base_d1, 0), (_iter_a));             \
+                                                                               \
+    STATEMENT_                                                                 \
+    (                                                                          \
+        (*(_pdist)) = 0;                                                       \
+        if ((_iter_a)->cont != (_iter_b)->cont)  break;                        \
+                                                                               \
+        while ((_iter_a)->curr.node != (_iter_b)->curr.node && ++(*(_pdist)))  \
+               if (!(ccsll_iter_incr((_iter_a))))  break;                      \
+                                                                               \
+        if ((_iter_a)->curr.node == (_iter_b)->curr.node)  break;              \
+        else  (*(_pdist)) = 0;                                                 \
+    );                                                                         \
+                                                                               \
+    ccsll_iter_copy((_iter_a), _it((_iter_a)->cont, _base_d1, 0));             \
+                                                                               \
+    _it_clear((_iter_a)->cont, 1, , );                                         \
+)
 
 
 

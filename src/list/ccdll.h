@@ -379,7 +379,7 @@ STATEMENT_                                                                     \
 
 #define  ccdll_move_into(_ccdll_d, _ccdll_s)                                   \
                                                                                \
-         cc_ll_move_into(_ccdll_d, _ccdll_s, ccdll, )
+         cc_ll_move_into(_ccdll_d, _ccdll_s, ccdll, , )
 
 #define _ccdll_move_into(_iter_l, _iter_m, _iter_r)                            \
                                                                                \
@@ -388,13 +388,13 @@ STATEMENT_                                                                     \
 
 #define  ccdll_merge(_ccdll_d, _ccdll_s)                                       \
                                                                                \
-         ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ)
+         ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ, _last)
 
-#define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq)                            \
+#define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq, _last)                     \
                                                                                \
-         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, , )
+         cc_ll_merge_extd(_ccdll_d, _ccdll_s, _leq, ccdll, , , _last)
 
-#define _ccdll_merge_extd(_iter_l, _iter_m, _iter_r, _leq)                     \
+#define _ccdll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, _last)              \
                                                                                \
         _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, ccdll, )
 
