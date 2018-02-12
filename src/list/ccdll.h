@@ -388,7 +388,7 @@ STATEMENT_                                                                     \
 
 #define  ccdll_merge(_ccdll_d, _ccdll_s)                                       \
                                                                                \
-         ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ, _last)
+         ccdll_merge_extd(_ccdll_d, _ccdll_s, DLEQ, 0)
 
 #define  ccdll_merge_extd(_ccdll_d, _ccdll_s, _leq, _last)                     \
                                                                                \

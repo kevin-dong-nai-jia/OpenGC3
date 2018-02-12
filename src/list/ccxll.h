@@ -427,7 +427,7 @@ STATEMENT_                                                                     \
 
 #define  ccxll_merge(_ccxll_d, _ccxll_s)                                       \
                                                                                \
-         ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ, _last)
+         ccxll_merge_extd(_ccxll_d, _ccxll_s, XLEQ, 0)
 
 #define  ccxll_merge_extd(_ccxll_d, _ccxll_s, _leq, _last)                     \
                                                                                \

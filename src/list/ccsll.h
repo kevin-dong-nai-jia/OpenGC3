@@ -350,7 +350,7 @@ STATEMENT_                                                                     \
 
 #define  ccsll_merge(_ccsll_d, _ccsll_s)                                       \
                                                                                \
-         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT, _last)
+         ccsll_merge_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT, 0)
 
 #define  ccsll_merge_extd(_ccsll_d, _ccsll_s, _leq, _last)                     \
                                                                                \
