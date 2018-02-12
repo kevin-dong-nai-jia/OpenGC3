@@ -8,8 +8,11 @@
 | [`ccxll(T)`](doc/ccxll-call.pdf) | [XOR Linked List](doc/ccxll-list.pdf) |
 |  `ccsll(T)`                      |  Singly Linked List                   |
 |  `ccdll(T)`                      |  Doubly Linked List                   |
+|  `ccgbt(T)`                      |  TBA                                  |
+|  `ccrbt(T)`                      |  TBA                                  |
+|  `ccmap(T)`                      |  TBA                                  |
 
-## Example
+## Demonstration
 
 ```c
 #include "src/list/extd-ccdll.h"
@@ -50,5 +53,8 @@ See [test cases](test) for more fascinating examples!
 
 This project is distributed under [the MIT License](LICENSE).
 
+## Acknowledgement
 
+MOST Grant No. 106-2813-C-009-027-E (Date: 2017-07-01 ~ 2018-02-28)
 
+This research is funded by the Ministry of Science and Technology, Taiwan.
