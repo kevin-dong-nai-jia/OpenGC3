@@ -9,9 +9,29 @@
 /* ccsll operations extended */
 
 
+#define  ccsll_move_into_prefetch(_ccsll_d, _ccsll_s)                          \
+                                                                               \
+         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll, _prefetch, _fast)
+
+#define _ccsll_move_into_prefetch(_iter_l, _iter_m, _iter_r /* ! */)           \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    ccsll_iter_end ((_iter_l));                                                \
+    ccsll_iter_head((_iter_m));                                                \
+                                                                               \
+    (_iter_l)->cont->tail.PRV = (_iter_r)->curr.node;                          \
+                                                                               \
+    ccsll_move_range_extd((_iter_l), (_iter_m),                                \
+                          (_iter_r),  ccsll_size((_iter_m)->cont));            \
+                                                                               \
+    (_iter_l)->cont->head.NXT->PRV = &((_iter_l)->cont->head);                 \
+)
+
+
 #define  ccsll_merge_prefetch(_ccsll_d, _ccsll_s)                              \
                                                                                \
-         ccsll_merge_prefetch_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT)
+         ccsll_merge_prefetch_extd(_ccsll_d, _ccsll_s, SLEQ_NEXT, 0)
 
 #define  ccsll_merge_prefetch_extd(_ccsll_d, _ccsll_s, _leq, _last)            \
                                                                                \
@@ -78,26 +98,6 @@ STATEMENT_                                                                     \
         ccsll_iter_init((_iter_r), (_iter_m)->cont, 0);                        \
         ccsll_iter_head((_iter_r));                                            \
     }                                                                          \
-)
-
-
-#define  ccsll_move_into_prefetch(_ccsll_d, _ccsll_s)                          \
-                                                                               \
-         cc_ll_move_into(_ccsll_d, _ccsll_s, ccsll, _prefetch, _fast)
-
-#define _ccsll_move_into_prefetch(_iter_l, _iter_m, _iter_r /* ! */)           \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    ccsll_iter_end ((_iter_l));                                                \
-    ccsll_iter_head((_iter_m));                                                \
-                                                                               \
-    (_iter_l)->cont->tail.PRV = (_iter_r)->curr.node;                          \
-                                                                               \
-    ccsll_move_range_extd((_iter_l), (_iter_m),                                \
-                          (_iter_r),  ccsll_size((_iter_m)->cont));            \
-                                                                               \
-    (_iter_l)->cont->head.NXT->PRV = &((_iter_l)->cont->head);                 \
 )
 
 

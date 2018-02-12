@@ -9,6 +9,60 @@
 /* ccxll sort (destructive) */
 
 
+#define _ccxll_iter_block(_pblock, _iter)                                      \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_pblock) == NULL)                                                     \
+        ccxll_iter_tail((_iter));                                              \
+    else if ((_pblock)->bnxt == NULL)                                          \
+        ccxll_iter_begin((_iter));                                             \
+    else                                                                       \
+    {                                                                          \
+        (_iter)->curr.XOR = &(_pblock)->nodes[0];                              \
+        (_iter)->prev.XOR = &(_pblock)->bnxt->nodes[(_pblock)->bnxt->ncnt - 1];\
+        (_iter)->next.XOR = XOR2((_iter)->curr.node->XOR, (_iter)->prev.XOR);  \
+    }                                                                          \
+)
+
+
+#define  ccxll_block_merge_extd(_ccxll, _leq)                                  \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    _it_init((_ccxll), 3, _base_s1, ccxll);                                    \
+                                                                               \
+    _ccxll_block_merge_extd((_ccxll), _it((_ccxll), _base_s1, 0),              \
+                                      _it((_ccxll), _base_s1, 1),              \
+                                      _it((_ccxll), _base_s1, 2), _leq);       \
+                                                                               \
+    _it_clear((_ccxll), 3, , );                                                \
+)
+
+
+#define _ccxll_block_merge_extd(_ccxll, _iter_l, _iter_m, _iter_r, _leq)       \
+                                                                               \
+STATEMENT_                                                                     \
+(                                                                              \
+    if ((_ccxll)->pool == NULL)  break;                                        \
+                                                                               \
+    (_ccxll)->pblock = (_ccxll)->pool;                                         \
+                                                                               \
+    ccxll_iter_begin((_iter_r));                                               \
+                                                                               \
+    while ((_ccxll)->pblock != NULL)                                           \
+    {                                                                          \
+        ccxll_iter_begin((_iter_l));                                           \
+        ccxll_iter_copy ((_iter_m), (_iter_r));                                \
+                                                                               \
+       _ccxll_iter_block((_ccxll)->pblock->bprv, (_iter_r));                   \
+        ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);         \
+                                                                               \
+        (_ccxll)->pblock = (_ccxll)->pblock->bprv;                             \
+    }                                                                          \
+)
+
+
 #define  ccxll_sort_destruct(_ccxll)                                           \
                                                                                \
          ccxll_sort_destruct_extd(_ccxll, XLEQ, ACMP)
@@ -41,87 +95,24 @@ STATEMENT_                                                                     \
 )
 
 
-#define  ccxll_block_merge_extd(_ccxll, _leq)                                  \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    _it_init((_ccxll), 3, _base_s1, ccxll);                                    \
-                                                                               \
-    _ccxll_block_merge_extd((_ccxll), _it((_ccxll), _base_s1, 0),              \
-                                      _it((_ccxll), _base_s1, 1),              \
-                                      _it((_ccxll), _base_s1, 2), _leq);       \
-                                                                               \
-    _it_clear((_ccxll), 3);                                                    \
-)
+
+/* ccxll sort (unstable, reverse-based) */
 
 
-#define _ccxll_block_merge_extd(_ccxll, _iter_l, _iter_m, _iter_r, _leq)       \
+#define  ccxll_move_into_unstable(_ccxll_d, _ccxll_s)                          \
                                                                                \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_ccxll)->pool == NULL)  break;                                        \
-                                                                               \
-    (_ccxll)->pblock = (_ccxll)->pool;                                         \
-                                                                               \
-    ccxll_iter_begin((_iter_r));                                               \
-                                                                               \
-    while ((_ccxll)->pblock != NULL)                                           \
-    {                                                                          \
-        ccxll_iter_begin((_iter_l));                                           \
-        ccxll_iter_copy ((_iter_m), (_iter_r));                                \
-                                                                               \
-       _ccxll_iter_block((_ccxll)->pblock->bprv, (_iter_r));                   \
-        ccxll_merge_range_extd((_iter_l), (_iter_m), (_iter_r), _leq);         \
-                                                                               \
-        (_ccxll)->pblock = (_ccxll)->pblock->bprv;                             \
-    }                                                                          \
-)
-
-
-#define _ccxll_iter_block(_pblock, _iter)                                      \
-                                                                               \
-STATEMENT_                                                                     \
-(                                                                              \
-    if ((_pblock) == NULL)                                                     \
-        ccxll_iter_tail((_iter));                                              \
-    else if ((_pblock)->bnxt == NULL)                                          \
-        ccxll_iter_begin((_iter));                                             \
-    else                                                                       \
-    {                                                                          \
-        (_iter)->curr.XOR = &(_pblock)->nodes[0];                              \
-        (_iter)->prev.XOR = &(_pblock)->bnxt->nodes[(_pblock)->bnxt->ncnt - 1];\
-        (_iter)->next.XOR = XOR2((_iter)->curr.node->XOR, (_iter)->prev.XOR);  \
-    }                                                                          \
-)
-
-
-
-/* ccxll sort (reverse-based) */
-
-
-#define  ccxll_sort_unstable(_ccxll)                                           \
-                                                                               \
-         ccxll_sort_unstable_extd(_ccxll, XLEQ)
-
-#define  ccxll_sort_unstable_extd(_ccxll, _leq)                                \
-                                                                               \
-         cc_ll_sort_extd(_ccxll, _leq, ccxll, _unstable)
-
-#define _ccxll_sort_unstable_extd(_ccxll,  _carry,  _pbuck,                    \
-                                  _iter_a, _iter_b, _leq)                      \
-        _cc_ll_sort_extd(_ccxll,  _carry,  _pbuck,                             \
-                         _iter_a, _iter_b, _leq, ccxll, _unstable)
+         cc_ll_move_into(_ccxll_d, _ccxll_s, ccxll, , )
 
 
 #define  ccxll_merge_unstable(_ccxll_d, _ccxll_s)                              \
                                                                                \
-         ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, XLEQ)
+         ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, XLEQ, 0)
 
-#define  ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, _leq)                   \
+#define  ccxll_merge_unstable_extd(_ccxll_d, _ccxll_s, _leq, _last)            \
                                                                                \
-         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, _unstable, )
+         cc_ll_merge_extd(_ccxll_d, _ccxll_s, _leq, ccxll, _unstable, , _last)
 
-#define _ccxll_merge_unstable_extd(_iter_l, _iter_m, _iter_r, _leq)            \
+#define _ccxll_merge_unstable_extd(_iter_l, _iter_m, _iter_r, _leq, _last)     \
                                                                                \
         _cc_ll_merge_extd(_iter_l, _iter_m, _iter_r, _leq, ccxll, _unstable)
 
@@ -157,6 +148,20 @@ STATEMENT_                                                                     \
     ccxll_iter_copy((_iter_m), (_iter_r));                                     \
     ccxll_iter_copy((_iter_l), (_iter_r));                                     \
 )
+
+
+#define  ccxll_sort_unstable(_ccxll)                                           \
+                                                                               \
+         ccxll_sort_unstable_extd(_ccxll, XLEQ)
+
+#define  ccxll_sort_unstable_extd(_ccxll, _leq)                                \
+                                                                               \
+         cc_ll_sort_extd(_ccxll, _leq, ccxll, _unstable)
+
+#define _ccxll_sort_unstable_extd(_ccxll,  _carry,  _pbuck,                    \
+                                  _iter_a, _iter_b, _leq)                      \
+        _cc_ll_sort_extd(_ccxll,  _carry,  _pbuck,                             \
+                         _iter_a, _iter_b, _leq, ccxll, _unstable)
 
 
 
