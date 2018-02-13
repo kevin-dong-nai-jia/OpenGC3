@@ -52,14 +52,14 @@ STATEMENT_                                                                     \
 /* itarr */
 
 
-#define _itarr_init(_cont, _ll_)                                               \
+#define _itarr_init(_cont, _cc_)                                               \
                                                                                \
 STATEMENT_                                                                     \
 (                                                                              \
     _safe_alloc((_cont)->itarr, sizeof(*(_cont)->itarr));                      \
                                                                                \
     for (int _idx = 0; _idx < (int)(ELEMOF(*(_cont)->itarr)); _idx++)          \
-        _ll_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont), 1);              \
+        _cc_##_iter_init(&((*(_cont)->itarr)[_idx]), (_cont), 1);              \
 )
 
 
@@ -82,52 +82,52 @@ STATEMENT_                                                                     \
 
 #ifndef CC_STRICT
 
-#define _it_init(_cont, _item, _base, _ll_)                                    \
+#define _it_init(_cont, _item, _base, _cc_)                                    \
                                                                                \
         __typeof__(**(_cont)->_it) _base[(_item)];                             \
                                                                                \
         for (int _idx_item = 0; _idx_item < (_item); _idx_item++)              \
-            _ll_##_iter_init(_it((_cont), _base, _idx_item), (_cont), 1)
+            _cc_##_iter_init(_it((_cont), _base, _idx_item), (_cont), 1)
 
-#define _it_init_fast(_cont, _item, _base, _ll_)                               \
+#define _it_init_fast(_cont, _item, _base, _cc_)                               \
                                                                                \
-        _it_init_auxr(_cont, _item, _base, _ll_);                              \
+        _it_init_auxr(_cont, _item, _base, _cc_);                              \
                                                                                \
         __typeof__(**(_cont)->_it) _base##_fast[(_item)];                      \
                                                                                \
         for (int _idx_item = 0; _idx_item < (_item); _idx_item++)              \
-            _ll_##_iter_copy(_it_fast((_cont), _base, _idx_item),              \
+            _cc_##_iter_copy(_it_fast((_cont), _base, _idx_item),              \
                              _it_auxr((_cont), _base, _idx_item))
 
 #else
 
-#define _it_init(_cont, _item, _base, _ll_)                                    \
+#define _it_init(_cont, _item, _base, _cc_)                                    \
                                                                                \
-        _it_init_auxr(_cont, _item, _base, _ll_)
+        _it_init_auxr(_cont, _item, _base, _cc_)
 
-#define _it_init_fast(_cont, _item, _base, _ll_)                               \
+#define _it_init_fast(_cont, _item, _base, _cc_)                               \
                                                                                \
-        _it_init_auxr(_cont, _item, _base, _ll_)
+        _it_init_auxr(_cont, _item, _base, _cc_)
 
 #endif // CC_STRICT
 
 
-#define _it_init_auxr(_cont, _item, _base, _ll_)                               \
+#define _it_init_auxr(_cont, _item, _base, _cc_)                               \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _itco_init((_cont), (_item), &(_base), _##_ll_##_iter_init, _it)
+        _itco_init((_cont), (_item), &(_base), _##_cc_##_iter_init, _it)
 
 
-#define _co_init(_cont, _item, _base, _ll_)                                    \
+#define _co_init(_cont, _item, _base, _cc_)                                    \
                                                                                \
-        _co_init_auxr(_cont, _item, _base, _ll_)
+        _co_init_auxr(_cont, _item, _base, _cc_)
 
-#define _co_init_auxr(_cont, _item, _base, _ll_)                               \
+#define _co_init_auxr(_cont, _item, _base, _cc_)                               \
                                                                                \
         int _base;                                                             \
                                                                                \
-        _itco_init((_cont), (_item), &(_base), _##_ll_##_init, _co)
+        _itco_init((_cont), (_item), &(_base), _##_cc_##_init, _co)
 
 
 #define _itco_init(_cont, _item, _pbase, _pinit, _itco_)                       \
@@ -143,28 +143,28 @@ STATEMENT_                                                                     \
 
 #ifndef CC_STRICT
 
-#define _it_clear(_cont, _item, _base, _ll_)
+#define _it_clear(_cont, _item, _base, _cc_)
 
 #else
 
-#define _it_clear(_cont, _item, _base, _ll_)      _itco_clear(_cont, _item, _it)
+#define _it_clear(_cont, _item, _base, _cc_)      _itco_clear(_cont, _item, _it)
 
 #endif // CC_STRICT
 
-#define _it_clear_fast(_cont, _item, _base, _ll_)                              \
+#define _it_clear_fast(_cont, _item, _base, _cc_)                              \
                                                                                \
         for (int _idx_item = 0; _idx_item < (_item); _idx_item++)              \
-            _ll_##_iter_copy(_it_auxr((_cont), _base, _idx_item),              \
+            _cc_##_iter_copy(_it_auxr((_cont), _base, _idx_item),              \
                              _it_fast((_cont), _base, _idx_item));             \
                                                                                \
-        _it_clear_auxr(_cont, _item, _base, _ll_)
+        _it_clear_auxr(_cont, _item, _base, _cc_)
 
-#define _it_clear_auxr(_cont, _item, _base, _ll_) _itco_clear(_cont, _item, _it)
+#define _it_clear_auxr(_cont, _item, _base, _cc_) _itco_clear(_cont, _item, _it)
 
 
-#define _co_clear(_cont, _item, _base, _ll_)      _itco_clear(_cont, _item, _co)
+#define _co_clear(_cont, _item, _base, _cc_)      _itco_clear(_cont, _item, _co)
 
-#define _co_clear_auxr(_cont, _item, _base, _ll_) _itco_clear(_cont, _item, _co)
+#define _co_clear_auxr(_cont, _item, _base, _cc_) _itco_clear(_cont, _item, _co)
 
 
 #define _itco_clear(_cont, _item, _itco_)                                      \
