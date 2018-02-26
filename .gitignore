@@ -7,6 +7,9 @@
 !src/*
 !src/*/*.h
 
+!img/
+!img/*.svg
+
 !test/
 !test/*
 !test/*/*.c
