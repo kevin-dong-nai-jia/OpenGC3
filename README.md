@@ -43,6 +43,12 @@ int main(void)
 
 See [test cases](test) for more fascinating examples!
 
+## Performance
+
+Input Data: MT19937-64 Pseudorandom Number Generator
+
+![testbench](img/cpu-cycles-elapsed.svg)
+
 ## Contributors
 
 [Kevin Dong](mailto:kevin.dong.nai.jia@gmail.com) - 2015 2016 2017 2018
